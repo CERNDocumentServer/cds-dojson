@@ -1,0 +1,1 @@
+-e git+https://github.com/inveniosoftware/invenio-query-parser.git@master#egg=invenio-query-parser

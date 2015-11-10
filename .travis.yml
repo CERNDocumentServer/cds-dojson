@@ -23,6 +23,7 @@ install:
   - pip install coveralls pep257
   - pip install pytest pytest-pep8 pytest-cov pytest-cache
   - pip install -e .[docs,tests]
+  - pip install -r requirements-dev.txt
 
 script:
   - pep257 --match-dir='dojson'

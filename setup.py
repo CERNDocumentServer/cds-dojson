@@ -81,7 +81,7 @@ setup(
     platforms='any',
     install_requires=[
         'dojson>=0.1.1',
-        'invenio-query-parser>=0.2',
+        'invenio-query-parser>=0.3.0',
         'invenio-utils>=0.2.0',
         'pyPEG2>=2.15.1',
     ],

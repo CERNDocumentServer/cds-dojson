@@ -27,7 +27,6 @@ from invenio_query_parser.walkers.match_unit import MatchUnit
 
 
 class Query(object):
-
     """Query object."""
 
     def __init__(self, query):

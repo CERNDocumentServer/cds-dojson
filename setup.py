@@ -50,6 +50,7 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
+
 # Get the version string.  Cannot be done with import!
 with open(os.path.join('cds_dojson', 'version.py'), 'rt') as f:
     version = re.search(

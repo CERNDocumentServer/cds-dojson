@@ -42,10 +42,8 @@ def convert_cdsmarcxml(source):
 def query_matcher(record):
     """Record query matcher.
 
-    :param record: :func:`dojson.contrib.marc21.utils.create_record` object.
-
+    :param record: python dictionary
     :returns: a model instance
-    :rtype: :class:`~cds_dojson.marc21.translations.default.CDSMarc21`
     """
     logger = logging.getLogger(__name__ + ".query_matcher")
 

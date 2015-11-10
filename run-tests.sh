@@ -7,6 +7,6 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-pep257 --match-dir='dojson' dojson && \
+pep257 --match-dir='cds_dojson' cds_dojson && \
 sphinx-build -qnNW docs docs/_build/html && \
 python setup.py test

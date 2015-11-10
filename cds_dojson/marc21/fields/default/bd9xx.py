@@ -124,7 +124,7 @@ def citation(self, key, value):
 @utils.for_each_value
 @utils.filter_values
 def status_week(self, key, value):
-    """Status week."""
+    """The status week."""
     return {
         'acquisition_of_proceedings_code': value.get('a'),
         'display_period_for_books': value.get('d'),
@@ -241,6 +241,18 @@ def sysno(self, key, value):
     }
 
 
+@marc21.over('collections', '^980..', override=True)
+@utils.for_each_value
+@utils.filter_values
+def collections(record, key, value):
+    """Parse custom MARC tag 980."""
+    return {
+        'primary': value.get('a'),
+        'secondary': value.get('b'),
+        'deleted': value.get('c'),
+    }
+
+
 @marc21.over('system_number_of_deleted_double_records', '^981__')
 @utils.for_each_value
 def system_number_of_deleted_double_records(self, key, value):
@@ -296,7 +308,7 @@ def refexctract_references(self, key, value):
 @utils.for_each_value
 @utils.filter_values
 def record_type(self, key, value):
-    """Record type - mostly IMAGE"""
+    """Record type - mostly IMAGE."""
     return {
         'record_type': value.get('a'),
         'dump': value.get('9'),

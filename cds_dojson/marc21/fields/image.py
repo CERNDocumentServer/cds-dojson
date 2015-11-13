@@ -38,10 +38,25 @@ def album_parent(self, key, value):
 @utils.for_each_value
 @utils.filter_values
 def image_url(self, key, value):
-    """Image URL. Contains the URL to the concrete image file
-    and information about the format
+    """Image URL.
+
+    Contains the URL to the concrete image file
+    and information about the format.
     """
-    indicator1_map = {"4": "http", "7": "method_in_subfield"}
+    indicator_map1 = {
+        "#": "No information provided",
+        "0": "Email",
+        "1": "FTP",
+        "2": "Remote login (Telnet)",
+        "3": "Dial-up",
+        "4": "HTTP",
+        "7": "Method specified in subfield $2"}
+    indicator_map2 = {
+        "#": "No information provided",
+        "0": "Resource",
+        "1": "Version of resource",
+        "2": "Related resource",
+        "8": "No display constant generated"}
     return {
         'size': value.get('s'),
         'path': value.get('d'),
@@ -51,6 +66,7 @@ def image_url(self, key, value):
         'public_note': value.get('z'),
         'subformat': value.get('x'),
         'photo_id': value.get('8'),
-        'access_method_subfield': value.get('2'),
-        'access_method': indicator1_map.get(key[3]),
+        'relationship': indicator_map2.get(key[4]),
+        'access_method':
+        value.get('2') if key[3] == '7' else indicator_map1.get(key[3]),
     }

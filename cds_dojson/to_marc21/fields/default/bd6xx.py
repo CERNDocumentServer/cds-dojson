@@ -19,18 +19,52 @@
 
 """CDS special/custom tags."""
 
-from __future__ import absolute_import, unicode_literals
-
 from dojson import utils
 
 from ...models.default import model as to_marc21
+
+
+@to_marc21.over('653', '^index_term_uncontrolled$', override=True)
+@utils.reverse_for_each_value
+@utils.filter_values
+def reverse_index_term_uncontrolled(self, key, value):
+    """Reverse - Index Term-Uncontrolled."""
+    indicator_map1 = {
+        "No information provided": "_",
+        "No level specified": "0",
+        "Primary": "1",
+        "Secondary": "2"}
+    indicator_map2 = {
+        "Chronological term": "4",
+        "Corporate name": "2",
+        "Genre/form term": "6",
+        "Geographic name": "5",
+        "Meeting name": "3",
+        "No information provided": "_",
+        "Personal name": "1",
+        "Topical term": "0"}
+    return {
+        'a': utils.reverse_force_list(
+            value.get('uncontrolled_term')
+        ),
+        '8': utils.reverse_force_list(
+            value.get('field_link_and_sequence_number')
+        ),
+        '6': value.get('linkage'),
+        '9': value.get('institute_of_the_uncontrolled_term'),
+        '$ind1': indicator_map1.get(value.get('level_of_index_term'), '_'),
+        '$ind2': indicator_map2.get(value.get('type_of_term_or_name'), '_'),
+    }
 
 
 @to_marc21.over('690', '^subject_indicator$')
 @utils.reverse_for_each_value
 def subject_indicator(self, key, value):
     """Subject Indicator."""
-    return {'a': value}
+    return {
+        'a': value,
+        '$ind1': 'C',
+    }
 
 
 @to_marc21.over('691', '^observation$')

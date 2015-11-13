@@ -24,6 +24,39 @@ from cds_dojson.marc21.models.default import model as marc21
 from dojson import utils
 
 
+@marc21.over('index_term_uncontrolled', '^653[10_2][_1032546]', override=True)
+@utils.for_each_value
+@utils.filter_values
+def index_term_uncontrolled(self, key, value):
+    """Index Term-Uncontrolled."""
+    indicator_map1 = {
+        "#": "No information provided",
+        "0": "No level specified",
+        "1": "Primary",
+        "2": "Secondary"}
+    indicator_map2 = {
+        "#": "No information provided",
+        "0": "Topical term",
+        "1": "Personal name",
+        "2": "Corporate name",
+        "3": "Meeting name",
+        "4": "Chronological term",
+        "5": "Geographic name",
+        "6": "Genre/form term"}
+    return {
+        'uncontrolled_term': utils.force_list(
+            value.get('a')
+        ),
+        'field_link_and_sequence_number': utils.force_list(
+            value.get('8')
+        ),
+        'linkage': value.get('6'),
+        'institute_of_the_uncontrolled_term': value.get('9'),
+        'level_of_index_term': indicator_map1.get(key[3]),
+        'type_of_term_or_name': indicator_map2.get(key[4]),
+    }
+
+
 @marc21.over('subject_indicator', '^69[07]C_')
 @utils.for_each_value
 def subject_indicator(self, key, value):

@@ -30,7 +30,7 @@ from dojson import utils
 def french_summary_note(self, key, value):
     """French summary note."""
     return {
-        'smuary': value.get('a'),
+        'sumary': value.get('a'),
         'expansion_of_summary_note': value.get('b')
     }
 

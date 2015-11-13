@@ -18,3 +18,7 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
 """To MARC 21 model conversion."""
+
+from ..overdo import OverdoBase
+
+to_marc21 = OverdoBase(entry_point_models='cds_dojson.to_marc21.models')

@@ -17,63 +17,8 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
-"""Marc21 init."""
+"""MARC21."""
 
-from __future__ import absolute_import
+from ..overdo import OverdoBase
 
-import pkg_resources
-import logging
-
-from invenio_utils.datastructures import SmartDict
-
-from ..query import Query
-from .models.default import model as marc21_default_model
-
-
-def convert_cdsmarcxml(source):
-    """Convert CDS to JSON."""
-    from dojson.contrib.marc21.utils import create_record, split_blob
-
-    for data in split_blob(source.read()):
-        record = create_record(data)
-        yield query_matcher(record).do(record)
-
-
-def query_matcher(record):
-    """Record query matcher.
-
-    :param record: python dictionary
-    :returns: a model instance
-    """
-    logger = logging.getLogger(__name__ + ".query_matcher")
-
-    _smart_dict_record = SmartDict(dict(record))
-    _matches = []
-    for entry_point in pkg_resources.iter_entry_points(
-            'cds_dojson.marc21.models'):
-        name = entry_point.name
-        model = entry_point.load()
-        query = Query(model.__query__)
-
-        if query.match(_smart_dict_record):
-            logger.info("Model `{0}` found matching the query {1}.".format(
-                name, model
-            ))
-            _matches.append([name, model])
-
-    try:
-        if len(_matches) > 1:
-            logger.error(
-                ("Found more than one matches `{0}`, now it'll fallback to {1}"
-                 " for record {2}.").format(
-                    _matches, _matches[0], _smart_dict_record
-                )
-            )
-        return _matches[0][1]
-    except IndexError:
-        logger.warning(
-            "Model *not* found, fallback to default {0} for record {1}".format(
-                marc21_default_model, _smart_dict_record
-            )
-        )
-        return marc21_default_model
+marc21 = OverdoBase(entry_point_models='cds_dojson.marc21.models')

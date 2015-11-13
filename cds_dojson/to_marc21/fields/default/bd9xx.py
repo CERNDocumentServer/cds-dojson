@@ -19,8 +19,6 @@
 
 """CDS special/custom tags."""
 
-from __future__ import absolute_import, unicode_literals
-
 from dojson import utils
 
 from ...models.default import model as to_marc21
@@ -48,7 +46,7 @@ def grey_book(self, key, value):
     }
 
 
-@to_marc21.over('9031', '^approval_status_history$')
+@to_marc21.over('903', '^approval_status_history$')
 @utils.reverse_for_each_value
 @utils.filter_values
 def approval_status_history(self, key, value):
@@ -61,6 +59,7 @@ def approval_status_history(self, key, value):
         'e': value.get('deadline'),
         'f': value.get('e-mail'),
         's': value.get('status'),
+        '$ind1': '1',
     }
 
 
@@ -106,7 +105,7 @@ def fsgo(self, key, value):
     }
 
 
-@to_marc21.over('citation', '^913__')
+@to_marc21.over('913', '^citation$')
 @utils.reverse_for_each_value
 @utils.filter_values
 def citation(self, key, value):
@@ -121,7 +120,7 @@ def citation(self, key, value):
     }
 
 
-@to_marc21.over('status_week', '^916__')
+@to_marc21.over('916', '^status_week$')
 @utils.reverse_for_each_value
 @utils.filter_values
 def status_week(self, key, value):
@@ -197,7 +196,7 @@ def aleph_linking_field(self, key, value):
         'a': value.get('link_type'),
         'b': value.get('sysno'),
         'l': value.get('library'),
-        'ln': value.get('down_record_link_note'),
+        'n': value.get('down_record_link_note'),
         'm': value.get('up_record_link_note'),
         'y': value.get('year_link'),
         'v': value.get('volume_link'),
@@ -210,7 +209,7 @@ def aleph_linking_field(self, key, value):
 
 # We are squashing this field, because it might contain duplicates
 # (even though it shouldn't) and we don't want to lose data
-@to_marc21.over('owner', '^963$')
+@to_marc21.over('963', '^owner$')
 @utils.filter_values
 def owner(self, key, value):
     """Owner."""
@@ -271,7 +270,7 @@ def additional_subject_added_entry_topical_term(self, key, value):
     }
 
 
-@to_marc21.over('999C5', '^references$')
+@to_marc21.over('999', '^references$')
 @utils.reverse_for_each_value
 @utils.filter_values
 def references(self, key, value):
@@ -291,15 +290,19 @@ def references(self, key, value):
         'u': value.get('uniform_resource_identifier'),
         'v': value.get('volume'),
         'y': value.get('year'),
+        '$ind1': 'C',
+        '$ind2': '5',
     }
 
 
-@to_marc21.over('999C6', '^refextract_references$')
+@to_marc21.over('999', '^refextract_references$')
 @utils.reverse_for_each_value
 def refexctract_references(self, key, value):
     """Refextract references."""
     return {
         'a': value.get('refextract_info'),
+        '$ind1': 'C',
+        '$ind2': '6',
     }
 
 

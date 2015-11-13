@@ -17,18 +17,18 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
-"""CDS MARC21 model."""
+"""Album model."""
 
-from dojson.contrib.marc21 import marc21
+from dojson.contrib.to_marc21.model import OverUndo
 
+from .default import model as cds_to_marc21
 from ...overdo import Overdo
 
 
-class CDSMarc21(Overdo):
-    """Translation Index for CDS specific MARC21."""
+class CDSToAlbum(Overdo, OverUndo):
+    """Translation Index for CDS Albums."""
 
-    __query__ = '690C_.a:CERN'
+    __query__ = 'record_type.record_type:ALBUM'
 
-
-model = CDSMarc21(bases=(marc21, ),
-                  entry_point_group='cds_dojson.marc21.default')
+model = CDSToAlbum(bases=(cds_to_marc21, ),
+                   entry_point_group='cds_dojson.to_marc21.album')

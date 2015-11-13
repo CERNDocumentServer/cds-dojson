@@ -196,7 +196,7 @@ def aleph_linking_field(self, key, value):
         'link_type': value.get('a'),
         'sysno': value.get('b'),
         'library': value.get('l'),
-        'down_record_link_note': value.get('ln'),
+        'down_record_link_note': value.get('n'),
         'up_record_link_note': value.get('m'),
         'year_link': value.get('y'),
         'volume_link': value.get('v'),
@@ -304,7 +304,7 @@ def refexctract_references(self, key, value):
     }
 
 
-@marc21.over('record_type', '^999..')
+@marc21.over('record_type', '^999__')
 @utils.for_each_value
 @utils.filter_values
 def record_type(self, key, value):

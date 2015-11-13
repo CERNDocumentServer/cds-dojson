@@ -17,18 +17,22 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
-"""CDS MARC21 model."""
+"""Utilities for converting MARC21."""
 
-from dojson.contrib.marc21 import marc21
-
-from ...overdo import Overdo
+from dojson.contrib.marc21.utils import create_record, split_blob
 
 
-class CDSMarc21(Overdo):
-    """Translation Index for CDS specific MARC21."""
+def load(source):
+    """Load MARC XML and return Python dict."""
+    for data in split_blob(source.read()):
+        record = create_record(data)
+        # if record.get('999__', {}).get('a', '') == 'ALBUM':
+        #     for rrecord in split_album(record):
+        #         yield rrecord
+        yield record
 
-    __query__ = '690C_.a:CERN'
 
-
-model = CDSMarc21(bases=(marc21, ),
-                  entry_point_group='cds_dojson.marc21.default')
+def split_album(record):
+    """Create one album and several photos from the current record."""
+    # TODO: Implement album splitter!
+    yield record

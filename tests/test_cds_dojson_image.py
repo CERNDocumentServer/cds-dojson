@@ -21,8 +21,13 @@
 
 from __future__ import absolute_import
 
-from cds_dojson.marc21 import query_matcher
+import json
+from click.testing import CliRunner
 
+from cds_dojson.marc21.models.image import model as marc21
+from cds_dojson.matcher import matcher
+from cds_dojson.to_marc21.models.image import model as to_marc21
+from dojson.contrib.marc21.utils import create_record
 
 CDS_IMAGE = """
 <record>
@@ -112,23 +117,50 @@ CDS_IMAGE = """
 """
 
 
-class TestCDSDoJSONImage(object):
+def test_image():
+    """Test image model from XML into JSONi."""
+    blob = create_record(CDS_IMAGE)
+    model = matcher(blob, 'cds_dojson.marc21.models')
 
-    """Test CDS Images."""
+    assert model == marc21
 
-    def test_image(self):
-        """Test image model from XML into JSONi."""
-        from dojson.contrib.marc21.utils import create_record
-        from cds_dojson.marc21.models.image import (
-            model as marc21
+    data = model.do(blob)
+    # Check the control number (doJSON)
+    assert data.get('control_number') == '1782445'
+
+    # Check the parent album (CDSImage)
+    assert data['album_parent'][0]['album_id'] == '2054964'
+
+    # Check the imprint (CDSMarc21)
+    assert data['imprint'][0]['place_of_publication'] == 'Geneva'
+
+    # Check that no fields are missing their model
+    assert model.missing(blob) == []
+
+
+def test_identity_check():
+    """Test image model from XML into JSON."""
+    blob = create_record(CDS_IMAGE)
+    data = marc21.do(blob)
+    back_blob = to_marc21.do(data)
+    assert blob == back_blob
+
+
+def test_cli_do_cds_marc21_from_xml():
+    """Test MARC21 loading from XML."""
+    from dojson import cli
+
+    runner = CliRunner()
+
+    with runner.isolated_filesystem():
+        with open('record.xml', 'wb') as f:
+            f.write(CDS_IMAGE)
+
+        result = runner.invoke(
+            cli.apply_rule,
+            ['-i', 'record.xml', '-l', 'cds_marcxml', 'cds_marc21']
         )
-
-        match = query_matcher(create_record(CDS_IMAGE))
-
-        assert isinstance(match, marc21.__class__)
-
-        blob = create_record(CDS_IMAGE)
-        data = marc21.do(blob)
+        data = json.loads(result.output)[0]
 
         # Check the control number (doJSON)
         assert data.get('control_number') == '1782445'
@@ -138,6 +170,3 @@ class TestCDSDoJSONImage(object):
 
         # Check the imprint (CDSMarc21)
         assert data['imprint'][0]['place_of_publication'] == 'Geneva'
-
-        # Check that no fields are missing their model
-        assert marc21.missing(blob) == []

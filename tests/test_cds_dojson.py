@@ -17,28 +17,24 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 
-"""Query parser."""
+"""General CDS DoJSON Tests."""
 
-import pypeg2
+from __future__ import absolute_import, print_function
 
-from invenio_query_parser.walkers.pypeg_to_ast import PypegConverter
-from invenio_query_parser.parser import Main as parser
-from invenio_query_parser.walkers.match_unit import MatchUnit
+import pytest
 
 
-class Query(object):
-    """Query object."""
+def test_version():
+    """Test version import."""
+    from cds_dojson import __version__
+    assert __version__
 
-    def __init__(self, query):
-        """Init."""
-        self._query = query
 
-    @property
-    def query(self):
-        """Parse query string using given grammar."""
-        tree = pypeg2.parse(self._query, parser, whitespace="")
-        return tree.accept(PypegConverter())
-
-    def match(self, record, user_info=None):
-        """Return True if record match the query."""
-        return self.query.accept(MatchUnit(record))
+def test_wrong_model():
+    """Test cds_marc21 should not be used for `over`."""
+    from cds_dojson.marc21 import marc21
+    with pytest.raises(NotImplementedError):
+        @marc21.over('test', '...')
+        def test(self, key, value):
+            """Testing function."""
+            return {'a': 'b'}

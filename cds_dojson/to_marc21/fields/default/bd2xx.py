@@ -19,8 +19,6 @@
 
 """CDS special/custom tags."""
 
-from __future__ import absolute_import, unicode_literals
-
 from dojson import utils
 
 from ...models.default import model as to_marc21

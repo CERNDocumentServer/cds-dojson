@@ -19,8 +19,6 @@
 
 """CDS special/custom tags."""
 
-from __future__ import absolute_import, unicode_literals
-
 from dojson import utils
 
 from ...models.default import model as to_marc21
@@ -32,7 +30,7 @@ from ...models.default import model as to_marc21
 def french_summary_note(self, key, value):
     """French summary note."""
     return {
-        'a': value.get('smuary'),
+        'a': value.get('sumary'),
         'b': value.get('expansion_of_summary_note')
     }
 

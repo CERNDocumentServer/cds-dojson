@@ -17,18 +17,18 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
-"""CDS MARC21 model."""
+"""Video model."""
 
-from dojson.contrib.marc21 import marc21
+from dojson.contrib.to_marc21.model import OverUndo
 
+from .default import model as cds_to_marc21
 from ...overdo import Overdo
 
 
-class CDSMarc21(Overdo):
-    """Translation Index for CDS specific MARC21."""
+class CDSToVideo(Overdo, OverUndo):
+    """Translation Index for CDS Videos."""
 
-    __query__ = '690C_.a:CERN'
+    __query__ = 'collection.primary:PUBLVIDEOMOVIE'
 
-
-model = CDSMarc21(bases=(marc21, ),
-                  entry_point_group='cds_dojson.marc21.default')
+model = CDSToVideo(bases=(cds_to_marc21, ),
+                   entry_point_group='cds_dojson.to_marc21.video')

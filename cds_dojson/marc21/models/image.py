@@ -19,11 +19,11 @@
 
 """Image model."""
 
-from .default import CDSMarc21, model as cds_marc21
+from ...overdo import Overdo
+from .default import model as cds_marc21
 
 
-class CDSImage(CDSMarc21):
-
+class CDSImage(Overdo):
     """Translation Index for CDS Images."""
 
     __query__ = '999__.a:IMAGE'

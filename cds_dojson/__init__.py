@@ -18,3 +18,9 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
 """The CDS DoJson."""
+
+from .version import __version__
+
+__all__ = (
+    '__version__',
+)

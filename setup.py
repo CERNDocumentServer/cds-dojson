@@ -52,11 +52,10 @@ class PyTest(TestCommand):
 
 
 # Get the version string.  Cannot be done with import!
-with open(os.path.join('cds_dojson', 'version.py'), 'rt') as f:
-    version = re.search(
-        '__version__\s*=\s*"(?P<version>.*)"\n',
-        f.read()
-    ).group('version')
+g = {}
+with open(os.path.join('cds_dojson', 'version.py'), 'rt') as fp:
+    exec(fp.read(), g)
+    version = g['__version__']
 
 tests_require = [
     'pytest-cache>=1.0',
@@ -83,7 +82,6 @@ setup(
     install_requires=[
         'dojson>=0.1.1',
         'invenio-query-parser>=0.3.0',
-        'invenio-utils>=0.2.0',
         'pyPEG2>=2.15.1',
     ],
     extras_require={
@@ -107,11 +105,17 @@ setup(
     tests_require=tests_require,
     cmdclass={'test': PyTest},
     entry_points={
+        'cds_dojson.marc21.models': [
+            'album = cds_dojson.marc21.models.album:model',
+            'default = cds_dojson.marc21.models.default:model',
+            'image = cds_dojson.marc21.models.image:model',
+            'video = cds_dojson.marc21.models.video:model',
+        ],
         'cds_dojson.marc21.default': [
             'bd01x09x = cds_dojson.marc21.fields.default.bd01x09x',
             'bd2xx = cds_dojson.marc21.fields.default.bd2xx',
             'bd5xx = cds_dojson.marc21.fields.default.bd5xx',
-            'bd69x = cds_dojson.marc21.fields.default.bd69x',
+            'bd6xx = cds_dojson.marc21.fields.default.bd6xx',
             'bd7xx = cds_dojson.marc21.fields.default.bd7xx',
             'bd8xx = cds_dojson.marc21.fields.default.bd8xx',
             'bd9xx = cds_dojson.marc21.fields.default.bd9xx',
@@ -122,17 +126,40 @@ setup(
         'cds_dojson.marc21.image': [
             'image = cds_dojson.marc21.fields.image'
         ],
+        'cds_dojson.marc21.video': [
+            'video = cds_dojson.marc21.fields.video'
+        ],
+        'cds_dojson.to_marc21.models': [
+            'album = cds_dojson.to_marc21.models.album:model',
+            'default = cds_dojson.to_marc21.models.default:model',
+            'image = cds_dojson.to_marc21.models.image:model',
+            'video = cds_dojson.to_marc21.models.video:model',
+        ],
+        'cds_dojson.to_marc21.default': [
+            'bd01x09x = cds_dojson.to_marc21.fields.default.bd01x09x',
+            'bd2xx = cds_dojson.to_marc21.fields.default.bd2xx',
+            'bd5xx = cds_dojson.to_marc21.fields.default.bd5xx',
+            'bd6xx = cds_dojson.to_marc21.fields.default.bd6xx',
+            'bd7xx = cds_dojson.to_marc21.fields.default.bd7xx',
+            'bd8xx = cds_dojson.to_marc21.fields.default.bd8xx',
+            'bd9xx = cds_dojson.to_marc21.fields.default.bd9xx',
+        ],
+        'cds_dojson.to_marc21.album': [
+            'album = cds_dojson.to_marc21.fields.album'
+        ],
+        'cds_dojson.to_marc21.image': [
+            'image = cds_dojson.to_marc21.fields.image'
+        ],
+        'cds_dojson.to_marc21.video': [
+            'video = cds_dojson.to_marc21.fields.video'
+        ],
+        # DoJSON entry points
         'dojson.cli.rule': [
+            'cds_marc21 = cds_dojson.marc21:marc21',
+            'cds_to_marc21 = cds_dojson.to_marc21:to_marc21'
         ],
         'dojson.cli.load': [
-        ],
-        'dojson.cli.dump': [
-        ],
-        'cds_dojson.marc21.models': [
-            'album = cds_dojson.marc21.models.album:model',
-            'default = cds_dojson.marc21.models.default:model',
-            'image = cds_dojson.marc21.models.image:model',
-            'video = cds_dojson.marc21.models.video:model',
+            'cds_marcxml = cds_dojson.marc21.utils:load',
         ],
     }
 )

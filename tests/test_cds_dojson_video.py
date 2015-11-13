@@ -21,6 +21,13 @@
 
 from __future__ import absolute_import
 
+import json
+from click.testing import CliRunner
+
+from cds_dojson.marc21.models.video import model as marc21
+from cds_dojson.matcher import matcher
+from cds_dojson.to_marc21.models.video import model as to_marc21
+from dojson.contrib.marc21.utils import create_record
 
 CDS_VIDEO_PROJECT = """
 <record>
@@ -224,57 +231,112 @@ CDS_VIDEO_CLIP = """
 """
 
 
-class TestCDSDoJSONVideos(object):
+def test_video_clip():
+    """Test video clip loading from XML."""
+    blob = create_record(CDS_VIDEO_CLIP)
+    model = matcher(blob, 'cds_dojson.marc21.models')
 
-    """Test CDS."""
+    assert model == marc21
 
-    def test_video_clip(self):
-        """Test video clip loading from XML."""
-        from dojson.contrib.marc21.utils import create_record
-        from cds_dojson.marc21.models.video import (
-            model as marc21
+    data = model.do(blob)
+
+    assert len(data.get('creation_production_credits_note')) == 3
+    assert data[
+        'host_item_entry'][0]['report_number'] == ["CERN-MOVIE-2015-038"]
+    expected_physical_description = [
+        {
+            "accompanying_material": "16:9",
+            "other_physical_details": "1920x1080 16/9, 25.00",
+            "dimensions": ["25"],
+            "extent": ["00:09:05.280"],
+            "maximum_resolution": "1920x1080",
+        }
+    ]
+    assert data.get(
+        'physical_description') == expected_physical_description
+
+    # Check that no fields are missing their model
+    assert model.missing(blob) == []
+
+
+def test_cli_do_cds_marc21_from_xml_video_clip():
+    """Test MARC21 loading from XML."""
+    from dojson import cli
+
+    runner = CliRunner()
+
+    with runner.isolated_filesystem():
+        with open('record.xml', 'wb') as f:
+            f.write(CDS_VIDEO_CLIP)
+
+        result = runner.invoke(
+            cli.apply_rule,
+            ['-i', 'record.xml', '-l', 'cds_marcxml', 'cds_marc21']
         )
+        data = json.loads(result.output)[0]
 
-        blob = create_record(CDS_VIDEO_CLIP)
-        data = marc21.do(blob)
-
-        # Check if credits are correct
         assert len(data.get('creation_production_credits_note')) == 3
-        # Check if the host entry is correct
         assert data[
             'host_item_entry'][0]['report_number'] == ["CERN-MOVIE-2015-038"]
-
-        # Check physical description
         expected_physical_description = [
             {
                 "accompanying_material": "16:9",
                 "other_physical_details": "1920x1080 16/9, 25.00",
                 "dimensions": ["25"],
-                "extent": ["00:09:05.280"]
+                "extent": ["00:09:05.280"],
+                "maximum_resolution": "1920x1080",
             }
         ]
         assert data.get(
             'physical_description') == expected_physical_description
 
-        # Check that no fields are missing their model
-        assert marc21.missing(blob) == []
 
-    def test_video_project(self):
-        """Test video project from XML."""
-        from dojson.contrib.marc21.utils import create_record
-        from cds_dojson.marc21.models.default import (
-            model as marc21
+def test_video_project():
+    """Test video project from XML."""
+    blob = create_record(CDS_VIDEO_PROJECT)
+    model = matcher(blob, 'cds_dojson.marc21.models')
+
+    assert model == marc21
+
+    data = model.do(blob)
+
+    assert data['constituent_unit_entry'][0][
+        'report_number'] == ['CERN-MOVIE-2015-038-001']
+    assert data.get('control_number') == '2053119'
+
+    # Check that no fields are missing their model
+    assert model.missing(blob) == []
+
+
+def test_cli_do_cds_marc21_from_xml_video_project():
+    """Test MARC21 loading from XML."""
+    from dojson import cli
+
+    runner = CliRunner()
+
+    with runner.isolated_filesystem():
+        with open('record.xml', 'wb') as f:
+            f.write(CDS_VIDEO_PROJECT)
+
+        result = runner.invoke(
+            cli.apply_rule,
+            ['-i', 'record.xml', '-l', 'cds_marcxml', 'cds_marc21']
         )
+        data = json.loads(result.output)[0]
 
-        blob = create_record(CDS_VIDEO_PROJECT)
-        data = marc21.do(blob)
-
-        # Check if the video file is present
         assert data['constituent_unit_entry'][0][
             'report_number'] == ['CERN-MOVIE-2015-038-001']
-
-        # Check the control number
         assert data.get('control_number') == '2053119'
 
-        # Check that no fields are missing their model
-        assert marc21.missing(blob) == []
+
+def test_identity_check():
+    """Test image model from XML into JSON."""
+    blob = create_record(CDS_VIDEO_PROJECT)
+    data = marc21.do(blob)
+    back_blob = to_marc21.do(data)
+    assert blob == back_blob
+
+    blob = create_record(CDS_VIDEO_CLIP)
+    data = marc21.do(blob)
+    back_blob = to_marc21.do(data)
+    assert blob == back_blob

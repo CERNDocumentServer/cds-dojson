@@ -19,8 +19,6 @@
 
 """CDS special/custom tags."""
 
-from __future__ import absolute_import, unicode_literals
-
 from dojson import utils
 
 from ...models.default import model as to_marc21
@@ -99,7 +97,7 @@ def added_entry_corporate_name(self, key, value):
     }
 
 
-@to_marc21.over('721__', '^translator$')
+@to_marc21.over('721', '^translator$')
 @utils.reverse_for_each_value
 @utils.filter_values
 def translator(self, key, value):

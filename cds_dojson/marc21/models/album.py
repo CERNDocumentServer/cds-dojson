@@ -19,11 +19,11 @@
 
 """Album model."""
 
-from .default import CDSMarc21, model as cds_marc21
+from ...overdo import Overdo
+from .default import model as cds_marc21
 
 
-class CDSAlbum(CDSMarc21):
-
+class CDSAlbum(Overdo):
     """Translation Index for CDS Albums."""
 
     __query__ = '999__.a:ALBUM'

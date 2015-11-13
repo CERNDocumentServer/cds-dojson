@@ -20,6 +20,7 @@
 """The CDS DoJson Utils."""
 
 import functools
+import six
 from collections import defaultdict
 
 
@@ -39,10 +40,10 @@ def for_each_squash(f):
         merge_dict = defaultdict(list)
 
         for unmerged_dict in unmerged_list:
-            for key, element in iter(unmerged_dict.items()):
+            for key, element in six.iteritems(unmerged_dict):
                 merge_dict[key].append(element)
 
         merge_dict = {key: (value if len(value) > 1 else value[0])
-                      for key, value in iter(merge_dict.items())}
+                      for key, value in six.iteritems(merge_dict)}
         return merge_dict
     return wrapper

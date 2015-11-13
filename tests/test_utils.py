@@ -19,29 +19,26 @@
 
 from __future__ import absolute_import
 
+from cds_dojson.utils import for_each_squash
+from dojson.utils import filter_values
 
-class TestCDSDoJSONUtils(object):
 
-    """Test DoJSON utils"""
+def test_for_each_squash():
+    """Check if for_each_squash works correctly."""
 
-    def test_for_each_squash(self):
-        """Check if for_each_squash works correctly"""
-        from cds_dojson.utils import for_each_squash
-        from dojson.utils import filter_values
+    @for_each_squash
+    @filter_values
+    def field(self, key, value):
+        return {
+            'a': value.get('1'),
+            'b': value.get('2')
+        }
 
-        @for_each_squash
-        @filter_values
-        def field(self, key, value):
-            return {
-                'a': value.get('1'),
-                'b': value.get('2')
-            }
+    squashed = field(None, None, {'1': 'foo', '2': 'bar'})
+    assert squashed == {'a': 'foo', 'b': 'bar'}
 
-        squashed = field(None, None, {'1': 'foo', '2': 'bar'})
-        assert squashed == {'a': 'foo', 'b': 'bar'}
+    squashed = field(None, None, [{'1': 'foo'}, {'2': 'bar'}])
+    assert squashed == {'a': 'foo', 'b': 'bar'}
 
-        squashed = field(None, None, [{'1': 'foo'}, {'2': 'bar'}])
-        assert squashed == {'a': 'foo', 'b': 'bar'}
-
-        squashed = field(None, None, [{'1': 'foo', '2': 'bar2'}, {'2': 'bar'}])
-        assert squashed == {'a': 'foo', 'b': ['bar2', 'bar']}
+    squashed = field(None, None, [{'1': 'foo', '2': 'bar2'}, {'2': 'bar'}])
+    assert squashed == {'a': 'foo', 'b': ['bar2', 'bar']}

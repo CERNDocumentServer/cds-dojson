@@ -24,7 +24,7 @@ from cds_dojson.marc21.models.default import model as marc21
 from dojson import utils
 
 
-@marc21.over('added_entry_corporate_name', '^710[10_2][_2]', override=True)
+@marc21.over('added_entry_corporate_name', '^710[10_2][_2]$', override=True)
 @utils.for_each_value
 @utils.filter_values
 def added_entry_corporate_name(self, key, value):
@@ -89,7 +89,7 @@ def added_entry_corporate_name(self, key, value):
     }
 
 
-@marc21.over('translator', '^721__')
+@marc21.over('translator', '^721__$')
 @utils.for_each_value
 @utils.filter_values
 def translator(self, key, value):

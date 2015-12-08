@@ -19,13 +19,13 @@
 
 """Video model."""
 
-from dojson.contrib.to_marc21.model import OverUndo
+from dojson.contrib.to_marc21.model import Underdo
 
 from .default import model as cds_to_marc21
 from ...overdo import Overdo
 
 
-class CDSToVideo(Overdo, OverUndo):
+class CDSToVideo(Overdo, Underdo):
     """Translation Index for CDS Videos."""
 
     __query__ = 'collection.primary:PUBLVIDEOMOVIE'

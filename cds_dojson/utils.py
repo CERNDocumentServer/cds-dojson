@@ -20,8 +20,9 @@
 """The CDS DoJson Utils."""
 
 import functools
-import six
 from collections import defaultdict
+
+import six
 
 
 def for_each_squash(f):

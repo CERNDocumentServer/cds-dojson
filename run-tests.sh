@@ -7,6 +7,9 @@
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
 
-pep257 --match-dir='cds_dojson' cds_dojson && \
+pydocstyle --match-dir='cds_dojson' cds_dojson && \
+# isort -rc -c -df -o dojson **/*.py && \
+check-manifest --ignore ".travis-*" && \
 sphinx-build -qnNW docs docs/_build/html && \
-python setup.py test
+python setup.py test && \
+sphinx-build -qnNW -b doctest docs docs/_build/doctest

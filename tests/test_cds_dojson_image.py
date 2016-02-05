@@ -22,12 +22,14 @@
 from __future__ import absolute_import
 
 import json
+
 from click.testing import CliRunner
+from dojson.contrib.marc21.utils import create_record
 
 from cds_dojson.marc21.models.image import model as marc21
 from cds_dojson.matcher import matcher
 from cds_dojson.to_marc21.models.image import model as to_marc21
-from dojson.contrib.marc21.utils import create_record
+
 
 CDS_IMAGE = """
 <record>
@@ -157,8 +159,15 @@ def test_cli_do_cds_marc21_from_xml():
             f.write(CDS_IMAGE)
 
         result = runner.invoke(
-            cli.apply_rule,
-            ['-i', 'record.xml', '-l', 'cds_marcxml', 'cds_marc21']
+            cli.cli,
+            ['-i', 'record.xml', '-l', 'cds_marcxml', 'missing', 'cds_marc21']
+        )
+        assert '' == result.output
+        assert 0 == result.exit_code
+
+        result = runner.invoke(
+            cli.cli,
+            ['-i', 'record.xml', '-l', 'cds_marcxml', 'do', 'cds_marc21']
         )
         data = json.loads(result.output)[0]
 

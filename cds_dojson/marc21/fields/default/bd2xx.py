@@ -19,10 +19,10 @@
 
 """CDS special/custom tags."""
 
+from dojson import utils
+
 from cds_dojson import utils as cds_utils
 from cds_dojson.marc21.models.default import model as marc21
-
-from dojson import utils
 
 
 @marc21.over('imprint', '^269__')

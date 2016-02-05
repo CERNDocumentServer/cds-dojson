@@ -19,12 +19,12 @@
 
 """CDS Image MARC 21 field definitions."""
 
-from cds_dojson.marc21.models.image import model as marc21
-
 from dojson import utils
 
+from cds_dojson.marc21.models.image import model as marc21
 
-@marc21.over('album_parent', '^774[10_][8_]', override=True)
+
+@marc21.over('album_parent', '^774[_01][_8]', override=True)
 @utils.for_each_value
 def album_parent(self, key, value):
     """Album ID which contains this photo"""
@@ -34,7 +34,7 @@ def album_parent(self, key, value):
     }
 
 
-@marc21.over('image_url', '^856.[10_28]', override=True)
+@marc21.over('image_url', '^856[_012347][_0128]', override=True)
 @utils.for_each_value
 @utils.filter_values
 def image_url(self, key, value):

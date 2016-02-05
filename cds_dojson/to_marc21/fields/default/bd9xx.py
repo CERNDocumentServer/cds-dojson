@@ -33,34 +33,29 @@ def affiliation_at_conversion(self, key, value):
     }
 
 
-@to_marc21.over('903', '^grey_book$')
-@utils.reverse_for_each_value
-@utils.filter_values
-def grey_book(self, key, value):
-    """Grey book."""
-    return {
-        'a': value.get('approval'),
-        'b': value.get('beam'),
-        'd': value.get('status_date'),
-        's': value.get('status'),
-    }
-
-
-@to_marc21.over('903', '^approval_status_history$')
+@to_marc21.over('903', '^approval_status_history$|^grey_book$')
 @utils.reverse_for_each_value
 @utils.filter_values
 def approval_status_history(self, key, value):
     """Approval status history."""
-    return {
-        'a': value.get('description'),
-        'b': value.get('report_number'),
-        'c': value.get('category'),
-        'd': value.get('date'),
-        'e': value.get('deadline'),
-        'f': value.get('e-mail'),
-        's': value.get('status'),
-        '$ind1': '1',
-    }
+    if any(k in value for k in ('approval', 'beam', 'status_week')):
+        return {
+            'a': value.get('approval'),
+            'b': value.get('beam'),
+            'd': value.get('status_date'),
+            's': value.get('status'),
+        }
+    else:
+        return {
+            'a': value.get('description'),
+            'b': value.get('report_number'),
+            'c': value.get('category'),
+            'd': value.get('date'),
+            'e': value.get('deadline'),
+            'f': value.get('e-mail'),
+            's': value.get('status'),
+            '$ind1': '1',
+        }
 
 
 @to_marc21.over('905', '^spokesman$')
@@ -270,48 +265,38 @@ def additional_subject_added_entry_topical_term(self, key, value):
     }
 
 
-@to_marc21.over('999', '^references$')
+@to_marc21.over('999', '^references$|^refextract_references$|^record_type$')
 @utils.reverse_for_each_value
 @utils.filter_values
 def references(self, key, value):
     """References."""
-    return {
-        'a': value.get('doi'),
-        'h': value.get('authors'),
-        'm': utils.reverse_force_list(
-            value.get('miscellaneous')
-        ),
-        'n': value.get('issue_number'),
-        'o': value.get('order_number'),
-        'p': value.get('page'),
-        'r': value.get('report_number'),
-        's': value.get('journal_publication_note'),
-        't': value.get('journal_title_abbreviation'),
-        'u': value.get('uniform_resource_identifier'),
-        'v': value.get('volume'),
-        'y': value.get('year'),
-        '$ind1': 'C',
-        '$ind2': '5',
-    }
-
-
-@to_marc21.over('999', '^refextract_references$')
-@utils.reverse_for_each_value
-def refexctract_references(self, key, value):
-    """Refextract references."""
-    return {
-        'a': value.get('refextract_info'),
-        '$ind1': 'C',
-        '$ind2': '6',
-    }
-
-
-@to_marc21.over('999', '^record_type$')
-@utils.reverse_for_each_value
-@utils.filter_values
-def record_type(self, key, value):
-    """Record type - mostly IMAGE."""
-    return {
-        'a': value.get('record_type'),
-        '9': value.get('dump'),
-    }
+    if 'refextract_info' in value:
+        return {
+            'a': value.get('refextract_info'),
+            '$ind1': 'C',
+            '$ind2': '6',
+        }
+    elif 'record_type' in value:
+        return {
+            'a': value.get('record_type'),
+            '9': value.get('dump'),
+        }
+    else:
+        return {
+            'a': value.get('doi'),
+            'h': value.get('authors'),
+            'm': utils.reverse_force_list(
+                value.get('miscellaneous')
+            ),
+            'n': value.get('issue_number'),
+            'o': value.get('order_number'),
+            'p': value.get('page'),
+            'r': value.get('report_number'),
+            's': value.get('journal_publication_note'),
+            't': value.get('journal_title_abbreviation'),
+            'u': value.get('uniform_resource_identifier'),
+            'v': value.get('volume'),
+            'y': value.get('year'),
+            '$ind1': 'C',
+            '$ind2': '5',
+        }

@@ -19,9 +19,9 @@
 
 """CDS special/custom tags."""
 
-from cds_dojson.to_marc21.models.video import model as to_marc21
-
 from dojson import utils
+
+from cds_dojson.to_marc21.models.video import model as to_marc21
 
 
 @to_marc21.over('300', '^physical_description$', override=True)

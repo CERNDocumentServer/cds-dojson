@@ -19,9 +19,9 @@
 
 """CDS Album MARC 21 field definitions."""
 
-from cds_dojson.to_marc21.models.album import model as to_marc21
-
 from dojson import utils
+
+from cds_dojson.to_marc21.models.album import model as to_marc21
 
 
 @to_marc21.over('774', 'images', override=True)

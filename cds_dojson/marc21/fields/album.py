@@ -19,12 +19,12 @@
 
 """CDS Album MARC 21 field definitions."""
 
-from cds_dojson.marc21.models.album import model as marc21
-
 from dojson import utils
 
+from cds_dojson.marc21.models.album import model as marc21
 
-@marc21.over('images', '^774[10_][8_]', override=True)
+
+@marc21.over('images', '^774[_01][_8]', override=True)
 @utils.for_each_value
 @utils.filter_values
 def images(self, key, value):

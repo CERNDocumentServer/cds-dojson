@@ -21,3 +21,8 @@ recursive-include docs Makefile
 recursive-include dojson *.py
 recursive-include dojson *.json
 recursive-include tests *.py
+
+# added by check_manifest.py
+include *.txt
+recursive-include cds_dojson *.py
+recursive-include tests *.xml

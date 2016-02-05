@@ -37,9 +37,13 @@ class OverdoBase(DoJSONOverdo):
         """Not to be used in this class."""
         raise NotImplementedError()
 
-    def do(self, blob):
+    def do(self, blob, **kwargs):
         """Translate blob values and instantiate new model instance."""
-        return matcher(blob, self.entry_point_models).do(blob)
+        return matcher(blob, self.entry_point_models).do(blob, **kwargs)
+
+    def missing(self, blob, **kwargs):
+        """Translate blob values and instantiate new model instance."""
+        return matcher(blob, self.entry_point_models).missing(blob, **kwargs)
 
 
 class Overdo(DoJSONOverdo):

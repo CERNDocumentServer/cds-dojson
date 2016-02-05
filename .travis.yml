@@ -1,36 +1,40 @@
-# -*- coding: utf-8 -*-
-#
-# This file is part of DoJSON
-# Copyright (C) 2015 CERN.
-#
-# DoJSON is free software; you can redistribute it and/or modify
-# it under the terms of the Revised BSD License; see LICENSE file for
-# more details.
-
-sudo: false
-
-language: python
-
-python:
-#  - "2.6"
-  - "2.7"
-# FIXME esmre is not Python 3 compatible
-#  - "3.3"
-#  - "3.4"
-
-install:
-  - pip install --upgrade pip
-  - pip install coveralls pep257
-  - pip install pytest pytest-pep8 pytest-cov pytest-cache
-  - pip install -e .[docs,tests]
-
-script:
-  - pep257 --match-dir='cds_dojson' cds_dojson
-  - "sphinx-build -qnNW docs docs/_build/html"
-  - python setup.py test
-
-after_success:
-  - coveralls
-
 notifications:
   email: false
+sudo: false
+language: python
+cache:
+- pip
+env:
+  matrix:
+  - REQUIREMENTS=lowest
+  - REQUIREMENTS=release
+  - REQUIREMENTS=devel
+python:
+- '2.7'
+- '3.3'
+- '3.4'
+- '3.5'
+before_install:
+- travis_retry pip install --upgrade pip setuptools py
+- travis_retry pip install twine wheel coveralls requirements-builder
+- requirements-builder --level=min setup.py > .travis-lowest-requirements.txt
+- requirements-builder --level=pypi setup.py > .travis-release-requirements.txt
+- requirements-builder --level=dev --req requirements-devel.txt setup.py > .travis-devel-requirements.txt
+install:
+- travis_retry pip install -r .travis-${REQUIREMENTS}-requirements.txt
+- travis_retry pip install -e .[all]
+script:
+- "./run-tests.sh"
+after_success:
+- coveralls
+deploy:
+  provider: pypi
+  user: egabancho
+  password:
+    secure: Tkv2P80GTka3hpl/R0cLiJpnaZ1k3rhM5p6BPMzFKFqcfuWEDsqIMJ/+QW0cQ8hgSlfJyFgE8g5JMWz2n6P8svhTfVzWhLXWwYwbUEf0ji9jZXiFL2TJB7gSoZ0L6vIDRGOB1Lss5MwV1PO0KOlMVGZJQgITYu0iICKbbgVQR9OneLwNqTL+uaSw3OMFvJWhTGt8GhIRuw2BPG/6m3WklqVo7sr6g9D64GZqqukrblFuVzvsr7+/BmI14auzKh2hhNamGbWY261VxBFvta2dUJhwpckBLx7cY4a4Zw2MakdjcKWrp3hPDQ13D53nzM5XPjRw9qU37zfq+wWUgMilSU8eUHkmkXZRs8a2C12BAxQF0tpvDp3I4dJvBYvUUEDSvCJSAfejGRX5Sd4zH6512Xlhg0JJcfd+bIt9G4bZBXqzl8sHUsOTv9okItPQJ4E5gAMyiP5BpaIwNfO//2BnQ5mCeIpHvJnzmNod5j05ElbGNdv95MJ8NXmYUFVHDfIipx9mWx0rG9BoTEBopR9PS3GmztfSsR5xeo52Wbyz1wad2Lt9yeq3K2F58jlCaMbd2MVcPr2bpsxqL2JFl4kDi5VunOWebDQGJt48rwoCxHlgzUa3ByGY+UWYNAuNqLtC3k01kM803yUmzNZITzoF4iozxaxCo88V3i62u2IhqBw=
+  on:
+    tags: true
+    distributions: compile_catalog sdist bdist_wheel`
+    repo: CERNDocumentServer/cds-dojson
+    python: '2.7'
+    condition: "$REQUIREMENTS = release"

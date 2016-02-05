@@ -15,7 +15,6 @@ import os
 import re
 import sys
 
-
 _html_theme = "sphinx_rtd_theme"
 _html_theme_path = []
 try:
@@ -42,6 +41,7 @@ except ImportError:
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
+    'sphinx.ext.doctest',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -57,8 +57,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'DoJSON'
-copyright = u'2014, Invenio collaboration'
+project = u'CDS-DoJSON'
+copyright = u'2014, CERN Document Server'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -197,7 +197,7 @@ html_theme_path = _html_theme_path
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DoJSONdoc'
+htmlhelp_basename = 'CDSDoJSONdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -217,8 +217,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'DoJSON.tex', u'DoJSON Documentation',
-     u'Invenio collaboration', 'manual'),
+    ('index', 'CDS-DoJSON.tex', u'CDS DoJSON Documentation',
+     u'CERN Document Server', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -247,8 +247,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'invenioqueryparser', u'DoJSON Documentation',
-     [u'Invenio collaboration'], 1)
+    ('index', 'cdsdojson', u'CDS DoJSON Documentation',
+     [u'CERN Document Server'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -261,8 +261,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'DoJSON', u'DoJSON Documentation',
-     u'Invenio collaboration', 'DoJSON', 'One line description of project.',
+    ('index', 'CDS-DoJSON', u'CDS DoJSON Documentation',
+     u'CERN Document Server', 'CDS-DoJSON', 'One line description of project.',
      'Miscellaneous'),
 ]
 

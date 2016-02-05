@@ -19,9 +19,9 @@
 
 """CDS special/custom tags."""
 
-from cds_dojson.marc21.models.default import model as marc21
-
 from dojson import utils
+
+from cds_dojson.marc21.models.default import model as marc21
 
 
 @marc21.over('added_entry_corporate_name', '^710[10_2][_2]$', override=True)

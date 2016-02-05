@@ -19,10 +19,10 @@
 
 """CDS special/custom tags."""
 
+from dojson import utils
+
 from cds_dojson import utils as cds_utils
 from cds_dojson.marc21.models.default import model as marc21
-
-from dojson import utils
 
 
 @marc21.over('affiliation_at_conversion', '^901__')
@@ -34,7 +34,7 @@ def affiliation_at_conversion(self, key, value):
     }
 
 
-@marc21.over('grey_book', '^903__')
+@marc21.over('grey_book', '^903__$')
 @utils.for_each_value
 @utils.filter_values
 def grey_book(self, key, value):
@@ -47,7 +47,7 @@ def grey_book(self, key, value):
     }
 
 
-@marc21.over('approval_status_history', '^9031_')
+@marc21.over('approval_status_history', '^9031_$')
 @utils.for_each_value
 @utils.filter_values
 def approval_status_history(self, key, value):

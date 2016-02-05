@@ -30,3 +30,18 @@ class CDSVideo(Overdo):
 
 model = CDSVideo(bases=(cds_marc21, ),
                  entry_point_group='cds_dojson.marc21.video')
+
+
+@model.over('__order__', '__order__', override=True)
+def order(self, key, value):
+    """Preserve order of datafields."""
+    order = []
+    for field in value:
+        name = model.index.query(field)
+        if name:
+            name = name[0]
+        else:
+            name = field
+        order.append(name)
+
+    return order

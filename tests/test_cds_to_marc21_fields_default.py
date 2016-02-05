@@ -22,11 +22,13 @@
 from __future__ import absolute_import
 
 import json
-from click.testing import CliRunner
 
+from click.testing import CliRunner
 from dojson.contrib.marc21.utils import create_record
+
 from cds_dojson.marc21.models.default import model as marc21
 from cds_dojson.to_marc21.models.default import model as to_marc21
+
 
 RECORD_SIMPLE = """
 <record>

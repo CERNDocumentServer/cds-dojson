@@ -19,8 +19,9 @@
 
 from __future__ import absolute_import
 
-from cds_dojson.utils import for_each_squash
 from dojson.utils import filter_values
+
+from cds_dojson.utils import for_each_squash
 
 
 def test_for_each_squash():

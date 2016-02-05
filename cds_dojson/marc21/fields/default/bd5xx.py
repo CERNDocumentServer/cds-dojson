@@ -19,9 +19,9 @@
 
 """CDS special/custom tags."""
 
-from cds_dojson.marc21.models.default import model as marc21
-
 from dojson import utils
+
+from cds_dojson.marc21.models.default import model as marc21
 
 
 @marc21.over('french_summary_note', '^590__')

@@ -1,36 +1,57 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of DoJSON
+# This file is part of CDS-DoJSON
 # Copyright (C) 2015 CERN.
 #
-# DoJSON is free software; you can redistribute it and/or modify
+# CDS-DoJSON is free software; you can redistribute it and/or modify
 # it under the terms of the Revised BSD License; see LICENSE file for
 # more details.
+
+notifications:
+  email: false
 
 sudo: false
 
 language: python
 
+cache:
+- pip
+
+env:
+- REQUIREMENTS=lowest
+- REQUIREMENTS=release
+- REQUIREMENTS=devel
+
 python:
-#  - "2.6"
-  - "2.7"
-# FIXME esmre is not Python 3 compatible
-#  - "3.3"
-#  - "3.4"
+- '2.7'
+- '3.3'
+- '3.4'
+- '3.5'
+
+before_install:
+- travis_retry pip install --upgrade pip setuptools py
+- travis_retry pip install twine wheel coveralls requirements-builder
+- requirements-builder --level=min setup.py > .travis-lowest-requirements.txt
+- requirements-builder --level=pypi setup.py > .travis-release-requirements.txt
+- requirements-builder --level=dev --req requirements-devel.txt setup.py > .travis-devel-requirements.txt
 
 install:
-  - pip install --upgrade pip
-  - pip install coveralls pep257
-  - pip install pytest pytest-pep8 pytest-cov pytest-cache
-  - pip install -e .[docs,tests]
+- travis_retry pip install -r .travis-${REQUIREMENTS}-requirements.txt
+- travis_retry pip install -e .[all]
 
 script:
-  - pep257 --match-dir='cds_dojson' cds_dojson
-  - "sphinx-build -qnNW docs docs/_build/html"
-  - python setup.py test
+- "./run-tests.sh"
 
 after_success:
-  - coveralls
+- coveralls
 
-notifications:
-  email: false
+deploy:
+  provider: pypi
+  user: egebancho
+  password:
+    secure: uNcBmYTWCQVQBVnYaG3pTymPue+HA/tzHiQZDTLxb7Chd8dFT93CNPkdliQu733fu0epbYsGEGvdVl4R4jW3tN3lNxQ21/qS0AjrHuaxc3brc8pWF/8Nu7gkSuwAF19876A26Mn6NSvnAOa+HcRfgfELV4QBm3zZzdKXQvLkjr6Nu2eVxuGU/gvpy/9WxvCiL6uJQSBc8or/4v+icclpd9HlK7qqcZX9GEubGoR2027reGM2mHhIEETKdtQF/hzj0if9BTXAqOpwEqoWUvEtsteGu07qd0p8wWW95wWpO2eLK4CrPNex+bchPYBnqktj5cZbJl4zjQjotU1pfVzZyQrtYpsGRxjNUZZ8ponkKl5YeWLojJCwZHrYkEgg9ZFTd2rjjeqUUtotd/ihNsZ+prrYckbGHQjtWi2XGA/OekEtDzhk3zfy/0jo6epFaQxbmIPx/NK3C/Fsxh5/yivRXvoUgJt2MH5ZCuHuAz7X6RyHKCuKT6FEbvNORxyNTS4oJqiPRI5F4x6+wf4JAHiY0Ybsw+gpwhRgcdl1iRw1qAAs0ICoKUwWM0oPLX1/875DwCkImWBjYVgfoIh5eMlW79EgFmbBPS66TnGA/bCqStxyRMc7wCeS+KyDhGqCL+QMf/46TXZ0VtH/33X3+FL8Buauw6MoLUl5X1H+rFwOtuI=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    branch: master
+    repo: CERNDocumentServer/cds-dojson

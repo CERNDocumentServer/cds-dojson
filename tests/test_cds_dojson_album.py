@@ -22,12 +22,14 @@
 from __future__ import absolute_import
 
 import json
-from click.testing import CliRunner
 
-from cds_dojson.matcher import matcher
+from click.testing import CliRunner
 from dojson.contrib.marc21.utils import create_record
+
 from cds_dojson.marc21.models.album import model as marc21
+from cds_dojson.matcher import matcher
 from cds_dojson.to_marc21.models.album import model as to_marc21
+
 
 CDS_ALBUM = """
 <record>
@@ -202,9 +204,8 @@ def test_album():
     assert model == marc21
 
     data = model.do(blob)
-
     assert data['physical_medium'][1][
-        'material_base_and_configuration'] == ['Neg NB 6 x 6']
+        'material_base_and_configuration'] == ('Neg NB 6 x 6', )
     assert data['images'][3]['$ref'] == 'http://cds.cern.ch/record/1782448'
     assert data['images'][3]['relation'] == 'Cover'
     assert data['imprint'][0]['complete_date'] == 'Sep 1970'
@@ -231,11 +232,18 @@ def test_cli_do_cds_marc21_from_xml():
 
     with runner.isolated_filesystem():
         with open('record.xml', 'wb') as f:
-            f.write(CDS_ALBUM)
+            f.write(CDS_ALBUM.encode('utf-8'))
 
         result = runner.invoke(
-            cli.apply_rule,
-            ['-i', 'record.xml', '-l', 'cds_marcxml', 'cds_marc21']
+            cli.cli,
+            ['-i', 'record.xml', '-l', 'cds_marcxml', 'missing', 'cds_marc21']
+        )
+        assert '' == result.output
+        assert 0 == result.exit_code
+
+        result = runner.invoke(
+            cli.cli,
+            ['-i', 'record.xml', '-l', 'cds_marcxml', 'do', 'cds_marc21']
         )
         data = json.loads(result.output)[0]
 

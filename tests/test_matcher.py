@@ -17,9 +17,8 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 
+from cds_dojson.marc21.models import album, default, image, video
 from cds_dojson.matcher import matcher
-
-from cds_dojson.marc21.models import *
 
 
 def test_marc21_matcher():
@@ -29,7 +28,7 @@ def test_marc21_matcher():
     duplicated_blob = {'999__': [{'a': 'IMAGE'}, {'a': 'ALBUM'}]}
     image_blob = {'999__': {'a': 'IMAGE'}}
     no_match_blob = {'000__': {'z': 'odd'}}
-    video_blob = {'999__': {'a': 'PUBLVIDEOMOVIE'}}
+    video_blob = {'980__': {'a': 'PUBLVIDEOMOVIE'}}
 
     assert album.model == matcher(album_blob, 'cds_dojson.marc21.models')
     assert default.model == matcher(cern_blob, 'cds_dojson.marc21.models')
@@ -37,3 +36,4 @@ def test_marc21_matcher():
         duplicated_blob, 'cds_dojson.marc21.models')
     assert default.model == matcher(no_match_blob, 'cds_dojson.marc21.models')
     assert image.model == matcher(image_blob, 'cds_dojson.marc21.models')
+    assert video.model == matcher(video_blob, 'cds_dojson.marc21.models')

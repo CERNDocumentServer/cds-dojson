@@ -20,12 +20,13 @@
 """Query parser."""
 
 import logging
+
 import pkg_resources
 import pypeg2
 
-from invenio_query_parser.walkers.pypeg_to_ast import PypegConverter
 from invenio_query_parser.parser import Main as parser
 from invenio_query_parser.walkers.match_unit import MatchUnit
+from invenio_query_parser.walkers.pypeg_to_ast import PypegConverter
 
 
 class Query(object):
@@ -47,7 +48,10 @@ class Query(object):
 
 
 def matcher(record, entry_point_group):
-    """DoJSON model matcher.
+    """Matcher for DoJSON models.
+
+    Using ``invenio-query-parser`` and ``MatchUnit`` walker decide which of the
+    DoJSON models will be use depending on the content of the record.
 
     :param record: Something that looks like a python dictionary
 
@@ -55,7 +59,6 @@ def matcher(record, entry_point_group):
     """
     logger = logging.getLogger(__name__ + ".dojson_matcher")
 
-    _smart_dict_record = dict(record)
     _matches = []
     default = None
     for entry_point in pkg_resources.iter_entry_points(entry_point_group):
@@ -64,7 +67,7 @@ def matcher(record, entry_point_group):
         if entry_point.name == 'default':
             default = model
 
-        if query.match(_smart_dict_record):
+        if query.match(record):
             logger.info("Model `{0}` found matching the query {1}.".format(
                 entry_point.name, model
             ))
@@ -75,7 +78,7 @@ def matcher(record, entry_point_group):
             logger.error(
                 ("Found more than one matches `{0}`, we'll use {1}"
                  " for record {2}.").format(
-                    _matches, default, _smart_dict_record
+                    _matches, default, record
                 )
             )
             return default
@@ -83,7 +86,7 @@ def matcher(record, entry_point_group):
     except IndexError:
         logger.warning(
             "Model *not* found, fallback to default {0} for record {1}".format(
-                default, _smart_dict_record
+                default, record
             )
         )
         return default

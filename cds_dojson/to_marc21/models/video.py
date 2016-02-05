@@ -21,8 +21,8 @@
 
 from dojson.contrib.to_marc21.model import Underdo
 
-from .default import model as cds_to_marc21
 from ...overdo import Overdo
+from .default import model as cds_to_marc21
 
 
 class CDSToVideo(Overdo, Underdo):

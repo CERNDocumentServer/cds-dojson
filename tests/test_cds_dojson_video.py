@@ -99,7 +99,8 @@ CDS_VIDEO_PROJECT = """
 </record>
 """
 
-CDS_VIDEO_CLIP = """
+# Needs to be a unicode because of weird French characters
+CDS_VIDEO_CLIP = u"""
 <record>
   <controlfield tag="001">2053121</controlfield>
   <controlfield tag="005">20150918135611.0</controlfield>
@@ -141,7 +142,7 @@ CDS_VIDEO_CLIP = """
     <subfield code="a">Piotr Traczyk</subfield>
   </datafield>
   <datafield tag="520" ind1=" " ind2=" ">
-    <subfield code="a">Indie rockers Deerhoof battled with the noise of CERN’s magnet test facilities on 30 August 2015. The band visited CERN at the invitation of ATLAS physicist James Beacham, whose pilot project Ex/Noise/CERN collides experimental music artists with experimental particle physics. Credits: -Producer- CERN Video Productions James Beacham François Briard -Director- Noemi Caraban -Camera- Yann Krajewski Piotr Traczyk Noemi Caraban -Crane operator- Antonio Henrique Jorge-Costa -Live recording at CERN- Mixing at Rec studio/Geneva By Serge Morattel -Infography- Daniel Dominguez Noemi Caraban -Deerhoof- John Dieterich Satomi Matsuzaki Ed Rodriguez Greg Saunier w/Deron Pulley SPECIAL THANKS TO: Michal Strychalski Marta Bajko Maryline Charrondiere Luca Bottura Christian Giloux Rodrigue Faes Mariane Catallon Georgina Hobgen Hailey Reissman Marine Bass</subfield>
+    <subfield code="a">Indie rockers Deerhoof battled with the noise of CERN's magnet test facilities on 30 August 2015. The band visited CERN at the invitation of ATLAS physicist James Beacham, whose pilot project Ex/Noise/CERN collides experimental music artists with experimental particle physics. Credits: -Producer- CERN Video Productions James Beacham François Briard -Director- Noemi Caraban -Camera- Yann Krajewski Piotr Traczyk Noemi Caraban -Crane operator- Antonio Henrique Jorge-Costa -Live recording at CERN- Mixing at Rec studio/Geneva By Serge Morattel -Infography- Daniel Dominguez Noemi Caraban -Deerhoof- John Dieterich Satomi Matsuzaki Ed Rodriguez Greg Saunier w/Deron Pulley SPECIAL THANKS TO: Michal Strychalski Marta Bajko Maryline Charrondiere Luca Bottura Christian Giloux Rodrigue Faes Mariane Catallon Georgina Hobgen Hailey Reissman Marine Bass</subfield>
   </datafield>
   <datafield tag="542" ind1=" " ind2=" ">
     <subfield code="d">CERN</subfield>
@@ -270,7 +271,7 @@ def test_cli_do_cds_marc21_from_xml_video_clip():
 
     with runner.isolated_filesystem():
         with open('record.xml', 'wb') as f:
-            f.write(CDS_VIDEO_CLIP)
+            f.write(CDS_VIDEO_CLIP.encode('utf-8'))
 
         result = runner.invoke(
             cli.cli,
@@ -326,7 +327,7 @@ def test_cli_do_cds_marc21_from_xml_video_project():
 
     with runner.isolated_filesystem():
         with open('record.xml', 'wb') as f:
-            f.write(CDS_VIDEO_PROJECT)
+            f.write(CDS_VIDEO_PROJECT.encode('utf-8'))
 
         result = runner.invoke(
             cli.cli,

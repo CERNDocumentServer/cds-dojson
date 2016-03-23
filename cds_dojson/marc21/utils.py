@@ -19,12 +19,12 @@
 
 """Utilities for converting MARC21."""
 
-from dojson.contrib.marc21.utils import create_record, split_blob
+from dojson.contrib.marc21.utils import create_record, split_stream
 
 
 def load(source):
     """Load MARC XML and return Python dict."""
-    for data in split_blob(source.read()):
+    for data in split_stream(source):
         record = create_record(data)
         # if record.get('999__', {}).get('a', '') == 'ALBUM':
         #     for rrecord in split_album(record):

@@ -232,7 +232,7 @@ def test_cli_do_cds_marc21_from_xml():
 
     with runner.isolated_filesystem():
         with open('record.xml', 'wb') as f:
-            f.write(CDS_ALBUM)
+            f.write(CDS_ALBUM.encode('utf-8'))
 
         result = runner.invoke(
             cli.cli,

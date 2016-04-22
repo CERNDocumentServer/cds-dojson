@@ -358,3 +358,22 @@ def test_identity_check():
     data = marc21.do(blob)
     back_blob = to_marc21.do(data)
     assert blob == back_blob
+
+
+def test_jsonschema():
+    """Test jsonschema."""
+    blob = create_record(CDS_VIDEO_PROJECT)
+    model = matcher(blob, 'cds_dojson.marc21.models')
+    data = model.do(blob)
+
+    assert '$schema' in data
+    assert data['$schema'] == {
+        '$ref': 'marc21/cds_bibliographic/video-v1.0.0.json'}
+
+    blob = create_record(CDS_VIDEO_CLIP)
+    model = matcher(blob, 'cds_dojson.marc21.models')
+    data = model.do(blob)
+
+    assert '$schema' in data
+    assert data['$schema'] == {
+        '$ref': 'marc21/cds_bibliographic/video-v1.0.0.json'}

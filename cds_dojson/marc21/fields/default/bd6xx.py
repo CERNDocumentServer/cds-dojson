@@ -76,7 +76,7 @@ def observation(self, key, value):
 def accelerator_experiment(self, key, value):
     """Experiment."""
     return {
-        'acelerator': value.get('a'),
+        'accelerator': value.get('a'),
         'experiment': value.get('e'),
         'facility': value.get('f'),
         'subfield_s': value.get('s'),

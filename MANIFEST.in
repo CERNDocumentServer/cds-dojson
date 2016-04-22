@@ -7,22 +7,21 @@
 
 include *.rst
 include *.sh
+include *.txt
 include *.yml
 include .coveragerc
-include .travis.yml
 include .dockerignore
+include .travis.yml
 include Dockerfile
 include LICENSE
 include pytest.ini
 include tox.ini
+recursive-include cds_dojson *.json
+recursive-include cds_dojson *.py
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
-recursive-include dojson *.py
 recursive-include dojson *.json
+recursive-include dojson *.py
 recursive-include tests *.py
-
-# added by check_manifest.py
-include *.txt
-recursive-include cds_dojson *.py
 recursive-include tests *.xml

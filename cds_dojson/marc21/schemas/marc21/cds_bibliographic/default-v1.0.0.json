@@ -1,0 +1,12 @@
+{
+    "allOf": [
+        {"$ref": "bd-v1.0.1.json"},
+        {"$ref": "bd01x09.json"},
+        {"$ref": "bd2xx.json"},
+        {"$ref": "bd5xx.json"},
+        {"$ref": "bd6xx.json"},
+        {"$ref": "bd7xx.json"},
+        {"$ref": "bd8xx.json"},
+        {"$ref": "bd9xx.json"}
+    ]
+}

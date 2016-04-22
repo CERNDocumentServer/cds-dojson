@@ -179,3 +179,14 @@ def test_cli_do_cds_marc21_from_xml():
 
         # Check the imprint (CDSMarc21)
         assert data['imprint'][0]['place_of_publication'] == 'Geneva'
+
+
+def test_jsonschema():
+    """Test jsonschema."""
+    blob = create_record(CDS_IMAGE)
+    model = matcher(blob, 'cds_dojson.marc21.models')
+    data = model.do(blob)
+
+    assert '$schema' in data
+    assert data['$schema'] == {
+        '$ref': 'marc21/cds_bibliographic/image-v1.0.0.json'}

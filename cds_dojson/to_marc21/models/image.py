@@ -19,13 +19,11 @@
 
 """Image model."""
 
-from dojson.contrib.to_marc21.model import Underdo
-
-from ...overdo import Overdo
+from ...overdo import Underdo
 from .default import model as cds_to_marc21
 
 
-class CDSToImage(Overdo, Underdo):
+class CDSToImage(Underdo):
     """Translation Index for CDS Images."""
 
     __query__ = 'record_type.record_type:IMAGE'

@@ -35,7 +35,7 @@ def added_entry_corporate_name(self, key, value):
         "2": "Name in direct order"}
     indicator_map2 = {"#": "No information provided", "2": "Analytical entry"}
     return {
-        'authority_record_control_number': utils.force_list(
+        'authority_record_control_number_or_standard_number': utils.force_list(
             value.get('0')
         ),
         'materials_specified': value.get('3'),

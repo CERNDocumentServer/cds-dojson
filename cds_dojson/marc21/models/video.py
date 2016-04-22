@@ -19,14 +19,16 @@
 
 """Video model."""
 
-from ...overdo import Overdo
+from ...overdo import OverdoJSONSchema
 from .default import model as cds_marc21
 
 
-class CDSVideo(Overdo):
+class CDSVideo(OverdoJSONSchema):
     """Translation Index for CDS Videos."""
 
     __query__ = '980__.a:PUBLVIDEOMOVIE'
+
+    __schema__ = 'marc21/cds_bibliographic/video-v1.0.0.json'
 
 model = CDSVideo(bases=(cds_marc21, ),
                  entry_point_group='cds_dojson.marc21.video')

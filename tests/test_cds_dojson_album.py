@@ -257,3 +257,14 @@ def test_cli_do_cds_marc21_from_xml():
 
         # Check the imprint (CDSMarc21)
         assert data['imprint'][0]['complete_date'] == 'Sep 1970'
+
+
+def test_jsonschema():
+    """Test jsonschema."""
+    blob = create_record(CDS_ALBUM)
+    model = matcher(blob, 'cds_dojson.marc21.models')
+    data = model.do(blob)
+
+    assert '$schema' in data
+    assert data['$schema'] == {
+        '$ref': 'marc21/cds_bibliographic/album-v1.0.0.json'}

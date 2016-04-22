@@ -21,13 +21,15 @@
 
 from dojson.contrib.marc21 import marc21
 
-from ...overdo import Overdo
+from ...overdo import OverdoJSONSchema
 
 
-class CDSMarc21(Overdo):
+class CDSMarc21(OverdoJSONSchema):
     """Translation Index for CDS specific MARC21."""
 
     __query__ = '690C_.a:CERN'
+
+    __schema__ = 'marc21/cds_bibliographic/default-v1.0.0.json'
 
 
 model = CDSMarc21(bases=(marc21, ),

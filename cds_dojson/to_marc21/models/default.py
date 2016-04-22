@@ -20,12 +20,11 @@
 """CDS To MARC21 model."""
 
 from dojson.contrib.to_marc21 import to_marc21
-from dojson.contrib.to_marc21.model import Underdo
 
-from ...overdo import Overdo
+from ...overdo import Underdo
 
 
-class CDSToMarc21(Overdo, Underdo):
+class CDSToMarc21(Underdo):
 
     """Translation Index for CDS specific MARC21."""
 

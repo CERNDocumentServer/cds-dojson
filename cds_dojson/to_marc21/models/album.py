@@ -19,13 +19,12 @@
 
 """Album model."""
 
-from dojson.contrib.to_marc21.model import Underdo
 
-from ...overdo import Overdo
+from ...overdo import Underdo
 from .default import model as cds_to_marc21
 
 
-class CDSToAlbum(Overdo, Underdo):
+class CDSToAlbum(Underdo):
     """Translation Index for CDS Albums."""
 
     __query__ = 'record_type.record_type:ALBUM'

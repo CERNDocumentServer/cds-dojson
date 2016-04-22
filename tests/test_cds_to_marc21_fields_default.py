@@ -27,6 +27,7 @@ from click.testing import CliRunner
 from dojson.contrib.marc21.utils import create_record
 
 from cds_dojson.marc21.models.default import model as marc21
+from cds_dojson.matcher import matcher
 from cds_dojson.to_marc21.models.default import model as to_marc21
 
 
@@ -239,3 +240,14 @@ def test_identity_check():
     data = marc21.do(blob)
     back_blob = to_marc21.do(data)
     assert blob == back_blob
+
+
+def test_jsonschema():
+    """Test jsonschema."""
+    blob = create_record(RECORD_SIMPLE)
+    model = matcher(blob, 'cds_dojson.marc21.models')
+    data = model.do(blob)
+
+    assert '$schema' in data
+    assert data['$schema'] == {
+        '$ref': 'marc21/cds_bibliographic/default-v1.0.0.json'}

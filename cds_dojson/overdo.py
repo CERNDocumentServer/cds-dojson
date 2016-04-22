@@ -19,9 +19,23 @@
 
 """Base classes for CDS DoJSON."""
 
+import pkg_resources
+
 from dojson.overdo import Overdo as DoJSONOverdo
+from dojson.contrib.to_marc21.model import Underdo as DoJSONUnderdo
 
 from .matcher import matcher
+
+try:
+    pkg_resources.get_distribution('flask')
+    from flask import current_app
+    current_app.app_context()
+    if 'invenio-jsonschemas' not in current_app.extension:
+        raise RuntimeError
+except (pkg_resources.DistributionNotFound, RuntimeError):
+    HAS_FLASK = False
+else:
+    HAS_FLASK = True
 
 
 class OverdoBase(DoJSONOverdo):
@@ -72,3 +86,32 @@ class Overdo(DoJSONOverdo):
             self.rules[:] = [rule for rule in self.rules if not override(rule)]
 
         return super(Overdo, self).over(name, *source_tags)
+
+
+class OverdoJSONSchema(Overdo):
+    """Translation index which adds $schema key."""
+
+    __schema__ = ''
+    """Name of the schema to be added to the final JSON."""
+
+    def do(self, blob, ignore_missing=True, exception_handlers=None):
+        """Set schema after translation depending on the model."""
+        json = super(Overdo, self).do(
+            blob=blob,
+            ignore_missing=ignore_missing,
+            exception_handlers=exception_handlers
+        )
+        if HAS_FLASK:
+            json_schema = current_app.extensions['invenio-jsonschemas']
+            json['$schema'] = json_schema.path_to_url(
+                self.__class__.__schema__)
+        else:
+            json['$schema'] = {'$ref': self.__class__.__schema__}
+
+        return json
+
+
+class Underdo(Overdo, DoJSONUnderdo):
+    """Translation index specification for reverse marc21 translation."""
+
+    pass

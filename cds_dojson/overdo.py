@@ -29,10 +29,7 @@ from .matcher import matcher
 try:
     pkg_resources.get_distribution('flask')
     from flask import current_app
-    current_app.app_context()
-    if 'invenio-jsonschemas' not in current_app.extension:
-        raise RuntimeError
-except (pkg_resources.DistributionNotFound, RuntimeError):
+except (pkg_resources.DistributionNotFound, RuntimeError) as e:
     HAS_FLASK = False
 else:
     HAS_FLASK = True
@@ -103,8 +100,9 @@ class OverdoJSONSchema(Overdo):
         )
         if HAS_FLASK:
             json_schema = current_app.extensions['invenio-jsonschemas']
-            json['$schema'] = json_schema.path_to_url(
-                self.__class__.__schema__)
+            json['$schema'] = {
+                '$ref': json_schema.path_to_url(self.__class__.__schema__)
+            }
         else:
             json['$schema'] = {'$ref': self.__class__.__schema__}
 

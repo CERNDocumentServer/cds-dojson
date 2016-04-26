@@ -28,7 +28,7 @@ class CDSImage(OverdoJSONSchema):
 
     __query__ = '999__.a:IMAGE'
 
-    __schema__ = 'marc21/cds_bibliographic/image-v1.0.0.json'
+    __schema__ = 'records/image-v1.0.0.json'
 
 model = CDSImage(bases=(cds_marc21, ),
                  entry_point_group='cds_dojson.marc21.image')

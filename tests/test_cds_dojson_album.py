@@ -267,4 +267,4 @@ def test_jsonschema():
 
     assert '$schema' in data
     assert data['$schema'] == {
-        '$ref': 'marc21/cds_bibliographic/album-v1.0.0.json'}
+        '$ref': 'records/album-v1.0.0.json'}

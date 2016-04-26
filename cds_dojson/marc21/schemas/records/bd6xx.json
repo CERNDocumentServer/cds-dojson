@@ -36,7 +36,10 @@
         },
         "subject_indicator": {
             "description": "Subject Indicator",
-            "type": "string"
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         },
         "observation": {
             "description": "Observation",
@@ -80,7 +83,6 @@
                     "type": "string"
                 }
             }
-        },
-
+        }
     }
 }

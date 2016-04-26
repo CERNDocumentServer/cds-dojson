@@ -368,7 +368,7 @@ def test_jsonschema():
 
     assert '$schema' in data
     assert data['$schema'] == {
-        '$ref': 'marc21/cds_bibliographic/video-v1.0.0.json'}
+        '$ref': 'records/video-v1.0.0.json'}
 
     blob = create_record(CDS_VIDEO_CLIP)
     model = matcher(blob, 'cds_dojson.marc21.models')
@@ -376,4 +376,4 @@ def test_jsonschema():
 
     assert '$schema' in data
     assert data['$schema'] == {
-        '$ref': 'marc21/cds_bibliographic/video-v1.0.0.json'}
+        '$ref': 'records/video-v1.0.0.json'}

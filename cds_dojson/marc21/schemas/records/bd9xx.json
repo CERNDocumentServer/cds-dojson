@@ -163,7 +163,10 @@
         },
         "base": {
             "description": "Base",
-            "type": "string"
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         },
         "cat": {
             "description": "CAT.",
@@ -273,7 +276,10 @@
         },
         "system_number_of_deleted_double_records": {
             "description": "System number of deleted double records",
-            "type": "string"
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         },
         "additional_subject_added_entry_topical_term": {
             "description": "Additional subject added entry- topical term",

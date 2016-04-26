@@ -28,7 +28,7 @@ class CDSVideo(OverdoJSONSchema):
 
     __query__ = '980__.a:PUBLVIDEOMOVIE'
 
-    __schema__ = 'marc21/cds_bibliographic/video-v1.0.0.json'
+    __schema__ = 'records/video-v1.0.0.json'
 
 model = CDSVideo(bases=(cds_marc21, ),
                  entry_point_group='cds_dojson.marc21.video')

@@ -208,7 +208,8 @@ def test_album():
         'material_base_and_configuration'] == ('Neg NB 6 x 6', )
     assert data['images'][3]['$ref'] == 'http://cds.cern.ch/record/1782448'
     assert data['images'][3]['relation'] == 'Cover'
-    assert data['imprint'][0]['complete_date'] == 'Sep 1970'
+    assert data['imprint'][0]['_complete_date'] == 'Sep 1970'
+    assert data['imprint'][0]['complete_date'] == '1970-09-01'
     assert data['place_of_photo'] == [
         {'place': 'CERN PS', 'requester': 'PHILIPPS'}]
 
@@ -256,7 +257,8 @@ def test_cli_do_cds_marc21_from_xml():
         assert data['images'][3]['relation'] == 'Cover'
 
         # Check the imprint (CDSMarc21)
-        assert data['imprint'][0]['complete_date'] == 'Sep 1970'
+        assert data['imprint'][0]['_complete_date'] == 'Sep 1970'
+        assert data['imprint'][0]['complete_date'] == '1970-09-01'
 
 
 def test_jsonschema():

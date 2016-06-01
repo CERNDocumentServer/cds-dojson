@@ -83,5 +83,5 @@ def imprint(self, key, value):
     return {
         'a': value.get('place_of_publication'),
         'b': value.get('name_of_publication'),
-        'c': value.get('complete_date'),
+        'c': value.get('_complete_date'),
     }

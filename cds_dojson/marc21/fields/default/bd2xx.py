@@ -37,5 +37,6 @@ def imprint(self, key, value):
     return {
         'place_of_publication': value.get('a'),
         'name_of_publication': value.get('b'),
-        'complete_date': value.get('c'),
+        'complete_date': cds_utils.convert_date_to_iso_8601(value.get('c')),
+        '_complete_date': value.get('c'),
     }

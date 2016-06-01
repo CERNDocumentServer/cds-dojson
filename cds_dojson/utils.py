@@ -22,6 +22,7 @@
 import functools
 from collections import defaultdict
 
+import arrow
 import six
 
 
@@ -48,3 +49,36 @@ def for_each_squash(f):
                       for key, value in six.iteritems(merge_dict)}
         return merge_dict
     return wrapper
+
+
+def convert_date_to_iso_8601(date, format_='YYYY-MM-DD', **kwargs):
+    """Convert a date string its ISO 8601 representation.
+
+    YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45+01:00)
+
+    YYYY = four-digit year
+    MM   = two-digit month (01=January, etc.)
+    DD   = two-digit day of month (01 through 31)
+    hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
+    mm   = two digits of minute (00 through 59)
+    ss   = two digits of second (00 through 59)
+    s    = one or more digits representing a decimal fraction of a second
+    TZD  = time zone designator (Z or +hh:mm or -hh:mm)
+    """
+    # The order is important as arrow tries to apply them top to bottom
+    _FORMATS = [
+        'YYYY-MM-DD',
+        'YYYY/MM/DD',
+        'DD/MM/YYYY',
+        'YYYY.MM.DD',
+        'DD MMMM YYYY',
+        'DD MMM YYYY',
+        'DD MMM YY',
+        'YYYY-MM',
+        'YYYY/MM',
+        'YYYY.MM',
+        'MMM YYYY',
+        'YYYY',
+        'YY',
+    ]
+    return arrow.get(date, _FORMATS).format(format_) if date else date

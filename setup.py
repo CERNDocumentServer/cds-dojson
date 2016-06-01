@@ -63,6 +63,7 @@ setup(
         'setuptools>=17.1',
     ],
     install_requires=[
+        'arrow>=0.7.0',
         'dojson>=1.2.1',
         'invenio-query-parser>=0.5.0',
     ],

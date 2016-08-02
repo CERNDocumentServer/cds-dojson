@@ -23,12 +23,15 @@ from __future__ import absolute_import
 
 import json
 
+import mock
 from click.testing import CliRunner
 from dojson.contrib.marc21.utils import create_record
 
 from cds_dojson.marc21.models.image import model as marc21
 from cds_dojson.matcher import matcher
 from cds_dojson.to_marc21.models.image import model as to_marc21
+
+from testutils import mock_path_to_url
 
 
 CDS_IMAGE = """
@@ -119,42 +122,44 @@ CDS_IMAGE = """
 """
 
 
-def test_image():
+def test_image(app):
     """Test image model from XML into JSONi."""
-    blob = create_record(CDS_IMAGE)
-    model = matcher(blob, 'cds_dojson.marc21.models')
+    with app.app_context():
+        blob = create_record(CDS_IMAGE)
+        model = matcher(blob, 'cds_dojson.marc21.models')
 
-    assert model == marc21
+        assert model == marc21
 
-    data = model.do(blob)
-    # Check the control number (doJSON)
-    assert data.get('control_number') == '1782445'
+        data = model.do(blob)
+        # Check the control number (doJSON)
+        assert data.get('control_number') == '1782445'
 
-    # Check the parent album (CDSImage)
-    assert data['album_parent'][0]['album_id'] == '2054964'
+        # Check the parent album (CDSImage)
+        assert data['album_parent'][0]['album_id'] == '2054964'
 
-    # Check the imprint (CDSMarc21)
-    assert data['imprint'][0]['place_of_publication'] == 'Geneva'
+        # Check the imprint (CDSMarc21)
+        assert data['imprint'][0]['place_of_publication'] == 'Geneva'
 
-    # Check that no fields are missing their model
-    assert model.missing(blob) == []
+        # Check that no fields are missing their model
+        assert model.missing(blob) == []
 
 
-def test_identity_check():
+def test_identity_check(app):
     """Test image model from XML into JSON."""
-    blob = create_record(CDS_IMAGE)
-    data = marc21.do(blob)
-    back_blob = to_marc21.do(data)
-    assert blob == back_blob
+    with app.app_context():
+        blob = create_record(CDS_IMAGE)
+        data = marc21.do(blob)
+        back_blob = to_marc21.do(data)
+        assert blob == back_blob
 
 
-def test_cli_do_cds_marc21_from_xml():
+def test_cli_do_cds_marc21_from_xml(app):
     """Test MARC21 loading from XML."""
     from dojson import cli
 
     runner = CliRunner()
 
-    with runner.isolated_filesystem():
+    with app.app_context(), runner.isolated_filesystem():
         with open('record.xml', 'wb') as f:
             f.write(CDS_IMAGE.encode('utf-8'))
 
@@ -181,12 +186,15 @@ def test_cli_do_cds_marc21_from_xml():
         assert data['imprint'][0]['place_of_publication'] == 'Geneva'
 
 
-def test_jsonschema():
+@mock.patch('invenio_jsonschemas.ext.InvenioJSONSchemasState.path_to_url',
+            mock_path_to_url)
+def test_jsonschema(app):
     """Test jsonschema."""
-    blob = create_record(CDS_IMAGE)
-    model = matcher(blob, 'cds_dojson.marc21.models')
-    data = model.do(blob)
+    with app.app_context():
+        blob = create_record(CDS_IMAGE)
+        model = matcher(blob, 'cds_dojson.marc21.models')
+        data = model.do(blob)
 
-    assert '$schema' in data
-    assert data['$schema'] == {
-        '$ref': 'records/image-v1.0.0.json'}
+        assert '$schema' in data
+        assert data['$schema'] == {
+            '$ref': 'records/image-v1.0.0.json'}

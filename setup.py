@@ -24,8 +24,12 @@ with open(os.path.join('cds_dojson', 'version.py'), 'rt') as f:
 tests_require = [
     'check-manifest>=0.25',
     'coverage>=4.0',
-    # 'invenio-jsonschemas>=1.0.0a2',
+    'invenio-jsonschemas>=1.0.0a2',
     'isort>=4.2.2',
+    'jsonpatch>=1.11',
+    'jsonref>=0.1',
+    'jsonresolver>=0.1.0',
+    'jsonschema>=2.5.1',
     'mock>=1.0.0',
     'pydocstyle>=1.0.0',
     'pytest-cache>=1.0',

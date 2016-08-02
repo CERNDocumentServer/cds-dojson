@@ -23,12 +23,18 @@ from __future__ import absolute_import
 
 import json
 
+import pytest
+import mock
 from click.testing import CliRunner
 from dojson.contrib.marc21.utils import create_record
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 
 from cds_dojson.marc21.models.video import model as marc21
 from cds_dojson.matcher import matcher
 from cds_dojson.to_marc21.models.video import model as to_marc21
+
+from testutils import mock_path_to_url, mock_get_schema, json_resolver
 
 
 CDS_VIDEO_PROJECT = """
@@ -234,42 +240,43 @@ CDS_VIDEO_CLIP = u"""
 """
 
 
-def test_video_clip():
+def test_video_clip(app):
     """Test video clip loading from XML."""
-    blob = create_record(CDS_VIDEO_CLIP)
-    model = matcher(blob, 'cds_dojson.marc21.models')
+    with app.app_context():
+        blob = create_record(CDS_VIDEO_CLIP)
+        model = matcher(blob, 'cds_dojson.marc21.models')
 
-    assert model == marc21
+        assert model == marc21
 
-    data = model.do(blob)
+        data = model.do(blob)
 
-    assert len(data.get('creation_production_credits_note')) == 3
-    # It is a tuple and not a list because it is not dump to JSON
-    assert data[
-        'host_item_entry'][0]['report_number'] == ("CERN-MOVIE-2015-038", )
-    expected_physical_description = [
-        {
-            "accompanying_material": "16:9",
-            "other_physical_details": "1920x1080 16/9, 25.00",
-            "dimensions": ("25", ),
-            "extent": ("00:09:05.280", ),
-            "maximum_resolution": "1920x1080",
-        }
-    ]
-    assert data.get(
-        'physical_description') == expected_physical_description
+        assert len(data.get('creation_production_credits_note')) == 3
+        # It is a tuple and not a list because it is not dump to JSON
+        assert data[
+            'host_item_entry'][0]['report_number'] == ("CERN-MOVIE-2015-038", )
+        expected_physical_description = [
+            {
+                "accompanying_material": "16:9",
+                "other_physical_details": "1920x1080 16/9, 25.00",
+                "dimensions": ("25", ),
+                "extent": ("00:09:05.280", ),
+                "maximum_resolution": "1920x1080",
+            }
+        ]
+        assert data.get(
+            'physical_description') == expected_physical_description
 
-    # Check that no fields are missing their model
-    assert model.missing(blob) == []
+        # Check that no fields are missing their model
+        assert model.missing(blob) == []
 
 
-def test_cli_do_cds_marc21_from_xml_video_clip():
+def test_cli_do_cds_marc21_from_xml_video_clip(app):
     """Test MARC21 loading from XML."""
     from dojson import cli
 
     runner = CliRunner()
 
-    with runner.isolated_filesystem():
+    with app.app_context(), runner.isolated_filesystem():
         with open('record.xml', 'wb') as f:
             f.write(CDS_VIDEO_CLIP.encode('utf-8'))
 
@@ -302,30 +309,31 @@ def test_cli_do_cds_marc21_from_xml_video_clip():
             'physical_description') == expected_physical_description
 
 
-def test_video_project():
+def test_video_project(app):
     """Test video project from XML."""
-    blob = create_record(CDS_VIDEO_PROJECT)
-    model = matcher(blob, 'cds_dojson.marc21.models')
+    with app.app_context():
+        blob = create_record(CDS_VIDEO_PROJECT)
+        model = matcher(blob, 'cds_dojson.marc21.models')
 
-    assert model == marc21
+        assert model == marc21
 
-    data = model.do(blob)
+        data = model.do(blob)
 
-    assert data['constituent_unit_entry'][0][
-        'report_number'] == ('CERN-MOVIE-2015-038-001', )
-    assert data.get('control_number') == '2053119'
+        assert data['constituent_unit_entry'][0][
+            'report_number'] == ('CERN-MOVIE-2015-038-001', )
+        assert data.get('control_number') == '2053119'
 
-    # Check that no fields are missing their model
-    assert model.missing(blob) == []
+        # Check that no fields are missing their model
+        assert model.missing(blob) == []
 
 
-def test_cli_do_cds_marc21_from_xml_video_project():
+def test_cli_do_cds_marc21_from_xml_video_project(app):
     """Test MARC21 loading from XML."""
     from dojson import cli
 
     runner = CliRunner()
 
-    with runner.isolated_filesystem():
+    with app.app_context(), runner.isolated_filesystem():
         with open('record.xml', 'wb') as f:
             f.write(CDS_VIDEO_PROJECT.encode('utf-8'))
 
@@ -347,33 +355,45 @@ def test_cli_do_cds_marc21_from_xml_video_project():
         assert data.get('control_number') == '2053119'
 
 
-def test_identity_check():
-    """Test image model from XML into JSON."""
-    blob = create_record(CDS_VIDEO_PROJECT)
-    data = marc21.do(blob)
-    back_blob = to_marc21.do(data)
-    assert blob == back_blob
+def test_identity_check(app):
+    with app.app_context():
+        """Test image model from XML into JSON."""
+        blob = create_record(CDS_VIDEO_PROJECT)
+        data = marc21.do(blob)
+        back_blob = to_marc21.do(data)
+        assert blob == back_blob
 
-    blob = create_record(CDS_VIDEO_CLIP)
-    data = marc21.do(blob)
-    back_blob = to_marc21.do(data)
-    assert blob == back_blob
+        blob = create_record(CDS_VIDEO_CLIP)
+        data = marc21.do(blob)
+        back_blob = to_marc21.do(data)
+        assert blob == back_blob
 
 
-def test_jsonschema():
+@mock.patch('invenio_jsonschemas.ext.InvenioJSONSchemasState.path_to_url',
+            mock_path_to_url)
+@mock.patch('invenio_jsonschemas.ext.InvenioJSONSchemasState.get_schema',
+            mock_get_schema)
+def test_jsonschema(app):
     """Test jsonschema."""
-    blob = create_record(CDS_VIDEO_PROJECT)
-    model = matcher(blob, 'cds_dojson.marc21.models')
-    data = model.do(blob)
+    with app.app_context():
+        blob = create_record(CDS_VIDEO_PROJECT)
+        model = matcher(blob, 'cds_dojson.marc21.models')
+        data = model.do(blob)
 
-    assert '$schema' in data
-    assert data['$schema'] == {
-        '$ref': 'records/video-v1.0.0.json'}
+        assert '$schema' in data
+        assert data['$schema'] == {
+            '$ref': 'records/video-v1.0.0.json'}
 
-    blob = create_record(CDS_VIDEO_CLIP)
-    model = matcher(blob, 'cds_dojson.marc21.models')
-    data = model.do(blob)
+        blob = create_record(CDS_VIDEO_CLIP)
+        model = matcher(blob, 'cds_dojson.marc21.models')
+        data = model.do(blob)
 
-    assert '$schema' in data
-    assert data['$schema'] == {
-        '$ref': 'records/video-v1.0.0.json'}
+        assert '$schema' in data
+        assert data['$schema'] == {
+            '$ref': 'records/video-v1.0.0.json'}
+
+        schema = {
+            '$ref': 'http://cdslabs.cern.ch/schemas/records/video-v1.0.0.json'}
+        resolver = json_resolver(schema)
+        with pytest.raises(ValidationError) as exc_info:
+            validate({'$schema': schema}, schema, resolver=resolver)

@@ -1,5 +1,12 @@
 Changes
 =======
+Version 0.3.2 (released 2016-08-12)
+-----------------------------------
+
+- First draft video schema.
+- Moves ``schemas`` folder up as they don't relay anymore on MACR21 as base
+  model.
+
 
 Version 0.3.0 (released 2016-04-27)
 -----------------------------------

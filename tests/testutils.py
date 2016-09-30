@@ -28,13 +28,6 @@ def mock_path_to_url(self, path):
     return path
 
 
-def mock_get_schema(self, path):
-    """Mock the ``get_schema`` method of InvenioJSONSchemasState."""
-    with open(pkg_resources.resource_filename(
-            'cds.modules.records.jsonschemas', path), 'r') as f:
-        return json.load(f)
-
-
 def json_resolver(schema):
     """Test ``json_resolver``."""
     json_resolver = JSONResolver(plugins=['demo.json_resolver', ])

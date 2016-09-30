@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "CDS Deposit Project Schema.",
+  "additionalProperties": false,
+  "properties": {
+    "allOf": [
+      {
+        "$ref": "https://cdslabs.cern.ch/schemas/deposits/deposit-v1.0.0.json"
+      },
+      {
+        "$ref": "../../records/project-v1.0.0.json"
+      },
+      {
+        "$ref": "https://cdslabs.cern.ch/schemas/records/file-v1.0.0.json"
+      },
+      {
+        "required": [
+            "_deposit"
+        ]
+      }
+    ]
+  }
+}

@@ -136,6 +136,9 @@ setup(
             'video = cds_dojson.to_marc21.fields.video'
         ],
         # DoJSON entry points
+        'console_scripts': [
+            'cds-dojson=cds_dojson.cli:cli',
+        ],
         'dojson.cli.rule': [
             'cds_marc21 = cds_dojson.marc21:marc21',
             'cds_to_marc21 = cds_dojson.to_marc21:to_marc21'

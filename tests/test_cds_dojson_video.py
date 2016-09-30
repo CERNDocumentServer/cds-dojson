@@ -34,7 +34,7 @@ from cds_dojson.marc21.models.video import model as marc21
 from cds_dojson.matcher import matcher
 from cds_dojson.to_marc21.models.video import model as to_marc21
 
-from testutils import mock_path_to_url, mock_get_schema, json_resolver
+from testutils import mock_path_to_url, json_resolver
 
 
 CDS_VIDEO_PROJECT = """
@@ -371,8 +371,6 @@ def test_identity_check(app):
 
 @mock.patch('invenio_jsonschemas.ext.InvenioJSONSchemasState.path_to_url',
             mock_path_to_url)
-@mock.patch('invenio_jsonschemas.ext.InvenioJSONSchemasState.get_schema',
-            mock_get_schema)
 def test_jsonschema(app):
     """Test jsonschema."""
     with app.app_context():

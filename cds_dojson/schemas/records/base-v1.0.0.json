@@ -219,23 +219,27 @@
   "type": "object",
   "properties": {
     "$schema": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-            "description": "URL to the referenced resource",
-            "format": "url",
-            "type": "string"
-        }
-      },
-      "required": [
-        "$ref"
-       ]
+      "type": "string"
     },
     "recid": {
       "description": "Invenio record identifier (integer).",
       "type": "number"
     },
-    "_access": {}
+    "_access": {},
+    "_deposit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "integer"
+        },
+        "owners": {
+          "type": "integer"
+        }
+      }
+    }
   },
   "required": ["recid", "_access"]
 }

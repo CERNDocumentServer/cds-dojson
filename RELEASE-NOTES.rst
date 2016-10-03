@@ -1,8 +1,8 @@
 ==================
-CDS-DoJSON v0.3.2
+CDS-DoJSON v0.3.3
 ==================
 
-DoJSON v0.3.2 was released on August 12, 2016.
+DoJSON v0.3.3 was released on 3 Octomber, 2016.
 
 About
 -----
@@ -12,19 +12,18 @@ CDS DoJSON is an extension of DoJSON package with the customization for CDS.
 New features
 ------------
 
-- First draft video schema.
-- Moves ``schemas`` folder up as they don't relay anymore on MACR21 as base
-  model.
+- Video & Project schemas
+- CLI for resolving schemas 
 
 Installation
 ------------
 
-   $ pip install cds-dojson==0.3.2
+   $ pip install cds-dojson==0.3.3
 
 Documentation
 -------------
 
-    http://cds-dojson.readthedocs.org/en/v0.3.2
+    http://cds-dojson.readthedocs.org/en/v0.3.3
 
     Happy hacking and thanks for flying DoJSON.
 

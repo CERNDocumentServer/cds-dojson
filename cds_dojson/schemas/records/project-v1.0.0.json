@@ -142,8 +142,11 @@
     "videos": {
       "type": "array",
       "items": {
-        "$reference": {
-          "type": "string"
+        "type": "object",
+        "properties": {
+          "$reference": {
+            "type": "string"
+          }
         }
       }
     },
@@ -263,7 +266,14 @@
         "type": "object"
       }
     },
-    "_access": {},
+    "_access": {
+      "type": "object",
+      "properties": {
+        "read": {
+          "type": "string"
+        }
+      }
+    },
     "description": {
       "properties": {
         "source": {

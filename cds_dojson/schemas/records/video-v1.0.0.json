@@ -476,7 +476,14 @@
         }
       }
     },
-    "_access": {},
+    "_access": {
+      "type": "object",
+      "properties": {
+        "read": {
+          "type": "string"
+        }
+      }
+    },
     "$schema": {
       "type": "string"
     },

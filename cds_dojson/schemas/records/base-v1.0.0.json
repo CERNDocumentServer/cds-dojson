@@ -225,7 +225,14 @@
       "description": "Invenio record identifier (integer).",
       "type": "number"
     },
-    "_access": {},
+    "_access": {
+      "type": "object",
+      "properties": {
+        "read": {
+          "type": "string"
+        }
+      }
+    },
     "_deposit": {
       "type": "object",
       "properties": {

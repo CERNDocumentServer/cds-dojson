@@ -75,8 +75,11 @@
         "videos": {
           "type": "array",
           "items": {
-            "$reference": {
-              "type": "string"
+            "type": "object",
+            "properties": {
+              "$reference": {
+                "type": "string"
+              }
             }
           }
         }

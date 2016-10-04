@@ -283,7 +283,14 @@
        },
        "additionalProperties": false
      },
-     "_access": {},
+     "_access": {
+        "type": "object",
+        "properties": {
+          "read": {
+            "type": "string"
+          }
+        }
+     },
      "description": {
        "required": [
          "value"
@@ -602,8 +609,11 @@
      },
      "videos": {
        "items": {
-         "$reference": {
-           "type": "string"
+         "type": "object",
+         "properties": {
+           "$reference": {
+             "type": "string"
+           }
          }
        },
        "type": "array"

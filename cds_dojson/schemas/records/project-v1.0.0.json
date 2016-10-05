@@ -181,7 +181,15 @@
           "type": "integer"
         },
         "owners": {
-          "type": "integer"
+          "name": "owners",
+          "title": "Owners",
+          "type": "array",
+          "description": "Owners of the record (a list of user's IDs).",
+          "items": [
+            {
+              "type": "integer"
+            }
+          ]
         }
       },
       "type": "object"

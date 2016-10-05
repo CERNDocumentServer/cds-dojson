@@ -12,7 +12,8 @@
           "value": {
             "type": "string"
           }
-        }
+        },
+        "type": "object"
       },
       "type": "array"
     },
@@ -397,7 +398,8 @@
           "value": {
             "type": "string"
           }
-        }
+        },
+        "type": "object"
       },
       "type": "array"
     },

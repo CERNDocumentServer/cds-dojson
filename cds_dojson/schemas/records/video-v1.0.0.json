@@ -215,7 +215,8 @@
           "value": {
             "type": "string"
           }
-        }
+        },
+        "type": "object"
       },
       "type": "array",
       "description": ""
@@ -453,7 +454,8 @@
           "value": {
             "type": "string"
           }
-        }
+        },
+        "type": "object"
       },
       "type": "array",
       "description": ""

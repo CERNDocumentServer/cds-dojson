@@ -278,5 +278,5 @@
       }
     }
   },
-  "required": ["recid", "_access"]
+  "required": ["recid"]
 }

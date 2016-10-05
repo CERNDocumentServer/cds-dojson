@@ -551,7 +551,6 @@
   },
   "type": "object",
   "required": [
-    "recid",
-    "_access"
+    "recid"
   ]
 }

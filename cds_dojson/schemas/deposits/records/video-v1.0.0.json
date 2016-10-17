@@ -646,6 +646,9 @@
           "title"
         ]
       }
+    },
+    "_project_id": {
+      "type": "string"
     }
   }
 }

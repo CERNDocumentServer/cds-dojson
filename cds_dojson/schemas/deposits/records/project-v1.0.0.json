@@ -231,7 +231,6 @@
     }
   },
   "description": "Describe information needed for deposit module.",
-  "type": "object",
   "required": [
     "_deposit"
   ],

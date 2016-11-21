@@ -397,6 +397,9 @@
             "published"
           ]
         },
+        "state": {
+          "type": "object"
+        },
         "created_by": {
           "name": "created_by",
           "title": "Creator",

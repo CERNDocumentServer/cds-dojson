@@ -8,6 +8,18 @@
       "$ref": "https://cdslabs.cern.ch/schemas/deposits/deposit-v1.0.0.json"
     },
     {
+      "properties": {
+        "_deposit": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    {
       "$ref": "../../records/video-v1.0.0.json"
     },
     {

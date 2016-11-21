@@ -48,7 +48,8 @@ def compile_schema(schema, base_uri='', ref_resolver=None, in_place=False):
         schema = copy.deepcopy(schema)
 
     if ref_resolver is None:
-        ref_resolver = jsonschema.RefResolver(base_uri=base_uri, referrer=schema)
+        ref_resolver = jsonschema.RefResolver(
+            base_uri=base_uri, referrer=schema)
 
     json_resolver = JSONResolver()
     resolver_cls = ref_resolver_factory(json_resolver)

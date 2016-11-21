@@ -366,6 +366,9 @@
           "name": "status",
           "type": "string"
         },
+        "state": {
+          "type": "object"
+        },
         "created_by": {
           "title": "Creator",
           "name": "created_by",

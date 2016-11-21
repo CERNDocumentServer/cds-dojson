@@ -15,6 +15,18 @@
         "$ref": "https://cdslabs.cern.ch/schemas/records/file-v1.0.0.json"
       },
       {
+        "properties": {
+          "_deposit": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      {
         "required": [
             "_deposit"
         ]

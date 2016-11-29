@@ -226,6 +226,10 @@
       "description": "Invenio record identifier (integer).",
       "type": "number"
     },
+    "doi": {
+      "description": "Record DOI identifier (string).",
+      "type": "string"
+    },
     "_access": {
       "type": "object",
       "properties": {

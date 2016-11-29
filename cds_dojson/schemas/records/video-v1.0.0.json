@@ -464,6 +464,10 @@
       "type": "number",
       "description": "Invenio record identifier (integer)."
     },
+    "doi": {
+      "type": "string",
+      "description": "Record DOI identifier (string)."
+    },
     "_deposit": {
       "type": "object",
       "properties": {

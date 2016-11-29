@@ -238,6 +238,17 @@
     "type"
   ],
   "properties": {
+    "report_number": {
+      "type": "object",
+      "properties": {
+        "report_number": {
+          "type": "string"
+        },
+        "_report_number": {
+          "type": "string"
+        }
+      }
+    },
     "copyright": {
       "type": "object",
       "description": ".",

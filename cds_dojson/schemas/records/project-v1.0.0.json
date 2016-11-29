@@ -336,6 +336,17 @@
     "type": {
       "description": "Type of the project.",
       "type": "string"
+    },
+    "report_number": {
+      "type": "object",
+      "properties": {
+        "report_number": {
+          "type": "string"
+        },
+        "_report_number": {
+          "type": "string"
+        }
+      }
     }
   },
   "definitions": {

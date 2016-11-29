@@ -425,6 +425,10 @@
       "description": "Invenio record identifier (integer).",
       "type": "number"
     },
+    "doi": {
+      "type": "string",
+      "description": "Invenio record identifier (integer)."
+    },
     "title": {
       "required": [
         "title"

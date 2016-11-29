@@ -625,6 +625,10 @@
       "type": "number",
       "description": "Invenio record identifier (integer)."
     },
+    "doi": {
+      "type": "string",
+      "description": "Invenio record identifier (integer)."
+    },
     "title_translations": {
       "type": "array",
       "items": {

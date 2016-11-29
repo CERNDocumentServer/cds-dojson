@@ -321,6 +321,10 @@
     "recid": {
       "description": "Invenio record identifier (integer).",
       "type": "number"
+    },
+    "doi": {
+      "type": "string",
+      "description": "Record DOI identifier (string)."
     }
   },
   "definitions": {

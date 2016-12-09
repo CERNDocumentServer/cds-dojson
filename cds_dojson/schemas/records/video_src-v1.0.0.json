@@ -95,6 +95,14 @@
         },
         "_project_id": {
           "type": "string"
+        },
+        "_deposit": {
+          "type": "object",
+          "properties": {
+            "extracted_metadata": {
+              "type": "object"
+            }
+          }
         }
       }
     }

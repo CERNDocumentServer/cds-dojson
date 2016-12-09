@@ -374,6 +374,9 @@
           "name": "created_by",
           "description": "ID of user that created the deposit.",
           "type": "integer"
+        },
+        "extracted_metadata": {
+          "type": "object"
         }
       }
     },

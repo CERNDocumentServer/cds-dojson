@@ -405,6 +405,9 @@
           "title": "Creator",
           "type": "integer",
           "description": "ID of user that created the deposit."
+        },
+        "extracted_metadata": {
+          "type": "object"
         }
       }
     },

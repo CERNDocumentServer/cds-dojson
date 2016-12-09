@@ -483,6 +483,9 @@
               "type": "integer"
             }
           ]
+        },
+        "extracted_metadata": {
+          "type": "object"
         }
       }
     },

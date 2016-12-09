@@ -82,6 +82,14 @@
               }
             }
           }
+        },
+        "_deposit": {
+          "type": "object",
+          "properties": {
+            "extracted_metadata": {
+              "type": "object"
+            }
+          }
         }
       }
     }

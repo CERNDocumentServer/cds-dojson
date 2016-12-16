@@ -232,7 +232,10 @@
   "additionalProperties": false,
   "type": "object",
   "required": [
-    "_deposit"
+    "_deposit",
+    "date",
+    "category",
+    "type"
   ],
   "properties": {
     "copyright": {
@@ -269,6 +272,14 @@
       "required": [
         "value"
       ]
+    },
+    "category": {
+      "description": "Category of the project.",
+      "type": "string"
+    },
+    "type": {
+      "description": "Type of the project.",
+      "type": "string"
     },
     "title": {
       "additionalProperties": false,

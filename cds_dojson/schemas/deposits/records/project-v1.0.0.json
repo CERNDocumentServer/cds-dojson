@@ -232,7 +232,10 @@
   },
   "description": "Describe information needed for deposit module.",
   "required": [
-    "_deposit"
+    "_deposit",
+    "date",
+    "category",
+    "type"
   ],
   "properties": {
     "creator": {
@@ -431,6 +434,14 @@
     "doi": {
       "type": "string",
       "description": "Invenio record identifier (integer)."
+    },
+    "category": {
+      "description": "Category of the project.",
+      "type": "string"
+    },
+    "type": {
+      "description": "Type of the project.",
+      "type": "string"
     },
     "title": {
       "required": [

@@ -468,6 +468,14 @@
       "type": "string",
       "description": "Record DOI identifier (string)."
     },
+    "category": {
+      "description": "Category of the project.",
+      "type": "string"
+    },
+    "type": {
+      "description": "Type of the project.",
+      "type": "string"
+    },
     "_deposit": {
       "type": "object",
       "properties": {
@@ -592,7 +600,10 @@
     }
   },
   "required": [
-    "recid"
+    "recid",
+    "date",
+    "category",
+    "type"
   ],
   "title": "CDS Base Record Schema v1.0.0"
 }

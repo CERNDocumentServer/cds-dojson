@@ -281,6 +281,14 @@
           "type": "string"
         }
       }
+    },
+    "category": {
+      "description": "Category of the project.",
+      "type": "string"
+    },
+    "type": {
+      "description": "Type of the project.",
+      "type": "string"
     }
   },
   "required": ["recid"]

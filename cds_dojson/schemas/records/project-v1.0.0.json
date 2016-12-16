@@ -328,6 +328,14 @@
     "doi": {
       "type": "string",
       "description": "Record DOI identifier (string)."
+    },
+    "category": {
+      "description": "Category of the project.",
+      "type": "string"
+    },
+    "type": {
+      "description": "Type of the project.",
+      "type": "string"
     }
   },
   "definitions": {
@@ -560,6 +568,9 @@
   },
   "type": "object",
   "required": [
-    "recid"
+    "recid",
+    "date",
+    "category",
+    "type"
   ]
 }

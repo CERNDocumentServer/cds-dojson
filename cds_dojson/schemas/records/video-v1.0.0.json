@@ -614,7 +614,8 @@
     "recid",
     "date",
     "category",
-    "type"
+    "type",
+    "report_number"
   ],
   "title": "CDS Base Record Schema v1.0.0"
 }

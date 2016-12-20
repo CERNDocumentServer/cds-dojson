@@ -117,7 +117,8 @@
         "recid",
         "date",
         "category",
-        "type"
+        "type",
+        "report_number"
       ]
     }
   ]

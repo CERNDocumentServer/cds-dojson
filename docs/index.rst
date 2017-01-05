@@ -1,6 +1,6 @@
 ..
   This file is part of cds_dojson
-  Copyright (C) 2015 CERN.
+  Copyright (C) 2015, 2016, 2017 CERN.
 
   cds_dojson is free software; you can redistribute it and/or
   modify it under the terms of the Revised BSD License; see LICENSE

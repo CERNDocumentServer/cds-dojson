@@ -232,7 +232,10 @@
   },
   "description": "Describe information needed for deposit module.",
   "required": [
-    "_deposit"
+    "_deposit",
+    "date",
+    "category",
+    "type"
   ],
   "properties": {
     "report_number": {

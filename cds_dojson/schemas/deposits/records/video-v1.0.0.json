@@ -232,7 +232,10 @@
   "additionalProperties": false,
   "type": "object",
   "required": [
-    "_deposit"
+    "_deposit",
+    "date",
+    "category",
+    "type"
   ],
   "properties": {
     "report_number": {

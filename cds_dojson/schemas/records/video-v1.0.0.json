@@ -230,6 +230,9 @@
   "type": "object",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "properties": {
+    "featured": {
+      "type": "boolean"
+    },
     "title_translations": {
       "type": "array",
       "items": {

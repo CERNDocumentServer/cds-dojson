@@ -238,6 +238,9 @@
     "type"
   ],
   "properties": {
+    "featured": {
+      "type": "boolean"
+    },
     "report_number": {
       "type": "object",
       "properties": {

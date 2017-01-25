@@ -6,8 +6,8 @@ cache:
 - pip
 env:
   matrix:
-  - REQUIREMENTS=lowest
-  - REQUIREMENTS=release
+  # - REQUIREMENTS=lowest
+  # - REQUIREMENTS=release
   - REQUIREMENTS=devel
 python:
 - '2.7'

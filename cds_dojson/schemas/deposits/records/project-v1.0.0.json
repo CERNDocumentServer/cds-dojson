@@ -141,8 +141,28 @@
       "type": "object"
     },
     "license": {
-      "description": "A license document that applies to this content, typically indicated by URL.",
-      "type": "string"
+        "items": {
+            "additionalProperties": false,
+            "properties": {
+                "license": {
+                    "title": "License name",
+                    "type": "string"
+                },
+                "material": {
+                    "type": "string"
+                },
+                "url": {
+                    "format": "url",
+                    "title": "URL of the license",
+                    "type": "string"
+                }
+            },
+            "title": "License",
+            "type": "object"
+        },
+        "title": "License information",
+        "type": "array",
+        "uniqueItems": true
     },
     "date": {
       "format": "date-time",
@@ -487,8 +507,28 @@
       "type": "object"
     },
     "license": {
-      "description": "A license document that applies to this content, typically indicated by URL.",
-      "type": "string"
+        "items": {
+            "additionalProperties": false,
+            "properties": {
+                "license": {
+                    "title": "License name",
+                    "type": "string"
+                },
+                "material": {
+                    "type": "string"
+                },
+                "url": {
+                    "format": "url",
+                    "title": "URL of the license",
+                    "type": "string"
+                }
+            },
+            "title": "License",
+            "type": "object"
+        },
+        "title": "License information",
+        "type": "array",
+        "uniqueItems": true
     },
     "description_translations": {
       "items": {

@@ -258,6 +258,9 @@
     "type"
   ],
   "properties": {
+    "duration": {
+      "type": "string"
+    },
     "featured": {
       "type": "boolean"
     },

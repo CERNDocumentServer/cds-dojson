@@ -14,7 +14,7 @@
               {
                 "properties": {
                   "language": {
-                    "type": "string"
+                    "$ref": "base-v1.0.0.json#/definitions/language"
                   }
                 }
               }
@@ -31,7 +31,7 @@
               {
                 "properties": {
                   "language": {
-                    "type": "string"
+                    "$ref": "base-v1.0.0.json#/definitions/language"
                   }
                 }
               }

@@ -538,6 +538,28 @@
             "type": "string"
           },
           "language": {
+            "description": "A language of the resource.",
+            "enum": [
+              "bg",
+              "ca",
+              "de",
+              "el",
+              "en",
+              "es",
+              "fr",
+              "hr",
+              "it",
+              "ja",
+              "ka",
+              "no",
+              "pl",
+              "pt",
+              "ru",
+              "sk",
+              "sv",
+              "zh_CN",
+              "zh_TW"
+            ],
             "type": "string"
           },
           "value": {
@@ -563,6 +585,28 @@
             "type": "string"
           },
           "language": {
+            "description": "A language of the resource.",
+            "enum": [
+              "bg",
+              "ca",
+              "de",
+              "el",
+              "en",
+              "es",
+              "fr",
+              "hr",
+              "it",
+              "ja",
+              "ka",
+              "no",
+              "pl",
+              "pt",
+              "ru",
+              "sk",
+              "sv",
+              "zh_CN",
+              "zh_TW"
+            ],
             "type": "string"
           },
           "subtitle": {

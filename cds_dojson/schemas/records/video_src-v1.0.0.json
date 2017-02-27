@@ -114,7 +114,8 @@
         "type": {
           "description": "Type of the project.",
           "type": "string"
-        }
+        },
+        "language": { "$ref": "base-v1.0.0.json#/definitions/language" }
       },
       "required": [
         "recid",

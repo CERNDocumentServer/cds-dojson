@@ -70,10 +70,6 @@
       },
       "type": "object"
     },
-    "language": {
-      "description": "A language of the resource.",
-      "type": "string"
-    },
     "copyright": {
       "description": ".",
       "properties": {

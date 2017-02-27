@@ -157,6 +157,10 @@
     },
     "language": {
       "description": "A language of the resource.",
+      "enum": [
+        "en",
+        "fr"
+      ],
       "type": "string"
     },
     "copyright": {

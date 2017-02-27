@@ -140,8 +140,12 @@
         "uniqueItems": true
     },
     "language": {
-      "type": "string",
-      "description": "A language of the resource."
+      "description": "A language of the resource.",
+      "enum": [
+        "en",
+        "fr"
+      ],
+      "type": "string"
     },
     "copyright": {
       "type": "object",
@@ -650,6 +654,14 @@
       "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
     },
     "_project_id": {
+      "type": "string"
+    },
+    "language": {
+      "description": "A language of the resource.",
+      "enum": [
+        "en",
+        "fr"
+      ],
       "type": "string"
     }
   },

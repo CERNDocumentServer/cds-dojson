@@ -243,8 +243,12 @@
       ]
     },
     "language": {
-      "type": "string",
-      "description": "A language of the resource."
+      "description": "A language of the resource.",
+      "enum": [
+        "en",
+        "fr"
+      ],
+      "type": "string"
     }
   },
   "description": "Describe information needed for deposit module.",
@@ -723,6 +727,14 @@
       }
     },
     "_project_id": {
+      "type": "string"
+    },
+    "language": {
+      "description": "A language of the resource.",
+      "enum": [
+        "en",
+        "fr"
+      ],
       "type": "string"
     }
   }

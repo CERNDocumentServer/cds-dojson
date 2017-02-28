@@ -756,7 +756,8 @@
     "date",
     "category",
     "type",
-    "report_number"
+    "report_number",
+    "duration"
   ],
   "title": "CDS Base Record Schema v1.0.0"
 }

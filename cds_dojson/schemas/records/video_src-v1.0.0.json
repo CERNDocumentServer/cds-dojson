@@ -6,30 +6,20 @@
     {
       "properties": {
         "title": { "$ref": "base-v1.0.0.json#/definitions/title" },
-        "title_translations": {
-          "type": "array",
-          "items": {
-            "allOf": [
-              { "$ref": "base-v1.0.0.json#/definitions/title" },
-              {
-                "properties": {
-                  "language": {
-                    "$ref": "base-v1.0.0.json#/definitions/language"
-                  }
-                }
-              }
-            ]
-          }
-        },
         "keywords": { "$ref": "base-v1.0.0.json#/definitions/keywords" },
         "description": { "$ref": "base-v1.0.0.json#/definitions/description" },
-        "description_translations": {
+        "translations": {
           "type": "array",
           "items": {
             "allOf": [
-              { "$ref": "base-v1.0.0.json#/definitions/description" },
               {
                 "properties": {
+                  "title": {
+                    "$ref": "base-v1.0.0.json#/definitions/title"
+                  },
+                  "description": {
+                    "$ref": "base-v1.0.0.json#/definitions/description"
+                  },
                   "language": {
                     "$ref": "base-v1.0.0.json#/definitions/language"
                   }

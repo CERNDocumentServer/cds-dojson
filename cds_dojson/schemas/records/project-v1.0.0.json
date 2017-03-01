@@ -81,50 +81,6 @@
         ]
       }
     },
-    "description_translations": {
-      "type": "array",
-      "items": {
-        "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          },
-          "language": {
-            "description": "A language of the resource.",
-            "enum": [
-              "bg",
-              "ca",
-              "de",
-              "el",
-              "en",
-              "es",
-              "fr",
-              "hr",
-              "it",
-              "ja",
-              "ka",
-              "no",
-              "pl",
-              "pt",
-              "ru",
-              "sk",
-              "sv",
-              "zh_CN",
-              "zh_TW"
-            ],
-            "type": "string"
-          }
-        },
-        "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "value"
-        ]
-      }
-    },
     "license": {
         "items": {
             "additionalProperties": false,
@@ -149,21 +105,26 @@
         "type": "array",
         "uniqueItems": true
     },
-    "title_translations": {
-      "type": "array",
+    "translations": {
       "items": {
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "subtitle": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
+          "description": {
+            "additionalProperties": false,
+            "required": [
+              "value"
+            ],
+            "type": "object",
+            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
           },
           "language": {
-            "description": "A language of the resource.",
             "enum": [
               "bg",
               "ca",
@@ -185,16 +146,31 @@
               "zh_CN",
               "zh_TW"
             ],
-            "type": "string"
+            "type": "string",
+            "description": "A language of the resource."
+          },
+          "title": {
+            "additionalProperties": false,
+            "required": [
+              "title"
+            ],
+            "type": "object",
+            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "subtitle": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
           }
-        },
-        "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "title"
-        ]
-      }
+        }
+      },
+      "type": "array"
     },
     "date": {
       "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",

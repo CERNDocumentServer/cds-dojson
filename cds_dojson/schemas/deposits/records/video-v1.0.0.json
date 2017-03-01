@@ -372,21 +372,26 @@
         }
       }
     },
-    "description_translations": {
-      "type": "array",
+    "translations": {
       "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
+          "description": {
+            "additionalProperties": false,
+            "required": [
+              "value"
+            ],
+            "type": "object",
+            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
           },
           "language": {
-            "description": "A language of the resource.",
             "enum": [
               "bg",
               "ca",
@@ -408,13 +413,31 @@
               "zh_CN",
               "zh_TW"
             ],
-            "type": "string"
+            "type": "string",
+            "description": "A language of the resource."
+          },
+          "title": {
+            "additionalProperties": false,
+            "required": [
+              "title"
+            ],
+            "type": "object",
+            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "subtitle": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
           }
-        },
-        "required": [
-          "value"
-        ]
-      }
+        }
+      },
+      "type": "array"
     },
     "date": {
       "format": "date-time",
@@ -742,53 +765,6 @@
     "doi": {
       "type": "string",
       "description": "Invenio record identifier (integer)."
-    },
-    "title_translations": {
-      "type": "array",
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "subtitle": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          },
-          "language": {
-            "description": "A language of the resource.",
-            "enum": [
-              "bg",
-              "ca",
-              "de",
-              "el",
-              "en",
-              "es",
-              "fr",
-              "hr",
-              "it",
-              "ja",
-              "ka",
-              "no",
-              "pl",
-              "pt",
-              "ru",
-              "sk",
-              "sv",
-              "zh_CN",
-              "zh_TW"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "title"
-        ]
-      }
     },
     "_project_id": {
       "type": "string"

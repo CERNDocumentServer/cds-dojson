@@ -200,28 +200,28 @@
       }
     },
     "license": {
-        "items": {
-            "additionalProperties": false,
-            "properties": {
-                "license": {
-                    "title": "License name",
-                    "type": "string"
-                },
-                "material": {
-                    "type": "string"
-                },
-                "url": {
-                    "format": "url",
-                    "title": "URL of the license",
-                    "type": "string"
-                }
-            },
-            "title": "License",
-            "type": "object"
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "license": {
+            "title": "License name",
+            "type": "string"
+          },
+          "material": {
+            "type": "string"
+          },
+          "url": {
+            "format": "url",
+            "title": "URL of the license",
+            "type": "string"
+          }
         },
-        "title": "License information",
-        "type": "array",
-        "uniqueItems": true
+        "title": "License",
+        "type": "object"
+      },
+      "title": "License information",
+      "type": "array",
+      "uniqueItems": true
     },
     "date": {
       "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",
@@ -233,8 +233,8 @@
       "type": "object",
       "properties": {
         "bucket": {
-            "type": "string"
-          },
+          "type": "string"
+        },
         "checksum": {
           "type": "string"
         },

@@ -208,6 +208,7 @@
             "type": "string"
           },
           "material": {
+            "title": "Material",
             "type": "string"
           },
           "url": {
@@ -256,6 +257,12 @@
           "type": "string"
         }
       }
+    },
+    "publication_date": {
+      "title": "Publication date",
+      "description": "When the record is published",
+      "type": "string",
+      "format" : "date-time"
     }
   },
   "type": "object",
@@ -341,6 +348,12 @@
     "type": {
       "description": "Type of the project.",
       "type": "string"
+    },
+    "publication_date": {
+      "title": "Publication date",
+      "description": "When the record is published",
+      "type": "string",
+      "format" : "date-time"
     }
   },
   "required": ["recid"]

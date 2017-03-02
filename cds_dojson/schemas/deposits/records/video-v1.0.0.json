@@ -17,28 +17,29 @@
       "description": "An unambiguous reference to the resource within a given context."
     },
     "license": {
-        "items": {
-            "additionalProperties": false,
-            "properties": {
-                "license": {
-                    "title": "License name",
-                    "type": "string"
-                },
-                "material": {
-                    "type": "string"
-                },
-                "url": {
-                    "format": "url",
-                    "title": "URL of the license",
-                    "type": "string"
-                }
-            },
-            "title": "License",
-            "type": "object"
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "license": {
+            "title": "License name",
+            "type": "string"
+          },
+          "material": {
+            "title": "License name",
+            "type": "string"
+          },
+          "url": {
+            "format": "url",
+            "title": "URL of the license",
+            "type": "string"
+          }
         },
-        "title": "License information",
-        "type": "array",
-        "uniqueItems": true
+        "title": "License",
+        "type": "object"
+      },
+      "title": "License information",
+      "type": "array",
+      "uniqueItems": true
     },
     "file": {
       "type": "object",
@@ -793,6 +794,12 @@
         "zh_TW"
       ],
       "type": "string"
+    },
+    "publication_date": {
+      "title": "Publication date",
+      "description": "When the record is published",
+      "type": "string",
+      "format" : "date-time"
     }
   }
 }

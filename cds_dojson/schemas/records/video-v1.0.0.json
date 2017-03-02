@@ -116,28 +116,29 @@
       "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity."
     },
     "license": {
-        "items": {
-            "additionalProperties": false,
-            "properties": {
-                "license": {
-                    "title": "License name",
-                    "type": "string"
-                },
-                "material": {
-                    "type": "string"
-                },
-                "url": {
-                    "format": "url",
-                    "title": "URL of the license",
-                    "type": "string"
-                }
-            },
-            "title": "License",
-            "type": "object"
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "license": {
+            "title": "License name",
+            "type": "string"
+          },
+          "material": {
+            "title": "Material",
+            "type": "string"
+          },
+          "url": {
+            "format": "url",
+            "title": "URL of the license",
+            "type": "string"
+          }
         },
-        "title": "License information",
-        "type": "array",
-        "uniqueItems": true
+        "title": "License",
+        "type": "object"
+      },
+      "title": "License information",
+      "type": "array",
+      "uniqueItems": true
     },
     "language": {
       "description": "A language of the resource.",
@@ -266,6 +267,12 @@
       "format": "date-time",
       "type": "string",
       "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)"
+    },
+    "publication_date": {
+      "title": "Publication date",
+      "description": "When the record is published",
+      "type": "string",
+      "format" : "date-time"
     }
   },
   "type": "object",
@@ -426,28 +433,29 @@
       "additionalProperties": false
     },
     "license": {
-        "items": {
-            "additionalProperties": false,
-            "properties": {
-                "license": {
-                    "title": "License name",
-                    "type": "string"
-                },
-                "material": {
-                    "type": "string"
-                },
-                "url": {
-                    "format": "url",
-                    "title": "URL of the license",
-                    "type": "string"
-                }
-            },
-            "title": "License",
-            "type": "object"
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "license": {
+            "title": "License name",
+            "type": "string"
+          },
+          "material": {
+            "title": "Material",
+            "type": "string"
+          },
+          "url": {
+            "format": "url",
+            "title": "URL of the license",
+            "type": "string"
+          }
         },
-        "title": "License information",
-        "type": "array",
-        "uniqueItems": true
+        "title": "License",
+        "type": "object"
+      },
+      "title": "License information",
+      "type": "array",
+      "uniqueItems": true
     },
     "contributors": {
       "type": "array",
@@ -720,6 +728,12 @@
         "zh_TW"
       ],
       "type": "string"
+    },
+    "publication_date": {
+      "title": "Publication date",
+      "description": "When the record is published",
+      "type": "string",
+      "format" : "date-time"
     }
   },
   "required": [

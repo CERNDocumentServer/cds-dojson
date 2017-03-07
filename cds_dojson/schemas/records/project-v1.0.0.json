@@ -323,7 +323,22 @@
       "type": "object",
       "properties": {
         "read": {
-          "type": "string"
+          "name": "read",
+          "type": "array",
+          "items": [
+            {
+              "type": ["integer", "string"]
+            }
+          ]
+        },
+        "update": {
+          "type": "array",
+          "name": "update",
+          "items": [
+            {
+              "type": ["integer", "string"]
+            }
+          ]
         }
       }
     },

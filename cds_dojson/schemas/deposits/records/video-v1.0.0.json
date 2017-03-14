@@ -448,23 +448,19 @@
     "_access": {
       "type": "object",
       "properties": {
-        "read": {
-          "name": "read",
-          "type": "array",
-          "items": [
-            {
-              "type": ["integer", "string"]
-            }
-          ]
-        },
         "update": {
           "type": "array",
-          "name": "update",
-          "items": [
-            {
-              "type": ["integer", "string"]
-            }
-          ]
+          "items": {
+            "type": "string",
+             "title": "Update"
+          }
+        },
+        "read": {
+          "type": "array",
+          "items": {
+            "type": "string",
+             "title": "Read"
+          }
         }
       }
     },

@@ -1,7 +1,8 @@
 {
-  "title": "CDS Deposit Project Schema.",
+  "title": "CDS Project Deposit Schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
+  "additionalProperties": false,
   "definitions": {
     "title": {
       "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
@@ -238,13 +239,6 @@
       "type": "object"
     }
   },
-  "description": "Describe information needed for deposit module.",
-  "required": [
-    "_deposit",
-    "date",
-    "category",
-    "type"
-  ],
   "properties": {
     "report_number": {
       "type": "object",
@@ -708,5 +702,12 @@
       "format" : "date-time"
     }
   },
-  "additionalProperties": false
+  "required": [
+    "_deposit",
+    "title",
+    "description",
+    "date",
+    "category",
+    "type"
+  ]
 }

@@ -1,10 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "CDS Project Record Schema v1.0.0",
   "allOf": [
     { "$ref": "base-v1.0.0.json" },
-    {"properties":
-      {
+    {
+      "properties": {
         "title": { "$ref": "base-v1.0.0.json#/definitions/title" },
         "keywords": { "$ref": "base-v1.0.0.json#/definitions/keywords" },
         "description": { "$ref": "base-v1.0.0.json#/definitions/description" },
@@ -92,10 +91,13 @@
       },
       "required": [
         "recid",
+        "title",
+        "description",
         "date",
+        "publication_date",
+        "report_number",
         "category",
-        "type",
-        "report_number"
+        "type"
       ]
     }
   ]

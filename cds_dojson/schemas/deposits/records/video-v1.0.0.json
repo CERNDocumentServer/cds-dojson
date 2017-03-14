@@ -1,4 +1,8 @@
 {
+  "title": "CDS Video Deposit Schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
   "definitions": {
     "identifier": {
       "additionalProperties": false,
@@ -260,16 +264,6 @@
       "type": "string"
     }
   },
-  "description": "Describe information needed for deposit module.",
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "additionalProperties": false,
-  "type": "object",
-  "required": [
-    "_deposit",
-    "date",
-    "category",
-    "type"
-  ],
   "properties": {
     "duration": {
       "type": "string"
@@ -795,5 +789,14 @@
       "type": "string",
       "format" : "date-time"
     }
-  }
+  },
+  "required": [
+    "_deposit",
+    "recid",
+    "title",
+    "description",
+    "date",
+    "category",
+    "type"
+  ]
 }

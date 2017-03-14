@@ -1,4 +1,7 @@
 {
+  "title": "CDS Base Record Schema v1.0.0",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
   "definitions": {
     "description": {
       "type": "object",
@@ -266,8 +269,6 @@
       "format" : "date-time"
     }
   },
-  "type": "object",
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "properties": {
     "duration": {
       "type": "string"
@@ -731,11 +732,13 @@
   },
   "required": [
     "recid",
+    "title",
+    "description",
     "date",
+    "publication_date",
+    "report_number",
     "category",
     "type",
-    "report_number",
     "duration"
-  ],
-  "title": "CDS Base Record Schema v1.0.0"
+  ]
 }

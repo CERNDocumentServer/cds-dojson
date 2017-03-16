@@ -154,19 +154,15 @@
       "description": "."
     },
     "keywords": {
-      "type": "array",
-      "description": "",
       "items": {
         "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
         }
-      }
+      },
+      "type": "array"
     },
     "title": {
       "additionalProperties": false,
@@ -360,18 +356,15 @@
       ]
     },
     "keywords": {
-      "type": "array",
-      "description": "",
       "items": {
+        "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
         }
-      }
+      },
+      "type": "array"
     },
     "translations": {
       "items": {

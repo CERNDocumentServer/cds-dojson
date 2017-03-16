@@ -250,18 +250,14 @@
     },
     "keywords": {
       "items": {
+        "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
-        },
-        "type": "object"
+        }
       },
-      "type": "array",
-      "description": ""
+      "type": "array"
     },
     "date": {
       "format": "date-time",
@@ -542,18 +538,14 @@
     },
     "keywords": {
       "items": {
+        "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
-        },
-        "type": "object"
+        }
       },
-      "type": "array",
-      "description": ""
+      "type": "array"
     },
     "recid": {
       "type": "number",

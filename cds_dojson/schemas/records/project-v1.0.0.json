@@ -3,17 +3,13 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "properties": {
     "keywords": {
-      "description": "",
       "items": {
+        "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
-        },
-        "type": "object"
+        }
       },
       "type": "array"
     },
@@ -473,17 +469,13 @@
       "additionalProperties": false
     },
     "keywords": {
-      "description": "",
       "items": {
+        "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
-        },
-        "type": "object"
+        }
       },
       "type": "array"
     },

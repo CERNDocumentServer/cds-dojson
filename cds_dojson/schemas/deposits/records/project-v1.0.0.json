@@ -107,17 +107,13 @@
     },
     "keywords": {
       "items": {
+        "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
-        },
-        "type": "object"
+        }
       },
-      "description": "",
       "type": "array"
     },
     "identifier": {
@@ -454,16 +450,13 @@
     },
     "keywords": {
       "items": {
+        "type": "object",
         "properties": {
-          "source": {
-            "type": "string"
-          },
-          "value": {
+          "$reference": {
             "type": "string"
           }
         }
       },
-      "description": "",
       "type": "array"
     },
     "recid": {

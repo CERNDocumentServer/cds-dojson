@@ -4,12 +4,7 @@
   "properties": {
     "keywords": {
       "items": {
-        "type": "object",
-        "properties": {
-          "$reference": {
-            "type": "string"
-          }
-        }
+        "type": "object"
       },
       "type": "array"
     },
@@ -470,12 +465,7 @@
     },
     "keywords": {
       "items": {
-        "type": "object",
-        "properties": {
-          "$reference": {
-            "type": "string"
-          }
-        }
+        "type": "object"
       },
       "type": "array"
     },

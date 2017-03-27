@@ -1,11 +1,17 @@
 {
+  "title": "CDS Video Deposit Schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "title": "CDS Deposit Video Schema.",
   "additionalProperties": false,
   "allOf": [
     {
       "$ref": "https://cdslabs.cern.ch/schemas/deposits/deposit-v1.0.0.json"
+    },
+    {
+      "$ref": "../../records/video-v1.0.0.json"
+    },
+    {
+      "$ref": "https://cdslabs.cern.ch/schemas/records/file-v1.0.0.json"
     },
     {
       "properties": {
@@ -23,14 +29,14 @@
       }
     },
     {
-      "$ref": "../../records/video-v1.0.0.json"
-    },
-    {
-      "$ref": "https://cdslabs.cern.ch/schemas/records/file-v1.0.0.json"
-    },
-    {
       "required": [
-        "_deposit"
+        "_deposit",
+        "recid",
+        "title",
+        "description",
+        "date",
+        "category",
+        "type"
       ]
     }
   ]

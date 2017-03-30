@@ -31,7 +31,6 @@
     {
       "required": [
         "_deposit",
-        "recid",
         "title",
         "description",
         "date",

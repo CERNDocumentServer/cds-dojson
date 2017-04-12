@@ -177,7 +177,6 @@
       "type": "string"
     },
     "copyright": {
-      "description": ".",
       "type": "object",
       "properties": {
         "holder": {

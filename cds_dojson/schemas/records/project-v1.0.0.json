@@ -234,7 +234,6 @@
           "format": "url"
         }
       },
-      "description": ".",
       "type": "object"
     },
     "language": {

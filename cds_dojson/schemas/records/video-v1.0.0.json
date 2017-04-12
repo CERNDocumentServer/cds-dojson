@@ -184,8 +184,7 @@
           "type": "string",
           "description": "The year during which the claimed copyright for the CreativeWork was first asserted."
         }
-      },
-      "description": "."
+      }
     },
     "identifier": {
       "type": "object",
@@ -327,8 +326,7 @@
         },
         "description": "A file object described using some basic subfields. (Usually to be extended)."
       },
-      "type": "array",
-      "description": "."
+      "type": "array"
     },
     "translations": {
       "items": {
@@ -529,8 +527,7 @@
           "type": "string",
           "description": "The year during which the claimed copyright for the CreativeWork was first asserted."
         }
-      },
-      "description": "."
+      }
     },
     "keywords": {
       "items": {

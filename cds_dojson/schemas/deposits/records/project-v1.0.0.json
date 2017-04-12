@@ -72,7 +72,6 @@
       "type": "object"
     },
     "copyright": {
-      "description": ".",
       "properties": {
         "year": {
           "format": "date-time",

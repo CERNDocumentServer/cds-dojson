@@ -10,6 +10,10 @@
     "name": {
       "description": "TODO",
       "type": "string"
+    },
+    "provenance": {
+      "description": "Specifies the provenance of a keyword",
+      "type": "string"
     }
   }
 }

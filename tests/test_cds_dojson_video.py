@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation,
 # Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-
 """Test cds dojson video records."""
 
 from __future__ import absolute_import
@@ -35,7 +34,6 @@ from cds_dojson.matcher import matcher
 from cds_dojson.to_marc21.models.video import model as to_marc21
 
 from testutils import mock_path_to_url, json_resolver
-
 
 CDS_VIDEO_PROJECT = """
 <record>
@@ -252,17 +250,18 @@ def test_video_clip(app):
 
         assert len(data.get('creation_production_credits_note')) == 3
         # It is a tuple and not a list because it is not dump to JSON
-        assert data[
-            'host_item_entry'][0]['report_number'] == ("CERN-MOVIE-2015-038", )
-        expected_physical_description = [
-            {
-                "accompanying_material": "16:9",
-                "other_physical_details": "1920x1080 16/9, 25.00",
-                "dimensions": ("25", ),
-                "extent": ("00:09:05.280", ),
-                "maximum_resolution": "1920x1080",
-            }
-        ]
+        assert data['host_item_entry'][0]['report_number'] == (
+            "CERN-MOVIE-2015-038", )
+        expected_physical_description = [{
+            "accompanying_material":
+            "16:9",
+            "other_physical_details":
+            "1920x1080 16/9, 25.00",
+            "dimensions": ("25", ),
+            "extent": ("00:09:05.280", ),
+            "maximum_resolution":
+            "1920x1080",
+        }]
         assert data.get(
             'physical_description') == expected_physical_description
 
@@ -280,31 +279,31 @@ def test_cli_do_cds_marc21_from_xml_video_clip(app):
         with open('record.xml', 'wb') as f:
             f.write(CDS_VIDEO_CLIP.encode('utf-8'))
 
-        result = runner.invoke(
-            cli.cli,
-            ['-i', 'record.xml', '-l', 'cds_marcxml', 'missing', 'cds_marc21']
-        )
+        result = runner.invoke(cli.cli, [
+            '-i', 'record.xml', '-l', 'cds_marcxml', 'missing', 'cds_marc21'
+        ])
         assert '' == result.output
         assert 0 == result.exit_code
 
-        result = runner.invoke(
-            cli.cli,
-            ['-i', 'record.xml', '-l', 'cds_marcxml', 'do', 'cds_marc21']
-        )
+        result = runner.invoke(cli.cli, [
+            '-i', 'record.xml', '-l', 'cds_marcxml', 'do', 'cds_marc21'
+        ])
         data = json.loads(result.output)[0]
 
         assert len(data.get('creation_production_credits_note')) == 3
-        assert data[
-            'host_item_entry'][0]['report_number'] == ["CERN-MOVIE-2015-038"]
-        expected_physical_description = [
-            {
-                "accompanying_material": "16:9",
-                "other_physical_details": "1920x1080 16/9, 25.00",
-                "dimensions": ["25"],
-                "extent": ["00:09:05.280"],
-                "maximum_resolution": "1920x1080",
-            }
+        assert data['host_item_entry'][0]['report_number'] == [
+            "CERN-MOVIE-2015-038"
         ]
+        expected_physical_description = [{
+            "accompanying_material":
+            "16:9",
+            "other_physical_details":
+            "1920x1080 16/9, 25.00",
+            "dimensions": ["25"],
+            "extent": ["00:09:05.280"],
+            "maximum_resolution":
+            "1920x1080",
+        }]
         assert data.get(
             'physical_description') == expected_physical_description
 
@@ -319,8 +318,8 @@ def test_video_project(app):
 
         data = model.do(blob)
 
-        assert data['constituent_unit_entry'][0][
-            'report_number'] == ('CERN-MOVIE-2015-038-001', )
+        assert data['constituent_unit_entry'][0]['report_number'] == (
+            'CERN-MOVIE-2015-038-001', )
         assert data.get('control_number') == '2053119'
 
         # Check that no fields are missing their model
@@ -337,21 +336,20 @@ def test_cli_do_cds_marc21_from_xml_video_project(app):
         with open('record.xml', 'wb') as f:
             f.write(CDS_VIDEO_PROJECT.encode('utf-8'))
 
-        result = runner.invoke(
-            cli.cli,
-            ['-i', 'record.xml', '-l', 'cds_marcxml', 'missing', 'cds_marc21']
-        )
+        result = runner.invoke(cli.cli, [
+            '-i', 'record.xml', '-l', 'cds_marcxml', 'missing', 'cds_marc21'
+        ])
         assert '' == result.output
         assert 0 == result.exit_code
 
-        result = runner.invoke(
-            cli.cli,
-            ['-i', 'record.xml', '-l', 'cds_marcxml', 'do', 'cds_marc21']
-        )
+        result = runner.invoke(cli.cli, [
+            '-i', 'record.xml', '-l', 'cds_marcxml', 'do', 'cds_marc21'
+        ])
         data = json.loads(result.output)[0]
 
-        assert data['constituent_unit_entry'][0][
-            'report_number'] == ['CERN-MOVIE-2015-038-001']
+        assert data['constituent_unit_entry'][0]['report_number'] == [
+            'CERN-MOVIE-2015-038-001'
+        ]
         assert data.get('control_number') == '2053119'
 
 
@@ -380,7 +378,8 @@ def test_jsonschema(app):
 
         assert '$schema' in data
         assert data['$schema'] == {
-            '$ref': 'records/video-v1.0.0.json'}
+            '$ref': 'records/videos/video/video-v1.0.0.json'
+        }
 
         blob = create_record(CDS_VIDEO_CLIP)
         model = matcher(blob, 'cds_dojson.marc21.models')
@@ -388,10 +387,13 @@ def test_jsonschema(app):
 
         assert '$schema' in data
         assert data['$schema'] == {
-            '$ref': 'records/video-v1.0.0.json'}
+            '$ref': 'records/videos/video/video-v1.0.0.json'
+        }
 
         schema = {
-            '$ref': 'http://cdslabs.cern.ch/schemas/records/video-v1.0.0.json'}
+            '$ref':
+            'http://cdslabs.cern.ch/schemas/records/videos/video/video-v1.0.0.json'
+        }
         resolver = json_resolver(schema)
         with pytest.raises(ValidationError) as exc_info:
             validate({'$schema': schema}, schema, resolver=resolver)

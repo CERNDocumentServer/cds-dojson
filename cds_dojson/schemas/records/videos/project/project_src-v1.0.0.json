@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "allOf": [
-    { "$ref": "base-v1.0.0.json" },
+    { "$ref": "../../base-v1.0.0.json" },
     {
       "properties": {
-        "title": { "$ref": "base-v1.0.0.json#/definitions/title" },
-        "keywords": { "$ref": "base-v1.0.0.json#/definitions/keywords" },
-        "description": { "$ref": "base-v1.0.0.json#/definitions/description" },
+        "title": { "$ref": "../../base-v1.0.0.json#/definitions/title" },
+        "keywords": { "$ref": "../../base-v1.0.0.json#/definitions/keywords" },
+        "description": { "$ref": "../../base-v1.0.0.json#/definitions/description" },
         "translations": {
           "type": "array",
           "items": {
@@ -14,25 +14,25 @@
               {
                 "properties": {
                   "title": {
-                    "$ref": "base-v1.0.0.json#/definitions/title"
+                    "$ref": "../../base-v1.0.0.json#/definitions/title"
                   },
                   "description": {
-                    "$ref": "base-v1.0.0.json#/definitions/description"
+                    "$ref": "../../base-v1.0.0.json#/definitions/description"
                   },
                   "language": {
-                    "$ref": "base-v1.0.0.json#/definitions/language"
+                    "$ref": "../../base-v1.0.0.json#/definitions/language"
                   }
                 }
               }
             ]
           }
         },
-        "creator": { "$ref": "base-v1.0.0.json#/definitions/creator" },
+        "creator": { "$ref": "../../base-v1.0.0.json#/definitions/creator" },
         "contributors": {
           "type": "array",
           "items": {
             "allOf": [
-              {"$ref": "base-v1.0.0.json#/definitions/contributor"},
+              {"$ref": "../../base-v1.0.0.json#/definitions/contributor"},
               {
                 "properties": {
                   "role": {
@@ -53,12 +53,12 @@
             ]
           }
         },
-        "date": { "$ref": "base-v1.0.0.json#/definitions/date" },
-        "license": { "$ref": "base-v1.0.0.json#/definitions/license" },
+        "date": { "$ref": "../../base-v1.0.0.json#/definitions/date" },
+        "license": { "$ref": "../../base-v1.0.0.json#/definitions/license" },
         "_files": {
             "type": "array",
             "items": {
-              "$ref": "base-v1.0.0.json#/definitions/file"
+              "$ref": "../../base-v1.0.0.json#/definitions/file"
             }
         },
         "videos": {

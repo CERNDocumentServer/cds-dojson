@@ -21,43 +21,47 @@
 # In applying this license, CERN does not
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
-
 """Test cds-dojson CLI and jsonschema compiler."""
 
 from __future__ import absolute_import
 
 import json
+
 import pkg_resources
-from click.testing import CliRunner
 
 from cds_dojson.cli import compile_schema
+from click.testing import CliRunner
 
 
 def test_cli():
     """Test cds-dojson CLI."""
     runner = CliRunner()
-    result = runner.invoke(
-        compile_schema,
-        [pkg_resources.resource_filename(
-            'cds_dojson.schemas', 'records/video_src-v1.0.0.json'), ]
-    )
+    result = runner.invoke(compile_schema, [
+        pkg_resources.resource_filename(
+            'cds_dojson.schemas',
+            'records/videos/video/video_src-v1.0.0.json'),
+    ])
 
     assert 0 == result.exit_code
     compiled_schema_result = json.loads(result.output)
-    with open(pkg_resources.resource_filename(
-            'cds_dojson.schemas', 'records/video-v1.0.0.json'), 'r') as f:
+    with open(
+            pkg_resources.resource_filename(
+                'cds_dojson.schemas',
+                'records/videos/video/video-v1.0.0.json'), 'r') as f:
         compile_schema_expected = json.load(f)
     assert compile_schema_expected == compiled_schema_result
 
-    result = runner.invoke(
-        compile_schema,
-        [pkg_resources.resource_filename(
-            'cds_dojson.schemas', 'records/project_src-v1.0.0.json'), ]
-    )
+    result = runner.invoke(compile_schema, [
+        pkg_resources.resource_filename(
+            'cds_dojson.schemas',
+            'records/videos/project/project_src-v1.0.0.json'),
+    ])
 
     assert 0 == result.exit_code
     compiled_schema_result = json.loads(result.output)
-    with open(pkg_resources.resource_filename(
-            'cds_dojson.schemas', 'records/project-v1.0.0.json'), 'r') as f:
+    with open(
+            pkg_resources.resource_filename(
+                'cds_dojson.schemas',
+                'records/videos/project/project-v1.0.0.json'), 'r') as f:
         compile_schema_expected = json.load(f)
     assert compile_schema_expected == compiled_schema_result

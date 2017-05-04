@@ -143,6 +143,27 @@
       "type": "array",
       "uniqueItems": true
     },
+    "related_links": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Related link name",
+            "type": "string"
+          },
+          "url": {
+            "format": "url",
+            "title": "Related URL",
+            "type": "string"
+          }
+        },
+        "title": "Related links",
+        "type": "object"
+      },
+      "title": "Related links information",
+      "type": "array",
+      "uniqueItems": true
+    },
     "language": {
       "description": "A language of the resource.",
       "enum": [
@@ -447,6 +468,27 @@
         "type": "object"
       },
       "title": "License information",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "related_links": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Related link name",
+            "type": "string"
+          },
+          "url": {
+            "format": "url",
+            "title": "Related URL",
+            "type": "string"
+          }
+        },
+        "title": "Related links",
+        "type": "object"
+      },
+      "title": "Related links information",
       "type": "array",
       "uniqueItems": true
     },

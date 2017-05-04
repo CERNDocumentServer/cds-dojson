@@ -56,6 +56,9 @@
         "date": { "$ref": "../../base-v1.0.0.json#/definitions/date" },
         "copyright": { "$ref": "../../base-v1.0.0.json#/definitions/copyright" },
         "license": { "$ref": "../../base-v1.0.0.json#/definitions/license" },
+        "vr": {
+          "type": "boolean"
+        },
         "duration": {
           "type": "string"
         },

@@ -269,6 +269,9 @@
     }
   },
   "properties": {
+    "vr": {
+      "type": "boolean"
+    },
     "duration": {
       "type": "string"
     },

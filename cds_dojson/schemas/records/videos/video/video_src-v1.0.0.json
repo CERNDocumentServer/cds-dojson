@@ -4,9 +4,9 @@
     { "$ref": "../../base-v1.0.0.json" },
     {
       "properties": {
-        "title": { "$ref": "../../base-v1.0.0.json#/definitions/title" },
-        "keywords": { "$ref": "../../base-v1.0.0.json#/definitions/keywords" },
-        "description": { "$ref": "../../base-v1.0.0.json#/definitions/description" },
+        "title": { "$ref": "../../definitions-v1.0.0.json#/definitions/title" },
+        "keywords": { "$ref": "../../definitions-v1.0.0.json#/definitions/keywords" },
+        "description": { "$ref": "../../definitions-v1.0.0.json#/definitions/description" },
         "translations": {
           "type": "array",
           "items": {
@@ -15,25 +15,25 @@
               {
                 "properties": {
                   "title": {
-                    "$ref": "../../base-v1.0.0.json#/definitions/title"
+                    "$ref": "../../definitions-v1.0.0.json#/definitions/title"
                   },
                   "description": {
-                    "$ref": "../../base-v1.0.0.json#/definitions/description"
+                    "$ref": "../../definitions-v1.0.0.json#/definitions/description"
                   },
                   "language": {
-                    "$ref": "../../base-v1.0.0.json#/definitions/language"
+                    "$ref": "../../definitions-v1.0.0.json#/definitions/language"
                   }
                 }
               }
             ]
           }
         },
-        "creator": { "$ref": "../../base-v1.0.0.json#/definitions/creator" },
+        "creator": { "$ref": "../../definitions-v1.0.0.json#/definitions/creator" },
         "contributors": {
           "type": "array",
           "items": {
             "allOf": [
-              {"$ref": "../../base-v1.0.0.json#/definitions/contributor"},
+              {"$ref": "../../definitions-v1.0.0.json#/definitions/contributor"},
               {
                 "properties": {
                   "role": {
@@ -54,10 +54,10 @@
             ]
           }
         },
-        "date": { "$ref": "../../base-v1.0.0.json#/definitions/date" },
-        "copyright": { "$ref": "../../base-v1.0.0.json#/definitions/copyright" },
-        "license": { "$ref": "../../base-v1.0.0.json#/definitions/license" },
-        "related_links": { "$ref": "../../base-v1.0.0.json#/definitions/related_links" },
+        "date": { "$ref": "../../definitions-v1.0.0.json#/definitions/date" },
+        "copyright": { "$ref": "../../definitions-v1.0.0.json#/definitions/copyright" },
+        "license": { "$ref": "../../definitions-v1.0.0.json#/definitions/license" },
+        "related_links": { "$ref": "../../definitions-v1.0.0.json#/definitions/related_links" },
         "vr": {
           "type": "boolean"
         },
@@ -71,7 +71,7 @@
           "type": "array",
           "items":{
             "allOf": [
-              { "$ref": "../../base-v1.0.0.json#/definitions/file" },
+              { "$ref": "../../definitions-v1.0.0.json#/definitions/file" },
               {
                 "properties": {
                   "category": {
@@ -111,7 +111,7 @@
           "description": "Type of the project.",
           "type": "string"
         },
-        "language": { "$ref": "../../base-v1.0.0.json#/definitions/language" }
+        "language": { "$ref": "../../definitions-v1.0.0.json#/definitions/language" }
       },
       "required": [
         "recid",

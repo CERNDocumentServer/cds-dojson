@@ -353,15 +353,17 @@
       "type": "array"
     },
     "translations": {
+      "type": "array",
       "items": {
+        "type": "object",
         "properties": {
           "description": {
+            "type": "object",
+            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
             "additionalProperties": false,
             "required": [
               "value"
             ],
-            "type": "object",
-            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
             "properties": {
               "source": {
                 "type": "string"
@@ -372,6 +374,7 @@
             }
           },
           "language": {
+            "description": "A language of the resource.",
             "enum": [
               "bg",
               "ca",
@@ -393,16 +396,15 @@
               "zh_CN",
               "zh_TW"
             ],
-            "type": "string",
-            "description": "A language of the resource."
+            "type": "string"
           },
           "title": {
+            "type": "object",
+            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
             "additionalProperties": false,
             "required": [
               "title"
             ],
-            "type": "object",
-            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
             "properties": {
               "source": {
                 "type": "string"
@@ -416,8 +418,7 @@
             }
           }
         }
-      },
-      "type": "array"
+      }
     },
     "date": {
       "format": "date-time",

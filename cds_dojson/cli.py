@@ -31,7 +31,7 @@ import json
 
 import click
 
-from .schemas.tranform import compile_schema as _compile_schema
+from .schemas.transform import compile_schema as _compile_schema
 
 
 @click.group()

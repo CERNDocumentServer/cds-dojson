@@ -12,7 +12,6 @@
 from __future__ import print_function
 
 import os
-import re
 import sys
 
 _html_theme = "sphinx_rtd_theme"
@@ -66,12 +65,12 @@ copyright = u'2014, CERN Document Server'
 #
 # The short X.Y version.
 
-with open(os.path.join('..', 'cds_dojson', 'version.py'), 'rt') as f:
-    version = re.search(
-        '__version__\s*=\s*"(?P<version>.*)"\n',
-        f.read()
-    ).group('version')
-
+g = {}
+with open(os.path.join(os.path.dirname(__file__), '..',
+                       'cds_dojson', 'version.py'),
+          'rt') as fp:
+    exec(fp.read(), g)
+    version = g['__version__']
 # The full version, including alpha/beta/rc tags.
 release = version
 

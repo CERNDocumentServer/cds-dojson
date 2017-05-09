@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2016, 2017 CERN.
 #
 # CERN Document Server is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -37,7 +37,6 @@ from .schemas.transform import compile_schema as _compile_schema
 @click.group()
 def cli():
     """CDS dojson CLI."""
-    pass
 
 
 @cli.command()

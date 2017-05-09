@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CDS.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2016, 2017 CERN.
 #
 # CDS is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -37,8 +37,6 @@ import jsonresolver
                     host='cdslabs.cern.ch')
 def resolve_definitions(path):
     """Resolve the JSON definition schema."""
-    # import pytest
-    # pytest.set_trace()
     with open(pkg_resources.resource_filename(
             'cds_dojson.schemas', path), 'r') as f:
         return json.load(f)

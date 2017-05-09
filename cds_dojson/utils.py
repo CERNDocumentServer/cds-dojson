@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,14 +16,51 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
-
 """The CDS DoJson Utils."""
 
 import functools
 from collections import defaultdict
 
+from collections import MutableMapping, MutableSequence
 import arrow
 import six
+
+
+class MementoDict(dict):
+    """Dictionary that remembers which keys have being access."""
+
+    def __init__(self, *args, **kwargs):
+        """Set memory and create the dictionary."""
+        self.memory = set()
+        super(MementoDict, self).__init__(*args, **kwargs)
+
+    def iteritems(self, skyp_memento=False):
+        """Add to memory the keys while iterating if not skyp."""
+        for key, value in six.iteritems(super(MementoDict, self)):
+            if not skyp_memento:
+                self.memory.add(key)
+            yield (key, value)
+    items = iteritems
+
+    def __getitem__(self, key):
+        """Add the key to memory before running the get."""
+        self.memory.add(key)
+        return super(MementoDict, self).__getitem__(key)
+
+    def get(self, key, default=None):
+        """Add the key to memory before running the get."""
+        self.memory.add(key)
+        return super(MementoDict, self).get(key, default)
+
+    @property
+    def accessed_keys(self):
+        """Get the list of accessed keys."""
+        return self.memory
+
+    @property
+    def not_accessed_keys(self):
+        """Get l the list of non-accessed keys."""
+        return set(self.keys()).difference(self.memory)
 
 
 def for_each_squash(f):
@@ -45,10 +82,35 @@ def for_each_squash(f):
             for key, element in six.iteritems(unmerged_dict):
                 merge_dict[key].append(element)
 
-        merge_dict = {key: (value if len(value) > 1 else value[0])
-                      for key, value in six.iteritems(merge_dict)}
+        merge_dict = {
+            key: (value if len(value) > 1 else value[0])
+            for key, value in six.iteritems(merge_dict)
+        }
         return merge_dict
+
     return wrapper
+
+
+def not_accessed_keys(blob):
+    """Calculate not accessed keys from the blob.
+
+    It assumes the blob is an instance of MementoDict or a list.
+    """
+    missing = set()
+    if isinstance(blob, MutableMapping):
+        missing = blob.not_accessed_keys
+        for key, value in blob.iteritems(skyp_memento=True):
+            partial_missing = not_accessed_keys(value)
+            if partial_missing:
+                missing.update(
+                    ['{0}{1}'.format(key, f) for f in partial_missing])
+                if key in missing:
+                    missing.remove(key)
+    elif isinstance(blob, MutableSequence):
+        for value in blob:
+            missing.update(not_accessed_keys(value))
+
+    return missing
 
 
 def convert_date_to_iso_8601(date, format_='YYYY-MM-DD', **kwargs):

@@ -18,15 +18,25 @@
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 """Base model tests."""
 
-import pytest
+import os
+
+import pkg_resources
 from cds_dojson.marc21.models.base import model
+from cds_dojson.marc21.utils import create_record
 
 
-@pytest.mark.parametrize(
-    'marcxml_to_json', [('base.xml', model)], indirect=True)
-def test_base_model(app, marcxml_to_json):
+def test_base_model(app):
     """Test base model."""
-    record = marcxml_to_json
-    assert record['recid'] == 1495143
-    assert record['agency_code'] == 'SzGeCERN'
-    assert record['modification_date'] == '20170316170631.0'
+    marcxml = pkg_resources.resource_string(__name__,
+                                            os.path.join(
+                                                'fixtures', 'base.xml'))
+
+    with app.app_context():
+        blob = create_record(marcxml)
+        assert model.missing(blob) == {'001', '003', '005'}
+
+        record = model.do(blob)
+        assert record['recid'] == 1495143
+        assert record['agency_code'] == 'SzGeCERN'
+        assert record['modification_date'] == '20170316170631.0'
+        assert not model.missing(blob)

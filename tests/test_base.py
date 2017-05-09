@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of CERN Document Server.
+# This file is part of Invenio.
 # Copyright (C) 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
@@ -15,25 +15,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Common fields."""
+# 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
+"""Base model tests."""
 
-from ..models.base import model as marc21
-
-
-@marc21.over('recid', '^001')
-def recid(self, key, value):
-    """Record Identifier."""
-    return int(value)
+import pytest
+from cds_dojson.marc21.models.base import model
 
 
-@marc21.over('agency_code', '^003')
-def agency_code(self, key, value):
-    """Control number identifier"""
-    return value
-
-
-@marc21.over('modification_date', '^005')
-def modification_date(self, key, value):
-    """Date and Time of Latest Transaction."""
-    return value
+@pytest.mark.parametrize(
+    'marcxml_to_json', [('base.xml', model)], indirect=True)
+def test_base_model(app, marcxml_to_json):
+    """Test base model."""
+    record = marcxml_to_json
+    assert record['recid'] == 1495143
+    assert record['agency_code'] == 'SzGeCERN'
+    assert record['modification_date'] == '20170316170631.0'

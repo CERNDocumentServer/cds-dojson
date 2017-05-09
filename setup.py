@@ -89,6 +89,9 @@ setup(
         'cds_dojson.marc21.models': [
             'video = cds_dojson.marc21.models.video:model',
         ],
+        'cds_dojson.marc21.base': [
+            'base = cds_dojson.marc21.fields.base'
+        ],
         'cds_dojson.marc21.video': [
             'video = cds_dojson.marc21.fields.video'
         ],

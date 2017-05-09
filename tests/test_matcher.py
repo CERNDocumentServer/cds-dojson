@@ -20,9 +20,13 @@
 from cds_dojson.marc21.models import video
 from cds_dojson.matcher import matcher
 
+from dojson.contrib import marc21 as default
+
 
 def test_marc21_matcher():
     """Test CDS DoJSON matcher."""
     video_blob = {'980__': {'a': 'PUBLVIDEOMOVIE'}}
+    not_match = {'foo': 'bar'}
 
     assert video.model == matcher(video_blob, 'cds_dojson.marc21.models')
+    assert default.model == matcher(not_match, 'cds_dojson.marc21.models')

@@ -20,7 +20,7 @@
 """Utilities for converting MARC21."""
 
 from lxml import etree
-from six import StringIO, iteritems, string_types
+from six import StringIO, binary_type, text_type
 from dojson.contrib.marc21.utils import split_stream, MARC21_DTD
 
 
@@ -29,88 +29,60 @@ def create_record(marcxml, correct=False, keep_singletons=True):
     If correct == 1, then perform DTD validation
     If correct == 0, then do not perform DTD validation
     """
-    if isinstance(marcxml, string_types):
+    if isinstance(marcxml, binary_type):
+        marcxml = marcxml.decode('utf-8')
+
+    if isinstance(marcxml, text_type):
         parser = etree.XMLParser(dtd_validation=correct, recover=True)
 
         if correct:
-            marcxml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
-                       '<!DOCTYPE collection SYSTEM "file://{0}">\n'
-                       '<collection>\n{1}\n</collection>'.format(
+            marcxml = (u'<?xml version="1.0" encoding="UTF-8"?>\n'
+                       u'<!DOCTYPE collection SYSTEM "file://{0}">\n'
+                       u'<collection>\n{1}\n</collection>'.format(
                            MARC21_DTD, marcxml))
 
         tree = etree.parse(StringIO(marcxml), parser)
     else:
         tree = marcxml
-    record = {}
-    field_position_global = 0
+    record = []
+
+    leader_iterator = tree.iter(tag='{*}leader')
+    for leader in leader_iterator:
+        text = leader.text or ''
+        record.append(('leader', text))
 
     controlfield_iterator = tree.iter(tag='{*}controlfield')
     for controlfield in controlfield_iterator:
-        tag = controlfield.attrib.get('tag', '!')  # .encode("UTF-8")
-        ind1 = ' '
-        ind2 = ' '
-        text = controlfield.text
-        if text is None:
-            text = ''
-        else:
-            text = text  # .encode("UTF-8")
-        subfields = []
+        tag = controlfield.attrib.get('tag', '!')
+        text = controlfield.text or ''
         if text or keep_singletons:
-            field_position_global += 1
-            record.setdefault(tag, []).append((subfields, ind1, ind2, text,
-                                               field_position_global))
+            record.append((tag, text))
 
     datafield_iterator = tree.iter(tag='{*}datafield')
     for datafield in datafield_iterator:
-        tag = datafield.attrib.get('tag', '!')  # .encode("UTF-8")
-        ind1 = datafield.attrib.get('ind1', '!')  # .encode("UTF-8")
-        ind2 = datafield.attrib.get('ind2', '!')  # .encode("UTF-8")
-        # ind1, ind2 = _wash_indicators(ind1, ind2)
-        if ind1 in ('', '_'):
-            ind1 = ' '
-        if ind2 in ('', '_'):
-            ind2 = ' '
-        subfields = []
+        tag = datafield.attrib.get('tag', '!')
+        ind1 = datafield.attrib.get('ind1', '!')
+        ind2 = datafield.attrib.get('ind2', '!')
+        if ind1 in ('', '#'):
+            ind1 = '_'
+        if ind2 in ('', '#'):
+            ind2 = '_'
+        ind1 = ind1.replace(' ', '_')
+        ind2 = ind2.replace(' ', '_')
+
+        fields = []
         subfield_iterator = datafield.iter(tag='{*}subfield')
         for subfield in subfield_iterator:
             code = subfield.attrib.get('code', '!')  # .encode("UTF-8")
-            text = subfield.text
-            if text is None:
-                text = ''
-            else:
-                text = text  # .encode("UTF-8")
+            text = subfield.text or ''
             if text or keep_singletons:
-                subfields.append((code, text))
-        if subfields or keep_singletons:
-            text = ''
-            field_position_global += 1
-            record.setdefault(tag, []).append((subfields, ind1, ind2, text,
-                                               field_position_global))
+                fields.append((code, text))
 
-    class RecTree(dict):
-        def __setitem__(self, key, value):
-            """Set key making a list if already present."""
-            if key in self:
-                current_value = self.get(key)
-                if not isinstance(current_value, list):
-                    current_value = [current_value]
-                current_value.append(value)
-                value = current_value
-            super(RecTree, self).__setitem__(key, value)
+        if fields or keep_singletons:
+            key = '{0}{1}{2}'.format(tag, ind1, ind2)
+            record.append((key, dict(fields)))
 
-    rec_tree = RecTree()
-
-    for key, values in iteritems(record):
-        if key < '010' and key.isdigit():
-            rec_tree[key] = [value[3] for value in values]
-        else:
-            for value in values:
-                field = RecTree()
-                for subfield in value[0]:
-                    field[subfield[0]] = subfield[1]
-                rec_tree[(key + value[1] + value[2]).replace(' ', '_')] = field
-
-    return dict(rec_tree)
+    return dict(record)
 
 
 def load(source):

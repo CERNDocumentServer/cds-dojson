@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,14 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-
 """Base classes for CDS DoJSON."""
 
 import pkg_resources
-from dojson.contrib.to_marc21.model import Underdo as DoJSONUnderdo
 from dojson.overdo import Overdo as DoJSONOverdo
 
 from .matcher import matcher
+from .utils import not_accessed_keys
 
 try:
     pkg_resources.get_distribution('flask')
@@ -37,8 +36,10 @@ else:
 class OverdoBase(DoJSONOverdo):
     """Base entry class."""
 
-    def __init__(
-            self, bases=None, entry_point_group=None, entry_point_models=None):
+    def __init__(self,
+                 bases=None,
+                 entry_point_group=None,
+                 entry_point_models=None):
         """Init."""
         super(OverdoBase, self).__init__(bases, entry_point_group)
         self.entry_point_models = entry_point_models
@@ -62,6 +63,9 @@ class Overdo(DoJSONOverdo):
     __query__ = ''
     """To be used by the matcher to find the proper model."""
 
+    __ignore_keys__ = []
+    """List of keys which don't need transformation."""
+
     def over(self, name, *source_tags, **kwargs):
         """Register creator rule.
 
@@ -83,6 +87,11 @@ class Overdo(DoJSONOverdo):
 
         return super(Overdo, self).over(name, *source_tags)
 
+    def missing(self, blob, **kwargs):
+        """Return keys with missing rules."""
+        return set(self.__class__.__ignore_keys__).symmetric_difference(
+            not_accessed_keys(blob))
+
 
 class OverdoJSONSchema(Overdo):
     """Translation index which adds $schema key."""
@@ -95,8 +104,7 @@ class OverdoJSONSchema(Overdo):
         json = super(Overdo, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
-            exception_handlers=exception_handlers
-        )
+            exception_handlers=exception_handlers)
         if HAS_FLASK:
             json_schema = current_app.extensions['invenio-jsonschemas']
             json['$schema'] = {
@@ -106,13 +114,3 @@ class OverdoJSONSchema(Overdo):
             json['$schema'] = {'$ref': self.__class__.__schema__}
 
         return json
-
-    def missing(self, blob, **kwargs):
-        """Return keys with missing rules."""
-        return super(OverdoJSONSchema, self).missing(blob)
-
-
-class Underdo(Overdo, DoJSONUnderdo):
-    """Translation index specification for reverse marc21 translation."""
-
-    pass

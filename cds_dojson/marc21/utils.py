@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,12 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-
 """Utilities for converting MARC21."""
 
 from lxml import etree
 from six import StringIO, binary_type, text_type
 from dojson.contrib.marc21.utils import split_stream, MARC21_DTD
+
+from ..utils import MementoDict
 
 
 def create_record(marcxml, correct=False, keep_singletons=True):
@@ -81,9 +82,9 @@ def create_record(marcxml, correct=False, keep_singletons=True):
 
         if fields or keep_singletons:
             key = '{0}{1}{2}'.format(tag, ind1, ind2)
-            record.append((key, dict(fields)))
+            record.append((key, MementoDict(fields)))
 
-    return dict(record)
+    return MementoDict(record)
 
 
 def load(source):

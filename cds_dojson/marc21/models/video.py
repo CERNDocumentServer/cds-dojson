@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -20,7 +20,7 @@
 """Video model."""
 
 from ...overdo import OverdoJSONSchema
-from .default import model as cds_marc21
+from .base import model as cds_base
 
 
 class CDSVideo(OverdoJSONSchema):
@@ -30,20 +30,6 @@ class CDSVideo(OverdoJSONSchema):
 
     __schema__ = 'records/videos/video/video-v1.0.0.json'
 
-model = CDSVideo(bases=(cds_marc21, ),
+
+model = CDSVideo(bases=(cds_base, ),
                  entry_point_group='cds_dojson.marc21.video')
-
-
-@model.over('__order__', '__order__', override=True)
-def order(self, key, value):
-    """Preserve order of datafields."""
-    order = []
-    for field in value:
-        name = model.index.query(field)
-        if name:
-            name = name[0]
-        else:
-            name = field
-        order.append(name)
-
-    return order

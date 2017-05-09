@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,20 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+"""Common fields."""
 
-"""CDS To MARC21 model."""
-
-from dojson.contrib.to_marc21 import to_marc21
-
-from ...overdo import Underdo
+from ..models.base import model as marc21
 
 
-class CDSToMarc21(Underdo):
+@marc21.over('recid', '^001')
+def recid(self, key, value):
+    """Record Identifier."""
+    return value
 
-    """Translation Index for CDS specific MARC21."""
 
-    __query__ = 'subject_indicator:CERN'
+@marc21.over('agency_code', '^003')
+def agency_code(self, key, value):
+    """Control number identifier"""
+    return value
 
 
-model = CDSToMarc21(bases=(to_marc21, ),
-                    entry_point_group='cds_dojson.to_marc21.default')
+@marc21.over('modification_date', '^005')
+def modification_date(self, key, value):
+    """Date and Time of Latest Transaction."""
+    return value

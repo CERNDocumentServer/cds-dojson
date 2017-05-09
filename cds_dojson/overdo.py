@@ -108,8 +108,11 @@ class OverdoJSONSchema(Overdo):
 
         return json
 
+    def missing(self, blob, **kwargs):
+        """."""
+        raise NotImplementedError()
+
 
 class Underdo(Overdo, DoJSONUnderdo):
     """Translation index specification for reverse marc21 translation."""
-
     pass

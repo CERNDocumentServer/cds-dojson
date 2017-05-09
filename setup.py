@@ -87,52 +87,10 @@ setup(
     tests_require=tests_require,
     entry_points={
         'cds_dojson.marc21.models': [
-            'album = cds_dojson.marc21.models.album:model',
-            'default = cds_dojson.marc21.models.default:model',
-            'image = cds_dojson.marc21.models.image:model',
             'video = cds_dojson.marc21.models.video:model',
-        ],
-        'cds_dojson.marc21.default': [
-            'bd01x09x = cds_dojson.marc21.fields.default.bd01x09x',
-            'bd2xx = cds_dojson.marc21.fields.default.bd2xx',
-            'bd5xx = cds_dojson.marc21.fields.default.bd5xx',
-            'bd6xx = cds_dojson.marc21.fields.default.bd6xx',
-            'bd7xx = cds_dojson.marc21.fields.default.bd7xx',
-            'bd8xx = cds_dojson.marc21.fields.default.bd8xx',
-            'bd9xx = cds_dojson.marc21.fields.default.bd9xx',
-        ],
-        'cds_dojson.marc21.album': [
-            'album = cds_dojson.marc21.fields.album'
-        ],
-        'cds_dojson.marc21.image': [
-            'image = cds_dojson.marc21.fields.image'
         ],
         'cds_dojson.marc21.video': [
             'video = cds_dojson.marc21.fields.video'
-        ],
-        'cds_dojson.to_marc21.models': [
-            'album = cds_dojson.to_marc21.models.album:model',
-            'default = cds_dojson.to_marc21.models.default:model',
-            'image = cds_dojson.to_marc21.models.image:model',
-            'video = cds_dojson.to_marc21.models.video:model',
-        ],
-        'cds_dojson.to_marc21.default': [
-            'bd01x09x = cds_dojson.to_marc21.fields.default.bd01x09x',
-            'bd2xx = cds_dojson.to_marc21.fields.default.bd2xx',
-            'bd5xx = cds_dojson.to_marc21.fields.default.bd5xx',
-            'bd6xx = cds_dojson.to_marc21.fields.default.bd6xx',
-            'bd7xx = cds_dojson.to_marc21.fields.default.bd7xx',
-            'bd8xx = cds_dojson.to_marc21.fields.default.bd8xx',
-            'bd9xx = cds_dojson.to_marc21.fields.default.bd9xx',
-        ],
-        'cds_dojson.to_marc21.album': [
-            'album = cds_dojson.to_marc21.fields.album'
-        ],
-        'cds_dojson.to_marc21.image': [
-            'image = cds_dojson.to_marc21.fields.image'
-        ],
-        'cds_dojson.to_marc21.video': [
-            'video = cds_dojson.to_marc21.fields.video'
         ],
         # DoJSON entry points
         'console_scripts': [

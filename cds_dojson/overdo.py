@@ -20,9 +20,8 @@
 """Base classes for CDS DoJSON."""
 
 import pkg_resources
-
-from dojson.overdo import Overdo as DoJSONOverdo
 from dojson.contrib.to_marc21.model import Underdo as DoJSONUnderdo
+from dojson.overdo import Overdo as DoJSONOverdo
 
 from .matcher import matcher
 
@@ -107,6 +106,10 @@ class OverdoJSONSchema(Overdo):
             json['$schema'] = {'$ref': self.__class__.__schema__}
 
         return json
+
+    def missing(self, blob, **kwargs):
+        """Return keys with missing rules."""
+        return super(OverdoJSONSchema, self).missing(blob)
 
 
 class Underdo(Overdo, DoJSONUnderdo):

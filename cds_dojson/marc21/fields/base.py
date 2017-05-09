@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,36 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+"""Common fields."""
 
-"""CDS MARC21 model."""
-
-from dojson.contrib.marc21 import marc21
-
-from ...overdo import OverdoJSONSchema
+from ..models.base import model as marc21
 
 
-class CDSMarc21(OverdoJSONSchema):
-    """Translation Index for CDS specific MARC21."""
-
-    __query__ = '690C_.a:CERN'
-
-    __schema__ = 'records/default-v1.0.0.json'
+@marc21.over('recid', '^001')
+def recid(self, key, value):
+    """Record Identifier."""
+    return int(value)
 
 
-model = CDSMarc21(bases=(marc21, ),
-                  entry_point_group='cds_dojson.marc21.default')
+@marc21.over('agency_code', '^003')
+def agency_code(self, key, value):
+    """Control number identifier."""
+    return value
 
 
-@model.over('__order__', '__order__', override=True)
-def order(self, key, value):
-    """Preserve order of datafields."""
-    order = []
-    for field in value:
-        name = model.index.query(field)
-        if name:
-            name = name[0]
-        else:
-            name = field
-        order.append(name)
-
-    return order
+@marc21.over('modification_date', '^005')
+def modification_date(self, key, value):
+    """Date and Time of Latest Transaction."""
+    return value

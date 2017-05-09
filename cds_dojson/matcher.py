@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2015, 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -22,8 +22,9 @@
 import logging
 
 import pkg_resources
-import pypeg2
 
+import pypeg2
+from dojson.contrib.marc21 import model as default
 from invenio_query_parser.parser import Main as parser
 from invenio_query_parser.walkers.match_unit import MatchUnit
 from invenio_query_parser.walkers.pypeg_to_ast import PypegConverter
@@ -60,12 +61,9 @@ def matcher(record, entry_point_group):
     logger = logging.getLogger(__name__ + ".dojson_matcher")
 
     _matches = []
-    default = None
     for entry_point in pkg_resources.iter_entry_points(entry_point_group):
         model = entry_point.load()
         query = Query(model.__query__)
-        if entry_point.name == 'default':
-            default = model
 
         if query.match(record):
             logger.info("Model `{0}` found matching the query {1}.".format(

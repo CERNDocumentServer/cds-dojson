@@ -14,6 +14,20 @@
         "type": "string"
       }
     },
+    "access": {
+      "type": "object",
+      "properties": {
+        "public": {
+          "type": "boolean"
+        },
+        "restricted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "_record_type": {
       "description": "TODO",
       "type": "array",

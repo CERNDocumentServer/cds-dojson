@@ -28,7 +28,6 @@
             ]
           }
         },
-        "creator": { "$ref": "../../definitions-v1.0.0.json#/definitions/creator" },
         "contributors": {
           "type": "array",
           "items": {

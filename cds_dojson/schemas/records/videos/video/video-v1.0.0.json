@@ -335,11 +335,9 @@
           "title": "Owners",
           "type": "array",
           "description": "Owners of the record (a list of user's IDs).",
-          "items": [
-            {
-              "type": "integer"
-            }
-          ]
+          "items": {
+            "type": "integer"
+          }
         },
         "extracted_metadata": {
           "type": "object"
@@ -367,54 +365,6 @@
     },
     "$schema": {
       "type": "string"
-    },
-    "creator": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "format": "email",
-          "type": "string",
-          "description": "Contact email for the purpose of this specific record."
-        },
-        "affiliations": {
-          "items": {
-            "type": "string"
-          },
-          "uniqueItems": true,
-          "type": "array",
-          "description": "Affiliation(s) for the purpose of this specific record."
-        },
-        "contribution": {
-          "type": "string",
-          "description": "Specific contribution of the person to this specific record."
-        },
-        "name": {
-          "type": "string",
-          "description": "Full name of person. Personal name format: family, given."
-        },
-        "ids": {
-          "items": {
-            "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              },
-              "source": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          },
-          "uniqueItems": true,
-          "type": "array",
-          "description": "List of IDs related with the person."
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "additionalProperties": false,
-      "description": "An entity primarily responsible for making the resource. Examples of a Creator include a person, an organization, or a service. Typically, the name of a Creator should be used to indicate the entity."
     },
     "title": {
       "type": "object",

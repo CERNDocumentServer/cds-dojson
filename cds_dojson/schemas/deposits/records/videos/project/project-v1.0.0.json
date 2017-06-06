@@ -15,54 +15,6 @@
         }
       }
     },
-    "creator": {
-      "required": [
-        "name"
-      ],
-      "type": "object",
-      "description": "An entity primarily responsible for making the resource. Examples of a Creator include a person, an organization, or a service. Typically, the name of a Creator should be used to indicate the entity.",
-      "properties": {
-        "email": {
-          "format": "email",
-          "description": "Contact email for the purpose of this specific record.",
-          "type": "string"
-        },
-        "contribution": {
-          "description": "Specific contribution of the person to this specific record.",
-          "type": "string"
-        },
-        "affiliations": {
-          "items": {
-            "type": "string"
-          },
-          "description": "Affiliation(s) for the purpose of this specific record.",
-          "uniqueItems": true,
-          "type": "array"
-        },
-        "name": {
-          "description": "Full name of person. Personal name format: family, given.",
-          "type": "string"
-        },
-        "ids": {
-          "items": {
-            "type": "object",
-            "properties": {
-              "source": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          },
-          "description": "List of IDs related with the person.",
-          "uniqueItems": true,
-          "type": "array"
-        }
-      },
-      "additionalProperties": false
-    },
     "_access": {
       "type": "object",
       "properties": {
@@ -115,11 +67,9 @@
         },
         "owners": {
           "title": "Owners",
-          "items": [
-            {
-              "type": "integer"
-            }
-          ],
+          "items": {
+            "type": "integer"
+          },
           "description": "Owners of the deposit (a list of user's IDs).",
           "name": "owners",
           "type": "array"

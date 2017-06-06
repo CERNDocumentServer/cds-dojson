@@ -226,11 +226,9 @@
           "title": "Owners",
           "type": "array",
           "description": "Owners of the deposit (a list of user's IDs).",
-          "items": [
-            {
-              "type": "integer"
-            }
-          ]
+          "items": {
+            "type": "integer"
+          }
         },
         "status": {
           "name": "status",
@@ -447,54 +445,6 @@
           }
         }
       }
-    },
-    "creator": {
-      "additionalProperties": false,
-      "type": "object",
-      "description": "An entity primarily responsible for making the resource. Examples of a Creator include a person, an organization, or a service. Typically, the name of a Creator should be used to indicate the entity.",
-      "properties": {
-        "contribution": {
-          "type": "string",
-          "description": "Specific contribution of the person to this specific record."
-        },
-        "email": {
-          "format": "email",
-          "type": "string",
-          "description": "Contact email for the purpose of this specific record."
-        },
-        "name": {
-          "type": "string",
-          "description": "Full name of person. Personal name format: family, given."
-        },
-        "affiliations": {
-          "type": "array",
-          "uniqueItems": true,
-          "description": "Affiliation(s) for the purpose of this specific record.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "ids": {
-          "type": "array",
-          "uniqueItems": true,
-          "description": "List of IDs related with the person.",
-          "items": {
-            "additionalProperties": false,
-            "type": "object",
-            "properties": {
-              "source": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "required": [
-        "name"
-      ]
     },
     "_buckets": {
       "type": "object",

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,21 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+"""Common fields."""
 
-"""CDS special/custom tags."""
-
-from dojson import utils
-
-from ...models.default import model as to_marc21
+from ..models.base import model as marc21
 
 
-@to_marc21.over('859', '^electronic_mail_message$')
-@utils.reverse_for_each_value
-@utils.filter_values
-def electronic_mail_message(self, key, value):
-    """Electronic mail message."""
-    return {
-        'a': value.get('contact'),
-        'f': value.get('e-mail_address'),
-        'x': value.get('date'),
-    }
+@marc21.over('recid', '^001')
+def recid(self, key, value):
+    """Record Identifier."""
+    return int(value)
+
+
+@marc21.over('agency_code', '^003')
+def agency_code(self, key, value):
+    """Control number identifier"""
+    return value
+
+
+@marc21.over('modification_date', '^005')
+def modification_date(self, key, value):
+    """Date and Time of Latest Transaction."""
+    return value

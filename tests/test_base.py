@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of CERN Document Server.
-# Copyright (C) 2015 CERN.
+# This file is part of Invenio.
+# Copyright (C) 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -15,21 +15,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+# 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
+"""Base model tests."""
 
-"""CDS To MARC21 model."""
-
-from dojson.contrib.to_marc21 import to_marc21
-
-from ...overdo import Underdo
+import pytest
+from cds_dojson.marc21.models.base import model
 
 
-class CDSToMarc21(Underdo):
-
-    """Translation Index for CDS specific MARC21."""
-
-    __query__ = 'subject_indicator:CERN'
-
-
-model = CDSToMarc21(bases=(to_marc21, ),
-                    entry_point_group='cds_dojson.to_marc21.default')
+@pytest.mark.parametrize(
+    'marcxml_to_json', [('base.xml', model)], indirect=True)
+def test_base_model(app, marcxml_to_json):
+    """Test base model."""
+    record = marcxml_to_json
+    assert record['recid'] == 1495143
+    assert record['agency_code'] == 'SzGeCERN'
+    assert record['modification_date'] == '20170316170631.0'

@@ -19,10 +19,9 @@
 
 from __future__ import absolute_import
 
-import arrow
 from dojson.utils import filter_values
 
-from cds_dojson.utils import for_each_squash, convert_date_to_iso_8601
+from cds_dojson.utils import convert_date_to_iso_8601, for_each_squash
 
 
 def test_for_each_squash():

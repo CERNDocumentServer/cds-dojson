@@ -23,14 +23,12 @@
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 import copy
-import jsonschema
 import six
 
-from jsonresolver import JSONResolver
-from jsonresolver.contrib.jsonschema import ref_resolver_factory
+from jsonref import JsonRef
 
 
-def compile_schema(schema, base_uri='', ref_resolver=None, in_place=False):
+def compile_schema(schema, base_uri='', in_place=False):
     """Resolve references in schema.
 
     It is assumed that schemas have already been validated for backward
@@ -39,46 +37,13 @@ def compile_schema(schema, base_uri='', ref_resolver=None, in_place=False):
     :param schema: Schema that is currently processed.
     :param base_uri: URI of the currently processed schema.
                      If not provided it will use default.
-    :param ref_resolver: Resolver used to retrieve referenced schemas.
-                         If not provided it will use default.
     :param in_place: If set to False it will not modify given schema.
                           Modified copy of the schema will be returned.
     """
     if not in_place:
         schema = copy.deepcopy(schema)
 
-    if ref_resolver is None:
-        ref_resolver = jsonschema.RefResolver(
-            base_uri=base_uri, referrer=schema)
-
-    json_resolver = JSONResolver()
-    resolver_cls = ref_resolver_factory(json_resolver)
-    ref_refolver = resolver_cls.from_schema(schema)
-
-    return _compile_all_of(_resolve_references_sub(schema, ref_resolver))
-
-
-def _resolve_references_sub(schema, ref_resolver):
-    """Go through the schema and resolve references.
-
-    :param schema: Schema that is currently processed.
-    :param ref_resolver: Resolver used to retrieve referenced schemas.
-    """
-    if isinstance(schema, dict):
-        for key, json_value in six.iteritems(schema):
-            if isinstance(json_value, dict) and '$ref' in json_value:
-                    ref = json_value.pop('$ref', None)
-                    schema[key] = ref_resolver.resolve(ref)[1]
-            _resolve_references_sub(schema[key], ref_resolver)
-
-    elif isinstance(schema, list):
-        for i, schema_part in enumerate(schema):
-            if '$ref' in schema_part:
-                ref = schema_part.pop('$ref', None)
-                schema[i] = ref_resolver.resolve(ref)[1]
-            _resolve_references_sub(schema_part, ref_resolver)
-
-    return schema
+    return _compile_all_of(JsonRef.replace_refs(schema, base_uri=base_uri))
 
 
 def _compile_all_of(schema):

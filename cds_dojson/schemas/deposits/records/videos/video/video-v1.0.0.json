@@ -1,17 +1,139 @@
 {
-  "title": "CDS Video Deposit Schema",
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "additionalProperties": false,
   "properties": {
+    "_buckets": {
+      "type": "object",
+      "properties": {
+        "deposit": {
+          "type": "string",
+          "description": "Deposit bucket ID."
+        },
+        "record": {
+          "type": "string",
+          "description": "Record bucket ID."
+        }
+      }
+    },
+    "copyright": {
+      "type": "object",
+      "properties": {
+        "holder": {
+          "type": "string",
+          "description": "The party holding the legal copyright to the record."
+        },
+        "url": {
+          "type": "string",
+          "format": "url"
+        },
+        "year": {
+          "type": "string",
+          "description": "The year during which the claimed copyright for the CreativeWork was first asserted.",
+          "format": "date-time"
+        }
+      }
+    },
+    "_project_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        }
+      }
+    },
+    "recid": {
+      "type": "number",
+      "description": "Invenio record identifier (integer)."
+    },
     "vr": {
       "type": "boolean"
     },
-    "duration": {
-      "type": "string"
+    "contributors": {
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "Director",
+              "Camera operator",
+              "Producer",
+              "Music by",
+              "Editor",
+              "Provider",
+              "Translator",
+              "Other"
+            ]
+          },
+          "contribution": {
+            "type": "string",
+            "description": "Specific contribution of the person to this specific record."
+          },
+          "affiliations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "Affiliation(s) for the purpose of this specific record.",
+            "uniqueItems": true
+          },
+          "email": {
+            "type": "string",
+            "description": "Contact email for the purpose of this specific record.",
+            "format": "email"
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name of person. Personal name format: family, given."
+          },
+          "ids": {
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                }
+              }
+            },
+            "type": "array",
+            "description": "List of IDs related with the person.",
+            "uniqueItems": true
+          }
+        }
+      },
+      "type": "array"
     },
-    "featured": {
-      "type": "boolean"
+    "keywords": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "doi": {
+      "type": "string",
+      "description": "Record DOI identifier (string)."
     },
     "report_number": {
       "type": "object",
@@ -24,96 +146,177 @@
         }
       }
     },
-    "copyright": {
+    "_deposit": {
       "type": "object",
       "properties": {
-        "url": {
-          "format": "url",
-          "type": "string"
+        "created_by": {
+          "type": "integer",
+          "name": "created_by",
+          "description": "ID of user that created the deposit.",
+          "title": "Creator"
         },
-        "year": {
-          "format": "date-time",
-          "type": "string",
-          "description": "The year during which the claimed copyright for the CreativeWork was first asserted."
+        "extracted_metadata": {
+          "type": "object"
         },
-        "holder": {
+        "status": {
           "type": "string",
-          "description": "The party holding the legal copyright to the record."
+          "enum": [
+            "draft",
+            "published"
+          ],
+          "name": "status",
+          "title": "Status",
+          "description": "Status of the deposit, either 'draft' or 'published'."
+        },
+        "pid": {
+          "type": "object",
+          "description": "Identifier of the published record - usually the type and value of a 'recid'-type PID of the corresponding published record.",
+          "name": "pid",
+          "title": "Persistent identifier of the published record",
+          "properties": {
+            "revision_id": {
+              "type": "integer",
+              "description": "ID of the RecordMetadata revision. Used for record merging.",
+              "title": "Record Revision ID"
+            },
+            "type": {
+              "type": "string",
+              "description": "Type of the PID, in correspondece with PID's 'pid_type' property.",
+              "title": "PID Type"
+            },
+            "value": {
+              "type": "string",
+              "description": "Value of the PID, in correspondece with PID's 'pid_value' property.",
+              "title": "PID Value"
+            }
+          }
+        },
+        "owners": {
+          "name": "owners",
+          "title": "Owners",
+          "type": "array",
+          "description": "Owners of the deposit (a list of user's IDs).",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "state": {
+          "type": "object"
+        },
+        "id": {
+          "type": "string",
+          "name": "id",
+          "description": "Identifier of the deposit - usually the value of corresponding 'depid'-type PID.",
+          "title": "Persistent Identifier of the deposit"
+        }
+      },
+      "description": "Internal deposit metadata.",
+      "title": "Deposit",
+      "name": "_deposit",
+      "required": [
+        "id"
+      ]
+    },
+    "$schema": {
+      "type": "string"
+    },
+    "_access": {
+      "type": "object",
+      "properties": {
+        "read": {
+          "items": {
+            "type": "string",
+            "title": "Read"
+          },
+          "type": "array"
+        },
+        "update": {
+          "items": {
+            "type": "string",
+            "title": "Update"
+          },
+          "type": "array"
         }
       }
     },
-    "description": {
-      "additionalProperties": false,
-      "type": "object",
-      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
-      "properties": {
-        "source": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "value"
-      ]
-    },
-    "category": {
-      "description": "Category of the project.",
-      "type": "string"
+    "publication_date": {
+      "type": "string",
+      "description": "When the record is published",
+      "title": "Publication date",
+      "format": "date-time"
     },
     "type": {
-      "description": "Type of the project.",
-      "type": "string"
+      "type": "string",
+      "description": "Type of the project."
     },
-    "title": {
-      "additionalProperties": false,
+    "date": {
+      "type": "string",
+      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",
+      "format": "date-time"
+    },
+    "description": {
       "type": "object",
-      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
+      "additionalProperties": false,
+      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
+      "required": [
+        "value"
+      ],
       "properties": {
-        "title": {
-          "type": "string"
-        },
-        "subtitle": {
+        "value": {
           "type": "string"
         },
         "source": {
           "type": "string"
         }
-      },
-      "required": [
-        "title"
-      ]
+      }
     },
-    "keywords": {
-      "items": {
-        "type": "object"
-      },
-      "type": "array"
+    "_oai": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "OAI-PMH specific information.",
+      "properties": {
+        "sets": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "OAI-PMH sets for record."
+        },
+        "updated": {
+          "type": "string",
+          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
+        },
+        "id": {
+          "type": "string",
+          "description": "OAI-PMH record identifier."
+        }
+      }
+    },
+    "duration": {
+      "type": "string"
     },
     "translations": {
-      "type": "array",
       "items": {
         "type": "object",
         "properties": {
           "description": {
             "type": "object",
-            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
             "additionalProperties": false,
+            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
             "required": [
               "value"
             ],
             "properties": {
-              "source": {
+              "value": {
                 "type": "string"
               },
-              "value": {
+              "source": {
                 "type": "string"
               }
             }
           },
           "language": {
-            "description": "A language of the resource.",
+            "type": "string",
             "enum": [
               "bg",
               "ca",
@@ -135,12 +338,12 @@
               "zh_CN",
               "zh_TW"
             ],
-            "type": "string"
+            "description": "A language of the resource."
           },
           "title": {
             "type": "object",
-            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
             "additionalProperties": false,
+            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
             "required": [
               "title"
             ],
@@ -148,330 +351,48 @@
               "source": {
                 "type": "string"
               },
-              "subtitle": {
+              "title": {
                 "type": "string"
               },
-              "title": {
+              "subtitle": {
                 "type": "string"
               }
             }
           }
         }
-      }
-    },
-    "date": {
-      "format": "date-time",
-      "type": "string",
-      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)"
-    },
-    "_access": {
-      "type": "object",
-      "properties": {
-        "update": {
-          "type": "array",
-          "items": {
-            "type": "string",
-             "title": "Update"
-          }
-        },
-        "read": {
-          "type": "array",
-          "items": {
-            "type": "string",
-             "title": "Read"
-          }
-        }
-      }
-    },
-    "_deposit": {
-      "name": "_deposit",
-      "title": "Deposit",
-      "description": "Internal deposit metadata.",
-      "required": [
-        "id"
-      ],
-      "type": "object",
-      "properties": {
-        "pid": {
-          "name": "pid",
-          "title": "Persistent identifier of the published record",
-          "type": "object",
-          "description": "Identifier of the published record - usually the type and value of a 'recid'-type PID of the corresponding published record.",
-          "properties": {
-            "revision_id": {
-              "title": "Record Revision ID",
-              "type": "integer",
-              "description": "ID of the RecordMetadata revision. Used for record merging."
-            },
-            "type": {
-              "title": "PID Type",
-              "type": "string",
-              "description": "Type of the PID, in correspondece with PID's 'pid_type' property."
-            },
-            "value": {
-              "title": "PID Value",
-              "type": "string",
-              "description": "Value of the PID, in correspondece with PID's 'pid_value' property."
-            }
-          }
-        },
-        "id": {
-          "name": "id",
-          "title": "Persistent Identifier of the deposit",
-          "type": "string",
-          "description": "Identifier of the deposit - usually the value of corresponding 'depid'-type PID."
-        },
-        "owners": {
-          "name": "owners",
-          "title": "Owners",
-          "type": "array",
-          "description": "Owners of the deposit (a list of user's IDs).",
-          "items": {
-            "type": "integer"
-          }
-        },
-        "status": {
-          "name": "status",
-          "title": "Status",
-          "type": "string",
-          "description": "Status of the deposit, either 'draft' or 'published'.",
-          "enum": [
-            "draft",
-            "published"
-          ]
-        },
-        "state": {
-          "type": "object"
-        },
-        "created_by": {
-          "name": "created_by",
-          "title": "Creator",
-          "type": "integer",
-          "description": "ID of user that created the deposit."
-        },
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
-    },
-    "_oai": {
-      "description": "OAI-PMH specific information.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "description": "OAI-PMH record identifier.",
-          "type": "string"
-        },
-        "sets": {
-          "description": "OAI-PMH sets for record.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "updated": {
-          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)",
-          "type": "string"
-        }
-      }
-    },
-    "$schema": {
-      "type": "string"
-    },
-    "license": {
-        "items": {
-            "additionalProperties": false,
-            "properties": {
-                "license": {
-                    "title": "License name",
-                    "type": "string"
-                },
-                "material": {
-                    "type": "string"
-                },
-                "url": {
-                    "format": "url",
-                    "title": "URL of the license",
-                    "type": "string"
-                }
-            },
-            "title": "License",
-            "type": "object"
-        },
-        "title": "License information",
-        "type": "array",
-        "uniqueItems": true
+      },
+      "type": "array"
     },
     "related_links": {
       "items": {
+        "type": "object",
         "additionalProperties": false,
-        "properties": {
-          "name": {
-            "title": "Related link name",
-            "type": "string"
-          },
-          "url": {
-            "format": "url",
-            "title": "Related URL",
-            "type": "string"
-          }
-        },
         "title": "Related links",
-        "type": "object"
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Related URL",
+            "format": "url"
+          },
+          "name": {
+            "type": "string",
+            "title": "Related link name"
+          }
+        }
       },
-      "title": "Related links information",
       "type": "array",
+      "title": "Related links information",
       "uniqueItems": true
     },
-    "contributors": {
-      "type": "array",
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.",
-        "properties": {
-          "contribution": {
-            "type": "string",
-            "description": "Specific contribution of the person to this specific record."
-          },
-          "name": {
-            "type": "string",
-            "description": "Full name of person. Personal name format: family, given."
-          },
-          "affiliations": {
-            "type": "array",
-            "uniqueItems": true,
-            "description": "Affiliation(s) for the purpose of this specific record.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "Director",
-              "Camera operator",
-              "Producer",
-              "Music by",
-              "Editor",
-              "Provider",
-              "Translator",
-              "Other"
-            ]
-          },
-          "email": {
-            "format": "email",
-            "type": "string",
-            "description": "Contact email for the purpose of this specific record."
-          },
-          "ids": {
-            "type": "array",
-            "uniqueItems": true,
-            "description": "List of IDs related with the person.",
-            "items": {
-              "additionalProperties": false,
-              "type": "object",
-              "properties": {
-                "source": {
-                  "type": "string"
-                },
-                "value": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "required": [
-          "name"
-        ]
-      }
-    },
-    "_files": {
-      "name": "_files",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "Describe information needed for files in records.",
-        "properties": {
-          "width": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer"
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "Master",
-              "Slave",
-              "Subtitle",
-              "Other"
-            ],
-            "description": "Former BibDocFile.doctype."
-          },
-          "bucket": {
-            "type": "string"
-          },
-          "height": {
-            "type": "string"
-          },
-          "thumbnail": {
-            "type": "string"
-          },
-          "bitrate": {
-            "type": "string"
-          },
-          "checksum": {
-            "type": "string"
-          },
-          "previewer": {
-            "type": "string",
-            "description": "Identifier for previewer needed to preview this file."
-          },
-          "type": {
-            "type": "string",
-            "description": "File type extension."
-          },
-          "quality": {
-            "type": "string"
-          },
-          "version_id": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "_buckets": {
-      "type": "object",
-      "properties": {
-        "deposit": {
-          "type": "string",
-          "description": "Deposit bucket ID."
-        },
-        "record": {
-          "type": "string",
-          "description": "Record bucket ID."
-        }
-      }
-    },
-    "recid": {
-      "type": "number",
-      "description": "Invenio record identifier (integer)."
-    },
-    "doi": {
+    "category": {
       "type": "string",
-      "description": "Invenio record identifier (integer)."
+      "description": "Category of the project."
     },
-    "_project_id": {
-      "type": "string"
+    "featured": {
+      "type": "boolean"
     },
     "language": {
-      "description": "A language of the resource.",
+      "type": "string",
       "enum": [
         "bg",
         "ca",
@@ -493,15 +414,94 @@
         "zh_CN",
         "zh_TW"
       ],
-      "type": "string"
+      "description": "A language of the resource."
     },
-    "publication_date": {
-      "title": "Publication date",
-      "description": "When the record is published",
-      "type": "string",
-      "format" : "date-time"
-    }
-  },
+    "license": {
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "License",
+        "properties": {
+          "material": {
+            "type": "string",
+            "title": "Material"
+          },
+          "url": {
+            "type": "string",
+            "title": "URL of the license",
+            "format": "url"
+          },
+          "license": {
+            "type": "string",
+            "title": "License name"
+          }
+        }
+      },
+      "type": "array",
+      "title": "License information",
+      "uniqueItems": true
+    },
+    "_files": {
+      "type": "array",
+      "name": "_files",
+      "description": "Internal listing of files attached to deposit.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "File type extension."
+          },
+          "size": {
+            "type": "integer"
+          },
+          "bitrate": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "bucket": {
+            "type": "string"
+          },
+          "quality": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Master",
+              "Slave",
+              "Subtitle",
+              "Other"
+            ],
+            "description": "Former BibDocFile.doctype."
+          },
+          "key": {
+            "type": "string"
+          },
+          "width": {
+            "type": "string"
+          },
+          "height": {
+            "type": "string"
+          },
+          "version_id": {
+            "type": "string"
+          }
+        },
+        "description": "A file object described using some basic subfields. (Usually to be extended).",
+        "title": "File schema.",
+        "$schema": "http://json-schema.org/draft-04/schema#"
+        }
+      }
+    },
+  "description": "Describe information needed for deposit module.",
+  "title": "CDS Video Deposit Schema",
+  "additionalProperties": false,
   "required": [
     "_deposit",
     "title",
@@ -509,5 +509,6 @@
     "date",
     "category",
     "type"
-  ]
+  ],
+  "$schema": "http://json-schema.org/draft-04/schema#"
 }

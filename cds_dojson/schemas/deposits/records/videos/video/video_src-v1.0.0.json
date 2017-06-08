@@ -1,35 +1,20 @@
 {
-  "title": "CDS Video Deposit Schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "additionalProperties": false,
   "allOf": [
-    {
-      "$ref": "https://cdslabs.cern.ch/schemas/deposits/deposit-v1.0.0.json"
-    },
-    {
-      "$ref": "../../../../records/videos/video/video-v1.0.0.json"
-    },
-    {
-      "$ref": "https://cdslabs.cern.ch/schemas/records/file-v1.0.0.json"
-    },
+    { "$ref": "../../../deposit-v1.0.0.json" },
+    { "$ref": "../../../../records/videos/video/video-v1.0.0.json" },
+    { "$ref": "../../base-v1.0.0.json" },
     {
       "properties": {
-        "_deposit": {
-          "type": "object",
-          "properties": {
-            "state": {
-              "type": "object"
-            },
-            "extracted_metadata": {
-              "type": "object"
-            }
-          }
-        },
         "vr": {
           "type": "boolean"
         }
       }
+    },
+    {
+      "title": "CDS Video Deposit Schema"
     },
     {
       "required": [

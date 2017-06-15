@@ -3,7 +3,7 @@
   "type": "object",
   "additionalProperties": false,
   "allOf": [
-    { "$ref": "../../../deposit-v1.0.0.json" },
+    { "$ref": "../../../deposit-cds-v1.0.0.json" },
     { "$ref": "../../../../records/videos/video/video-v1.0.0.json" },
     { "$ref": "../../base-v1.0.0.json" },
     {

@@ -30,6 +30,7 @@
         },
         "contributors": {
           "type": "array",
+          "minItems": 1,
           "items": {
             "allOf": [
               {"$ref": "../../definitions-v1.0.0.json#/definitions/contributor"},
@@ -118,6 +119,7 @@
         "description",
         "date",
         "publication_date",
+        "contributors",
         "report_number",
         "category",
         "type",

@@ -1,363 +1,365 @@
 {
+  "$schema": "http://json-schema.org/draft-04/schema#", 
   "required": [
-    "recid",
-    "title",
-    "description",
-    "date",
-    "publication_date",
-    "report_number",
-    "category",
+    "recid", 
+    "title", 
+    "description", 
+    "date", 
+    "publication_date", 
+    "contributors", 
+    "report_number", 
+    "category", 
     "type"
-  ],
+  ], 
+  "type": "object", 
   "properties": {
-    "_access": {
-      "properties": {
-        "read": {
-          "items": {
-            "title": "Read",
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "update": {
-          "items": {
-            "title": "Update",
-            "type": "string"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "title": {
-      "required": [
-        "title"
-      ],
-      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-      "type": "object",
-      "properties": {
-        "source": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "subtitle": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "translations": {
-      "items": {
-        "properties": {
-          "description": {
-            "required": [
-              "value"
-            ],
-            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
-            "type": "object",
-            "properties": {
-              "source": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          },
-          "language": {
-            "description": "A language of the resource.",
-            "enum": [
-              "bg",
-              "ca",
-              "de",
-              "el",
-              "en",
-              "es",
-              "fr",
-              "hr",
-              "it",
-              "ja",
-              "ka",
-              "no",
-              "pl",
-              "pt",
-              "ru",
-              "sk",
-              "sv",
-              "zh_CN",
-              "zh_TW"
-            ],
-            "type": "string"
-          },
-          "title": {
-            "required": [
-              "title"
-            ],
-            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-            "type": "object",
-            "properties": {
-              "source": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "subtitle": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          }
-        },
-        "type": "object"
-      },
-      "type": "array"
-    },
-    "contributors": {
-      "items": {
-        "required": [
-          "name"
-        ],
-        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.",
-        "type": "object",
-        "properties": {
-          "email": {
-            "description": "Contact email for the purpose of this specific record.",
-            "format": "email",
-            "type": "string"
-          },
-          "affiliations": {
-            "description": "Affiliation(s) for the purpose of this specific record.",
-            "uniqueItems": true,
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "name": {
-            "description": "Full name of person. Personal name format: family, given.",
-            "type": "string"
-          },
-          "ids": {
-            "description": "List of IDs related with the person.",
-            "uniqueItems": true,
-            "items": {
-              "additionalProperties": false,
-              "properties": {
-                "source": {
-                  "type": "string"
-                },
-                "value": {
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            },
-            "type": "array"
-          },
-          "contribution": {
-            "description": "Specific contribution of the person to this specific record.",
-            "type": "string"
-          },
-          "role": {
-            "enum": [
-              "Director",
-              "Camera operator",
-              "Producer",
-              "Music by",
-              "Editor",
-              "Provider",
-              "Translator",
-              "Other"
-            ],
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "type": "array"
-    },
-    "description": {
-      "required": [
-        "value"
-      ],
-      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
-      "type": "object",
-      "properties": {
-        "source": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "report_number": {
-      "properties": {
-        "_report_number": {
-          "type": "string"
-        },
-        "report_number": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "_files": {
-      "items": {
-        "description": "A file object described using some basic subfields. (Usually to be extended).",
-        "type": "object",
-        "properties": {
-          "checksum": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
-          },
-          "version_id": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer"
-          },
-          "category": {
-            "description": "Former BibDocFile.doctype.",
-            "type": "string"
-          },
-          "bucket": {
-            "type": "string"
-          },
-          "type": {
-            "description": "File type extension.",
-            "type": "string"
-          }
-        }
-      },
-      "type": "array"
-    },
-    "type": {
-      "description": "Type of the project.",
-      "type": "string"
-    },
+    "category": {
+      "type": "string", 
+      "description": "Category of the project."
+    }, 
     "videos": {
       "items": {
+        "type": "object", 
         "properties": {
           "$reference": {
             "type": "string"
           }
-        },
-        "type": "object"
-      },
-      "type": "array"
-    },
-    "_deposit": {
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "extracted_metadata": {
-          "type": "object"
-        },
-        "created_by": {
-          "type": "integer"
-        },
-        "owners": {
-          "description": "Owners of the record (a list of user's IDs).",
-          "items": {
-            "type": "integer"
-          },
-          "name": "owners",
-          "title": "Owners",
-          "type": "array"
         }
-      },
-      "type": "object"
-    },
-    "date": {
-      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",
-      "format": "date-time",
-      "type": "string"
-    },
-    "recid": {
-      "description": "Invenio record identifier (integer).",
-      "type": "number"
-    },
+      }, 
+      "type": "array"
+    }, 
     "doi": {
-      "description": "Record DOI identifier (string).",
-      "type": "string"
-    },
+      "type": "string", 
+      "description": "Record DOI identifier (string)."
+    }, 
+    "description": {
+      "additionalProperties": false, 
+      "required": [
+        "value"
+      ], 
+      "type": "object", 
+      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.", 
+      "properties": {
+        "source": {
+          "type": "string"
+        }, 
+        "value": {
+          "type": "string"
+        }
+      }
+    }, 
+    "license": {
+      "uniqueItems": true, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "url": {
+            "title": "URL of the license", 
+            "type": "string", 
+            "format": "url"
+          }, 
+          "material": {
+            "type": "string", 
+            "title": "Material"
+          }, 
+          "license": {
+            "type": "string", 
+            "title": "License name"
+          }
+        }, 
+        "title": "License"
+      }, 
+      "type": "array", 
+      "title": "License information"
+    }, 
+    "report_number": {
+      "type": "object", 
+      "properties": {
+        "_report_number": {
+          "type": "string"
+        }, 
+        "report_number": {
+          "type": "string"
+        }
+      }
+    }, 
+    "_oai": {
+      "additionalProperties": false, 
+      "type": "object", 
+      "description": "OAI-PMH specific information.", 
+      "properties": {
+        "updated": {
+          "type": "string", 
+          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
+        }, 
+        "id": {
+          "type": "string", 
+          "description": "OAI-PMH record identifier."
+        }, 
+        "sets": {
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array", 
+          "description": "OAI-PMH sets for record."
+        }
+      }
+    }, 
+    "contributors": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "name"
+        ], 
+        "type": "object", 
+        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.", 
+        "properties": {
+          "name": {
+            "type": "string", 
+            "description": "Full name of person. Personal name format: family, given."
+          }, 
+          "ids": {
+            "uniqueItems": true, 
+            "items": {
+              "additionalProperties": false, 
+              "type": "object", 
+              "properties": {
+                "source": {
+                  "type": "string"
+                }, 
+                "value": {
+                  "type": "string"
+                }
+              }
+            }, 
+            "type": "array", 
+            "description": "List of IDs related with the person."
+          }, 
+          "affiliations": {
+            "uniqueItems": true, 
+            "items": {
+              "type": "string"
+            }, 
+            "type": "array", 
+            "description": "Affiliation(s) for the purpose of this specific record."
+          }, 
+          "role": {
+            "enum": [
+              "Director", 
+              "Camera operator", 
+              "Producer", 
+              "Music by", 
+              "Editor", 
+              "Provider", 
+              "Translator", 
+              "Other"
+            ], 
+            "type": "string"
+          }, 
+          "contribution": {
+            "type": "string", 
+            "description": "Specific contribution of the person to this specific record."
+          }, 
+          "email": {
+            "type": "string", 
+            "description": "Contact email for the purpose of this specific record.", 
+            "format": "email"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "title": {
+      "additionalProperties": false, 
+      "required": [
+        "title"
+      ], 
+      "type": "object", 
+      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.", 
+      "properties": {
+        "source": {
+          "type": "string"
+        }, 
+        "subtitle": {
+          "type": "string"
+        }, 
+        "title": {
+          "type": "string"
+        }
+      }
+    }, 
+    "translations": {
+      "items": {
+        "type": "object", 
+        "properties": {
+          "description": {
+            "additionalProperties": false, 
+            "required": [
+              "value"
+            ], 
+            "type": "object", 
+            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.", 
+            "properties": {
+              "source": {
+                "type": "string"
+              }, 
+              "value": {
+                "type": "string"
+              }
+            }
+          }, 
+          "language": {
+            "enum": [
+              "bg", 
+              "ca", 
+              "de", 
+              "el", 
+              "en", 
+              "es", 
+              "fr", 
+              "hr", 
+              "it", 
+              "ja", 
+              "ka", 
+              "no", 
+              "pl", 
+              "pt", 
+              "ru", 
+              "sk", 
+              "sv", 
+              "zh_CN", 
+              "zh_TW"
+            ], 
+            "type": "string", 
+            "description": "A language of the resource."
+          }, 
+          "title": {
+            "additionalProperties": false, 
+            "required": [
+              "title"
+            ], 
+            "type": "object", 
+            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.", 
+            "properties": {
+              "source": {
+                "type": "string"
+              }, 
+              "subtitle": {
+                "type": "string"
+              }, 
+              "title": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "_files": {
+      "items": {
+        "type": "object", 
+        "description": "A file object described using some basic subfields. (Usually to be extended).", 
+        "properties": {
+          "category": {
+            "type": "string", 
+            "description": "Former BibDocFile.doctype."
+          }, 
+          "checksum": {
+            "type": "string"
+          }, 
+          "bucket": {
+            "type": "string"
+          }, 
+          "version_id": {
+            "type": "string"
+          }, 
+          "key": {
+            "type": "string"
+          }, 
+          "type": {
+            "type": "string", 
+            "description": "File type extension."
+          }, 
+          "size": {
+            "type": "integer"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
     "keywords": {
       "items": {
         "type": "object"
-      },
+      }, 
       "type": "array"
-    },
+    }, 
+    "recid": {
+      "type": "number", 
+      "description": "Invenio record identifier (integer)."
+    }, 
+    "_access": {
+      "type": "object", 
+      "properties": {
+        "read": {
+          "items": {
+            "type": "string", 
+            "title": "Read"
+          }, 
+          "type": "array"
+        }, 
+        "update": {
+          "items": {
+            "type": "string", 
+            "title": "Update"
+          }, 
+          "type": "array"
+        }
+      }
+    }, 
+    "_deposit": {
+      "type": "object", 
+      "properties": {
+        "owners": {
+          "items": {
+            "type": "integer"
+          }, 
+          "title": "Owners", 
+          "type": "array", 
+          "description": "Owners of the record (a list of user's IDs).", 
+          "name": "owners"
+        }, 
+        "extracted_metadata": {
+          "type": "object"
+        }, 
+        "id": {
+          "type": "string"
+        }, 
+        "created_by": {
+          "type": "integer"
+        }
+      }
+    }, 
+    "date": {
+      "type": "string", 
+      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)", 
+      "format": "date-time"
+    }, 
     "publication_date": {
-      "description": "When the record is published",
-      "format": "date-time",
-      "title": "Publication date",
-      "type": "string"
-    },
+      "title": "Publication date", 
+      "type": "string", 
+      "description": "When the record is published", 
+      "format": "date-time"
+    }, 
     "$schema": {
       "type": "string"
-    },
-    "category": {
-      "description": "Category of the project.",
-      "type": "string"
-    },
-    "license": {
-      "uniqueItems": true,
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "url": {
-            "format": "url",
-            "title": "URL of the license",
-            "type": "string"
-          },
-          "license": {
-            "title": "License name",
-            "type": "string"
-          },
-          "material": {
-            "title": "Material",
-            "type": "string"
-          }
-        },
-        "title": "License",
-        "type": "object"
-      },
-      "title": "License information",
-      "type": "array"
-    },
-    "_oai": {
-      "description": "OAI-PMH specific information.",
-      "additionalProperties": false,
-      "properties": {
-        "sets": {
-          "description": "OAI-PMH sets for record.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "id": {
-          "description": "OAI-PMH record identifier.",
-          "type": "string"
-        },
-        "updated": {
-          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)",
-          "type": "string"
-        }
-      },
-      "type": "object"
+    }, 
+    "type": {
+      "type": "string", 
+      "description": "Type of the project."
     }
-  },
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "CDS Base Record Schema v1.0.0",
-  "type": "object"
+  }, 
+  "title": "CDS Base Record Schema v1.0.0"
 }

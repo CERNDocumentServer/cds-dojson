@@ -73,9 +73,12 @@
             }
           }
         },
-        "_deposit": {
+        "_cds": {
           "type": "object",
           "properties": {
+            "state": {
+              "type": "object"
+            },
             "extracted_metadata": {
               "type": "object"
             }

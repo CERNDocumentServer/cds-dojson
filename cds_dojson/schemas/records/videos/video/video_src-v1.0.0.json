@@ -95,9 +95,12 @@
         "_project_id": {
           "type": "string"
         },
-        "_deposit": {
+        "_cds": {
           "type": "object",
           "properties": {
+            "state": {
+              "type": "object"
+            },
             "extracted_metadata": {
               "type": "object"
             }

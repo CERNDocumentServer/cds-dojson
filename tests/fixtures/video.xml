@@ -1,0 +1,121 @@
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+  <record>
+    <controlfield tag="001">2272973</controlfield>
+    <controlfield tag="005">20170704112045.0</controlfield>
+    <datafield tag="037" ind1=" " ind2=" ">
+      <subfield code="a">CERN-MOVIE-2017-023-001</subfield>
+    </datafield>
+    <datafield tag="041" ind1=" " ind2=" ">
+      <subfield code="a">eng</subfield>
+    </datafield>
+    <datafield tag="100" ind1=" " ind2=" ">
+      <subfield code="a">CERN video productions</subfield>
+      <subfield code="e">Produced by</subfield>
+    </datafield>
+    <datafield tag="245" ind1=" " ind2=" ">
+      <subfield code="a">Happy 5th anniversary, Higgs boson!</subfield>
+    </datafield>
+    <datafield tag="260" ind1=" " ind2=" ">
+      <subfield code="c">2017</subfield>
+    </datafield>
+    <datafield tag="269" ind1=" " ind2=" ">
+      <subfield code="c">2017-07-04</subfield>
+    </datafield>
+    <datafield tag="300" ind1=" " ind2=" ">
+      <subfield code="a">00:01:09.480</subfield>
+      <subfield code="b">1920x1080 16/9, 25.00</subfield>
+      <subfield code="c">25</subfield>
+      <subfield code="d">1920x1080</subfield>
+      <subfield code="e">16:9</subfield>
+    </datafield>
+    <datafield tag="506" ind1="1" ind2=" ">
+      <subfield code="a"/>
+    </datafield>
+    <datafield tag="520" ind1=" " ind2=" ">
+      <subfield code="a">Where were you on 4 July 2012, the day in which the Higgs boson discovery was announced? Many people will be able to answer without referring to their diary. Perhaps you were among the few who had managed to secure a seat in CERN’s main auditorium, or who joined colleagues in universities and laboratories around the world at odd times of the day to watch the webcast. “I think we have it, no?” was the question posed by the then CERN Director General Rolf Heuer on 4 July in the CERN auditorium. The answer was as obvious as the emotion on faces in the crowd. The then ATLAS and CMS spokespersons, Fabiola Gianotti and Joe Incandela, had just presented the latest Higgs search results based on roughly two years of LHC operations. Given the hints for the Higgs presented a few months earlier in December 2011, the frenzy of rumours on blogs and intense media interest during the preceding weeks, and a title for the CERN seminar that left little to the imagination, the outcome was anticipated. This did not temper excitement.</subfield>
+    </datafield>
+    <datafield tag="542" ind1=" " ind2=" ">
+      <subfield code="d">CERN</subfield>
+      <subfield code="g">2017</subfield>
+    </datafield>
+    <datafield tag="653" ind1="1" ind2=" ">
+      <subfield code="a">higgs</subfield>
+      <subfield code="9">CERN</subfield>
+    </datafield>
+    <datafield tag="653" ind1="1" ind2=" ">
+      <subfield code="a">anniversary</subfield>
+      <subfield code="9">CERN</subfield>
+    </datafield>
+    <datafield tag="690" ind1="C" ind2=" ">
+      <subfield code="a">publvideomovie</subfield>
+    </datafield>
+    <datafield tag="700" ind1=" " ind2=" ">
+      <subfield code="a">CERN video productions</subfield>
+      <subfield code="e">Director</subfield>
+    </datafield>
+    <datafield tag="773" ind1=" " ind2=" ">
+      <subfield code="o">AVW.project.2963</subfield>
+      <subfield code="r">CERN-MOVIE-2017-023</subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
+      <subfield code="d">\\cern.ch\dfs\Services\MediaArchive\Video\Masters\Movies\CERN\2017\CERN-MOVIE-2017-023\Final_Output\CERN-MOVIE-2017-023-001.mov</subfield>
+      <subfield code="x">Absolute master path</subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
+      <subfield code="u">https://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-5872-kbps-1920x1080-audio-128-kbps-stereo.mp4</subfield>
+      <subfield code="x">mp45872</subfield>
+      <subfield code="y">5872 kbps maxH 1080 25 fps audio 128 kbps 48 kHz stereo</subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
+      <subfield code="u">https://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-2672-kbps-1280x720-audio-128-kbps-stereo.mp4</subfield>
+      <subfield code="x">mp42672</subfield>
+      <subfield code="y">2672 kbps maxH 720 25 fps audio 128 kbps 48 kHz stereo</subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
+      <subfield code="u">https://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-1436-kbps-853x480-audio-64-kbps-stereo.mp4</subfield>
+      <subfield code="x">mp41436</subfield>
+      <subfield code="y">1436 kbps maxH 480 25 fps audio 64 kbps 48 kHz stereo</subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
+      <subfield code="u">https://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-836-kbps-640x360-audio-64-kbps-stereo.mp4</subfield>
+      <subfield code="x">mp40836</subfield>
+      <subfield code="y">0836 kbps maxH 360 25 fps audio 64 kbps 48 kHz stereo</subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
+      <subfield code="u">https://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-386-kbps-426x240-audio-64-kbps-stereo.mp4</subfield>
+      <subfield code="x">mp40386</subfield>
+      <subfield code="y">0386 kbps maxH 240 15 fps audio 64 kbps 48 kHz stereo</subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
+      <subfield code="u">https://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg</subfield>
+      <subfield code="x">jpgposterframe</subfield>
+      <subfield code="y">posterframe 640x360 at 5 percent</subfield>
+    </datafield>
+    <datafield tag="859" ind1=" " ind2=" ">
+      <subfield code="f">Jacques.Fichet@cern.ch</subfield>
+    </datafield>
+    <datafield tag="937" ind1=" " ind2=" ">
+      <subfield code="c">04 Jul 2017</subfield>
+      <subfield code="s"/>
+    </datafield>
+    <datafield tag="960" ind1=" " ind2=" ">
+      <subfield code="a">85</subfield>
+    </datafield>
+    <datafield tag="970" ind1=" " ind2=" ">
+      <subfield code="a">AVW.clip.3447</subfield>
+    </datafield>
+    <datafield tag="980" ind1=" " ind2=" ">
+      <subfield code="a">PUBLVIDEOMOVIE</subfield>
+    </datafield>
+    <datafield tag="980" ind1=" " ind2=" ">
+      <subfield code="b">VIDEOMEDIALAB</subfield>
+    </datafield>
+  </record>
+</collection>

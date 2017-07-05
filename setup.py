@@ -87,13 +87,15 @@ setup(
     tests_require=tests_require,
     entry_points={
         'cds_dojson.marc21.models': [
-            'video = cds_dojson.marc21.models.video:model',
+            'video = cds_dojson.marc21.models.videos.video:model',
+            'video_project = cds_dojson.marc21.models.videos.project:model'
         ],
         'cds_dojson.marc21.base': [
             'base = cds_dojson.marc21.fields.base'
         ],
         'cds_dojson.marc21.video': [
-            'video = cds_dojson.marc21.fields.video'
+            'video = cds_dojson.marc21.fields.videos.video',
+            'project = cds_dojson.marc21.fields.videos.project'
         ],
         # DoJSON entry points
         'console_scripts': [

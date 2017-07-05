@@ -19,14 +19,15 @@
 
 """Video model."""
 
-from ...overdo import OverdoJSONSchema
-from .base import model as cds_base
+from ....overdo import OverdoJSONSchema
+from ..base import model as cds_base
 
 
 class CDSVideo(OverdoJSONSchema):
     """Translation Index for CDS Videos."""
 
-    __query__ = '980__.a:PUBLVIDEOMOVIE'
+    __query__ = '980__:VIDEO -980__:VIDEOARC -980__:VIDEOSHOOT \
+                 -970__:project -980__:DELETED'
 
     __schema__ = 'records/videos/video/video-v1.0.0.json'
 

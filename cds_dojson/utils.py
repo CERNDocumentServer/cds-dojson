@@ -19,9 +19,8 @@
 """The CDS DoJson Utils."""
 
 import functools
-from collections import defaultdict
+from collections import MutableMapping, MutableSequence, defaultdict
 
-from collections import MutableMapping, MutableSequence
 import arrow
 import six
 
@@ -32,6 +31,19 @@ class MementoDict(dict):
     def __init__(self, *args, **kwargs):
         """Set memory and create the dictionary."""
         self.memory = set()
+        if args and isinstance(args[0], MutableSequence):
+            args = list(args)
+            d = {}
+            for k, v in args[0]:
+                if k in d:
+                    try:
+                        d[k].append(v)
+                    except AttributeError:
+                        d[k] = [d[k], v]
+                else:
+                    d[k] = v
+            args[0] = [(k, v) for k, v in six.iteritems(d)]
+
         super(MementoDict, self).__init__(*args, **kwargs)
 
     def iteritems(self, skyp_memento=False):
@@ -40,6 +52,7 @@ class MementoDict(dict):
             if not skyp_memento:
                 self.memory.add(key)
             yield (key, value)
+
     items = iteritems
 
     def __getitem__(self, key):

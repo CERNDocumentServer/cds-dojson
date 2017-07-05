@@ -60,7 +60,7 @@ def test_not_accessed_keys():
     d1 = MementoDict()
     assert not not_accessed_keys(d1)
 
-    d1['a'] = [1, 2, 3]
+    d1 = MementoDict([('a', [1, 2, 3])])
     assert not_accessed_keys(d1) == {'a'}
     d1['b'] = MementoDict({'1': 1})
     assert not_accessed_keys(d1) == {'a', 'b1'}
@@ -79,3 +79,22 @@ def test_not_accessed_keys():
     for k, v in d2.iteritems():
         pass
     assert not_accessed_keys(d1) == {'a', 'c', 'd1', 'd2'}
+
+    d1['e'] = MementoDict([('1', 1), ('1', 2), ('1', 3)])
+    assert not_accessed_keys(d1) == {'a', 'c', 'd1', 'd2', 'e1'}
+
+
+def test_memento_dict():
+    """Check MementoDict class."""
+    d = MementoDict({'a': 1, 'b': 2})
+    assert d == {'a': 1, 'b': 2}
+
+    d = MementoDict([('a', 1), ('b', 2)])
+    assert d == {'a': 1, 'b': 2}
+
+    d = MementoDict([('a', 1), ('a', 2)])
+    assert d == {'a': [1, 2]}
+
+    # NOTE: is this the expected behavior?
+    d = MementoDict([('a', 1), ('a', [2, 3])])
+    assert d == {'a': [1, [2, 3]]}

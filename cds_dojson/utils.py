@@ -19,61 +19,61 @@
 """The CDS DoJson Utils."""
 
 import functools
-from collections import MutableMapping, MutableSequence, defaultdict
+from collections import defaultdict
 
 import arrow
 import six
 
+from dojson.utils import GroupableOrderedDict
 
-class MementoDict(dict):
+
+class MementoDict(GroupableOrderedDict):
     """Dictionary that remembers which keys have being access."""
 
-    def __init__(self, *args, **kwargs):
-        """Set memory and create the dictionary."""
-        self.memory = set()
-        if args and isinstance(args[0], MutableSequence):
-            args = list(args)
-            d = {}
-            for k, v in args[0]:
-                if k in d:
-                    try:
-                        d[k].append(v)
-                    except AttributeError:
-                        d[k] = [d[k], v]
-                else:
-                    d[k] = v
-            args[0] = [(k, v) for k, v in six.iteritems(d)]
+    def __new__(cls, *args):
+        """Add the memory to the default instance."""
+        cls.accessed_keys = property(
+            lambda self: set([k for k in self.__memory if k != '__order__']))
+        cls.not_accessed_keys = property(
+            lambda self: set(
+                [k for k in self.keys() if k != '__order__']
+            ).difference(self.__memory))
+        new = GroupableOrderedDict.__new__(cls, *args)
+        new.__memory = set()
+        new.__skip_memento = False
+        return new
 
-        super(MementoDict, self).__init__(*args, **kwargs)
-
-    def iteritems(self, skyp_memento=False):
+    def iteritems(self, skip_memento=False, **kwargs):
         """Add to memory the keys while iterating if not skyp."""
-        for key, value in six.iteritems(super(MementoDict, self)):
-            if not skyp_memento:
-                self.memory.add(key)
+        self.__skip_memento = skip_memento
+        for key, value in super(MementoDict, self).iteritems(**kwargs):
+            self._add_to_memory(key)
             yield (key, value)
+        self.__skip_memento = False
 
     items = iteritems
 
+    def __repr__(self):
+        """Output the representation of the GroupableOrderedDict."""
+        out = ("({!r}, {!r})".format(k, v)
+               for k, v in self.iteritems(skip_memento=True, repeated=True)
+               if k != '__order__')
+        return 'GroupableOrderedDict(({out}))'.format(out=', '.join(out))
+
+    def _add_to_memory(self, key):
+        """Add key to the memory is it is not locked."""
+        if not self.__skip_memento:
+            self.__memory.add(key)
+
     def __getitem__(self, key):
         """Add the key to memory before running the get."""
-        self.memory.add(key)
+        self._add_to_memory(key)
         return super(MementoDict, self).__getitem__(key)
 
     def get(self, key, default=None):
         """Add the key to memory before running the get."""
-        self.memory.add(key)
+        self._add_to_memory(key)
         return super(MementoDict, self).get(key, default)
-
-    @property
-    def accessed_keys(self):
-        """Get the list of accessed keys."""
-        return self.memory
-
-    @property
-    def not_accessed_keys(self):
-        """Get l the list of non-accessed keys."""
-        return set(self.keys()).difference(self.memory)
 
 
 def for_each_squash(f):
@@ -110,16 +110,16 @@ def not_accessed_keys(blob):
     It assumes the blob is an instance of MementoDict or a list.
     """
     missing = set()
-    if isinstance(blob, MutableMapping):
+    if isinstance(blob, dict):
         missing = blob.not_accessed_keys
-        for key, value in blob.iteritems(skyp_memento=True):
+        for key, value in blob.iteritems(skip_memento=True):
             partial_missing = not_accessed_keys(value)
             if partial_missing:
                 missing.update(
                     ['{0}{1}'.format(key, f) for f in partial_missing])
                 if key in missing:
                     missing.remove(key)
-    elif isinstance(blob, MutableSequence):
+    elif isinstance(blob, (tuple, list)):
         for value in blob:
             missing.update(not_accessed_keys(value))
 

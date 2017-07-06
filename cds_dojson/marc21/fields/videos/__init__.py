@@ -15,25 +15,5 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Common fields."""
-
-from ..models.base import model as marc21
-
-
-@marc21.over('recid', '^001')
-def recid(self, key, value):
-    """Record Identifier."""
-    return int(value)
-
-
-@marc21.over('agency_code', '^003')
-def agency_code(self, key, value):
-    """Control number identifier."""
-    return value or 'SzGeCERN'
-
-
-@marc21.over('modification_date', '^005')
-def modification_date(self, key, value):
-    """Date and Time of Latest Transaction."""
-    return value
+# 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
+"""CDS Video fields.."""

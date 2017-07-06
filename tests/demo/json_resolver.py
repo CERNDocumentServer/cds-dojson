@@ -34,7 +34,7 @@ import jsonresolver
 
 
 @jsonresolver.route('/schemas/<path:path>',
-                    host='cdslabs.cern.ch')
+                    host='cds.cern.ch')
 def resolve_definitions(path):
     """Resolve the JSON definition schema."""
     with open(pkg_resources.resource_filename(

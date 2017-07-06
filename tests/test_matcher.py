@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2017 CERN.
+# Copyright (C) 2015, 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -17,11 +17,10 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 
-from cds_dojson.marc21.models.videos import video
-from cds_dojson.marc21.models.videos import project
-from cds_dojson.matcher import matcher
-
 from dojson.contrib import marc21 as default
+
+from cds_dojson.marc21.models.videos import project, video
+from cds_dojson.matcher import matcher
 
 
 def test_marc21_matcher():

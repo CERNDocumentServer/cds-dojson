@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of DoJSON
-# Copyright (C) 2015 CERN.
+# This file is part of CERN Document Server.
+# Copyright (C) 2015, 2017 CERN.
 #
-# DoJSON is free software; you can redistribute it and/or
-# modify it under the terms of the Revised BSD License; see LICENSE
-# file for more details.
+# Invenio is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# Invenio is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Invenio; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+
 
 """CDS DoJSON extension"""
 
@@ -70,6 +81,7 @@ setup(
         'arrow>=0.7.0',
         'dojson>=1.2.1',
         'invenio-query-parser>=0.5.0',
+        'requests>=2.18.1',
     ],
     extras_require=extras_require,
     classifiers=[
@@ -87,15 +99,14 @@ setup(
     tests_require=tests_require,
     entry_points={
         'cds_dojson.marc21.models': [
-            'video = cds_dojson.marc21.models.videos.video:model',
-            'video_project = cds_dojson.marc21.models.videos.project:model'
+            'videos_video = cds_dojson.marc21.models.videos.video:model',
+            'videos_project = cds_dojson.marc21.models.videos.project:model'
         ],
         'cds_dojson.marc21.base': [
             'base = cds_dojson.marc21.fields.base'
         ],
         'cds_dojson.marc21.video': [
             'video = cds_dojson.marc21.fields.videos.video',
-            'project = cds_dojson.marc21.fields.videos.project'
         ],
         # DoJSON entry points
         'console_scripts': [
@@ -108,5 +119,9 @@ setup(
         'dojson.cli.load': [
             'cds_marcxml = cds_dojson.marc21.utils:load',
         ],
+        'invenio_jsonschemas.schemas': [
+            'cds = cds_dojson.schemas',
+        ],
+
     }
 )

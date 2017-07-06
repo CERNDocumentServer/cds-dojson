@@ -27,6 +27,11 @@ from invenio_jsonschemas import InvenioJSONSchemas
 def app():
     """Flask application fixture."""
     app_ = Flask(__name__)
+    app_.config.update(
+        TESTING=True,
+        JSONSCHEMAS_HOST='cds.cern.ch',
+    )
+
     app_.config.update(TESTING=True)
     InvenioJSONSchemas(app_)
     return app_

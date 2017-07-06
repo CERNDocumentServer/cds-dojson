@@ -39,14 +39,20 @@
                   "role": {
                     "type": "string",
                     "enum": [
+                      "Animations by",
+                      "Camera Operator",
+                      "Co-Producer",
+                      "Creator",
                       "Director",
-                      "Camera operator",
-                      "Producer",
-                      "Music by",
                       "Editor",
-                      "Provider",
-                      "Translator",
-                      "Other"
+                      "Music by",
+                      "Narrator",
+                      "Photography",
+                      "Producer",
+                      "Reporter",
+                      "Screenwriter",
+                      "Speaker",
+                      "Translator"
                     ]
                   }
                 }

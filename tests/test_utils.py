@@ -57,16 +57,31 @@ def test_convert_date_to_iso_8601():
 
 def test_not_accessed_keys():
     """Check not_accessed_keys function."""
-    d1 = MementoDict()
+    d1 = MementoDict([])
     assert not not_accessed_keys(d1)
 
     d1 = MementoDict([('a', [1, 2, 3])])
     assert not_accessed_keys(d1) == {'a'}
-    d1['b'] = MementoDict({'1': 1})
+
+    d1 = MementoDict([
+        ('a', [1, 2, 3]),
+        ('b', MementoDict({'1': 1}))
+    ])
     assert not_accessed_keys(d1) == {'a', 'b1'}
-    d1['c'] = 1
+
+    d1 = MementoDict([
+        ('a', [1, 2, 3]),
+        ('b', MementoDict({'1': 1})),
+        ('c', 1)
+    ])
     assert not_accessed_keys(d1) == {'a', 'b1', 'c'}
-    d1['d'] = [MementoDict({'1': 1, '2': 2}), MementoDict({'1': 2, '2': 2})]
+
+    d1 = MementoDict([
+        ('a', [1, 2, 3]),
+        ('b', MementoDict({'1': 1})),
+        ('c', 1),
+        ('d', [MementoDict({'1': 1, '2': 2}), MementoDict({'1': 2, '2': 2})])
+    ])
     assert not_accessed_keys(d1) == {'a', 'b1', 'c', 'd1', 'd2'}
 
     assert not d1.accessed_keys
@@ -80,8 +95,17 @@ def test_not_accessed_keys():
         pass
     assert not_accessed_keys(d1) == {'a', 'c', 'd1', 'd2'}
 
-    d1['e'] = MementoDict([('1', 1), ('1', 2), ('1', 3)])
-    assert not_accessed_keys(d1) == {'a', 'c', 'd1', 'd2', 'e1'}
+    d1.get('c')
+    assert not_accessed_keys(d1) == {'a', 'd1', 'd2'}
+
+    d1 = MementoDict([
+        ('a', [1, 2, 3]),
+        ('b', MementoDict({'1': 1})),
+        ('c', 1),
+        ('d', [MementoDict({'1': 1, '2': 2}), MementoDict({'1': 2, '2': 2})]),
+        ('e', MementoDict([('1', 1), ('1', 2), ('1', 3)]))
+    ])
+    assert not_accessed_keys(d1) == {'a', 'b1', 'c', 'd1', 'd2', 'e1'}
 
 
 def test_memento_dict():
@@ -97,4 +121,4 @@ def test_memento_dict():
 
     # NOTE: is this the expected behavior?
     d = MementoDict([('a', 1), ('a', [2, 3])])
-    assert d == {'a': [1, [2, 3]]}
+    assert d == {'a': [1, 2, 3]}

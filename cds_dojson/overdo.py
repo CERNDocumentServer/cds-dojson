@@ -63,7 +63,7 @@ class Overdo(DoJSONOverdo):
     __query__ = ''
     """To be used by the matcher to find the proper model."""
 
-    __ignore_keys__ = []
+    __ignore_keys__ = set()
     """List of keys which don't need transformation."""
 
     def over(self, name, *source_tags, **kwargs):
@@ -89,7 +89,7 @@ class Overdo(DoJSONOverdo):
 
     def missing(self, blob, **kwargs):
         """Return keys with missing rules."""
-        return set(self.__class__.__ignore_keys__).symmetric_difference(
+        return self.__class__.__ignore_keys__.symmetric_difference(
             not_accessed_keys(blob))
 
 

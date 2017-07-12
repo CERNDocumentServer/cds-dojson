@@ -18,12 +18,14 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Video fields."""
 
+from __future__ import absolute_import, print_function
+
 import re
 
 from dojson.utils import filter_values, for_each_value, force_list
 
 from ...models.videos.video import model
-from .utils import build_contributor
+from .utils import build_contributor, language_to_isocode
 
 
 # Required fields
@@ -114,3 +116,11 @@ def access(self, key, value):
                 for s in force_list(value.get('d') or value.get('m', '')) if s
             ])
     return _access
+
+
+# Language
+
+@model.over('language', '^041__')
+def language(self, key, value):
+    """Language."""
+    return language_to_isocode(value.get('a'))

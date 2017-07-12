@@ -19,6 +19,7 @@
 """Video utils."""
 
 import re
+import pycountry
 
 from dojson.utils import force_list
 from six import iteritems
@@ -187,3 +188,17 @@ def build_contributor(value):
         contributors.append(
             dict((k, v) for k, v in iteritems(contributor) if v is not None))
     return contributors
+
+
+def language_to_isocode(lang):
+    """Translate language to isocode."""
+    lang = lang.lower()
+    try:
+        return pycountry.languages.get(alpha_3=lang).alpha_2
+    except KeyError, AttributeError:
+        exceptions = {
+            'eng-fre': 'en-fr',
+            'silent': 'silent',
+            'sil': 'silent',
+        }
+        return exceptions.get(lang)

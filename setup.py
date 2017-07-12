@@ -47,6 +47,7 @@ tests_require = [
     'pytest-cov>=2.1.0',
     'pytest-pep8>=1.0.6',
     'pytest>=2.8.0',
+    'pycountry>=17.5.14',
 ]
 
 extras_require = {

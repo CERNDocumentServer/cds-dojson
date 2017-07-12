@@ -31,7 +31,10 @@ class CDSVideo(OverdoJSONSchema):
 
     __schema__ = 'records/videos/video/video-v1.0.0.json'
 
-    __ignore_keys__ = {'035__9', '035__a', '5061_2', '5061_5', '5061_a'}
+    __ignore_keys__ = {
+        '035__9', '035__a', '5061_2', '5061_5', '5061_a', '0248_a', '0248_p',
+        '0248_q',
+    }
 
 
 model = CDSVideo(bases=(cds_base, ),

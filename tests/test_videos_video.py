@@ -32,42 +32,50 @@ def test_required_fields(app):
         blob = create_record(marcxml)
         record = model.do(blob)
 
-        assert record['$schema'] == {
-            '$ref': ('https://cds.cern.ch/schemas/records/videos/video/'
-                     'video-v1.0.0.json')
+        assert record == {
+            '$schema': {
+                '$ref': ('https://cds.cern.ch/schemas/records/videos/video/'
+                         'video-v1.0.0.json')
+            },
+            '_access': {'read': ['test-group@cern.ch',
+                                 'cds-admin@cern.ch',
+                                 'test-email@cern.ch',
+                                 'example@test.com'],
+                        'update': ['Jacques.Fichet@cern.ch',
+                                   'christoph.martin.madsen@cern.ch']},
+            'category': 'CERN',
+            'contributors': [
+                {'name': 'CERN Video Productions', 'role': 'Producer'},
+                {'name': 'CERN Video Productions', 'role': 'Director'},
+                {'affiliations': (u'CERN',),
+                 'email': u'christoph.martin.madsen@cern.ch',
+                 'ids': [{'source': 'CERN', 'value': u'755568'},
+                         {'source': 'CDS', 'value': u'2090563'}],
+                 'name': 'Madsen, Christoph Martin',
+                 'role': 'Director'},
+                {'affiliations': (u'CERN',),
+                 'email': u'Paola.Catapano@cern.ch',
+                 'ids': [{'source': 'CERN', 'value': u'380837'},
+                         {'source': 'CDS', 'value': u'2050975'}],
+                 'name': 'Catapano, Paola',
+                 'role': 'Director'},
+                {'affiliations': (u'CERN',),
+                 'email': u'christoph.martin.madsen@cern.ch',
+                 'ids': [{'source': 'CERN', 'value': u'755568'},
+                         {'source': 'CDS', 'value': u'2090563'}],
+                 'name': 'Madsen, Christoph Martin',
+                 'role': 'Editor'}],
+            'date': '2017-07-04',
+            'description': ('Where were you on 4 July 2012, the day in which '
+                            'the Higgs boson discovery was announced?'),
+            'duration': '00:01:09',
+            'language': u'en',
+            'modification_date': '20170704112045.0',
+            'recid': 2272973,
+            'report_number': ['CERN-MOVIE-2017-023-001'],
+            'title': {'title': 'Happy 5th anniversary, Higgs boson!'},
+            'type': 'MOVIE'
         }
-        assert record['recid'] == 2272973
-        assert record['date'] == '2017-07-04'
-        assert record['duration'] == '00:01:09'
-        assert record['title'][
-            'title'] == 'Happy 5th anniversary, Higgs boson!'
-        assert record['contributors'][0] == {
-            'name': u'CERN Video Productions',
-            'role': 'Producer'
-        }
-        assert record['contributors'][-1] == {
-            'affiliations': ('CERN', ),
-            'email': 'christoph.martin.madsen@cern.ch',
-            'ids': [
-                {'source': 'CERN', 'value': u'755568'},
-                {'source': 'CDS', 'value': u'2090563'}
-            ],
-            'name': 'Madsen, Christoph Martin',
-            'role': 'Editor'
-        }
-        assert record['_access'] == {
-            'read': [
-                'test-group@cern.ch',
-                'cds-admin@cern.ch',
-                'test-email@cern.ch',
-                'example@test.com',
-            ],
-            'update': [
-                'Jacques.Fichet@cern.ch',
-                'christoph.martin.madsen@cern.ch',
-            ]
-        }
-        assert record['language'] == 'en'
 
         # Add required fields calculated by post-process tasks.
         record['publication_date'] = '2017-07-04'
@@ -82,3 +90,4 @@ def test_language_to_isocode():
     assert language_to_isocode('silent') == 'silent'
     assert language_to_isocode('sil') == 'silent'
     assert language_to_isocode('fuu') is None
+    assert language_to_isocode('test >3 chars') is None

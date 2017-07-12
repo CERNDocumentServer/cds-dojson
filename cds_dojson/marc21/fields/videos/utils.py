@@ -195,7 +195,7 @@ def language_to_isocode(lang):
     lang = lang.lower()
     try:
         return pycountry.languages.get(alpha_3=lang).alpha_2
-    except KeyError, AttributeError:
+    except (KeyError, AttributeError):
         exceptions = {
             'eng-fre': 'en-fr',
             'silent': 'silent',

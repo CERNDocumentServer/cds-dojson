@@ -2,6 +2,11 @@
   <record>
     <controlfield tag="001">2272973</controlfield>
     <controlfield tag="005">20170704112045.0</controlfield>
+    <datafield tag="0248" ind1=" " ind2=" ">
+      <subfield code="a">test a</subfield>
+      <subfield code="p">test p</subfield>
+      <subfield code="q">test q</subfield>
+    </datafield>
     <datafield tag="037" ind1=" " ind2=" ">
       <subfield code="a">CERN-MOVIE-2017-023-001</subfield>
     </datafield>
@@ -50,7 +55,7 @@
       <subfield code="m">example@test.com</subfield>
     </datafield>
     <datafield tag="520" ind1=" " ind2=" ">
-      <subfield code="a">Where were you on 4 July 2012, the day in which the Higgs boson discovery was announced? Many people will be able to answer without referring to their diary. Perhaps you were among the few who had managed to secure a seat in CERN’s main auditorium, or who joined colleagues in universities and laboratories around the world at odd times of the day to watch the webcast. “I think we have it, no?” was the question posed by the then CERN Director General Rolf Heuer on 4 July in the CERN auditorium. The answer was as obvious as the emotion on faces in the crowd. The then ATLAS and CMS spokespersons, Fabiola Gianotti and Joe Incandela, had just presented the latest Higgs search results based on roughly two years of LHC operations. Given the hints for the Higgs presented a few months earlier in December 2011, the frenzy of rumours on blogs and intense media interest during the preceding weeks, and a title for the CERN seminar that left little to the imagination, the outcome was anticipated. This did not temper excitement.</subfield>
+      <subfield code="a">Where were you on 4 July 2012, the day in which the Higgs boson discovery was announced?</subfield>
     </datafield>
     <datafield tag="542" ind1=" " ind2=" ">
       <subfield code="d">CERN</subfield>

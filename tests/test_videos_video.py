@@ -18,6 +18,7 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Video rules tests."""
 
+from cds_dojson.marc21.fields.videos.utils import language_to_isocode
 from cds_dojson.marc21.models.videos.video import model
 from cds_dojson.marc21.utils import create_record
 from helpers import load_fixture_file, validate
@@ -32,7 +33,8 @@ def test_required_fields(app):
         record = model.do(blob)
 
         assert record['$schema'] == {
-            '$ref': 'https://cds.cern.ch/schemas/records/videos/video/video-v1.0.0.json'
+            '$ref': ('https://cds.cern.ch/schemas/records/videos/video/'
+                     'video-v1.0.0.json')
         }
         assert record['recid'] == 2272973
         assert record['date'] == '2017-07-04'
@@ -65,7 +67,18 @@ def test_required_fields(app):
                 'christoph.martin.madsen@cern.ch',
             ]
         }
+        assert record['language'] == 'en'
 
         # Add required fields calculated by post-process tasks.
         record['publication_date'] = '2017-07-04'
         validate(record)
+
+
+def test_language_to_isocode():
+    """Test language to isocode."""
+    assert language_to_isocode('eng') == 'en'
+    assert language_to_isocode('eng-fre') == 'en-fr'
+    assert language_to_isocode('ITA') == 'it'
+    assert language_to_isocode('silent') == 'silent'
+    assert language_to_isocode('sil') == 'silent'
+    assert language_to_isocode('fuu') is None

@@ -21,61 +21,17 @@
 from __future__ import absolute_import, print_function
 
 import re
+import arrow
 
-from dojson.utils import filter_values, for_each_value, force_list
+from dojson.errors import IgnoreKey
+from dojson.utils import filter_values, force_list, \
+    ignore_value
 
 from ...models.videos.video import model
-from .utils import build_contributor, language_to_isocode
+from .utils import language_to_isocode
 
 
 # Required fields
-
-@model.over('title', '^245_[1_]')
-@filter_values
-def title(self, key, value):
-    """Title."""
-    return {
-        'title': value.get('a'),
-        'subtitle': value.get('b'),
-    }
-
-
-@model.over('description', '^520__')
-def description(self, key, value):
-    """Description."""
-    return value.get('a')
-
-
-@model.over('date', '^269__')
-def date(self, key, value):
-    """Date."""
-    return value.get('c')
-
-
-@model.over('contributors', '^(100|700)__')
-def contributors(self, key, value):
-    """Contributors."""
-    authors = self.get('contributors', [])
-    values = force_list(value)
-    for value in values:
-        authors.extend(build_contributor(value))
-    return authors
-
-
-@model.over('report_number', '^(037|088)__')
-@for_each_value
-def report_number(self, key, value):
-    """Report number.
-
-    Category and type are also derived from the report number.
-    """
-    rn = value.get('a') or value.get('9')
-    if rn and key.startswith('037__'):
-        # Extract category and type only from main report number, i.e. 037__a
-        self['category'], self['type'] = rn.split('-')[:2]
-
-    return rn
-
 
 @model.over('duration', '^300__')
 def duration(self, key, value):
@@ -92,35 +48,86 @@ def duration(self, key, value):
         return None
 
 
-# Access
-
-@model.over('_access', '(^859__)|(^506[1_]_)')
-def access(self, key, value):
-    """Access rights.
-
-    It includes read/update access.
-    - 859__f contains the email of the submitter.
-    - 506__m/5061_d list of groups or emails of people who can access the
-      record. The groups are in the form <group-name> [CERN] which needs to be
-      transform into the email form.
-    """
-    _access = self.get('_access', {})
-    for value in force_list(value):
-        if key == '859__' and 'f' in value:
-            _access.setdefault('update', [])
-            _access['update'].append(value.get('f'))
-        elif key.startswith('506'):
-            _access.setdefault('read', [])
-            _access['read'].extend([
-                s.replace(' [CERN]', '@cern.ch')
-                for s in force_list(value.get('d') or value.get('m', '')) if s
-            ])
-    return _access
-
-
 # Language
 
 @model.over('language', '^041__')
 def language(self, key, value):
     """Language."""
     return language_to_isocode(value.get('a'))
+
+
+# Rest
+
+@model.over('physical_medium', '^340__')
+@filter_values
+def physical_medium(self, key, value):
+    """Physical medium."""
+    return {
+        'camera': value.get('d'),
+        'medium_standard': value.get('a'),
+        'note': value.get('j')
+    }
+
+
+@model.over('_project_id', '^773__')
+@ignore_value
+def project_id(self, key, value):
+    """Report number."""
+    values = force_list(value)
+    project_id = None
+    related_links = self.get('related_links', [])
+    for value in values:
+        related_link = {}
+        if 'p' in value and 'u' in value:
+            related_link['name'] = value.get('p')
+        #  if value.get('u'):
+            related_link['url'] = value.get('u')
+        #  if related_link:
+            related_links.append(related_link)
+        else:
+            project_id = value.get('r')
+    if related_links:
+        self['related_links'] = related_links
+    if not project_id:
+        raise IgnoreKey('project_id')
+    return project_id
+
+
+@model.over('location', '^110__')
+def location(self, key, value):
+    """Location."""
+    return value.get('a')
+
+
+@model.over('internal_note', '^595')
+def internal_note(self, key, value):
+    """Internal note."""
+    return ", ".join(filter(None, [value.get('a'), value.get('s')]))
+
+
+@model.over('subject', '^65017')
+def subject(self, key, value):
+    """Subject."""
+    return {
+        'source': value.get('2', 'SzGeCERN'),
+        'term': value.get('a')
+    }
+
+
+@model.over('accelerator_experiments', '^693__')
+@filter_values
+def accelerator_experiments(self, key, value):
+    """Accelerator experiments."""
+    return {
+        'accelerator': value.get('a'),
+        'experiment': value.get('e'),
+        'study': value.get('s'),
+        'facility': value.get('f'),
+        'project': value.get('p'),
+    }
+
+
+@model.over('date', '^269__')
+def date(self, key, value):
+    """Date."""
+    return arrow.get(value.get('c')).strftime('%Y-%m-%d')

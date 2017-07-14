@@ -19,14 +19,14 @@
 """Video rules tests."""
 
 from cds_dojson.marc21.fields.videos.utils import language_to_isocode
-from cds_dojson.marc21.models.videos.video import model
+from cds_dojson.marc21.models.videos.project import model
 from cds_dojson.marc21.utils import create_record
 from helpers import load_fixture_file, validate
 
 
 def test_required_fields(app):
     """Test required fields."""
-    marcxml = load_fixture_file('videos_video.xml')
+    marcxml = load_fixture_file('videos_project.xml')
 
     with app.app_context():
         blob = create_record(marcxml)
@@ -34,57 +34,29 @@ def test_required_fields(app):
 
         assert record == {
             '$schema': {
-                '$ref': ('https://cds.cern.ch/schemas/records/videos/video/'
-                         'video-v1.0.0.json')
+                '$ref': ('https://cds.cern.ch/schemas/'
+                         'records/videos/project/project-v1.0.0.json')
             },
-            '_access': {'read': ['test-group@cern.ch',
-                                 'cds-admin@cern.ch',
-                                 'test-email@cern.ch',
-                                 'example@test.com'],
-                        'update': ['Jacques.Fichet@cern.ch',
-                                   'christoph.martin.madsen@cern.ch']},
-            '_project_id': 'CERN-MOVIE-2017-023',
+            '_access': {'update': ['Jacques.Fichet@cern.ch']},
             'category': 'CERN',
             'contributors': [
                 {'name': 'CERN Video Productions', 'role': 'Producer'},
-                {'name': 'CERN Video Productions', 'role': 'Director'},
-                {'affiliations': (u'CERN',),
-                 'email': u'christoph.martin.madsen@cern.ch',
-                 'ids': [{'source': 'CERN', 'value': u'755568'},
-                         {'source': 'CDS', 'value': u'2090563'}],
-                 'name': 'Madsen, Christoph Martin',
-                 'role': 'Director'},
-                {'affiliations': (u'CERN',),
-                 'email': u'Paola.Catapano@cern.ch',
-                 'ids': [{'source': 'CERN', 'value': u'380837'},
-                         {'source': 'CDS', 'value': u'2050975'}],
-                 'name': 'Catapano, Paola',
-                 'role': 'Director'},
-                {'affiliations': (u'CERN',),
-                 'email': u'christoph.martin.madsen@cern.ch',
-                 'ids': [{'source': 'CERN', 'value': u'755568'},
-                         {'source': 'CDS', 'value': u'2090563'}],
-                 'name': 'Madsen, Christoph Martin',
-                 'role': 'Editor'}],
-            'copyright': {'holder': 'CERN', 'year': '2017'},
-            'date': '2017-07-04',
-            'description': ('Where were you on 4 July 2012, the day in which '
-                            'the Higgs boson discovery was announced?'),
-            'duration': '00:01:09',
-            'keywords': [
-                {'name': 'higgs', 'source': 'CERN'},
-                {'name': 'anniversary', 'source': 'CERN'}
+                {'name': 'CERN Video Productions', 'role': 'Director'}
             ],
-            'language': u'en',
-            'modification_date': '20170704112045.0',
-            'recid': 2272973,
-            'report_number': ['CERN-MOVIE-2017-023-001'],
-            'title': {'title': 'Happy 5th anniversary, Higgs boson!'},
-            'type': 'MOVIE'
+            'keywords': [{'name': 'Higgs', 'source': 'CERN'},
+                         {'name': 'anniversary', 'source': 'CERN'}],
+            'modification_date': '20170705113322.0',
+            'recid': 2272969,
+            'report_number': ['CERN-MOVIE-2017-023'],
+            'title': {'title': 'Higgs anniversary 5Y'},
+            'type': 'MOVIE',
+            'videos': [{'$ref': 'CERN-MOVIE-2017-023-002'},
+                       {'$ref': 'CERN-MOVIE-2017-023-001'}]
         }
 
         # Add required fields calculated by post-process tasks.
         record['publication_date'] = '2017-07-04'
+        record['date'] = '2017-07-04'
         validate(record)
 
 
@@ -98,8 +70,8 @@ def test_fields(app):
         record = model.do(blob)
         expected = {
             '$schema': {
-                '$ref': ('https://cds.cern.ch/schemas/records/videos/video/'
-                         'video-v1.0.0.json')
+                '$ref': ('https://cds.cern.ch/schemas/'
+                         'records/videos/project/project-v1.0.0.json')
             }
         }
         expected.update(**json_body)
@@ -108,54 +80,15 @@ def test_fields(app):
     with app.app_context():
         check_transformation(
             """
-            <datafield tag="541" ind1=" " ind2=" ">
-                <subfield code="e">test1</subfield>
+            <datafield tag="260" ind1=" " ind2=" ">
+                <subfield code="c">2001</subfield>
             </datafield>
-            """, {
-                'origina_source': 'test1',
-            })
-        check_transformation(
-            """
-            <datafield tag="590" ind1="4" ind2=" ">
-                <subfield code="a">test1</subfield>
-            </datafield>
-            """, {
-                'note': 'test1',
-            })
-        check_transformation(
-            """
-            <datafield tag="500" ind1=" " ind2=" ">
-                <subfield code="a">test1</subfield>
-            </datafield>
-            """, {
-                'note': 'test1',
-            })
-        check_transformation(
-            """
             <datafield tag="269" ind1=" " ind2=" ">
-                <subfield code="c">2017-03-15</subfield>
+                <subfield code="c">2005-10-12</subfield>
             </datafield>
             """, {
-                'date': '2017-03-15',
+                'date': "2001-01-01",
             })
-        check_transformation(
-            """
-            <datafield tag="340" ind1=" " ind2=" ">
-                <subfield code="a">test1</subfield>
-                <subfield code="d">test2</subfield>
-            </datafield>
-            """, {
-                'physical_medium': {
-                    'camera': 'test2',
-                    'medium_standard': 'test1',
-                }
-            })
-        check_transformation(
-            """
-            <datafield tag="590" ind1="4" ind2=" ">
-                <subfield code="a">test1</subfield>
-            </datafield>
-            """, {'note': 'test1'})
         check_transformation(
             """
             <datafield tag="540" ind1=" " ind2=" ">
@@ -194,29 +127,6 @@ def test_fields(app):
         check_transformation(
             """
             <datafield tag="773" ind1=" " ind2=" ">
-                <subfield code="r">test1</subfield>
-            </datafield>
-            <datafield tag="773" ind1=" " ind2=" ">
-                <subfield code="p">test1</subfield>
-                <subfield code="u">test2</subfield>
-            </datafield>
-            """, {
-                '_project_id': 'test1',
-                'related_links': [
-                    {'name': 'test1', 'url': 'test2'}
-                ],
-            })
-        check_transformation(
-            """
-            <datafield tag="773" ind1=" " ind2=" ">
-                <subfield code="r">test1</subfield>
-            </datafield>
-            """, {
-                '_project_id': 'test1',
-            })
-        check_transformation(
-            """
-            <datafield tag="773" ind1=" " ind2=" ">
                 <subfield code="p">test1</subfield>
                 <subfield code="u">test2</subfield>
             </datafield>
@@ -224,14 +134,6 @@ def test_fields(app):
                 'related_links': [
                     {'name': 'test1', 'url': 'test2'}
                 ],
-            })
-        check_transformation(
-            """
-            <datafield tag="110" ind1=" " ind2=" ">
-                <subfield code="a">test1</subfield>
-            </datafield>
-            """, {
-                'location': 'test1'
             })
         check_transformation(
             """
@@ -332,61 +234,34 @@ def test_fields(app):
             })
         check_transformation(
             """
-            <datafield tag="595" ind1=" " ind2=" ">
-                <subfield code="a">test1</subfield>
-                <subfield code="s">test2</subfield>
+            <datafield tag="774" ind1=" " ind2=" ">
+                <subfield code="r">test1</subfield>
             </datafield>
-            """, {'internal_note': 'test1, test2'}
-        )
-        check_transformation(
-            """
-            <datafield tag="595" ind1=" " ind2=" ">
-                <subfield code="s">test2</subfield>
-            </datafield>
-            """, {'internal_note': 'test2'}
-        )
-        check_transformation(
-            """
-            <datafield tag="595" ind1=" " ind2=" ">
-                <subfield code="a">test1</subfield>
-            </datafield>
-            """, {'internal_note': 'test1'}
-        )
-        check_transformation(
-            """
-            <datafield tag="650" ind1="1" ind2="7">
-                <subfield code="a">test1</subfield>
-                <subfield code="2">test2</subfield>
-            </datafield>
-            <datafield tag="650" ind1=" " ind2=" ">
-                <subfield code="a">test3</subfield>
-                <subfield code="2">test4</subfield>
+            <datafield tag="774" ind1=" " ind2=" ">
+                <subfield code="r">test2</subfield>
             </datafield>
             """, {
-                'subject': {
-                    'source': 'test2',
-                    'term': 'test1',
-                }
+                'videos': [
+                    {'$ref': 'test1'},
+                    {'$ref': 'test2'},
+                ]
             })
         check_transformation(
             """
-            <datafield tag="693" ind1=" " ind2=" ">
+            <datafield tag="520" ind1=" " ind2=" ">
                 <subfield code="a">test1</subfield>
-                <subfield code="e">test2</subfield>
-                <subfield code="s">test3</subfield>
-                <subfield code="f">test4</subfield>
-                <subfield code="p">test5</subfield>
             </datafield>
             """, {
-                'accelerator_experiments': {
-                    'accelerator': 'test1',
-                    'experiment': 'test2',
-                    'study': 'test3',
-                    'facility': 'test4',
-                    'project': 'test5',
-                }
-            }
-        )
+                'description': 'test1',
+            })
+        check_transformation(
+            """
+            <datafield tag="590" ind1="4" ind2=" ">
+                <subfield code="a">test1</subfield>
+            </datafield>
+            """, {
+                'note': 'test1',
+            })
 
 
 def test_language_to_isocode():

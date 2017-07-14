@@ -96,7 +96,6 @@
       "required": [
         "recid",
         "title",
-        "description",
         "date",
         "publication_date",
         "contributors",

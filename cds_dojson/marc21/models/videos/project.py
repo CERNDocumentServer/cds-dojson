@@ -30,6 +30,10 @@ class CDSVideoProject(OverdoJSONSchema):
 
     __schema__ = 'records/videos/project/project-v1.0.0.json'
 
+    __ignore_keys__ = {
+        '260__c', '690C_a', '960__a', '980__a', '980__b',
+    }
+
 
 model = CDSVideoProject(bases=(cds_base, ),
                         entry_point_group='cds_dojson.marc21.video')

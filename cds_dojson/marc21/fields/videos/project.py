@@ -15,21 +15,31 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Video utils."""
+# 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 
-import pycountry
+"""CDS Video project fields."""
+
+from __future__ import absolute_import, print_function
+
+from dojson.utils import filter_values, for_each_value, IgnoreKey
+
+from ...models.videos.project import model
 
 
-def language_to_isocode(lang):
-    """Translate language to isocode."""
-    lang = lang.lower()
-    try:
-        return pycountry.languages.get(alpha_3=lang).alpha_2
-    except (KeyError, AttributeError):
-        exceptions = {
-            'eng-fre': 'en-fr',
-            'silent': 'silent',
-            'sil': 'silent',
-        }
-        return exceptions.get(lang)
+@model.over('related_links', '^773__')
+@for_each_value
+@filter_values
+def related_links(self, key, value):
+    """Related links."""
+    return {
+        'name': value.get('p'),
+        'url': value.get('u'),
+    }
+
+
+@model.over('date', '^260__')
+def date(self, key, value):
+    """Date."""
+    if not value.get('c'):
+        raise IgnoreKey('date')
+    return "{0}-01-01".format(str(value.get('c')))

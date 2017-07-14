@@ -1,0 +1,59 @@
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+<record>
+  <controlfield tag="001">2272969</controlfield>
+  <controlfield tag="005">20170705113322.0</controlfield>
+  <datafield tag="037" ind1=" " ind2=" ">
+    <subfield code="a">CERN-MOVIE-2017-023</subfield>
+  </datafield>
+  <datafield tag="100" ind1=" " ind2=" ">
+    <subfield code="a">CERN Video Productions</subfield>
+    <subfield code="e">Produced by</subfield>
+  </datafield>
+  <datafield tag="245" ind1=" " ind2=" ">
+    <subfield code="a">Higgs anniversary 5Y</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">2017</subfield>
+  </datafield>
+  <datafield tag="690" ind1="C" ind2=" ">
+    <subfield code="a">publvideomovie</subfield>
+  </datafield>
+  <datafield tag="653" ind1="1" ind2=" ">
+    <subfield code="a">Higgs</subfield>
+    <subfield code="9">CERN</subfield>
+  </datafield>
+  <datafield tag="653" ind1="1" ind2=" ">
+    <subfield code="a">anniversary</subfield>
+    <subfield code="9">CERN</subfield>
+  </datafield>
+  <datafield tag="700" ind1=" " ind2=" ">
+    <subfield code="a">CERN Video Productions</subfield>
+    <subfield code="e">Director</subfield>
+  </datafield>
+  <datafield tag="774" ind1=" " ind2=" ">
+    <subfield code="r">CERN-MOVIE-2017-023-002</subfield>
+  </datafield>
+  <datafield tag="774" ind1=" " ind2=" ">
+    <subfield code="r">CERN-MOVIE-2017-023-001</subfield>
+  </datafield>
+  <datafield tag="859" ind1=" " ind2=" ">
+    <subfield code="f">Jacques.Fichet@cern.ch</subfield>
+  </datafield>
+  <datafield tag="937" ind1=" " ind2=" ">
+    <subfield code="c">2017-07-04</subfield>
+    <subfield code="s">Jacques.Fichet@cern.ch</subfield>
+  </datafield>
+  <datafield tag="960" ind1=" " ind2=" ">
+    <subfield code="a">85</subfield>
+  </datafield>
+  <datafield tag="970" ind1=" " ind2=" ">
+    <subfield code="a">AVW.project.2963</subfield>
+  </datafield>
+  <datafield tag="980" ind1=" " ind2=" ">
+    <subfield code="a">PUBLVIDEOMOVIE</subfield>
+  </datafield>
+  <datafield tag="980" ind1=" " ind2=" ">
+    <subfield code="b">VIDEOMEDIALAB</subfield>
+  </datafield>
+</record>
+</collection>

@@ -37,7 +37,7 @@ def related_links(self, key, value):
     }
 
 
-@model.over('date', '^260__')
+@model.over('date', '^269__')
 def date(self, key, value):
     """Date."""
     if not value.get('c'):

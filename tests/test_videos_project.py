@@ -51,7 +51,10 @@ def test_required_fields(app):
             'title': {'title': 'Higgs anniversary 5Y'},
             'type': 'MOVIE',
             'videos': [{'$ref': 'CERN-MOVIE-2017-023-002'},
-                       {'$ref': 'CERN-MOVIE-2017-023-001'}]
+                       {'$ref': 'CERN-MOVIE-2017-023-001'}],
+            'external_system_identifiers': [
+                {'schema': 'AVW', 'value': 'AVW.project.2963'}
+            ],
         }
 
         # Add required fields calculated by post-process tasks.
@@ -84,7 +87,7 @@ def test_fields(app):
                 <subfield code="c">2001</subfield>
             </datafield>
             <datafield tag="269" ind1=" " ind2=" ">
-                <subfield code="c">2005-10-12</subfield>
+                <subfield code="c">2001</subfield>
             </datafield>
             """, {
                 'date': "2001-01-01",
@@ -261,6 +264,20 @@ def test_fields(app):
             </datafield>
             """, {
                 'note': 'test1',
+            })
+        check_transformation(
+            """
+            <datafield tag="970" ind1=" " ind2=" ">
+                <subfield code="a">000012345.MDD</subfield>
+            </datafield>
+            <datafield tag="970" ind1=" " ind2=" ">
+                <subfield code="a">FCS.project.2345</subfield>
+            </datafield>
+            """, {
+                'external_system_identifiers': [
+                    {'value': '000012345.MDD', 'schema': 'ALEPH'},
+                    {'value': 'FCS.project.2345', 'schema': 'FCS'}
+                ]
             })
 
 

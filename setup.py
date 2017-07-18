@@ -83,6 +83,7 @@ setup(
         'dojson>=1.2.1',
         'invenio-query-parser>=0.5.0',
         'requests>=2.18.1',
+        'pycountry>=17.5.14',
     ],
     extras_require=extras_require,
     classifiers=[

@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-
 """Video model."""
 
 from ....overdo import OverdoJSONSchema
@@ -32,12 +31,40 @@ class CDSVideo(OverdoJSONSchema):
     __schema__ = 'records/videos/video/video-v1.0.0.json'
 
     __ignore_keys__ = {
-        '035__9', '035__a', '0248_a', '0248_p',
-        '0248_q', '100__9', '260__c', '300__b', '300__c', '300__d', '300__e',
-        '337__a', '340__t', '5061_2', '5061_5', '5061_f', '5061_z', '700__9',
-        '916__s', '916__w', '960__a', '963__a',
+        '0248_a',
+        '0248_p',
+        '0248_q',
+        '035__9',
+        '035__a',
+        '100__9',
+        '260__c',
+        '269__b',
+        '300__b',
+        '300__c',
+        '300__d',
+        '300__e',
+        '337__a',
+        '340__t',
+        '5061_2',
+        '5061_5',
+        '5061_f',
+        '5061_z',
+        '542__e',
+        '690C_a',
+        '700__9',
+        '700__0',
+        '916__s',
+        '916__w',
+        '937__c',
+        '960__a',
+        '962__b',
+        '962__l',
+        '962__t',
+        '963__a',
+        '980__a',
+        '980__b'
     }
 
 
-model = CDSVideo(bases=(cds_base, ),
-                 entry_point_group='cds_dojson.marc21.video')
+model = CDSVideo(
+    bases=(cds_base, ), entry_point_group='cds_dojson.marc21.video')

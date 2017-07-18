@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-
 """Video Project model."""
 
 from ....overdo import OverdoJSONSchema
@@ -31,9 +30,16 @@ class CDSVideoProject(OverdoJSONSchema):
     __schema__ = 'records/videos/project/project-v1.0.0.json'
 
     __ignore_keys__ = {
-        '260__c', '690C_a', '960__a', '980__a', '980__b',
+        '260__a',
+        '260__c',
+        '690C_a',
+        '774__o',
+        '937__c',
+        '960__a',
+        '980__a',
+        '980__b',
     }
 
 
-model = CDSVideoProject(bases=(cds_base, ),
-                        entry_point_group='cds_dojson.marc21.video')
+model = CDSVideoProject(
+    bases=(cds_base, ), entry_point_group='cds_dojson.marc21.video')

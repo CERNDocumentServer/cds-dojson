@@ -80,11 +80,19 @@ def test_required_fields(app):
             'recid': 2272973,
             'report_number': ['CERN-MOVIE-2017-023-001'],
             'title': {'title': 'Happy 5th anniversary, Higgs boson!'},
-            'type': 'MOVIE'
+            'type': 'MOVIE',
+            'external_system_identifiers': [
+                {'schema': 'AVW', 'value': 'AVW.clip.3447'}
+            ],
         }
 
         # Add required fields calculated by post-process tasks.
         record['publication_date'] = '2017-07-04'
+        record['doi'] = 'CERN/2272973'
+        record['license'] = [
+            {'license': 'CC BY 4.0',
+             'url': 'https://creativecommons.org/licenses/by/4.0/'}
+        ]
         validate(record)
 
 

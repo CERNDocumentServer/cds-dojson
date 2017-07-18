@@ -1,16 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#", 
   "required": [
-    "recid", 
-    "title", 
-    "description", 
+    "category",
+    "contributors",
+    "copyright",
     "date", 
+    "description",
+    "doi",
+    "duration",
+    "language",
+    "license",
     "publication_date", 
-    "contributors", 
+    "recid",
     "report_number", 
-    "category", 
-    "type", 
-    "duration"
+    "title",
+    "type"
   ], 
   "type": "object", 
   "properties": {
@@ -59,6 +63,7 @@
               "Camera Operator", 
               "Co-Producer", 
               "Creator", 
+              "Credits",
               "Director", 
               "Editor", 
               "Music by", 
@@ -91,11 +96,39 @@
       }, 
       "type": "array"
     }, 
-    "vr": {
-      "type": "boolean"
+    "physical_medium": {
+      "additionalProperties": false,
+      "description": "Physical medium, typically used for archive resources.",
+      "type": "object",
+      "properties": {
+        "note": {
+          "type": "string"
+        },
+        "camera": {
+          "type": "string"
+        },
+        "medium_standar": {
+          "type": "string"
+        }
+      },
+      "title": "Physical medium"
     }, 
-    "duration": {
-      "type": "string"
+    "_cds": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "object"
+        },
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
+    },
+    "keywords": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
     }, 
     "featured": {
       "type": "boolean"
@@ -119,11 +152,38 @@
         }
       }
     }, 
-    "keywords": {
+    "duration": {
+      "type": "string"
+    },
+    "external_system_identifiers": {
       "items": {
-        "type": "object"
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          }
+        }
       }, 
-      "type": "array"
+      "type": "array",
+      "description": "List of identifiers on external systems.",
+      "title": "External identifiers"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "description": "Subject.",
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        }
+      },
+      "title": "Subject"
     }, 
     "category": {
       "type": "string", 
@@ -237,6 +297,16 @@
       }, 
       "type": "array"
     }, 
+    "note": {
+      "type": "string",
+      "description": "Note.",
+      "title": "Note"
+    },
+    "location": {
+      "type": "string",
+      "description": "Place or location.",
+      "title": "Place or location"
+    },
     "_deposit": {
       "type": "object", 
       "properties": {
@@ -351,34 +421,14 @@
       "description": "When the record is published", 
       "format": "date-time"
     }, 
+    "internal_note": {
+      "type": "string", 
+      "description": "Internal note.",
+      "title": "Internal note"
+    }, 
     "doi": {
       "type": "string", 
       "description": "Record DOI identifier (string)."
-    }, 
-    "language": {
-      "enum": [
-        "bg", 
-        "ca", 
-        "de", 
-        "el", 
-        "en", 
-        "es", 
-        "fr", 
-        "hr", 
-        "it", 
-        "ja", 
-        "ka", 
-        "no", 
-        "pl", 
-        "pt", 
-        "ru", 
-        "sk", 
-        "sv", 
-        "zh_CN", 
-        "zh_TW"
-      ], 
-      "type": "string", 
-      "description": "A language of the resource."
     }, 
     "license": {
       "uniqueItems": true, 
@@ -405,16 +455,56 @@
       "type": "array", 
       "title": "License information"
     }, 
-    "_cds": {
+    "language": {
+      "enum": [
+        "bg",
+        "ca",
+        "de",
+        "el",
+        "en",
+        "es",
+        "fr",
+        "hr",
+        "it",
+        "ja",
+        "ka",
+        "no",
+        "pl",
+        "pt",
+        "ru",
+        "sk",
+        "sv",
+        "zh_CN",
+        "zh_TW"
+      ],
+      "type": "string",
+      "description": "A language of the resource."
+    },
+    "accelerator_experiment": {
+      "additionalProperties": false,
+      "description": "Accelerator and experiment information.",
       "type": "object", 
       "properties": {
-        "state": {
-          "type": "object"
+        "project": {
+          "type": "string"
         }, 
-        "extracted_metadata": {
-          "type": "object"
+        "study": {
+          "type": "string"
+        },
+        "experiment": {
+          "type": "string"
+        },
+        "accelerator": {
+          "type": "string"
+        },
+        "facility": {
+          "type": "string"
         }
-      }
+      },
+      "title": "Accelerator/Experiment"
+    },
+    "vr": {
+      "type": "boolean"
     }, 
     "recid": {
       "type": "number", 

@@ -3,10 +3,14 @@
   "title": "CDS Video Deposit Schema", 
   "required": [
     "_deposit", 
-    "title", 
-    "description", 
-    "date", 
     "category", 
+    "contributors",
+    "copyright",
+    "date",
+    "description",
+    "language",
+    "license",
+    "title",
     "type"
   ], 
   "additionalProperties": false, 
@@ -58,6 +62,7 @@
               "Camera Operator", 
               "Co-Producer", 
               "Creator", 
+              "Credits",
               "Director", 
               "Editor", 
               "Music by", 
@@ -90,19 +95,31 @@
       }, 
       "type": "array"
     }, 
-    "_cds": {
+    "physical_medium": {
+      "additionalProperties": false,
+      "title": "Physical medium",
       "type": "object", 
+      "description": "Physical medium, typically used for archive resources.",
       "properties": {
-        "state": {
-          "type": "object"
+        "note": {
+          "type": "string"
         }, 
-        "extracted_metadata": {
-          "type": "object"
+        "camera": {
+          "type": "string"
+        },
+        "medium_standar": {
+          "type": "string"
         }
       }
     }, 
-    "duration": {
-      "type": "string"
+    "vr": {
+      "type": "boolean"
+    },
+    "keywords": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
     }, 
     "featured": {
       "type": "boolean"
@@ -126,15 +143,42 @@
         }
       }
     }, 
-    "keywords": {
+    "duration": {
+      "type": "string"
+    },
+    "external_system_identifiers": {
       "items": {
-        "type": "object"
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          }
+        }
       }, 
-      "type": "array"
+      "type": "array",
+      "description": "List of identifiers on external systems.",
+      "title": "External identifiers"
     }, 
     "$schema": {
       "type": "string"
     }, 
+    "subject": {
+      "additionalProperties": false,
+      "title": "Subject",
+      "type": "object",
+      "description": "Subject.",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        }
+      }
+    },
     "category": {
       "type": "string", 
       "description": "Category of the project."
@@ -251,6 +295,16 @@
       "description": "Internal listing of files attached to deposit.", 
       "name": "_files"
     }, 
+    "note": {
+      "type": "string",
+      "description": "Note.",
+      "title": "Note"
+    },
+    "location": {
+      "type": "string",
+      "description": "Place or location.",
+      "title": "Place or location"
+    },
     "_deposit": {
       "description": "Internal deposit metadata.", 
       "title": "Deposit", 
@@ -410,6 +464,11 @@
       "description": "When the record is published", 
       "title": "Publication date"
     }, 
+    "internal_note": {
+      "type": "string",
+      "description": "Internal note.",
+      "title": "Internal note"
+    },
     "doi": {
       "type": "string", 
       "description": "Record DOI identifier (string)."
@@ -427,6 +486,31 @@
         }
       }
     }, 
+    "language": {
+      "enum": [
+        "bg",
+        "ca",
+        "de",
+        "el",
+        "en",
+        "es",
+        "fr",
+        "hr",
+        "it",
+        "ja",
+        "ka",
+        "no",
+        "pl",
+        "pt",
+        "ru",
+        "sk",
+        "sv",
+        "zh_CN",
+        "zh_TW"
+      ],
+      "type": "string",
+      "description": "A language of the resource."
+    },
     "license": {
       "uniqueItems": true, 
       "items": {
@@ -452,33 +536,39 @@
       "type": "array", 
       "title": "License information"
     }, 
-    "language": {
-      "enum": [
-        "bg", 
-        "ca", 
-        "de", 
-        "el", 
-        "en", 
-        "es", 
-        "fr", 
-        "hr", 
-        "it", 
-        "ja", 
-        "ka", 
-        "no", 
-        "pl", 
-        "pt", 
-        "ru", 
-        "sk", 
-        "sv", 
-        "zh_CN", 
-        "zh_TW"
-      ], 
-      "type": "string", 
-      "description": "A language of the resource."
+    "accelerator_experiment": {
+      "additionalProperties": false,
+      "title": "Accelerator/Experiment",
+      "type": "object",
+      "description": "Accelerator and experiment information.",
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "study": {
+          "type": "string"
+        },
+        "experiment": {
+          "type": "string"
+        },
+        "accelerator": {
+          "type": "string"
+        },
+        "facility": {
+          "type": "string"
+        }
+      }
     }, 
-    "vr": {
-      "type": "boolean"
+    "_cds": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "object"
+        },
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
     }, 
     "recid": {
       "type": "number", 

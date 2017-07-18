@@ -4,7 +4,6 @@
   "required": [
     "_deposit",
     "title",
-    "date",
     "category",
     "type"
   ],
@@ -12,56 +11,6 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
-    "category": {
-      "type": "string",
-      "description": "Category of the project."
-    },
-    "license": {
-      "uniqueItems": true,
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "properties": {
-          "url": {
-            "title": "URL of the license",
-            "type": "string",
-            "format": "url"
-          },
-          "material": {
-            "type": "string",
-            "title": "Material"
-          },
-          "license": {
-            "type": "string",
-            "title": "License name"
-          }
-        },
-        "title": "License"
-      },
-      "type": "array",
-      "title": "License information"
-    },
-    "doi": {
-      "type": "string",
-      "description": "Record DOI identifier (string)."
-    },
-    "_buckets": {
-      "type": "object",
-      "properties": {
-        "record": {
-          "type": "string",
-          "description": "Record bucket ID."
-        },
-        "deposit": {
-          "type": "string",
-          "description": "Deposit bucket ID."
-        }
-      }
-    },
-    "description": {
-      "type": "string",
-      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
-    },
     "videos": {
       "items": {
         "type": "object",
@@ -76,150 +25,6 @@
     "report_number": {
       "itmes": {
         "type": "string"
-      },
-      "type": "array"
-    },
-    "_oai": {
-      "additionalProperties": false,
-      "type": "object",
-      "description": "OAI-PMH specific information.",
-      "properties": {
-        "updated": {
-          "type": "string",
-          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
-        },
-        "id": {
-          "type": "string",
-          "description": "OAI-PMH record identifier."
-        },
-        "sets": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "description": "OAI-PMH sets for record."
-        }
-      }
-    },
-    "title": {
-      "additionalProperties": false,
-      "required": [
-        "title"
-      ],
-      "type": "object",
-      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-      "properties": {
-        "subtitle": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        }
-      }
-    },
-    "translations": {
-      "items": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string",
-            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
-          },
-          "language": {
-            "enum": [
-              "bg",
-              "ca",
-              "de",
-              "el",
-              "en",
-              "es",
-              "fr",
-              "hr",
-              "it",
-              "ja",
-              "ka",
-              "no",
-              "pl",
-              "pt",
-              "ru",
-              "sk",
-              "sv",
-              "zh_CN",
-              "zh_TW"
-            ],
-            "type": "string",
-            "description": "A language of the resource."
-          },
-          "title": {
-            "additionalProperties": false,
-            "required": [
-              "title"
-            ],
-            "type": "object",
-            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-            "properties": {
-              "subtitle": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "type": "array"
-    },
-    "_cds": {
-      "type": "object",
-      "properties": {
-        "state": {
-          "type": "object"
-        },
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
-    },
-    "_files": {
-      "items": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "description": "A file object described using some basic subfields. (Usually to be extended).",
-        "properties": {
-          "category": {
-            "type": "string",
-            "description": "Former BibDocFile.doctype."
-          },
-          "checksum": {
-            "type": "string"
-          },
-          "bucket": {
-            "type": "string"
-          },
-          "version_id": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "description": "File type extension."
-          },
-          "size": {
-            "type": "integer"
-          }
-        },
-        "title": "File schema."
-      },
-      "type": "array",
-      "description": "Internal listing of files attached to deposit.",
-      "name": "_files"
-    },
-    "keywords": {
-      "items": {
-        "type": "object"
       },
       "type": "array"
     },
@@ -242,9 +47,48 @@
         }
       }
     },
-    "recid": {
-      "type": "number",
-      "description": "Invenio record identifier (integer)."
+    "keywords": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "external_system_identifiers": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "type": "array",
+      "description": "List of identifiers on external systems.",
+      "title": "External identifiers"
+    },
+    "$schema": {
+      "type": "string"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "description": "Subject.",
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        }
+      },
+      "title": "Subject"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category of the project."
     },
     "contributors": {
       "minItems": 1,
@@ -287,14 +131,21 @@
           },
           "role": {
             "enum": [
+              "Animations by",
+              "Camera Operator",
+              "Co-Producer",
+              "Creator",
+              "Credits",
               "Director",
-              "Camera operator",
-              "Producer",
-              "Music by",
               "Editor",
-              "Provider",
-              "Translator",
-              "Other"
+              "Music by",
+              "Narrator",
+              "Photography",
+              "Producer",
+              "Reporter",
+              "Screenwriter",
+              "Speaker",
+              "Translator"
             ],
             "type": "string"
           },
@@ -310,6 +161,63 @@
         }
       },
       "type": "array"
+    },
+    "title": {
+      "additionalProperties": false,
+      "required": [
+        "title"
+      ],
+      "type": "object",
+      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
+      "properties": {
+        "subtitle": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "_files": {
+      "items": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "description": "A file object described using some basic subfields. (Usually to be extended).",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Former BibDocFile.doctype."
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "bucket": {
+            "type": "string"
+          },
+          "version_id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "File type extension."
+          },
+          "size": {
+            "type": "integer"
+          }
+        },
+        "title": "File schema."
+      },
+      "type": "array",
+      "description": "Internal listing of files attached to deposit.",
+      "name": "_files"
+    },
+    "note": {
+      "type": "string",
+      "description": "Note.",
+      "title": "Note"
     },
     "_deposit": {
       "description": "Internal deposit metadata.",
@@ -376,6 +284,89 @@
       },
       "name": "_deposit"
     },
+    "type": {
+      "type": "string",
+      "description": "Type of the project."
+    },
+    "description": {
+      "type": "string",
+      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
+    },
+    "_oai": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "OAI-PMH specific information.",
+      "properties": {
+        "updated": {
+          "type": "string",
+          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
+        },
+        "id": {
+          "type": "string",
+          "description": "OAI-PMH record identifier."
+        },
+        "sets": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "OAI-PMH sets for record."
+        }
+      }
+    },
+    "translations": {
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
+          },
+          "language": {
+            "enum": [
+              "bg",
+              "ca",
+              "de",
+              "el",
+              "en",
+              "es",
+              "fr",
+              "hr",
+              "it",
+              "ja",
+              "ka",
+              "no",
+              "pl",
+              "pt",
+              "ru",
+              "sk",
+              "sv",
+              "zh_CN",
+              "zh_TW"
+            ],
+            "type": "string",
+            "description": "A language of the resource."
+          },
+          "title": {
+            "additionalProperties": false,
+            "required": [
+              "title"
+            ],
+            "type": "object",
+            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
+            "properties": {
+              "subtitle": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "type": "array"
+    },
     "date": {
       "type": "string",
       "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",
@@ -387,12 +378,67 @@
       "description": "When the record is published",
       "format": "date-time"
     },
-    "$schema": {
-      "type": "string"
-    },
-    "type": {
+    "internal_note": {
       "type": "string",
-      "description": "Type of the project."
+      "description": "Internal note.",
+      "title": "Internal note"
+    },
+    "doi": {
+      "type": "string",
+      "description": "Record DOI identifier (string)."
+    },
+    "_buckets": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "type": "string",
+          "description": "Record bucket ID."
+        },
+        "deposit": {
+          "type": "string",
+          "description": "Deposit bucket ID."
+        }
+      }
+    },
+    "license": {
+      "uniqueItems": true,
+      "items": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "URL of the license",
+            "type": "string",
+            "format": "url"
+          },
+          "material": {
+            "type": "string",
+            "title": "Material"
+          },
+          "license": {
+            "type": "string",
+            "title": "License name"
+          }
+        },
+        "title": "License"
+      },
+      "type": "array",
+      "title": "License information"
+    },
+    "_cds": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "object"
+        },
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
+    },
+    "recid": {
+      "type": "number",
+      "description": "Invenio record identifier (integer)."
     }
   }
 }

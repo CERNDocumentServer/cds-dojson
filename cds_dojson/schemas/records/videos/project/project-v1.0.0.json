@@ -3,7 +3,6 @@
   "required": [
     "recid",
     "title",
-    "date",
     "publication_date",
     "contributors",
     "report_number",
@@ -12,10 +11,6 @@
   ],
   "type": "object",
   "properties": {
-    "category": {
-      "type": "string",
-      "description": "Category of the project."
-    },
     "videos": {
       "items": {
         "type": "object",
@@ -27,66 +22,70 @@
       },
       "type": "array"
     },
-    "doi": {
-      "type": "string",
-      "description": "Record DOI identifier (string)."
-    },
-    "description": {
-      "type": "string",
-      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
-    },
-    "license": {
-      "uniqueItems": true,
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "properties": {
-          "url": {
-            "title": "URL of the license",
-            "type": "string",
-            "format": "url"
-          },
-          "material": {
-            "type": "string",
-            "title": "Material"
-          },
-          "license": {
-            "type": "string",
-            "title": "License name"
-          }
-        },
-        "title": "License"
-      },
-      "type": "array",
-      "title": "License information"
-    },
     "report_number": {
       "itmes": {
         "type": "string"
       },
       "type": "array"
     },
-    "_oai": {
-      "additionalProperties": false,
+    "_access": {
       "type": "object",
-      "description": "OAI-PMH specific information.",
       "properties": {
-        "updated": {
-          "type": "string",
-          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
-        },
-        "id": {
-          "type": "string",
-          "description": "OAI-PMH record identifier."
-        },
-        "sets": {
+        "read": {
           "items": {
-            "type": "string"
+            "type": "string",
+            "title": "Read"
           },
-          "type": "array",
-          "description": "OAI-PMH sets for record."
+          "type": "array"
+        },
+        "update": {
+          "items": {
+            "type": "string",
+            "title": "Update"
+          },
+          "type": "array"
         }
       }
+    },
+    "keywords": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "external_system_identifiers": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "type": "array",
+      "description": "List of identifiers on external systems.",
+      "title": "External identifiers"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "description": "Subject.",
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        }
+      },
+      "title": "Subject"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category of the project."
     },
     "contributors": {
       "minItems": 1,
@@ -129,14 +128,21 @@
           },
           "role": {
             "enum": [
+              "Animations by",
+              "Camera Operator",
+              "Co-Producer",
+              "Creator",
+              "Credits",
               "Director",
-              "Camera operator",
-              "Producer",
-              "Music by",
               "Editor",
-              "Provider",
-              "Translator",
-              "Other"
+              "Music by",
+              "Narrator",
+              "Photography",
+              "Producer",
+              "Reporter",
+              "Screenwriter",
+              "Speaker",
+              "Translator"
             ],
             "type": "string"
           },
@@ -166,6 +172,93 @@
         },
         "title": {
           "type": "string"
+        }
+      }
+    },
+    "_files": {
+      "items": {
+        "type": "object",
+        "description": "A file object described using some basic subfields. (Usually to be extended).",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Former BibDocFile.doctype."
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "bucket": {
+            "type": "string"
+          },
+          "version_id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "File type extension."
+          },
+          "size": {
+            "type": "integer"
+          }
+        }
+      },
+      "type": "array"
+    },
+    "note": {
+      "type": "string",
+      "description": "Note.",
+      "title": "Note"
+    },
+    "_deposit": {
+      "type": "object",
+      "properties": {
+        "owners": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Owners",
+          "type": "array",
+          "description": "Owners of the record (a list of user's IDs).",
+          "name": "owners"
+        },
+        "id": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "integer"
+        }
+      }
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of the project."
+    },
+    "description": {
+      "type": "string",
+      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
+    },
+    "_oai": {
+      "additionalProperties": false,
+      "type": "object",
+      "description": "OAI-PMH specific information.",
+      "properties": {
+        "updated": {
+          "type": "string",
+          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
+        },
+        "id": {
+          "type": "string",
+          "description": "OAI-PMH record identifier."
+        },
+        "sets": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "OAI-PMH sets for record."
         }
       }
     },
@@ -222,98 +315,6 @@
       },
       "type": "array"
     },
-    "_cds": {
-      "type": "object",
-      "properties": {
-        "state": {
-          "type": "object"
-        },
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
-    },
-    "_files": {
-      "items": {
-        "type": "object",
-        "description": "A file object described using some basic subfields. (Usually to be extended).",
-        "properties": {
-          "category": {
-            "type": "string",
-            "description": "Former BibDocFile.doctype."
-          },
-          "checksum": {
-            "type": "string"
-          },
-          "bucket": {
-            "type": "string"
-          },
-          "version_id": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "description": "File type extension."
-          },
-          "size": {
-            "type": "integer"
-          }
-        }
-      },
-      "type": "array"
-    },
-    "keywords": {
-      "items": {
-        "type": "object"
-      },
-      "type": "array"
-    },
-    "recid": {
-      "type": "number",
-      "description": "Invenio record identifier (integer)."
-    },
-    "_access": {
-      "type": "object",
-      "properties": {
-        "read": {
-          "items": {
-            "type": "string",
-            "title": "Read"
-          },
-          "type": "array"
-        },
-        "update": {
-          "items": {
-            "type": "string",
-            "title": "Update"
-          },
-          "type": "array"
-        }
-      }
-    },
-    "_deposit": {
-      "type": "object",
-      "properties": {
-        "owners": {
-          "items": {
-            "type": "integer"
-          },
-          "title": "Owners",
-          "type": "array",
-          "description": "Owners of the record (a list of user's IDs).",
-          "name": "owners"
-        },
-        "id": {
-          "type": "string"
-        },
-        "created_by": {
-          "type": "integer"
-        }
-      }
-    },
     "date": {
       "type": "string",
       "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",
@@ -325,9 +326,54 @@
       "description": "When the record is published",
       "format": "date-time"
     },
-    "type": {
+    "internal_note": {
       "type": "string",
-      "description": "Type of the project."
+      "description": "Internal note.",
+      "title": "Internal note"
+    },
+    "doi": {
+      "type": "string",
+      "description": "Record DOI identifier (string)."
+    },
+    "license": {
+      "uniqueItems": true,
+      "items": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "URL of the license",
+            "type": "string",
+            "format": "url"
+          },
+          "material": {
+            "type": "string",
+            "title": "Material"
+          },
+          "license": {
+            "type": "string",
+            "title": "License name"
+          }
+        },
+        "title": "License"
+      },
+      "type": "array",
+      "title": "License information"
+    },
+    "_cds": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "object"
+        },
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
+    },
+    "recid": {
+      "type": "number",
+      "description": "Invenio record identifier (integer)."
     }
   },
   "title": "CDS Base Record Schema v1.0.0"

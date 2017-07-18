@@ -80,9 +80,7 @@ def project_id(self, key, value):
         related_link = {}
         if 'p' in value and 'u' in value:
             related_link['name'] = value.get('p')
-        #  if value.get('u'):
             related_link['url'] = value.get('u')
-        #  if related_link:
             related_links.append(related_link)
         else:
             project_id = value.get('r')
@@ -99,7 +97,7 @@ def location(self, key, value):
     return value.get('a')
 
 
-@model.over('internal_note', '^595')
+@model.over('internal_note', '^595__')
 def internal_note(self, key, value):
     """Internal note."""
     return ", ".join(filter(None, [value.get('a'), value.get('s')]))

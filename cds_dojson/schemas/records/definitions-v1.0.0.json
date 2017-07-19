@@ -278,7 +278,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "medium_standar": {
+        "medium_standard": {
           "type": "string"
         },
         "camera": {

@@ -30,6 +30,7 @@ class CDSVideoProject(OverdoJSONSchema):
     __schema__ = 'records/videos/project/project-v1.0.0.json'
 
     __ignore_keys__ = {
+        '005',
         '260__a',
         '260__c',
         '690C_a',

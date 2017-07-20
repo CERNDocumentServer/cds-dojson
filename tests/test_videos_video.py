@@ -76,7 +76,6 @@ def test_required_fields(app):
                 {'name': 'anniversary', 'source': 'CERN'}
             ],
             'language': u'en',
-            'modification_date': '20170704112045.0',
             'recid': 2272973,
             'report_number': ['CERN-MOVIE-2017-023-001'],
             'title': {'title': 'Happy 5th anniversary, Higgs boson!'},

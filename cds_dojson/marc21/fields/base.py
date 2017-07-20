@@ -41,12 +41,6 @@ def agency_code(self, key, value):
     return value or 'SzGeCERN'
 
 
-@model.over('modification_date', '^005')
-def modification_date(self, key, value):
-    """Date and Time of Latest Transaction."""
-    return value
-
-
 @model.over('report_number', '^(037|088)__')
 @for_each_value
 def report_number(self, key, value):

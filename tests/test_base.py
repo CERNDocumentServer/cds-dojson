@@ -38,5 +38,4 @@ def test_base_model(app):
         record = model.do(blob)
         assert record['recid'] == 1495143
         assert record['agency_code'] == 'SzGeCERN'
-        assert record['modification_date'] == '20170316170631.0'
         assert not model.missing(blob)

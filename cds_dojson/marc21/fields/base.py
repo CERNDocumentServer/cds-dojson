@@ -160,17 +160,6 @@ def license(self, key, value):
     }
 
 
-@model.over('copyright', '^542__')
-@filter_values
-def copyright(self, key, value):
-    """Copyright."""
-    return {
-        'holder': value.get('d'),
-        'year': value.get('g'),
-        'message': value.get('f'),
-    }
-
-
 @model.over('note', '^(5904_|500__)')
 def note(self, key, value):
     """Note."""

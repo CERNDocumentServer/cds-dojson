@@ -106,18 +106,6 @@ def test_fields(app):
             })
         check_transformation(
             """
-            <datafield tag="542" ind1=" " ind2=" ">
-                <subfield code="d">test1</subfield>
-                <subfield code="g">test2</subfield>
-                <subfield code="f">test3</subfield>
-            </datafield>
-            """, {
-                'copyright': {
-                    'holder': 'test1', 'year': 'test2', 'message': 'test3'
-                },
-            })
-        check_transformation(
-            """
             <datafield tag="653" ind1="1" ind2=" ">
                 <subfield code="a">test1</subfield>
                 <subfield code="9">test2</subfield>

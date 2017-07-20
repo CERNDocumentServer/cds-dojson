@@ -129,3 +129,14 @@ def accelerator_experiments(self, key, value):
 def date(self, key, value):
     """Date."""
     return arrow.get(value.get('c')).strftime('%Y-%m-%d')
+
+
+@model.over('copyright', '^542__')
+@filter_values
+def copyright(self, key, value):
+    """Copyright."""
+    return {
+        'holder': value.get('d'),
+        'year': value.get('g'),
+        'message': value.get('f'),
+    }

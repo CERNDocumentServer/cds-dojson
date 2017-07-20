@@ -45,7 +45,6 @@ def test_required_fields(app):
             ],
             'keywords': [{'name': 'Higgs', 'source': 'CERN'},
                          {'name': 'anniversary', 'source': 'CERN'}],
-            'modification_date': '20170705113322.0',
             'recid': 2272969,
             'report_number': ['CERN-MOVIE-2017-023'],
             'title': {'title': 'Higgs anniversary 5Y'},

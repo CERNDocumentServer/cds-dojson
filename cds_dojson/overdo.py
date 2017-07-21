@@ -89,8 +89,7 @@ class Overdo(DoJSONOverdo):
 
     def missing(self, blob, **kwargs):
         """Return keys with missing rules."""
-        return self.__class__.__ignore_keys__.symmetric_difference(
-            not_accessed_keys(blob))
+        return not_accessed_keys(blob) - self.__class__.__ignore_keys__
 
 
 class OverdoJSONSchema(Overdo):

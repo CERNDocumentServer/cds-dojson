@@ -101,7 +101,7 @@ class OverdoJSONSchema(Overdo):
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
-        json = super(Overdo, self).do(
+        json = super(OverdoJSONSchema, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)

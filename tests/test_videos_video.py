@@ -303,13 +303,13 @@ def test_fields(app):
                 <subfield code="e">Director</subfield>
             </datafield>
             <datafield tag="508" ind1=" " ind2=" ">
-                <subfield code="a">Camera operator, Paola Catapano</subfield>
+                <subfield code="a">Camera Operator, Paola Catapano</subfield>
             </datafield>
             <datafield tag="508" ind1=" " ind2=" ">
                 <subfield code="a"> test2</subfield>
             </datafield>
             <datafield tag="508" ind1=" " ind2=" ">
-                <subfield code="a">Camera operator</subfield>
+                <subfield code="a">Camera Operator</subfield>
             </datafield>
             <datafield tag="700" ind1=" " ind2=" ">
                 <subfield code="a">Christoph Madsen</subfield>
@@ -325,7 +325,7 @@ def test_fields(app):
                         'ids': [{'source': 'CERN', 'value': u'380837'},
                                 {'source': 'CDS', 'value': u'2050975'}],
                         'name': 'Catapano, Paola',
-                        'role': 'Camera operator'
+                        'role': 'Camera Operator'
                     },
                     {'name': 'test2', 'role': 'Credit'},
                     {

@@ -90,7 +90,7 @@
       "type": "array"
     },
     "report_number": {
-      "itmes": {
+      "items": {
         "type": "string"
       },
       "type": "array"

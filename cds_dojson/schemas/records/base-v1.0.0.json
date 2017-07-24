@@ -5,7 +5,7 @@
   "properties": {
     "report_number": {
       "type": "array",
-        "itmes": {
+        "items": {
           "type": "string"
         }
     },

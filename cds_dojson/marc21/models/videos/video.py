@@ -55,13 +55,9 @@ class CDSVideo(OverdoJSONSchema):
         '700__0',
         '700__9',
         '773__o',
-        # FIXME can I ignore?
-        '8567_2',
         '916__s',
         '916__w',
         '937__c',
-        # FIXME remove from ignored!
-        '937__s',
         '960__a',
         '961__c',
         '961__h',

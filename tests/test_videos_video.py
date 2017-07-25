@@ -43,6 +43,78 @@ def test_required_fields(app):
                                  'example@test.com'],
                         'update': ['Jacques.Fichet@cern.ch',
                                    'christoph.martin.madsen@cern.ch']},
+            '_files': [
+                {
+                    'filepath': 'MediaArchive/Video/Masters/Movies/CERN/2017/CERN-MOVIE-2017-023/Final_Output/CERN-MOVIE-2017-023-001.mov',
+                    'key': 'CERN-MOVIE-2017-023-001.mov',
+                    'tags': {
+                        'media_type': 'video',
+                        'content_type': 'mov',
+                        'context_type': 'master',
+                    },
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-5872-kbps-1920x1080-audio-128-kbps-stereo.mp4',
+                    'key': 'CERN-MOVIE-2017-023-001-5872-kbps-1920x1080-audio-128-kbps-stereo.mp4',
+                    'tags_to_guess_preset': {'preset': '1080p', 'video_bitrate': 5872},
+                    'tags': {
+                        'media_type': 'video',
+                        'content_type': 'mp4',
+                        'context_type': 'subformat',
+                    },
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-2672-kbps-1280x720-audio-128-kbps-stereo.mp4',
+                    'key': 'CERN-MOVIE-2017-023-001-2672-kbps-1280x720-audio-128-kbps-stereo.mp4',
+                    'tags_to_guess_preset': {'preset': '720p', 'video_bitrate': 2672},
+                    'tags': {
+                        'media_type': 'video',
+                        'content_type': 'mp4',
+                        'context_type': 'subformat',
+                    },
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-1436-kbps-853x480-audio-64-kbps-stereo.mp4',
+                    'key': 'CERN-MOVIE-2017-023-001-1436-kbps-853x480-audio-64-kbps-stereo.mp4',
+                    'tags_to_guess_preset': {'preset': '480p', 'video_bitrate': 1436},
+                    'tags': {
+                        'media_type': 'video',
+                        'content_type': 'mp4',
+                        'context_type': 'subformat',
+                    },
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-836-kbps-640x360-audio-64-kbps-stereo.mp4',
+                    'key': 'CERN-MOVIE-2017-023-001-836-kbps-640x360-audio-64-kbps-stereo.mp4',
+                    'tags_to_guess_preset': {'preset': '360p', 'video_bitrate': 836},
+                    'tags': {
+                        'media_type': 'video',
+                        'content_type': 'mp4',
+                        'context_type': 'subformat',
+                    },
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-386-kbps-426x240-audio-64-kbps-stereo.mp4',
+                    'key': 'CERN-MOVIE-2017-023-001-386-kbps-426x240-audio-64-kbps-stereo.mp4',
+                    'tags_to_guess_preset': {'preset': '240p', 'video_bitrate': 386},
+                    'tags': {
+                        'media_type': 'video',
+                        'content_type': 'mp4',
+                        'context_type': 'subformat',
+                    },
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg',
+                    'key': 'CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg',
+                    'tags': {
+                        'media_type': 'image',
+                        'height': '360',
+                        'width': '640',
+                        'content_type': 'jpg',
+                        'context_type': 'poster',
+                    }
+                }
+            ],
             '_project_id': 'CERN-MOVIE-2017-023',
             'category': 'CERN',
             'contributors': [

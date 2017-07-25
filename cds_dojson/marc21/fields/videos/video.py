@@ -196,9 +196,11 @@ def _files(self, key, value):
             return 'subformat', 'video'
         if value.get('x') == 'subtitle':
             return 'playlist', 'text'
-        if value.get('y').startswith('posterframe') and \
-                '5 percent' in value.get('y'):
-            return 'poster', 'image'
+        if value.get('y').startswith('posterframe'):
+            if ' 5 percent' in value.get('y'):
+                return 'poster', 'image'
+            else:
+                return 'ignore', 'ignore'
         return None, None
 
     def get_tags(context_type, value):
@@ -206,36 +208,50 @@ def _files(self, key, value):
             wh = value.get('y').split(' ')[1]
             [width, height] = wh.split('x')
             return {'width': width, 'height': height}
+        if value.get('x') == 'subtitle':
+            return {
+                'language': language_to_isocode(
+                    value.get('y').split(' ')[1][:3])
+            }
+        return {}
+
+    def get_filepath(value):
+        if value.get('d'):
+            return value.get('d')[
+                len('\\\\cern.ch\\dfs\\Services\\'):
+            ].replace('\\', '/')
+        else:
+            return value.get('u')[len('https://mediaarchive.cern.ch/'):]
+
+    def get_tags_to_guess_preset(context_type, value):
         if context_type == 'subformat':
             info = value.get('y').split(' ')
             return {
                 'video_bitrate': int(info[0]),
                 'preset': '{0}p'.format(info[3])
             }
+
+    def get_tags_to_transform(context_type, value):
         if context_type == 'frame':
             return {'timestamp': int(value.get('y').split(' ')[3])}
-        if value.get('x') == 'subtitle':
-            return {
-                'language': language_to_isocode(
-                    value.get('y').split(' ')[1][:3])
-            }
 
-    def get_filepath(value):
-        if value.get('d'):
-            return value.get('d')
-        else:
-            return value.get('u').replace(
-                'https://mediaarchive.cern.ch',
-                'd\\cern.ch\dfs\Services').replace('/', '\\')
-
-    # FIXME can we ignore 'x'?
+    # ignore 'x' sometimes (when is not useful)
     value.get('x')
 
     result = {}
     result['key'] = get_key(value)
-    result['content_type'] = os.path.splitext(result['key'])[1][1:]
-    result['context_type'], result['media_type'] = get_context_type(value)
-    result['tags'] = get_tags(result['context_type'], value)
+    context_type, media_type = get_context_type(value)
+    result['tags'] = get_tags(context_type, value)
+    result['tags'].update(context_type=context_type, media_type=media_type)
+    result['tags']['content_type'] = os.path.splitext(result['key'])[1][1:]
     result['filepath'] = get_filepath(value)
+    result['tags_to_guess_preset'] = get_tags_to_guess_preset(
+        context_type, value)
+    result['tags_to_transform'] = get_tags_to_transform(
+        context_type, value)
+
+    if result['key'].startswith('proxy-') or context_type == 'ignore':
+        # skip proxy files
+        raise IgnoreKey('_files')
 
     return result

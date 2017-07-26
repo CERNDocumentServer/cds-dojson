@@ -20,13 +20,14 @@
 
 from __future__ import absolute_import, print_function
 
+import os
 import re
 import arrow
 
 from six import iteritems
 from dojson.errors import IgnoreKey
 from dojson.utils import filter_values, force_list, \
-    ignore_value
+    ignore_value, for_each_value
 
 from ...models.videos.video import model
 from .utils import language_to_isocode
@@ -173,3 +174,68 @@ def copyright(self, key, value):
         'year': value.get('g'),
         'message': value.get('f'),
     }
+
+
+@model.over('_files', '^8567_')
+@for_each_value
+@filter_values
+def _files(self, key, value):
+    """File list."""
+    def get_key(value):
+        if value.get('d'):
+            return value.get('d').split('\\')[-1]
+        else:
+            return os.path.basename(value.get('u'))
+
+    def get_context_type(value):
+        if value.get('d'):
+            return 'master', 'video'
+        if value.get('y').startswith('thumbnail'):
+            return 'frame', 'image'
+        if 'kbps maxH' in value.get('y'):
+            return 'subformat', 'video'
+        if value.get('x') == 'subtitle':
+            return 'playlist', 'text'
+        if value.get('y').startswith('posterframe') and \
+                '5 percent' in value.get('y'):
+            return 'poster', 'image'
+        return None, None
+
+    def get_tags(context_type, value):
+        if context_type == 'poster':
+            wh = value.get('y').split(' ')[1]
+            [width, height] = wh.split('x')
+            return {'width': width, 'height': height}
+        if context_type == 'subformat':
+            info = value.get('y').split(' ')
+            return {
+                'video_bitrate': int(info[0]),
+                'preset': '{0}p'.format(info[3])
+            }
+        if context_type == 'frame':
+            return {'timestamp': int(value.get('y').split(' ')[3])}
+        if value.get('x') == 'subtitle':
+            return {
+                'language': language_to_isocode(
+                    value.get('y').split(' ')[1][:3])
+            }
+
+    def get_filepath(value):
+        if value.get('d'):
+            return value.get('d')
+        else:
+            return value.get('u').replace(
+                'https://mediaarchive.cern.ch',
+                'd\\cern.ch\dfs\Services').replace('/', '\\')
+
+    # FIXME can we ignore 'x'?
+    value.get('x')
+
+    result = {}
+    result['key'] = get_key(value)
+    result['content_type'] = os.path.splitext(result['key'])[1][1:]
+    result['context_type'], result['media_type'] = get_context_type(value)
+    result['tags'] = get_tags(result['context_type'], value)
+    result['filepath'] = get_filepath(value)
+
+    return result

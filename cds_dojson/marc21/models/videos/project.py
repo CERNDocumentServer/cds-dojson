@@ -33,6 +33,7 @@ class CDSVideoProject(OverdoJSONSchema):
         '005',
         '260__a',
         '260__c',
+        '269__c',
         '5061_a',
         '690C_a',
         '774__o',

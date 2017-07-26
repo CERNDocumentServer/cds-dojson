@@ -35,11 +35,3 @@ def related_links(self, key, value):
         'name': value.get('p'),
         'url': value.get('u'),
     }
-
-
-@model.over('date', '^269__')
-def date(self, key, value):
-    """Date."""
-    if not value.get('c'):
-        raise IgnoreKey('date')
-    return "{0}-01-01".format(str(value.get('c')))

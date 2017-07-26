@@ -84,13 +84,12 @@ def test_fields(app):
         check_transformation(
             """
             <datafield tag="260" ind1=" " ind2=" ">
-                <subfield code="c">2001</subfield>
+                <subfield code="c">2005</subfield>
             </datafield>
             <datafield tag="269" ind1=" " ind2=" ">
-                <subfield code="c">2001</subfield>
+                <subfield code="c">2001-02-03</subfield>
             </datafield>
             """, {
-                'date': "2001-01-01",
             })
         check_transformation(
             """

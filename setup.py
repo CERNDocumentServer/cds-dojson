@@ -17,8 +17,7 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
-
-"""CDS DoJSON extension"""
+"""CDS DoJSON extension."""
 
 import os
 import re
@@ -109,6 +108,7 @@ setup(
         ],
         'cds_dojson.marc21.video': [
             'video = cds_dojson.marc21.fields.videos.video',
+            'project = cds_dojson.marc21.fields.videos.project',
         ],
         # DoJSON entry points
         'console_scripts': [

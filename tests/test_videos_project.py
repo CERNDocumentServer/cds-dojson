@@ -54,6 +54,7 @@ def test_required_fields(app):
             'external_system_identifiers': [
                 {'schema': 'AVW', 'value': 'AVW.project.2963'}
             ],
+            'modified_by': 'Jacques.Fichet@cern.ch',
         }
 
         # Add required fields calculated by post-process tasks.

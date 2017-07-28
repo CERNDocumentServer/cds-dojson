@@ -23,6 +23,7 @@ from __future__ import absolute_import, print_function
 import re
 import arrow
 
+from six import iteritems
 from dojson.errors import IgnoreKey
 from dojson.utils import filter_values, force_list, \
     ignore_value
@@ -58,15 +59,47 @@ def language(self, key, value):
 
 # Rest
 
-@model.over('physical_medium', '^340__')
-@filter_values
+@model.over('physical_medium', '(^340__)|(^852__)')
 def physical_medium(self, key, value):
     """Physical medium."""
-    return {
-        'camera': value.get('d'),
-        'medium_standard': value.get('a'),
-        'note': value.get('j')
-    }
+    def find_match(seq, copy):
+        if not seq and not copy \
+                and key == '852__' and len(_physical_medium) == 1:
+            return _physical_medium[0]
+        else:
+            for i in _physical_medium:
+                if seq and seq == i.get('sequence_number') \
+                        or copy and copy == i.get('copy_number'):
+                    return i
+
+        _physical_medium.append({})
+        return _physical_medium[-1]
+
+    _physical_medium = self.get('physical_medium', [])
+    for value in force_list(value):
+        pm = find_match(value.get('8'), value.get('y'))
+        if key == '340__':
+            pm.update({
+                'sequence_number': value.get('8'),
+                'medium_standard': value.get('a'),
+                'note': value.get('j'),
+                'camera': value.get('d'),
+                'arrangement': value.get('k'),
+                'copy_number': value.get('t'),
+            })
+        elif key == '852__':
+            pm.update({
+                'sequence_number': value.get('8'),
+                'internal_note': value.get('9'),
+                'location': value.get('a'),
+                'shelf': value.get('b'),
+                'bar_code': value.get('c'),
+                'copy_number': value.get('t'),
+                'note': value.get('z'),
+            })
+
+    return [dict((k, v) for k, v in iteritems(i) if v is not None)
+            for i in _physical_medium]
 
 
 @model.over('_project_id', '^773__')

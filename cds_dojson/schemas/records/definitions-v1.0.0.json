@@ -286,6 +286,27 @@
         },
         "note": {
           "type": "string"
+        },
+        "sequence_number": {
+          "type": "string"
+        },
+        "arrangement": {
+          "type": "string"
+        },
+        "copy_number": {
+          "type": "string"
+        },
+        "internal_note": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "shelf": {
+          "type": "string"
+        },
+        "bar_code": {
+          "type": "string"
         }
       }
     },

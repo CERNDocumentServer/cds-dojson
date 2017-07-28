@@ -141,7 +141,7 @@
     </datafield>
     <datafield tag="937" ind1=" " ind2=" ">
       <subfield code="c">04 Jul 2017</subfield>
-      <subfield code="s"/>
+      <subfield code="s">Jacques.Fichet@cern.ch</subfield>
     </datafield>
     <datafield tag="960" ind1=" " ind2=" ">
       <subfield code="a">85</subfield>

@@ -175,3 +175,10 @@ def external_system_identifiers(self, key, value):
         'value': value,
         "schema": 'ALEPH' if value.startswith('0000') else value[:3]
     }
+
+
+@model.over('modified_by', '^937__')
+@ignore_value
+def modified_by(self, key, value):
+    """Modified by."""
+    return value.get('s')

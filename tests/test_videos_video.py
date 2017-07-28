@@ -83,6 +83,7 @@ def test_required_fields(app):
             'external_system_identifiers': [
                 {'schema': 'AVW', 'value': 'AVW.clip.3447'}
             ],
+            'modified_by': 'Jacques.Fichet@cern.ch',
         }
 
         # Add required fields calculated by post-process tasks.
@@ -148,14 +149,56 @@ def test_fields(app):
         check_transformation(
             """
             <datafield tag="340" ind1=" " ind2=" ">
-                <subfield code="a">test1</subfield>
-                <subfield code="d">test2</subfield>
+                <subfield code="a">test1A</subfield>
+                <subfield code="d">test2A</subfield>
+            </datafield>
+            <datafield tag="852" ind1=" " ind2=" ">
+                <subfield code="a">loc_test1A</subfield>
             </datafield>
             """, {
-                'physical_medium': {
-                    'camera': 'test2',
-                    'medium_standard': 'test1',
-                }
+                'physical_medium': [
+                    {
+                        'camera': 'test2A',
+                        'medium_standard': 'test1A',
+                        'location': 'loc_test1A'
+                    }
+                ]
+            })
+        check_transformation(
+            """
+            <datafield tag="340" ind1=" " ind2=" ">
+                <subfield code="8">A</subfield>
+                <subfield code="a">test1A</subfield>
+                <subfield code="d">test2A</subfield>
+            </datafield>
+            <datafield tag="340" ind1=" " ind2=" ">
+                <subfield code="8">B</subfield>
+                <subfield code="a">test1B</subfield>
+                <subfield code="d">test2B</subfield>
+            </datafield>
+            <datafield tag="852" ind1=" " ind2=" ">
+                <subfield code="8">B</subfield>
+                <subfield code="a">loc_test1B</subfield>
+            </datafield>
+            <datafield tag="852" ind1=" " ind2=" ">
+                <subfield code="8">A</subfield>
+                <subfield code="a">loc_test1A</subfield>
+            </datafield>
+            """, {
+                'physical_medium': [
+                    {
+                        'sequence_number': 'A',
+                        'camera': 'test2A',
+                        'medium_standard': 'test1A',
+                        'location': 'loc_test1A'
+                    },
+                    {
+                        'sequence_number': 'B',
+                        'camera': 'test2B',
+                        'medium_standard': 'test1B',
+                        'location': 'loc_test1B'
+                    }
+                ]
             })
         check_transformation(
             """

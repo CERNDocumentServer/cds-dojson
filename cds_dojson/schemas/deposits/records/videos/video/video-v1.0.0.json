@@ -101,13 +101,34 @@
       "type": "object",
       "description": "Physical medium, typically used for archive resources.",
       "properties": {
+        "shelf": {
+          "type": "string"
+        },
+        "copy_number": {
+          "type": "string"
+        },
+        "arrangement": {
+          "type": "string"
+        },
         "note": {
           "type": "string"
         },
         "camera": {
           "type": "string"
         },
+        "location": {
+          "type": "string"
+        },
+        "bar_code": {
+          "type": "string"
+        },
         "medium_standard": {
+          "type": "string"
+        },
+        "sequence_number": {
+          "type": "string"
+        },
+        "internal_note": {
           "type": "string"
         }
       }

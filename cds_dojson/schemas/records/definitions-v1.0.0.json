@@ -206,6 +206,10 @@
             "title": "Material",
             "type": "string"
           },
+          "credit": {
+            "title": "Credit",
+            "type": "string"
+          },
           "url": {
             "format": "url",
             "title": "URL of the license",

@@ -471,6 +471,10 @@
             "type": "string",
             "title": "Material"
           },
+          "credit": {
+            "type": "string",
+            "title": "Credit"
+          },
           "license": {
             "type": "string",
             "title": "License name"

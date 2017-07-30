@@ -463,11 +463,15 @@
             "format": "url"
           }, 
           "material": {
-            "type": "string", 
+            "type": "string",
             "title": "Material"
-          }, 
+          },
+          "credit": {
+            "type": "string",
+            "title": "Credit"
+          },
           "license": {
-            "type": "string", 
+            "type": "string",
             "title": "License name"
           }
         }, 

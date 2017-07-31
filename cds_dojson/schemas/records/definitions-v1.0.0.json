@@ -279,38 +279,40 @@
     "physical_medium": {
       "title": "Physical medium",
       "description": "Physical medium, typically used for archive resources.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "medium_standard": {
-          "type": "string"
-        },
-        "camera": {
-          "type": "string"
-        },
-        "note": {
-          "type": "string"
-        },
-        "sequence_number": {
-          "type": "string"
-        },
-        "arrangement": {
-          "type": "string"
-        },
-        "copy_number": {
-          "type": "string"
-        },
-        "internal_note": {
-          "type": "string"
-        },
-        "location": {
-          "type": "string"
-        },
-        "shelf": {
-          "type": "string"
-        },
-        "bar_code": {
-          "type": "string"
+      "type": "array",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "medium_standard": {
+            "type": "string"
+          },
+          "camera": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "sequence_number": {
+            "type": "string"
+          },
+          "arrangement": {
+            "type": "string"
+          },
+          "copy_number": {
+            "type": "string"
+          },
+          "internal_note": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "shelf": {
+            "type": "string"
+          },
+          "bar_code": {
+            "type": "string"
+          }
         }
       }
     },

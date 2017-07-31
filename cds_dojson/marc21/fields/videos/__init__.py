@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# This file is part of Invenio.
-# Copyright (C) 2015, 2017 CERN.
+# This file is part of CERN Document Server.
+# Copyright (C) 2017 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,22 +16,4 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
-"""Test fixtures."""
-
-import pytest
-from flask import Flask
-from invenio_jsonschemas import InvenioJSONSchemas
-
-
-@pytest.fixture()
-def app():
-    """Flask application fixture."""
-    app_ = Flask(__name__)
-    app_.config.update(
-        TESTING=True,
-        JSONSCHEMAS_HOST='cds.cern.ch',
-    )
-
-    app_.config.update(TESTING=True)
-    InvenioJSONSchemas(app_)
-    return app_
+"""CDS Video fields.."""

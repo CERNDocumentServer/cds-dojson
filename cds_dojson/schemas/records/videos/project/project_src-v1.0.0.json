@@ -39,14 +39,21 @@
                   "role": {
                     "type": "string",
                     "enum": [
+                      "Animations by",
+                      "Camera Operator",
+                      "Co-Producer",
+                      "Creator",
+                      "Credits",
                       "Director",
-                      "Camera operator",
-                      "Producer",
-                      "Music by",
                       "Editor",
-                      "Provider",
-                      "Translator",
-                      "Other"
+                      "Music by",
+                      "Narrator",
+                      "Photography",
+                      "Producer",
+                      "Reporter",
+                      "Screenwriter",
+                      "Speaker",
+                      "Translator"
                     ]
                   }
                 }
@@ -56,6 +63,10 @@
         },
         "date": { "$ref": "../../definitions-v1.0.0.json#/definitions/date" },
         "license": { "$ref": "../../definitions-v1.0.0.json#/definitions/license" },
+        "note": { "$ref": "../../definitions-v1.0.0.json#/definitions/note" },
+        "internal_note": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note" },
+        "subject": { "$ref": "../../definitions-v1.0.0.json#/definitions/subject" },
+        "external_system_identifiers": { "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers" },
         "_files": {
             "type": "array",
             "items": {
@@ -96,8 +107,6 @@
       "required": [
         "recid",
         "title",
-        "description",
-        "date",
         "publication_date",
         "contributors",
         "report_number",

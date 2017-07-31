@@ -19,10 +19,14 @@
     {
       "required": [
         "_deposit",
-        "title",
-        "description",
-        "date",
         "category",
+        "contributors",
+        "copyright",
+        "date",
+        "description",
+        "language",
+        "license",
+        "title",
         "type"
       ]
     }

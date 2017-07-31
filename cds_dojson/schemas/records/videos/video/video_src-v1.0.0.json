@@ -39,14 +39,21 @@
                   "role": {
                     "type": "string",
                     "enum": [
+                      "Animations by",
+                      "Camera Operator",
+                      "Co-Producer",
+                      "Creator",
+                      "Credits",
                       "Director",
-                      "Camera operator",
-                      "Producer",
-                      "Music by",
                       "Editor",
-                      "Provider",
-                      "Translator",
-                      "Other"
+                      "Music by",
+                      "Narrator",
+                      "Photography",
+                      "Producer",
+                      "Reporter",
+                      "Screenwriter",
+                      "Speaker",
+                      "Translator"
                     ]
                   }
                 }
@@ -58,6 +65,13 @@
         "copyright": { "$ref": "../../definitions-v1.0.0.json#/definitions/copyright" },
         "license": { "$ref": "../../definitions-v1.0.0.json#/definitions/license" },
         "related_links": { "$ref": "../../definitions-v1.0.0.json#/definitions/related_links" },
+        "location": { "$ref": "../../definitions-v1.0.0.json#/definitions/location" },
+        "physical_medium": { "$ref": "../../definitions-v1.0.0.json#/definitions/physical_medium" },
+        "note": { "$ref": "../../definitions-v1.0.0.json#/definitions/note" },
+        "internal_note": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note" },
+        "subject": { "$ref": "../../definitions-v1.0.0.json#/definitions/subject" },
+        "accelerator_experiment": { "$ref": "../../definitions-v1.0.0.json#/definitions/accelerator_experiment" },
+        "external_system_identifiers": { "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers" },
         "vr": {
           "type": "boolean"
         },
@@ -117,16 +131,20 @@
         "language": { "$ref": "../../definitions-v1.0.0.json#/definitions/language" }
       },
       "required": [
-        "recid",
-        "title",
-        "description",
-        "date",
-        "publication_date",
-        "contributors",
-        "report_number",
         "category",
-        "type",
-        "duration"
+        "contributors",
+        "copyright",
+        "date",
+        "description",
+        "doi",
+        "duration",
+        "language",
+        "license",
+        "publication_date",
+        "recid",
+        "report_number",
+        "title",
+        "type"
       ]
     }
   ]

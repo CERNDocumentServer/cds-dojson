@@ -63,7 +63,7 @@ class Overdo(DoJSONOverdo):
     __query__ = ''
     """To be used by the matcher to find the proper model."""
 
-    __ignore_keys__ = []
+    __ignore_keys__ = set()
     """List of keys which don't need transformation."""
 
     def over(self, name, *source_tags, **kwargs):
@@ -89,8 +89,7 @@ class Overdo(DoJSONOverdo):
 
     def missing(self, blob, **kwargs):
         """Return keys with missing rules."""
-        return set(self.__class__.__ignore_keys__).symmetric_difference(
-            not_accessed_keys(blob))
+        return not_accessed_keys(blob) - self.__class__.__ignore_keys__
 
 
 class OverdoJSONSchema(Overdo):
@@ -101,7 +100,7 @@ class OverdoJSONSchema(Overdo):
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
-        json = super(Overdo, self).do(
+        json = super(OverdoJSONSchema, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)

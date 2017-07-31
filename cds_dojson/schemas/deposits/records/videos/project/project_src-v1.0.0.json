@@ -13,8 +13,6 @@
       "required": [
         "_deposit",
         "title",
-        "description",
-        "date",
         "category",
         "type"
       ]

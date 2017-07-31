@@ -100,17 +100,7 @@
     },
     "description": {
       "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "source": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        }
-      },
-      "required": ["value"]
+      "type": "string"
     },
     "keywords": {
       "items": {
@@ -123,9 +113,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "source": {
-          "type": "string"
-        },
         "title": {
           "type": "string"
         },
@@ -206,6 +193,10 @@
             "title": "Material",
             "type": "string"
           },
+          "credit": {
+            "title": "Credit",
+            "type": "string"
+          },
           "url": {
             "format": "url",
             "title": "URL of the license",
@@ -279,6 +270,112 @@
       "title": "Related links information",
       "type": "array",
       "uniqueItems": true
+    },
+    "location": {
+      "title": "Place or location",
+      "description": "Place or location.",
+      "type": "string"
+    },
+    "physical_medium": {
+      "title": "Physical medium",
+      "description": "Physical medium, typically used for archive resources.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "medium_standard": {
+          "type": "string"
+        },
+        "camera": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "sequence_number": {
+          "type": "string"
+        },
+        "arrangement": {
+          "type": "string"
+        },
+        "copy_number": {
+          "type": "string"
+        },
+        "internal_note": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "shelf": {
+          "type": "string"
+        },
+        "bar_code": {
+          "type": "string"
+        }
+      }
+    },
+    "note": {
+      "title": "Note",
+      "description": "Note.",
+      "type": "string"
+    },
+    "internal_note": {
+      "title": "Internal note",
+      "description": "Internal note.",
+      "type": "string"
+    },
+    "subject": {
+      "title": "Subject",
+      "description": "Subject.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string"
+        }
+      }
+    },
+    "accelerator_experiment": {
+      "title": "Accelerator/Experiment",
+      "description": "Accelerator and experiment information.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "accelerator": {
+          "type": "string"
+        },
+        "experiment": {
+          "type": "string"
+        },
+        "study": {
+          "type": "string"
+        },
+        "facility": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        }
+      }
+    },
+    "external_system_identifiers": {
+      "title": "External identifiers",
+      "description": "List of identifiers on external systems.",
+      "type": "array",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

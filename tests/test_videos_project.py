@@ -212,7 +212,7 @@ def test_fields(app):
                         'name': 'Catapano, Paola',
                         'role': 'Camera Operator'
                     },
-                    {'name': 'test2', 'role': 'Credit'},
+                    {'name': 'test2', 'role': 'Credits'},
                     {
                         'affiliations': (u'CERN',),
                         'email': u'christoph.martin.madsen@cern.ch',

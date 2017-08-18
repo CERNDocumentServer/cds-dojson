@@ -71,7 +71,8 @@ def _get_correct_video_contributor_role(role):
         'coordination montage film': 'Editor',
         'copione & realizzazione': ('Screenwriter', 'Producer'),
         'created by': 'Creator',
-        'credit': 'Credit',
+        'credit': 'Credits',
+        'credits': 'Credits',
         'diaporama': 'Photography',
         'dierctor': 'Director',
         'directed by': 'Director',
@@ -218,4 +219,4 @@ def build_contributor_from_508(value):
             [_, name] = value.get('a').split(',')
             return build_contributor({'a': name.strip(), 'e': 'camera'})
     else:
-        return build_contributor({'a': item.strip(), 'e': 'credit'})
+        return build_contributor({'a': item.strip(), 'e': 'credits'})

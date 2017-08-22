@@ -135,7 +135,7 @@ def test_fields(app):
             </datafield>
             """, {
                 'translations': [{
-                    'title': 'test1',
+                    'title': {'title': 'test1'},
                     'description': 'test2',
                     'language': 'fr',
                 }]
@@ -150,7 +150,7 @@ def test_fields(app):
             </datafield>
             """, {
                 'translations': [{
-                    'title': 'test1',
+                    'title': {'title': 'test1'},
                     'description': 'test2',
                     'language': 'fr',
                 }]
@@ -162,7 +162,7 @@ def test_fields(app):
             </datafield>
             """, {
                 'translations': [{
-                    'title': 'test1',
+                    'title': {'title': 'test1'},
                     'language': 'fr',
                 }]
             })

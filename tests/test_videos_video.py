@@ -518,5 +518,5 @@ def test_language_to_isocode():
     assert language_to_isocode('ITA') == 'it'
     assert language_to_isocode('silent') == 'silent'
     assert language_to_isocode('sil') == 'silent'
-    assert language_to_isocode('fuu') is None
-    assert language_to_isocode('test >3 chars') is None
+    assert language_to_isocode('fuu') == 'silent'
+    assert language_to_isocode('French') == 'fr'

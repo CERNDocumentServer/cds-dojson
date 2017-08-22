@@ -32,4 +32,11 @@ def language_to_isocode(lang):
             'silent': 'silent',
             'sil': 'silent',
         }
-        return exceptions.get(lang)
+        value = exceptions.get(lang)
+        if value:
+            return value
+        try:
+            return pycountry.languages.get(alpha_2=lang[0:2]).alpha_2
+        except (KeyError, AttributeError):
+            # FIXME log somewhere
+            return 'silent'

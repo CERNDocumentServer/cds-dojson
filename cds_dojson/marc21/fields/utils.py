@@ -28,6 +28,17 @@ from six import iteritems
 from ..utils import MementoDict
 
 
+def _get_http_request(url, retry=0):
+    """Get the url and retry if fails."""
+    try:
+        return requests.get(url).json()
+    except Exception:
+        if retry > 0:
+            retry = retry - 1
+            # FIXME use invenio-logging?
+            return _get_http_request(url=url, retry=retry)
+
+
 def get_author_info_from_people_collection(info):
     """Get author information from CDS auto-completion endpoint."""
     # TODO: probably we will need to extract this somewhere else
@@ -36,7 +47,7 @@ def get_author_info_from_people_collection(info):
     if '0' in info or not info.get('a'):
         # There is already enough information or we don't have a name to query
         return info
-    author_info = requests.get(URL.format(info.get('a'))).json()
+    author_info = _get_http_request(url=URL.format(info.get('a')), retry=10)
     if not author_info or len(author_info) > 1:
         # Didn't find anything or find to many matches
         return info

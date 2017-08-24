@@ -275,6 +275,7 @@
           },
           "language": {
             "enum": [
+              "ar",
               "bg",
               "ca",
               "de",

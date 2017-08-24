@@ -436,6 +436,7 @@
           },
           "language": {
             "enum": [
+              "ar",
               "bg",
               "ca",
               "de",
@@ -516,6 +517,7 @@
     },
     "language": {
       "enum": [
+        "ar",
         "bg",
         "ca",
         "de",

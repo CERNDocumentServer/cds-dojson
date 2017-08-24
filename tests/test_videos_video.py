@@ -500,7 +500,7 @@ def test_fields(app):
                 <subfield code="p">test5</subfield>
             </datafield>
             """, {
-                'accelerator_experiments': {
+                'accelerator_experiment': {
                     'accelerator': 'test1',
                     'experiment': 'test2',
                     'study': 'test3',

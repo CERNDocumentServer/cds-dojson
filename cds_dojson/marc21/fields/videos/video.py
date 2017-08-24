@@ -146,9 +146,9 @@ def subject(self, key, value):
     }
 
 
-@model.over('accelerator_experiments', '^693__')
+@model.over('accelerator_experiment', '^693__')
 @filter_values
-def accelerator_experiments(self, key, value):
+def accelerator_experiment(self, key, value):
     """Accelerator experiments."""
     return {
         'accelerator': value.get('a'),

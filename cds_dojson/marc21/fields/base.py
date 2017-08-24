@@ -160,8 +160,8 @@ def note(self, key, value):
     return value.get('a')
 
 
-@model.over('origina_source', '^541__')
-def origina_source(self, key, value):
+@model.over('original_source', '^541__')
+def original_source(self, key, value):
     """Original source."""
     return value.get('e')
 

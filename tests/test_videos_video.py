@@ -192,7 +192,7 @@ def test_fields(app):
                 <subfield code="e">test1</subfield>
             </datafield>
             """, {
-                'origina_source': 'test1',
+                'original_source': 'test1',
             })
         check_transformation(
             """

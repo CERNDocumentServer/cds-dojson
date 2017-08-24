@@ -11,6 +11,9 @@
   ],
   "type": "object",
   "properties": {
+    "original_source": {
+      "type": "string"
+    },
     "videos": {
       "items": {
         "type": "object",

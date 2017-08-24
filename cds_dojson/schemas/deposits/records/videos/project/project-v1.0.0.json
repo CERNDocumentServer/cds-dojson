@@ -11,6 +11,9 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
+    "original_source": {
+      "type": "string"
+    },
     "videos": {
       "items": {
         "type": "object",

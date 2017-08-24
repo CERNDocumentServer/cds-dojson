@@ -8,6 +8,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "original_source": {
+          "type": "string"
+        },
         "affiliations": {
           "description": "Affiliation(s) for the purpose of this specific record.",
           "type": "array",

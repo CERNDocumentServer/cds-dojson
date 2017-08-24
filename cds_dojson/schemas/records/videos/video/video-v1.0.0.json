@@ -18,6 +18,9 @@
   ],
   "type": "object",
   "properties": {
+    "original_source": {
+      "type": "string"
+    },
     "contributors": {
       "minItems": 1,
       "items": {

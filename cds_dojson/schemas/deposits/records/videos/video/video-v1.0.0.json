@@ -17,6 +17,9 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
+    "agency_code": {
+      "type": "string"
+    },
     "original_source": {
       "type": "string"
     },

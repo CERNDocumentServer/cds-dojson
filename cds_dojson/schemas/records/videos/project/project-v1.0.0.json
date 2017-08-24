@@ -11,6 +11,9 @@
   ],
   "type": "object",
   "properties": {
+    "agency_code": {
+      "type": "string"
+    },
     "original_source": {
       "type": "string"
     },

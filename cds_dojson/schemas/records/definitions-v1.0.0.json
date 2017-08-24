@@ -8,6 +8,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "agency_code": {
+          "type": "string"
+        },
         "original_source": {
           "type": "string"
         },

@@ -1,8 +1,8 @@
 ==================
-CDS-DoJSON v0.4.0
+CDS-DoJSON v0.4.1
 ==================
 
-DoJSON v0.4.0 was released on August 18, 2017.
+DoJSON v0.4.1 was released on August 28, 2017.
 
 About
 -----
@@ -19,12 +19,12 @@ New features
 Installation
 ------------
 
-   $ pip install cds-dojson==0.4.0
+   $ pip install cds-dojson==0.4.1
 
 Documentation
 -------------
 
-    https://cds-dojson.readthedocs.org/en/v0.4.0
+    https://cds-dojson.readthedocs.org/en/v0.4.1
 
     Happy hacking and thanks for flying DoJSON.
 

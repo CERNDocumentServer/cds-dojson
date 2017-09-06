@@ -106,7 +106,7 @@ def keywords(self, key, value):
     """Keywords."""
     return {
         'name': value.get('a'),
-        'source': value.get('9'),
+        'source': value.get('9') or value.get('g'),  # Easier to solve here
     }
 
 

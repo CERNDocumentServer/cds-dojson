@@ -32,6 +32,8 @@ def _get_http_request(url, retry=0):
     """Get the url and retry if fails."""
     try:
         return requests.get(url).json()
+    except UnicodeEncodeError:
+        return _get_http_request(url=url.encode('utf-8'), retry=retry)
     except Exception:
         if retry > 0:
             retry = retry - 1

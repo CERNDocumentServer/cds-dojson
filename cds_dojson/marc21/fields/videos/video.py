@@ -24,6 +24,7 @@ import os
 import re
 import arrow
 
+from copy import deepcopy
 from six import iteritems
 from dojson.errors import IgnoreKey
 from dojson.utils import filter_values, force_list, \
@@ -191,7 +192,7 @@ def _files(self, key, value):
         if value.get('d'):
             return 'master', 'video'
         if value.get('y').startswith('thumbnail'):
-            return 'frame', 'image'
+            return 'ignore', 'ignore'
         if 'kbps maxH' in value.get('y'):
             return 'subformat', 'video'
         if value.get('x') == 'subtitle':
@@ -200,7 +201,7 @@ def _files(self, key, value):
             if ' 5 percent' in value.get('y'):
                 return 'poster', 'image'
             else:
-                return 'ignore', 'ignore'
+                return 'frame', 'image'
         return None, None
 
     def get_tags(context_type, value):
@@ -224,34 +225,55 @@ def _files(self, key, value):
             return value.get('u')[len('https://mediaarchive.cern.ch/'):]
 
     def get_tags_to_guess_preset(context_type, value):
-        if context_type == 'subformat':
-            info = value.get('y').split(' ')
-            return {
-                'video_bitrate': int(info[0]),
-                'preset': '{0}p'.format(info[3])
-            }
+        info = value.get('y').split(' ')
+        return {
+            'video_bitrate': int(info[0]),
+            'preset': '{0}p'.format(info[3])
+        }
 
     def get_tags_to_transform(context_type, value):
-        if context_type == 'frame':
+        if context_type in ['frame', 'poster']:
             return {'timestamp': int(value.get('y').split(' ')[3])}
+
+    def get_frame_name(result):
+        _, ext = os.path.splitext(result['key'])
+        index = (int(result['tags_to_transform']['timestamp']) // 10) + 1
+        return "frame-{0}{1}".format(index, ext)
 
     # ignore 'x' sometimes (when is not useful)
     value.get('x')
 
-    result = {}
-    result['key'] = get_key(value)
-    context_type, media_type = get_context_type(value)
-    result['tags'] = get_tags(context_type, value)
-    result['tags'].update(context_type=context_type, media_type=media_type)
-    result['tags']['content_type'] = os.path.splitext(result['key'])[1][1:]
-    result['filepath'] = get_filepath(value)
-    result['tags_to_guess_preset'] = get_tags_to_guess_preset(
-        context_type, value)
-    result['tags_to_transform'] = get_tags_to_transform(
-        context_type, value)
+    def compute(value, context_type, media_type):
+        result = {}
+        result['key'] = get_key(value)
+        result['tags'] = get_tags(context_type, value)
+        result['tags'].update(context_type=context_type, media_type=media_type)
+        result['tags']['content_type'] = os.path.splitext(result['key'])[1][1:]
+        result['filepath'] = get_filepath(value)
+        if context_type == 'subformat':
+            result['tags_to_guess_preset'] = get_tags_to_guess_preset(
+                context_type, value)
+        result['tags_to_transform'] = get_tags_to_transform(
+            context_type, value)
 
-    if result['key'].startswith('proxy-') or context_type == 'ignore':
-        # skip proxy files
-        raise IgnoreKey('_files')
+        if result['key'].startswith('proxy-') or context_type == 'ignore':
+            # skip proxy files
+            raise IgnoreKey('_files')
+
+        if context_type == 'frame':
+            # update key name
+            result['key'] = get_frame_name(result)
+
+        return result
+
+    result = compute(deepcopy(value), *get_context_type(value))
+
+    # if it's the poster frame, make a copy for a frame!
+    if result['tags']['context_type'] == 'poster' and \
+            result['tags_to_transform']['timestamp'] == 5:
+        frame_5 = compute(value, 'frame', 'image')
+        if '_files' not in self:
+            self['_files'] = []
+        self['_files'].append(frame_5)
 
     return result

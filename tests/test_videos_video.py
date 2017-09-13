@@ -32,7 +32,7 @@ def test_required_fields(app):
         blob = create_record(marcxml)
         record = model.do(blob)
 
-        assert record == {
+        expected = {
             '$schema': {
                 '$ref': ('https://cds.cern.ch/schemas/records/videos/video/'
                          'video-v1.0.0.json')
@@ -105,6 +105,14 @@ def test_required_fields(app):
                 },
                 {
                     'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg',
+                    'key': 'frame-1.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 5}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg',
                     'key': 'CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg',
                     'tags': {
                         'media_type': 'image',
@@ -112,7 +120,80 @@ def test_required_fields(app):
                         'width': '640',
                         'content_type': 'jpg',
                         'context_type': 'poster',
-                    }
+                    },
+                    'tags_to_transform': {'timestamp': 5},
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-15-percent.jpg',
+                    'key': 'frame-2.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 15}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-25-percent.jpg',
+                    'key': 'frame-3.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 25}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-35-percent.jpg',
+                    'key': 'frame-4.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 35}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-45-percent.jpg',
+                    'key': 'frame-5.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 45}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-55-percent.jpg',
+                    'key': 'frame-6.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 55}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-65-percent.jpg',
+                    'key': 'frame-7.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 65}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-75-percent.jpg',
+                    'key': 'frame-8.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 75}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-85-percent.jpg',
+                    'key': 'frame-9.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 85}
+                },
+                {
+                    'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-95-percent.jpg',
+                    'key': 'frame-10.jpg',
+                    'tags': {'content_type': 'jpg',
+                             'context_type': 'frame',
+                             'media_type': 'image'},
+                    'tags_to_transform': {'timestamp': 95}
                 }
             ],
             '_project_id': 'https://cds.cern.ch/record/1',
@@ -157,6 +238,8 @@ def test_required_fields(app):
             ],
             'modified_by': 'Jacques.Fichet@cern.ch',
         }
+
+        assert record == expected
 
         # Add required fields calculated by post-process tasks.
         record['publication_date'] = '2017-07-04'

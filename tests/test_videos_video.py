@@ -115,7 +115,7 @@ def test_required_fields(app):
                     }
                 }
             ],
-            '_project_id': 'CERN-MOVIE-2017-023',
+            '_project_id': 'https://cds.cern.ch/record/1',
             'category': 'CERN',
             'contributors': [
                 {'name': 'CERN Video Productions', 'role': 'Producer'},
@@ -316,7 +316,7 @@ def test_fields(app):
         check_transformation(
             """
             <datafield tag="773" ind1=" " ind2=" ">
-                <subfield code="r">test1</subfield>
+                <subfield code="u">test1</subfield>
             </datafield>
             <datafield tag="773" ind1=" " ind2=" ">
                 <subfield code="p">test1</subfield>
@@ -331,7 +331,7 @@ def test_fields(app):
         check_transformation(
             """
             <datafield tag="773" ind1=" " ind2=" ">
-                <subfield code="r">test1</subfield>
+                <subfield code="u">test1</subfield>
             </datafield>
             """, {
                 '_project_id': 'test1',

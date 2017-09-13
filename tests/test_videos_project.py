@@ -49,8 +49,8 @@ def test_required_fields(app):
             'report_number': ['CERN-MOVIE-2017-023'],
             'title': {'title': 'Higgs anniversary 5Y'},
             'type': 'MOVIE',
-            'videos': [{'$ref': 'CERN-MOVIE-2017-023-002'},
-                       {'$ref': 'CERN-MOVIE-2017-023-001'}],
+            'videos': [{'$ref': 'https://cds.cern.ch/record/1'},
+                       {'$ref': 'https://cds.cern.ch/record/2'}],
             'external_system_identifiers': [
                 {'schema': 'AVW', 'value': 'AVW.project.2963'}
             ],
@@ -225,10 +225,10 @@ def test_fields(app):
         check_transformation(
             """
             <datafield tag="774" ind1=" " ind2=" ">
-                <subfield code="r">test1</subfield>
+                <subfield code="u">test1</subfield>
             </datafield>
             <datafield tag="774" ind1=" " ind2=" ">
-                <subfield code="r">test2</subfield>
+                <subfield code="u">test2</subfield>
             </datafield>
             """, {
                 'videos': [

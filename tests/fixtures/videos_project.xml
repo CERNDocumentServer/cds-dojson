@@ -31,10 +31,10 @@
     <subfield code="e">Director</subfield>
   </datafield>
   <datafield tag="774" ind1=" " ind2=" ">
-    <subfield code="r">CERN-MOVIE-2017-023-002</subfield>
+    <subfield code="u">https://cds.cern.ch/record/1</subfield>
   </datafield>
   <datafield tag="774" ind1=" " ind2=" ">
-    <subfield code="r">CERN-MOVIE-2017-023-001</subfield>
+    <subfield code="u">https://cds.cern.ch/record/2</subfield>
   </datafield>
   <datafield tag="859" ind1=" " ind2=" ">
     <subfield code="f">Jacques.Fichet@cern.ch</subfield>

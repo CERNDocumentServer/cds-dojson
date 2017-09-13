@@ -117,7 +117,7 @@ def project_id(self, key, value):
             related_link['url'] = value.get('u')
             related_links.append(related_link)
         else:
-            project_id = value.get('r')
+            project_id = value.get('u')
     if related_links:
         self['related_links'] = related_links
     if not project_id:

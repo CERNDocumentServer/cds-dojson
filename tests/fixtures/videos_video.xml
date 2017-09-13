@@ -91,6 +91,7 @@
     <datafield tag="773" ind1=" " ind2=" ">
       <subfield code="o">AVW.project.2963</subfield>
       <subfield code="r">CERN-MOVIE-2017-023</subfield>
+      <subfield code="u">https://cds.cern.ch/record/1</subfield>
     </datafield>
     <datafield tag="856" ind1="7" ind2=" ">
       <subfield code="2">MediaArchive</subfield>

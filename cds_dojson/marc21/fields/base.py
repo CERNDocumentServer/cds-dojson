@@ -115,7 +115,7 @@ def keywords(self, key, value):
 def videos(self, key, value):
     """Videos."""
     return {
-        '$ref': value.get('r')
+        '$ref': value.get('u')
     }
 
 

@@ -23,7 +23,7 @@ import requests
 
 from dojson.utils import force_list
 from itertools import chain
-from six import iteritems
+from six import iteritems, PY2
 
 from ..utils import MementoDict
 
@@ -32,8 +32,6 @@ def _get_http_request(url, retry=0):
     """Get the url and retry if fails."""
     try:
         return requests.get(url).json()
-    except UnicodeEncodeError:
-        return _get_http_request(url=url.encode('utf-8'), retry=retry)
     except Exception:
         if retry > 0:
             retry = retry - 1
@@ -49,7 +47,12 @@ def get_author_info_from_people_collection(info):
     if '0' in info or not info.get('a'):
         # There is already enough information or we don't have a name to query
         return info
-    author_info = _get_http_request(url=URL.format(info.get('a')), retry=10)
+    author_name = info.get('a')
+    if PY2:
+        # In Python 3, encoded name will change type to bytes and this will
+        # cause query to CDS to fail
+        author_name = author_name.encode('utf-8')
+    author_info = _get_http_request(url=URL.format(author_name), retry=10)
     if not author_info or len(author_info) > 1:
         # Didn't find anything or find to many matches
         return info

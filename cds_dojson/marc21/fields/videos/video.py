@@ -275,5 +275,8 @@ def _files(self, key, value):
         if '_files' not in self:
             self['_files'] = []
         self['_files'].append(frame_5)
+        # update posterframe key name
+        _, ext = os.path.splitext(result['key'])
+        result['key'] = 'posterframe{0}'.format(ext)
 
     return result

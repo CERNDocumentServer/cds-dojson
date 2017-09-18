@@ -113,7 +113,7 @@ def test_required_fields(app):
                 },
                 {
                     'filepath': 'MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg',
-                    'key': 'CERN-MOVIE-2017-023-001-posterframe-640x360-at-5-percent.jpg',
+                    'key': 'posterframe.jpg',
                     'tags': {
                         'media_type': 'image',
                         'height': '360',

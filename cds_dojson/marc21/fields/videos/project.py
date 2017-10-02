@@ -21,7 +21,7 @@
 
 from __future__ import absolute_import, print_function
 
-from dojson.utils import filter_values, for_each_value, IgnoreKey
+from dojson.utils import filter_values, for_each_value
 
 from ...models.videos.project import model
 

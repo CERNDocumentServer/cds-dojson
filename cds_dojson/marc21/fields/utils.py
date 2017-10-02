@@ -213,7 +213,7 @@ def build_contributor(value):
         # Avoids a few calls
         value = get_author_info_from_people_collection(value)
 
-    role = _get_correct_video_contributor_role(value.get('e'))
+    role = _get_correct_video_contributor_role(value.get('e', 'producer'))
     contributor = {
         'ids': _extract_json_ids(value) or None,
         'name': value.get('name') or value.get('a'),

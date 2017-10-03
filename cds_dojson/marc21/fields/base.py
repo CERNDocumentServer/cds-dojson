@@ -61,11 +61,13 @@ def contributors(self, key, value):
     """Contributors."""
     authors = self.get('contributors', [])
     if key in ['100__', '700__']:
-        item = build_contributor(value)
+        items = build_contributor(value)
     else:
-        item = build_contributor_from_508(value)
-    if item and item not in authors:
-        authors.append(item)
+        items = build_contributor_from_508(value)
+    # add only contributors that are not part of the authors
+    authors.extend(
+        [item for item in items if item and item not in authors]
+    )
     return authors
 
 

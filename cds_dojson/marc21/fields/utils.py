@@ -190,7 +190,17 @@ def _extract_json_ids(info):
 
 
 def build_contributor(value):
-    """Create a."""
+    """Create a.
+
+    :returns: Contributors
+    :rtype: list
+
+    .. note::
+
+        In some cases contributor has a tuple of roles
+        (i.e. ('Producer', 'Director')) in such cases we return the contributor
+        as many times as the roles (2 in the example).
+    """
     OLD_VIDEO_TEAM_NAMES = {
         'cern', 'cern ', 'cern / audiovisual service', 'cern ???',
         'cern audio service', 'cern audio video service',
@@ -214,6 +224,7 @@ def build_contributor(value):
         value = get_author_info_from_people_collection(value)
 
     role = _get_correct_video_contributor_role(value.get('e', 'producer'))
+    contributors = []
     contributor = {
         'ids': _extract_json_ids(value) or None,
         'name': value.get('name') or value.get('a'),
@@ -223,8 +234,18 @@ def build_contributor(value):
     if contributor['name'].lower() in OLD_VIDEO_TEAM_NAMES:
         contributor['name'] = 'CERN Video Productions'
 
-    contributor['role'] = role
-    return dict((k, v) for k, v in iteritems(contributor) if v is not None)
+    contributor = dict(
+        (k, v) for k, v in iteritems(contributor) if v is not None
+    )
+
+    if isinstance(role, tuple):
+        for _role in role:
+            contributor['role'] = _role
+            contributors.append(contributor)
+    else:
+        contributor['role'] = role
+        contributors.append(contributor)
+    return contributors
 
 
 def build_contributor_from_508(value):

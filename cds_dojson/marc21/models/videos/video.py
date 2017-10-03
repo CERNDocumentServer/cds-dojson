@@ -80,7 +80,8 @@ class CDSVideo(OverdoJSONSchema):
         '962__t',
         '963__a',
         '980__a',
-        '980__b'
+        '980__b',
+        '981__a',
     }
 
 

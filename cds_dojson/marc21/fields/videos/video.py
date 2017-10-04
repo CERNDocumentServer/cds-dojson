@@ -280,3 +280,11 @@ def _files(self, key, value):
         result['key'] = 'posterframe{0}'.format(ext)
 
     return result
+
+
+@model.over('audio_characteristics', '^344__')
+def audio_characteristics(self, key, value):
+    """Audio characteristics."""
+    return {
+        'playback_channels': value.get('g'),
+    }

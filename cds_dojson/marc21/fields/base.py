@@ -38,7 +38,7 @@ def recid(self, key, value):
 @model.over('agency_code', '^003')
 def agency_code(self, key, value):
     """Control number identifier."""
-    return value or 'SzGeCERN'
+    return value if value.values() else 'SzGeCERN'
 
 
 @model.over('report_number', '^(037|088)__')

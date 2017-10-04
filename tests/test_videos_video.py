@@ -432,6 +432,28 @@ def test_fields(app):
             })
         check_transformation(
             """
+            <datafield tag="773" ind1=" " ind2=" ">
+              <subfield code="p">Version anglaise</subfield>
+              <subfield code="u">http://cds.cern.ch/record/43172</subfield>
+            </datafield>
+            <datafield tag="773" ind1=" " ind2=" ">
+              <subfield code="p">Version allemande</subfield>
+              <subfield code="r">CERN-FILM-1965-44</subfield>
+              <subfield code="u">https://cds.cern.ch/record/2194933</subfield>
+            </datafield>
+            <datafield tag="773" ind1=" " ind2=" ">
+              <subfield code="o">AVW.project.111</subfield>
+              <subfield code="r">CERN-MOVIE-1965-001</subfield>
+              <subfield code="u">https://cds.cern.ch/api/record/2017733</subfield>
+            </datafield>
+            """, {'_project_id': 'https://cds.cern.ch/api/record/2017733',
+                  'related_links': [
+                      {'name': 'Version anglaise', 'url': 'http://cds.cern.ch/record/43172'},
+                      {'name': 'Version allemande', 'url': 'https://cds.cern.ch/record/2194933'},
+                  ]}
+        )
+        check_transformation(
+            """
             <datafield tag="110" ind1=" " ind2=" ">
                 <subfield code="a">test1</subfield>
             </datafield>

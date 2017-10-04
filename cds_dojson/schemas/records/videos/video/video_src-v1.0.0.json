@@ -132,7 +132,15 @@
           "description": "Type of the project.",
           "type": "string"
         },
-        "language": { "$ref": "../../definitions-v1.0.0.json#/definitions/language" }
+        "language": { "$ref": "../../definitions-v1.0.0.json#/definitions/language" },
+        "audio_characteristics": {
+          "type": "object",
+          "properties": {
+            "playback_channels": {
+              "type": "string"
+            }
+          }
+        }
       },
       "required": [
         "category",

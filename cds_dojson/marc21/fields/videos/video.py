@@ -70,7 +70,7 @@ def physical_medium(self, key, value):
             return _physical_medium[0]
         else:
             for i in _physical_medium:
-                if seq and seq == i.get('sequence_number') \
+                if seq and seq in i.get('sequence_number') \
                         or copy and copy == i.get('copy_number'):
                     return i
 
@@ -78,11 +78,14 @@ def physical_medium(self, key, value):
         return _physical_medium[-1]
 
     _physical_medium = self.get('physical_medium', [])
+    sequence_numbers = []
     for value in force_list(value):
         pm = find_match(value.get('8'), value.get('y'))
+        # Append ``_8`` and ``_9``
+        sequence_numbers.append(value.get('8'))
+        sequence_numbers.append(value.get('9'))
         if key == '340__':
             pm.update({
-                'sequence_number': value.get('8'),
                 'medium_standard': value.get('a'),
                 'note': value.get('j'),
                 'camera': value.get('d'),
@@ -91,7 +94,6 @@ def physical_medium(self, key, value):
             })
         elif key == '852__':
             pm.update({
-                'sequence_number': value.get('8'),
                 'internal_note': value.get('9'),
                 'location': value.get('a'),
                 'shelf': value.get('b'),
@@ -99,7 +101,12 @@ def physical_medium(self, key, value):
                 'copy_number': value.get('t'),
                 'note': value.get('z'),
             })
-
+        pm.update({
+            'sequence_number': [
+                sequence_number for sequence_number in set(sequence_numbers) \
+                    if sequence_number is not None
+            ]
+        })
     return [dict((k, v) for k, v in iteritems(i) if v is not None)
             for i in _physical_medium]
 

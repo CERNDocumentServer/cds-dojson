@@ -126,7 +126,10 @@
             "type": "string"
           }, 
           "sequence_number": {
-            "type": "string"
+            "items": {
+              "type": "string"
+            }, 
+            "type": "array"
           }, 
           "internal_note": {
             "type": "string"

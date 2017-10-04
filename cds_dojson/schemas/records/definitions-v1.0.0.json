@@ -303,7 +303,10 @@
             "type": "string"
           },
           "sequence_number": {
-            "type": "string"
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
           },
           "arrangement": {
             "type": "string"

@@ -103,8 +103,8 @@ def physical_medium(self, key, value):
             })
         pm.update({
             'sequence_number': [
-                sequence_number for sequence_number in set(sequence_numbers) \
-                    if sequence_number is not None
+                sequence_number for sequence_number in set(sequence_numbers)
+                if sequence_number is not None
             ]
         })
     return [dict((k, v) for k, v in iteritems(i) if v is not None)

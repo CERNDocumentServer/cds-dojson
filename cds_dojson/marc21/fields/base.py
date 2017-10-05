@@ -65,9 +65,10 @@ def contributors(self, key, value):
     else:
         items = build_contributor_from_508(value)
     # add only contributors that are not part of the authors
-    authors.extend(
-        [item for item in items if item and item not in authors]
-    )
+    if items:
+        authors.extend(
+            [item for item in items if item and item not in authors]
+        )
     return authors
 
 

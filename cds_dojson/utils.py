@@ -145,6 +145,7 @@ def convert_date_to_iso_8601(date, format_='YYYY-MM-DD', **kwargs):
         'YYYY-MM-DD',
         'YYYY/MM/DD',
         'DD/MM/YYYY',
+        'DD/MM/YY',
         'YYYY.MM.DD',
         'DD MMMM YYYY',
         'DD MMM YYYY',

@@ -164,10 +164,8 @@ def _extract_json_ids(info):
     }
     regex = re.compile('((AUTHOR\|\((CDS|INSPIRE)\))|(\(SzGeCERN\)))(.*)')
     ids = []
-    for id_ in info.get('0', []):
-        match = regex.match(id_)
-        if not match:
-            pass
+    match = regex.match(info.get('0', ''))
+    if match:
         ids.append({
             'value': match.group(5),
             'source': SOURCES[match.group(1)]

@@ -504,6 +504,33 @@ def test_fields(app):
             })
         check_transformation(
             """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">0:0</subfield>
+                <subfield code="e">16:9</subfield>
+            </datafield>
+            """, {
+                'duration': '00:00:00'
+            })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">12:33:12</subfield>
+                <subfield code="e">16:9</subfield>
+            </datafield>
+            """, {
+                'duration': '12:33:12'
+            })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="b">16:9,</subfield>
+                <subfield code="e">16:9</subfield>
+            </datafield>
+            """, {
+                'duration': '00:00:00'
+            })
+        check_transformation(
+            """
             <datafield tag="590" ind1=" " ind2=" ">
                 <subfield code="a">test2</subfield>
             </datafield>

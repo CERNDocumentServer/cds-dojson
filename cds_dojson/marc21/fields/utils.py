@@ -251,7 +251,15 @@ def build_contributor_from_508(value):
     item = value.get('a')
     if item.lower().startswith('camera operator'):
         if ',' in item:
-            [_, name] = value.get('a').split(',')
-            return build_contributor({'a': name.strip(), 'e': 'camera'})
+            camera_operators = value.get('a').split(',')
+            # remove "camera operator" from the list
+            camera_operators.pop(0)
+            contributors = []
+            for name in camera_operators:
+                contributor = build_contributor(
+                    {'a': name.strip(), 'e': 'camera'})
+                if contributor:
+                    contributors.append(contributor[0])
+            return contributors
     else:
         return build_contributor({'a': item.strip(), 'e': 'credits'})

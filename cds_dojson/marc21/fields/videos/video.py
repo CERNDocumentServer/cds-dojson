@@ -46,7 +46,7 @@ def duration(self, key, value):
     """
     try:
         return re.match('(\d{2}:\d{2}:\d{2})(\.\d+)?', value.get('a')).group(1)
-    except AttributeError:
+    except (AttributeError, TypeError):
         # The regex didn't match, we will extract the duration later.
         return '00:00:00'
 

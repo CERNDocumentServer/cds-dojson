@@ -315,7 +315,8 @@ def test_fields(app):
                     {
                         'camera': 'test2A',
                         'medium_standard': 'test1A',
-                        'location': 'loc_test1A'
+                        'location': 'loc_test1A',
+                        'sequence_number': [],
                     }
                 ]
             })
@@ -342,13 +343,13 @@ def test_fields(app):
             """, {
                 'physical_medium': [
                     {
-                        'sequence_number': 'A',
+                        'sequence_number': ['A'],
                         'camera': 'test2A',
                         'medium_standard': 'test1A',
                         'location': 'loc_test1A'
                     },
                     {
-                        'sequence_number': 'B',
+                        'sequence_number': ['B'],
                         'camera': 'test2B',
                         'medium_standard': 'test1B',
                         'location': 'loc_test1B'
@@ -535,6 +536,12 @@ def test_fields(app):
                 <subfield code="a">Christoph Madsen</subfield>
                 <subfield code="e">Director</subfield>
             </datafield>
+            <datafield tag="700" ind1=" " ind2=" ">
+                <subfield code="0">AUTHOR|(CDS)1231231</subfield>
+                <subfield code="9">#BEARD#</subfield>
+                <subfield code="a">Jessica, Jones</subfield>
+                <subfield code="e">Produced by</subfield>
+            </datafield>
             """, {
                 'contributors': [
                     {'name': 'CERN Video Productions', 'role': 'Producer'},
@@ -554,6 +561,11 @@ def test_fields(app):
                         'ids': [{'source': 'CERN', 'value': u'755568'},
                                 {'source': 'CDS', 'value': u'2090563'}],
                         'name': 'Madsen, Christoph Martin', 'role': 'Director'
+                    },
+                    {
+                        'role': 'Producer',
+                        'ids': [{'source': 'CDS', 'value': '1231231'}],
+                        'name': 'Jessica, Jones'
                     },
                 ]
             })

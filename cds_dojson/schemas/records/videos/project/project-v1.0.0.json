@@ -240,6 +240,10 @@
       "type": "string", 
       "description": "Type of the project."
     }, 
+    "_eos_library_path": {
+      "type": "string", 
+      "description": "EOS path of the video production library."
+    }, 
     "description": {
       "type": "string", 
       "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."

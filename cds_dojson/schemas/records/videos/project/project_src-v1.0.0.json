@@ -106,6 +106,10 @@
         "type": {
           "description": "Type of the project.",
           "type": "string"
+        },
+        "_eos_library_path": {
+          "description": "EOS path of the video production library.",
+          "type": "string"
         }
       },
       "required": [

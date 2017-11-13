@@ -221,6 +221,8 @@ def _files(self, key, value):
                 'language': language_to_isocode(
                     value.get('y').split(' ')[1][:3])
             }
+        if context_type == 'master':
+            return {'preview': True}
         return {}
 
     def get_filepath(value):

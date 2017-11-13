@@ -51,6 +51,7 @@ def test_required_fields(app):
                         'media_type': 'video',
                         'content_type': 'mov',
                         'context_type': 'master',
+                        'preview': True,
                     },
                 },
                 {

@@ -56,6 +56,8 @@ class CDSVideo(OverdoJSONSchema):
         '700__9',
         '773__o',
         '773__r',
+        '787__i',
+        '787__w',
         '852__x',
         # FIXME need to double check (see #85)
         '8564_8',

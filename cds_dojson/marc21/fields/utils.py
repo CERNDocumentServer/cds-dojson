@@ -217,6 +217,10 @@ def build_contributor(value):
         'cern video+photo productions', 'cern videos production',
         'cern videos productions', 'cern visual media office', 'cern vmo'
     }
+    if not value.get('a'):
+        # Sometimes there are 100 or 700 fields with no $a subfield
+        # (wrong metadata), so let's ignore them
+        return []
     if value.get('a').lower() not in OLD_VIDEO_TEAM_NAMES:
         # Avoids a few calls
         value = get_author_info_from_people_collection(value)

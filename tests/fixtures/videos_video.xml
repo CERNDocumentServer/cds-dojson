@@ -106,7 +106,7 @@
     </datafield>
     <datafield tag="856" ind1="7" ind2=" ">
       <subfield code="2">MediaArchive</subfield>
-      <subfield code="u">https://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-2672-kbps-1280x720-audio-128-kbps-stereo.mp4</subfield>
+      <subfield code="u">http://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-2672-kbps-1280x720-audio-128-kbps-stereo.mp4</subfield>
       <subfield code="x">mp42672</subfield>
       <subfield code="y">2672 kbps maxH 720 25 fps audio 128 kbps 48 kHz stereo</subfield>
     </datafield>

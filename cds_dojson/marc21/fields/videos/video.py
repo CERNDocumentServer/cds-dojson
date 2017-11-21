@@ -231,7 +231,9 @@ def _files(self, key, value):
                 len('\\\\cern.ch\\dfs\\Services\\'):
             ].replace('\\', '/')
         else:
-            return value.get('u')[len('https://mediaarchive.cern.ch/'):]
+            return re.sub(
+                'https?://mediaarchive.cern.ch/', '', value.get('u', '')
+            )
 
     def get_tags_to_guess_preset(context_type, value):
         info = value.get('y').split(' ')

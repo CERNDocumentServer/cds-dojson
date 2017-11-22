@@ -106,6 +106,16 @@
     </datafield>
     <datafield tag="856" ind1="7" ind2=" ">
       <subfield code="2">MediaArchive</subfield>
+      <subfield code="u">
+        http://mediaarchive.cern.ch/MediaArchive/Video/Public/Rush/1993/CERN-VIDEORUSH-1993-001/CERN-VIDEORUSH-1993-001-0120-kbps-384x288-12.5-fps-audio-20-kbps-22-kHz-mono.wmv
+      </subfield>
+      <subfield code="x">wmv0120</subfield>
+      <subfield code="y">
+        0120 kbps 384x288 12.5 fps audio 20 kbps 22 kHz mono
+      </subfield>
+    </datafield>
+    <datafield tag="856" ind1="7" ind2=" ">
+      <subfield code="2">MediaArchive</subfield>
       <subfield code="u">http://mediaarchive.cern.ch/MediaArchive/Video/Public/Movies/CERN/2017/CERN-MOVIE-2017-023/CERN-MOVIE-2017-023-001/CERN-MOVIE-2017-023-001-2672-kbps-1280x720-audio-128-kbps-stereo.mp4</subfield>
       <subfield code="x">mp42672</subfield>
       <subfield code="y">2672 kbps maxH 720 25 fps audio 128 kbps 48 kHz stereo</subfield>

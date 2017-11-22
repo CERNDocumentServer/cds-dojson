@@ -200,6 +200,10 @@ def _files(self, key, value):
             return 'master', 'video'
         if value.get('y').startswith('thumbnail'):
             return 'ignore', 'ignore'
+        if value.get('x').startswith('wmv'):
+            return 'ignore', 'ignore'
+        if value.get('x').startswith('flv'):
+            return 'ignore', 'ignore'
         if 'kbps maxH' in value.get('y'):
             return 'subformat', 'video'
         if value.get('x') == 'subtitle':

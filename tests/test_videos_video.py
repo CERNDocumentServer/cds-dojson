@@ -599,6 +599,17 @@ def test_fields(app):
             })
         check_transformation(
             """
+            <datafield tag="100" ind1=" " ind2=" ">
+                <subfield code="a">CERN video productions</subfield>
+                <subfield code="e">Script and Director</subfield>
+            </datafield>
+            """, {
+                'contributors': [
+                    {'name': 'CERN Video Productions', 'role': 'Screenwriter'},
+                    {'name': 'CERN Video Productions', 'role': 'Director'}
+                ]})
+        check_transformation(
+            """
             <datafield tag="595" ind1=" " ind2=" ">
                 <subfield code="a">test1</subfield>
                 <subfield code="s">test2</subfield>

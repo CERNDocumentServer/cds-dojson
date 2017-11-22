@@ -18,12 +18,13 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """General field utils."""
 
+import copy
 import re
-import requests
-
-from dojson.utils import force_list
 from itertools import chain
-from six import iteritems, PY2
+
+import requests
+from dojson.utils import force_list
+from six import PY2, iteritems
 
 from ..utils import MementoDict
 
@@ -243,7 +244,7 @@ def build_contributor(value):
     if isinstance(role, tuple):
         for _role in role:
             contributor['role'] = _role
-            contributors.append(contributor)
+            contributors.append(copy.deepcopy(contributor))
     else:
         contributor['role'] = role
         contributors.append(contributor)

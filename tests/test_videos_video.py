@@ -610,6 +610,16 @@ def test_fields(app):
                 ]})
         check_transformation(
             """
+            <datafield tag="700" ind1=" " ind2=" ">
+                <subfield code="a">Jean-Claude Vialis</subfield>
+                <subfield code="e">Réalisation</subfield>
+            </datafield>
+            """, {
+                'contributors': [
+                    {'name': 'Jean-Claude Vialis', 'role': 'Producer'},
+                ]})
+        check_transformation(
+            """
             <datafield tag="595" ind1=" " ind2=" ">
                 <subfield code="a">test1</subfield>
                 <subfield code="s">test2</subfield>

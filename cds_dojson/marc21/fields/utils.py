@@ -74,7 +74,7 @@ def _get_correct_video_contributor_role(role):
         '3d animations': 'Animations by',
         'animation': 'Animations by',
         'animations': 'Animations by',
-        'auteur-r\xc3\xa9alisateur': ('Creator', 'Producer'),
+        u'auteur-r\xe9alisateur': ('Creator', 'Producer'),
         'author': 'Creator',
         'autor': 'Creator',
         'camera': 'Camera Operator',
@@ -104,7 +104,7 @@ def _get_correct_video_contributor_role(role):
         'editing': 'Editor',
         'edition': 'Editor',
         'editor': 'Editor',
-        'enqu\xc3\xaate': 'Reporter',
+        u'enqu\xeate': 'Reporter',
         'entretiens': 'Reporter',
         'executive producer': 'Producer',
         'film maker': 'Camera Operator',
@@ -131,17 +131,17 @@ def _get_correct_video_contributor_role(role):
         'productor': 'Producer',
         'realisateur': 'Producer',
         'realisation': 'Producer',
+        u'r\xe9alisation': 'Producer',
         'redaktion': 'Editor',
         'related by': 'Narrator',
         'reporter': 'Reporter',
         'reports': 'Reporter',
-        'r\xc3\xa9alisation': 'Producer',
         'scenario et realisation': 'Producer',
         'script': 'Screenwriter',
         'script & director': ('Screenwriter', 'Director'),
         'script and director': ('Screenwriter', 'Director'),
         'script, design and direction': ('Screenwriter', 'Editor', 'Director'),
-        'sc\xc3\xa9nario et r\xc3\xa9alisation': 'Producer',
+        u'sc\xe9nario et r\xe9alisation': 'Producer',
         'series producer': 'Producer',
         'shooting and editing': ('Camera Operator', 'Editor'),
         'son': 'Music by',
@@ -153,7 +153,7 @@ def _get_correct_video_contributor_role(role):
         'written and director': ('Screenwriter', 'Director'),
         'written and produced by': ('Screenwriter', 'Producer'),
     }
-    return tranlations.get(role.lower())
+    return tranlations[role.lower()]
 
 
 def _extract_json_ids(info):
@@ -226,7 +226,8 @@ def build_contributor(value):
         # Avoids a few calls
         value = get_author_info_from_people_collection(value)
 
-    role = _get_correct_video_contributor_role(value.get('e', 'producer'))
+    role = _get_correct_video_contributor_role(
+        value.get('e', 'producer'))  # always unicode
     contributors = []
     contributor = {
         'ids': _extract_json_ids(value) or None,

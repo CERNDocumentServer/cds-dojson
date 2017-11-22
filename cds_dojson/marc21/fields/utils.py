@@ -221,6 +221,7 @@ def build_contributor(value):
     if not value.get('a'):
         # Sometimes there are 100 or 700 fields with no $a subfield
         # (wrong metadata), so let's ignore them
+        value.get('e')  # quick hack to avoid false positves
         return []
     if value.get('a').lower() not in OLD_VIDEO_TEAM_NAMES:
         # Avoids a few calls

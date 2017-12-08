@@ -1,6 +1,18 @@
 Changes
 =======
 
+Version 0.6.0 (released 2017-12-08)
+-----------------------------------
+
+- Videos release candidate.
+- New ignore fields: 962__n, 852__j, 778, 981__a.
+- New 'audio_characteristics' field.
+- Addition of new languages: Ukrainian, Turkish, etc.
+- Ignore older video presets.
+- Ignore contributor field, if there is no $a subfield.
+- Fix translation of unicode roles.
+- Fix one contributor several roles.
+
 Version 0.5.0 (released 2017-09-14)
 -----------------------------------
 

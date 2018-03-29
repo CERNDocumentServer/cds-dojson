@@ -47,12 +47,6 @@
         }
       }
     }, 
-    "keywords": {
-      "items": {
-        "type": "object"
-      }, 
-      "type": "array"
-    }, 
     "external_system_identifiers": {
       "items": {
         "additionalProperties": false, 
@@ -68,6 +62,16 @@
       "type": "array", 
       "description": "List of identifiers on external systems.", 
       "title": "External identifiers"
+    }, 
+    "keywords": {
+      "items": {
+        "type": "object"
+      }, 
+      "type": "array"
+    }, 
+    "_eos_library_path": {
+      "type": "string", 
+      "description": "EOS path of the video production library."
     }, 
     "$schema": {
       "type": "string"
@@ -291,10 +295,6 @@
     "type": {
       "type": "string", 
       "description": "Type of the project."
-    }, 
-    "_eos_library_path": {
-      "type": "string", 
-      "description": "EOS path of the video production library."
     }, 
     "description": {
       "type": "string", 

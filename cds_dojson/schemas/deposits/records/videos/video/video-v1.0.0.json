@@ -528,6 +528,7 @@
       }
     }, 
     "language": {
+      "default": "en", 
       "enum": [
         "ar", 
         "bg", 

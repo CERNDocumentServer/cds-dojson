@@ -504,6 +504,7 @@
       "title": "License information"
     }, 
     "language": {
+      "default": "en", 
       "enum": [
         "ar", 
         "bg", 

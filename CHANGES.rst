@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.7.0 (released 2018-04-03)
+-----------------------------------
+
+- Addition of default language for videos (English)
+
 Version 0.6.0 (released 2017-12-08)
 -----------------------------------
 

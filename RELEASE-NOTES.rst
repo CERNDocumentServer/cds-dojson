@@ -1,8 +1,8 @@
 ==================
-CDS-DoJSON v0.6.0
+CDS-DoJSON v0.7.0
 ==================
 
-DoJSON v0.6.0 was released on December 8, 2017.
+DoJSON v0.7.0 was released on April 3, 2018.
 
 About
 -----
@@ -15,16 +15,17 @@ New features
 - First draft video schema.
 - Moves ``schemas`` folder up as they don't relay anymore on MACR21 as base
   model.
+- Addition of default language for videos (English)
 
 Installation
 ------------
 
-   $ pip install cds-dojson==0.6.0
+   $ pip install cds-dojson==0.7.0
 
 Documentation
 -------------
 
-    https://cds-dojson.readthedocs.org/en/v0.6.0
+    https://cds-dojson.readthedocs.org/en/v0.7.0
 
     Happy hacking and thanks for flying DoJSON.
 

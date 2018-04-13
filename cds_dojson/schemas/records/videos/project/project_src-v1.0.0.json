@@ -66,6 +66,7 @@
         "license": { "$ref": "../../definitions-v1.0.0.json#/definitions/license" },
         "note": { "$ref": "../../definitions-v1.0.0.json#/definitions/note" },
         "internal_note": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note" },
+        "internal_categories": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_categories" },
         "subject": { "$ref": "../../definitions-v1.0.0.json#/definitions/subject" },
         "external_system_identifiers": { "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers" },
         "_files": {

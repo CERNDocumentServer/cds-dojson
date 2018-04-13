@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2017 CERN.
+# Copyright (C) 2017, 2018 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -22,19 +22,20 @@ from __future__ import absolute_import, print_function
 
 import os
 import re
-import arrow
-
+from collections import defaultdict
 from copy import deepcopy
-from six import iteritems
+
+import arrow
 from dojson.errors import IgnoreKey
-from dojson.utils import filter_values, force_list, \
-    ignore_value, for_each_value
+from dojson.utils import (filter_values, for_each_value, force_list,
+                          ignore_value)
+from six import iteritems
 
 from ...models.videos.video import model
 from .utils import language_to_isocode
 
-
 # Required fields
+
 
 @model.over('duration', '^300__')
 def duration(self, key, value):
@@ -140,9 +141,21 @@ def location(self, key, value):
 
 
 @model.over('internal_note', '^595__')
+@ignore_value
 def internal_note(self, key, value):
     """Internal note."""
-    return ", ".join(filter(None, [value.get('a'), value.get('s')]))
+    _internal_categories = defaultdict(list)
+    _internal_categories.update(self.get('internal_categories', {}))
+    _internal_notes = self.get('internal_note', '').splitlines()
+    for v in force_list(value):
+        if v.get('a') in ('CERN50', 'CERN EDS', 'Video-SR-F', 'Pilote PICTURAE', 'Press'):
+            _internal_categories[v.get('a')].append(v.get('s'))
+        else:
+            _internal_notes.append(v.get('a'))
+
+    if _internal_categories:
+        self['internal_categories'] = dict(_internal_categories)
+    return '\n'.join(_internal_notes) or None
 
 
 @model.over('subject', '^65017')

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2017 CERN.
+# Copyright (C) 2017, 2018 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -622,23 +622,38 @@ def test_fields(app):
             """
             <datafield tag="595" ind1=" " ind2=" ">
                 <subfield code="a">test1</subfield>
-                <subfield code="s">test2</subfield>
             </datafield>
-            """, {'internal_note': 'test1, test2'}
-        )
-        check_transformation(
-            """
-            <datafield tag="595" ind1=" " ind2=" ">
-                <subfield code="s">test2</subfield>
-            </datafield>
-            """, {'internal_note': 'test2'}
+            """, {'internal_note': 'test1'}
         )
         check_transformation(
             """
             <datafield tag="595" ind1=" " ind2=" ">
                 <subfield code="a">test1</subfield>
             </datafield>
-            """, {'internal_note': 'test1'}
+            <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">test2</subfield>
+            </datafield>
+            """, {'internal_note': 'test1\ntest2'}
+        )
+        check_transformation(
+            """
+            <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">CERN50</subfield>
+                <subfield code="s">AcceleratorsDetectors</subfield>
+            </datafield>
+            """, {'internal_categories': {'CERN50': ['AcceleratorsDetectors']}}
+        )
+        check_transformation(
+            """
+            <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">test1</subfield>
+            </datafield>
+             <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">CERN50</subfield>
+                <subfield code="s">AcceleratorsDetectors</subfield>
+            </datafield>
+            """, {'internal_note': 'test1',
+                  'internal_categories': {'CERN50': ['AcceleratorsDetectors']}}
         )
         check_transformation(
             """

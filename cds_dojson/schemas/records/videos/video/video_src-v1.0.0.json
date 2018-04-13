@@ -70,6 +70,7 @@
         "physical_medium": { "$ref": "../../definitions-v1.0.0.json#/definitions/physical_medium" },
         "note": { "$ref": "../../definitions-v1.0.0.json#/definitions/note" },
         "internal_note": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note" },
+        "internal_categories": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_categories" },
         "subject": { "$ref": "../../definitions-v1.0.0.json#/definitions/subject" },
         "accelerator_experiment": { "$ref": "../../definitions-v1.0.0.json#/definitions/accelerator_experiment" },
         "external_system_identifiers": { "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers" },

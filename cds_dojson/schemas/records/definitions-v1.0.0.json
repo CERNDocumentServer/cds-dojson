@@ -346,6 +346,10 @@
       "description": "Internal note.",
       "type": "string"
     },
+    "internal_categories": {
+      "description": "FIXME: temporary location for potential future communities",
+      "type": "object"
+    },
     "subject": {
       "title": "Subject",
       "description": "Subject.",

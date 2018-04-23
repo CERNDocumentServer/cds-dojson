@@ -514,6 +514,12 @@
       "description": "FIXME: temporary location for potential future communities",
       "type": "object"
     },
+    "Press": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
     "doi": {
       "type": "string", 
       "description": "Record DOI identifier (string)."

@@ -177,6 +177,12 @@
               "type": "string"
             }
           }
+        },
+        "Press": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "required": [

@@ -146,11 +146,13 @@
     },
     "language": {
       "description": "A language of the resource.",
+      "default": "en",
       "enum": [
         "ar",
         "bg",
         "ca",
         "ch",
+        "cs",
         "da",
         "de",
         "el",
@@ -165,6 +167,7 @@
         "ja",
         "ka",
         "ko",
+        "nl",
         "no",
         "pl",
         "pt",
@@ -172,9 +175,11 @@
         "silent",
         "sk",
         "sr",
+        "sr",
         "sv",
         "tr",
         "uk",
+        "zh",
         "zh_CN",
         "zh_TW"
       ],

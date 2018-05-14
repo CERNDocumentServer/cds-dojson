@@ -1,6 +1,12 @@
 Changes
 =======
 
+Version 0.8.0 (released 2018-05-14)
+-----------------------------------
+
+- Addition of internal_* and Press fields.
+- Fix language ISO 639-2 vs 639-3 mix on DoJSON translations.
+
 Version 0.7.0 (released 2018-04-03)
 -----------------------------------
 

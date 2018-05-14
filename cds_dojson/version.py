@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of cds-dojson.
-# Copyright (C) 2015, 2016, 2017 CERN.
+# Copyright (C) 2015, 2016, 2017, 2018 CERN.
 #
 # cds-dojson is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -32,4 +32,4 @@ This file is imported by ``cds-dojson.__init__``, and parsed by
 # Do not change the format of this next line. Doing so risks breaking
 # setup.py and docs/conf.py
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"

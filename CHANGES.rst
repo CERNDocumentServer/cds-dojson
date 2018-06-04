@@ -1,6 +1,10 @@
 Changes
 =======
 
+Version 0.9.0 (released 2018-06-04)
+-----------------------------------
+- Remove the DOI from the required fields
+
 Version 0.8.0 (released 2018-05-14)
 -----------------------------------
 

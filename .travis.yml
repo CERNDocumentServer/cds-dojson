@@ -6,7 +6,6 @@ cache:
 - pip
 env:
   matrix:
-  # - REQUIREMENTS=lowest
   - REQUIREMENTS=release
   - REQUIREMENTS=devel
 python:
@@ -27,12 +26,12 @@ after_success:
 - coveralls
 deploy:
   provider: pypi
-  user: egabancho
+  user: cds
   password:
-    secure: Tkv2P80GTka3hpl/R0cLiJpnaZ1k3rhM5p6BPMzFKFqcfuWEDsqIMJ/+QW0cQ8hgSlfJyFgE8g5JMWz2n6P8svhTfVzWhLXWwYwbUEf0ji9jZXiFL2TJB7gSoZ0L6vIDRGOB1Lss5MwV1PO0KOlMVGZJQgITYu0iICKbbgVQR9OneLwNqTL+uaSw3OMFvJWhTGt8GhIRuw2BPG/6m3WklqVo7sr6g9D64GZqqukrblFuVzvsr7+/BmI14auzKh2hhNamGbWY261VxBFvta2dUJhwpckBLx7cY4a4Zw2MakdjcKWrp3hPDQ13D53nzM5XPjRw9qU37zfq+wWUgMilSU8eUHkmkXZRs8a2C12BAxQF0tpvDp3I4dJvBYvUUEDSvCJSAfejGRX5Sd4zH6512Xlhg0JJcfd+bIt9G4bZBXqzl8sHUsOTv9okItPQJ4E5gAMyiP5BpaIwNfO//2BnQ5mCeIpHvJnzmNod5j05ElbGNdv95MJ8NXmYUFVHDfIipx9mWx0rG9BoTEBopR9PS3GmztfSsR5xeo52Wbyz1wad2Lt9yeq3K2F58jlCaMbd2MVcPr2bpsxqL2JFl4kDi5VunOWebDQGJt48rwoCxHlgzUa3ByGY+UWYNAuNqLtC3k01kM803yUmzNZITzoF4iozxaxCo88V3i62u2IhqBw=
+    secure: 0H3YJLT6H1Fi6MrgNKtP/CAyQM4S8snxrx6bKSKgZyMUBWbxy6tQ0pkT+bistg4MUdE3Sb0jgi6J0riUMvLc4rI7QxggT/NCMOAqtbDUBM0dy2TKANgk8MPQWYrz/UCteh7ZyeOQLojHmr5JR3cqsCeS5krpVSslIKrSTehpD6b4Bo2PZFgh12VXsU/WoYpvocv3Y/6FVR2XZaGadDMjpm/9SMhzjcJD/PVMxVh64m0CIiOFiQ2XBlw49WO7YGljTrz81f7tWujucgGnc/AJF/xce/SnePyy5Wx9GrBiNWNO/GIz58Fp1LMhfIB4YL8KBDqGJMYqZvcU0NLd0gn3+WGNzqF1Ee3ryBaqZOiBwSvTKcXWn1zySQ97hRfgZ8nHQt4E9+m/7OaCB3Hx/1I39iZmucIcAG3n1Byox397vo5OiAYew0lO39YdPQtbIVQKZYLyyco7dATflnqDX+8hN5nLkhGWehKMPWvLJyqiFWynWsLpB2YmURFzAbihAzCtMVM/PgzXgVUnJ1mGLcZLVzdwkBpPnVUIX6MMKU7o+DZTpiZVnCx7dxPMKzKlISymj8I0HoUFBEwI2gXoQMjidxZ9wUiqT4eudHb5g9J0gyWTikAktZ88Lm2PtWwWGGk07C7w7bFrhbGG6nkFxfB95oNXCNLYAgsL0zw6Lvu4tmU=
+  distributions: "sdist bdist_wheel"
   on:
     tags: true
-    distributions: compile_catalog sdist bdist_wheel`
     repo: CERNDocumentServer/cds-dojson
     python: '2.7'
     condition: "$REQUIREMENTS = release"

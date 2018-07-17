@@ -1,0 +1,187 @@
+$schema: http://json-schema.org/schema#
+additionalProperties: false
+description: JSON data model for the holdings of the books, proceedings, standards, theses and reports in CDS. 
+.. note::
+    This model does not exist in Inspire, since it is used to manage the holdings (paper and electronic) held by the Library
+    
+properties:
+    $schema:
+        format: uri
+        minLength: 1
+        type: string
+
+    dois:
+        items:
+            additionalProperties: false
+            properties:
+                material:
+                    $ref: elements/material.json
+                    description: |-
+                        :MARC: ``0247_q``
+                source:
+                    $ref: elements/source.json
+                    description: |-
+                        :MARC: ``0247_9``
+                value:
+                    description: |-
+                        :MARC: ``0247_a``
+                        :example: ``10.1023/A:1026654312961``
+                    minLength: 1
+                    pattern: ^10\.\d+(\.\d+)?/\S+$
+                    title: DOI
+                    type: string
+            required:
+            - value
+            type: object
+        minItems: 1
+        title: List of DOIs
+        type: array
+        uniqueItems: true
+        
+    urls:
+        description: |-
+            :MARC: ``8564``
+            URLs to external resources related to this record.
+            .. note::
+                Links to internal CDS resources are found in another element. 
+        items:
+            $ref: elements/url.yml
+        minItems: 1
+        type: array
+        uniqueItems: true
+
+    persistent_identifiers:
+        description: |-
+            :MARC: ``0247``
+        items:
+            additionalProperties: false
+            properties:
+                material:
+                    $ref: elements/material.json
+                schema:
+                    description: |-
+                        :MARC: ``0247_2``
+                        Currently, the following identifiers are recognized:
+                        * `HDL <http://handle.net>`_
+                        * `URN
+                          <https://en.wikipedia.org/wiki/Uniform_Resource_Name>`_
+                        .. note::
+                            DOIs should be put into :ref:`hep.json#/properties/dois`, not here.
+                            Although ISBNs can also be mapped to a URN (by
+                            prepending ``urn:isbn:`` to the ISBN), they should
+                            be put in the :ref:`hep.json#/properties/isbns` field instead.
+                    enum:
+                    - HDL
+                    - URN
+                    minLength: 1
+                    title: Type of identifier
+                    type: string
+                source:
+                    $ref: elements/source.json
+                value:
+                    description: |-
+                        :MARC: ``0247_a``
+                        This value gets interpreted as an identfier of the type
+                        specified by :ref:`schema`.
+                        :example: ``10138/168995`` (when :ref:`schema` = ``HDL``)
+                        :example: ``urn:nbn:de:hebis:77-diss-1000009520`` (when
+                            :ref:`schema` = ``URN``)
+                    minLength: 1
+                    pattern: ^\S+$
+                    title: Persistent identifier
+                    type: string
+            required:
+            - schema
+            - value
+            type: object
+        minItems: 1
+        title: List of persistent identifiers
+        type: array
+        uniqueItems: true
+        
+    number_of_pages:
+        description: |-
+            :MARC: ``300``
+        minimum: 1
+        title: Number of pages of the document
+        type: integer
+    
+    visible:
+        description: |-
+            :MARC: Does not exist in MARC
+            Used to hide records that should not be made visible in the collection. 
+        type: boolean
+        
+    _private_notes:
+        description: |-
+            :MARC: No Marc 
+        minLength: 1
+        title: Private Note
+        type: string
+        
+    public_note:
+        description: |-
+            :MARC: No Marc 
+        minLength: 1
+        title: Public Note
+        type: string
+    
+    description:
+        description: |-
+            :MARC: No Marc - BibCirculation field ``description``
+        minLength: 1
+        title: Holding description
+        type: string
+    
+    barcode:
+        description: |-
+            :MARC: No Marc - BibCirculation field ``barcode``
+        minLength: 1
+        title: Holding description
+        type: string
+    
+    medium:
+        description: |-
+            :MARC: ``340``
+        items:
+            enum:
+            - print
+            - online
+            - CD-ROM
+            minLength: 1
+            type: string
+        minItems: 1
+        title: Holding medium
+        type: array
+        uniqueItems: true
+   
+    barcode:
+        description: |-
+            :MARC: No Marc - BibCirculation field ``location``
+        minLength: 1
+        title: Holding shelf number
+        type: string
+        
+    library:
+        description: |-
+            :MARC: No Marc - BibCirculation field ``library``
+            .. Note:: list should come from the list of Libraries registered in the system.     
+        items:
+            enum:
+            - C
+            - DE1
+            - DE2
+            - DE3
+            - DE4
+            - LSL
+            minLength: 1
+            type: string
+        minItems: 1
+        title: Holding library
+        type: array
+        uniqueItems: true
+
+required:
+- medium
+title: A record in the Literature collection
+type: object

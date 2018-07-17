@@ -1,0 +1,19 @@
+additionalProperties: false
+description: |-
+    :MARC: ``65017`` or ``65027`` not CERN subjects (ex. EUCARD)
+properties:
+    source:
+        minLength: 1
+        type: string
+    main:
+        description: |-
+            :MARC: If 65017->yes
+            In case there are several subject terms.  
+        type: boolean   
+    term:
+        minLength: 1
+        type: string
+required:
+- term
+title: Additional category
+type: object

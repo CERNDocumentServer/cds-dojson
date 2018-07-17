@@ -110,7 +110,7 @@ def replace_in_result(phrase, replace_with, key=None):
                             for k in res]
                 else:
                     return [dict((k, v.replace(phrase, replace_with).strip())
-                                 for k, v in elem.iteritems()) for elem in res]
+                                 for k, v in elem.items()) for elem in res]
             return res
         return proxy
     return the_decorator
@@ -122,7 +122,7 @@ def filter_list_values(f):
     def wrapper(self, key, value, **kwargs):
         out = f(self, key, value)
         if out:
-            clean_list = [dict((k, v) for k, v in elem.iteritems()
+            clean_list = [dict((k, v) for k, v in elem.items()
                                if v) for elem in out if elem]
             clean_list = [elem for elem in clean_list if elem]
             if not clean_list:

@@ -1,0 +1,110 @@
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+<record>
+<controlfield tag="001">2631308</controlfield>
+<controlfield tag="003">SzGeCERN</controlfield>
+<controlfield tag="005">20180716233715.0</controlfield>
+<datafield tag="020" ind1=" " ind2=" ">
+<subfield code="a">9780081020623</subfield>
+<subfield code="q">(electronic bk.)</subfield>
+<subfield code="u">electronic version</subfield>
+</datafield>
+<datafield tag="020" ind1=" " ind2=" ">
+<subfield code="z">9780081020616</subfield>
+<subfield code="u">electronic version</subfield>
+</datafield>
+<datafield tag="035" ind1=" " ind2=" ">
+<subfield code="9">EBL</subfield>
+<subfield code="a">5433846</subfield>
+</datafield>
+<datafield tag="041" ind1=" " ind2=" ">
+<subfield code="a">eng</subfield>
+</datafield>
+<datafield tag="082" ind1=" " ind2=" ">
+<subfield code="a">621.39732</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Collaert, Nadine</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">High mobility materials for CMOS applications</subfield>
+</datafield>
+<datafield tag="260" ind1=" " ind2=" ">
+<subfield code="a">San Diego, CA</subfield>
+<subfield code="b">Elsevier Science & Technology</subfield>
+<subfield code="c">2018</subfield>
+</datafield>
+<datafield tag="300" ind1=" " ind2=" ">
+<subfield code="b">390 p</subfield>
+</datafield>
+<datafield tag="490" ind1=" " ind2=" ">
+<subfield code="a">
+Woodhead Publishing series in electronic and optical materials
+</subfield>
+</datafield>
+<datafield tag="505" ind1=" " ind2=" ">
+<subfield code="t">
+Front Cover -- High Mobility Materials for CMOS Applications -- Copyright -- Contents -- Contributors -- Chapter 1: CMOS and Beyond CMOS: Scaling Challenges -- 1.1. Introduction -- 1.1.1. The Rise of CMOS, A Brief Chronology -- 1.1.2. How the CMOS Scaling Issues Change With Time -- 1.2. An Overview of the Critical Challenges for Sub-10nm CMOS -- 1.2.1. Parasitic Elements -- 1.2.1.1. Capacitance -- 1.2.1.2. Source-Drain (S/D) Resistance -- 1.2.2. Architectures for Better Electrostatic Confinement -- 1.2.2.1. Bulk Planar -- 1.2.2.2. SOI Planar (PDSOI and FDSOI) -- 1.2.2.3. Multiple Gate Devices and Nanowires -- 1.2.3. Gate Elements -- 1.2.3.1. Conventional Oxides -- 1.2.3.2. High-κ Dielectrics -- 1.2.3.3. Charge-Storing Gate Elements and Flash Memory -- 1.2.3.4. Ferroelectric FETs -- 1.2.3.5. Negative Capacitance Devices -- 1.2.3.6. Piezoelectric and Transduction Devices -- 1.2.4. Channel Architecture and Materials -- 1.2.4.1. NMOS Stress -- 1.2.4.2. Traditional Nonsilicon Channel Materials -- 1.2.4.2.1. Germanium-Based Materials -- 1.2.4.2.2. III-V-Based Materials -- 1.2.4.3. Mott-FET Devices -- 1.2.5. S/D Architecture and Materials -- 1.2.5.1. PMOS Strain Using e-SiGe in the S/D Regions -- 1.2.5.2. Tunnel FETs -- 1.2.5.3. Spin-MOSFETs and Spin-FETs -- 1.3. Conclusion -- References -- Chapter 2: Opportunities and Challenges of Multiscale Heterogeneous Material Integration on Si Platforms for Enhanced Fun ... -- 2.1. Introduction -- 2.2. Different Scales of Chip-Level Heterogeneous Integrations -- 2.3. Heterogeneous Device Circuits -- 2.4. Epitaxy Defect Engineering -- 2.5. Heterogeneous Material Augmentation of Transistors -- 2.6. Heterogeneously-Integrated Emerging Electronics & Optoelectronics -- 2.7. Conclusion -- Acknowledgments -- References -- Further Reading.
+</subfield>
+</datafield>
+<datafield tag="505" ind1=" " ind2=" ">
+<subfield code="t">
+Chapter 3: Monolithic Integration of InGaAs on Si(001) Substrate for Logic Devices -- 3.1. Introduction -- 3.2. III-V Semiconductors -- 3.2.1. General Properties of III-V Compounds -- 3.2.2. Heteroepitaxy: Strain and Relaxation -- 3.2.3. Heteroepitaxy: Growth Modes -- 3.2.4. Heteroepitaxy: Defects -- 3.3. III-V Growth Techniques -- 3.3.1. Molecular Beam Epitaxy -- 3.3.2. Metal-Organic Vapor Phase Epitaxy -- 3.4. The Challenges of III-V Heteroepitaxy on a Si(001) Substrate -- 3.4.1. Introduction -- 3.4.2. III-V Growth on Blanket Si Substrate -- 3.4.2.1. Si Surface Preparation -- 3.4.2.2. Metamorphic Buffer Layers -- 3.4.2.3. In0.53Ga0.47As Metamorphic Buffers on Si(001) -- 3.4.2.4. Conclusions of III-V Heteroepitaxy on Si Blanket Substrates -- 3.4.3. III-V Selective Area Growth on Patterned Si Substrates -- 3.4.3.1. Selective Area Growth (SAG) -- 3.4.3.2. Epitaxial Lateral Overgrowth (ELO) -- 3.4.3.3. Conclusions of III-V Selective Area Growth on Si Pattern Substrate -- 3.5. General Conclusions and Outlooks -- Acknowledgments -- References -- Chapter 4: III-N Epitaxy on Si for Power Electronics -- 4.1. Introduction -- 4.2. Buffer Layer Strain Engineering -- 4.2.1. Effect of Dislocations -- 4.2.2. Macroscopic Defects -- 4.2.3. Manufacturability -- 4.2.4. Substrate Variants -- 4.3. Active Layers -- 4.3.1. The Two-Dimensional Electron Gas: The Importance of Polarization -- 4.3.1.1. Spontaneous Polarization -- 4.3.1.2. Piezoelectric Polarization -- 4.3.1.3. Band Diagram -- 4.3.2. Beyond the AlGaN/GaN Heterojunction -- 4.3.2.1. The AlGaN/AlN/GaN Double Heterojunction -- 4.3.3. Beyond the AlGaN Barrier -- 4.3.3.1. The Pure AlN Barrier -- 4.3.3.2. The InAlN Barrier -- 4.3.4. Back Barriers -- 4.3.5. Reliability Considerations -- 4.3.6. Examples of Normally Off GaN-Based HEMT -- 4.3.6.1. Cascode Configuration -- 4.3.6.2. The pGaN Gate Architecture.
+</subfield>
+</datafield>
+<datafield tag="505" ind1=" " ind2=" ">
+<subfield code="t">
+4.3.6.3. The MOS-HEMT Architecture -- 4.4. Dynamic On-Resistance Behavior -- 4.4.1. Surface Trapping -- 4.4.2. Buffer Trapping -- 4.5. Thermal Performance -- 4.5.1. Power Electronics Devices vs RF Devices -- 4.6. Future Perspectives -- Acknowledgments -- References -- Further Reading -- Chapter 5: Impact of Defects on the Performance of High-Mobility Semiconductor Devices -- 5.1. Introduction -- 5.2. Impact of Deep Level Defects on the Electrical Parameters of Semiconductor Devices and Materials -- 5.3. Electrical Activity of Extended Defects -- 5.4. Electrical Activity of Extended Defects in Ge-Based Alloys -- 5.4.1. Fundamental Deep Level Properties -- 5.4.2. Impact on Material Properties -- 5.4.3. Impact on Ge-Based Devices -- 5.5. Electrical Activity of Extended Defects in III-V-Based Alloys -- 5.5.1. Fundamental Deep-Level Properties -- 5.5.2. Impact on Material Properties -- 5.5.3. Impact on III-V Devices -- 5.6. Mitigation of the Effect of Extended Defects in High-Mobility Materials -- 5.7. Summary and Conclusions -- References -- Chapter 6: SiGe Devices -- 6.1. SiGe Channel Promises for High Performance FETs -- 6.2. Device Considerations -- 6.2.1. Hole Transport in SiGe Channel -- 6.2.2. SiGe Band Structure -- 6.2.3. Material Quality and Thickness Constraints -- 6.2.4. Other Device Considerations -- 6.3. Planar and FDSOI SiGe Channel Devices -- 6.4. Strained SiGe FinFETs -- 6.5. Ge Channel MOSFETs -- 6.6. Gate Stack Requirements for SiGe-Channel Devices -- 6.6.1. Work Function Requirements -- 6.6.2. Interfacial Layer Formation -- References -- Chapter 7: III-V Devices and Technology for CMOS -- 7.1. Introduction -- 7.2. III-V Devices -- 7.2.1. Electron Transport in III-V Materials -- 7.2.2. nFet Devices -- 7.2.3. Leakage in Scaled Devices -- 7.2.4. Vertical Devices -- 7.3. III-V Gate Stack -- 7.3.1. Border Traps and Reliability.
+</subfield>
+</datafield>
+<datafield tag="505" ind1=" " ind2=" ">
+<subfield code="t">
+7.4. p-Type III-V Devices -- 7.5. Integration Options for 300mm VLSI Processing -- 7.5.1. Strain Relaxed Buffers -- 7.5.2. III-V on Insulator -- 7.5.2.1. III-V on Insulator by Epitaxial Lift-Off -- 7.5.3. Replacement Fin Technology -- 7.5.4. Confined Epitaxial Lateral Overgrowth -- 7.5.5. Template-Assisted Selective Epitaxy of III-V -- 7.5.6. Benchmarking of III-V on Si Devices -- 7.6. High-Mobility CMOS With III-V nMOS Channel -- 7.7. Conclusion -- References -- Chapter 8: Beyond CMOS: Steep-Slope Devices and Energy Efficient Nanoelectronics -- 8.1. Limits of Energy Computing: There Is Enough Room at the Bottom -- 8.2. Beyond CMOS Steep-Slope Switch Categories and Principles -- 8.3. Tunnel FETS -- 8.4. Negative Capacitance as Technology Booster for FETs and Tunnel FETs -- 8.5. Metal-Insulator-Transition Transistors: Mott-FETs, Hyper-FETs, PC-TFETs -- 8.6. Conclusions -- References -- Chapter 9: Optoelectronic Devices Integrated on Silicon -- 9.1. Scaling Challenges for Optoelectronic Devices -- 9.2. The Silicon Photonics Platform -- 9.2.1. Micrometer Scale Silicon Photonics -- 9.2.2. Silicon Nanophotonics -- 9.2.3. CMOS Silicon Photonics -- 9.2.4. III-V on Silicon Photonics -- 9.3. Design of Integrated Optoelectronic Devices -- 9.3.1. III-V on Silicon Photonics Platforms -- 9.3.2. III-V to Silicon Optical Coupling -- 9.3.3. Laser Design -- 9.3.4. Enhanced Functionalities -- 9.4. Fabrication of Integrated Optoelectronic Devices on Si -- 9.4.1. Epitaxial Layer Stack for Lasing at 1.30 and 1.55μm -- 9.4.2. Vertical vs. Lateral Current Injection Laser Stacks -- 9.4.3. Wafer Bonding vs. Direct Growth -- 9.4.4. III-V Structuring and Electrical Contacts -- 9.4.5. Current State-of-the-Art of Hybrid-Integrated III-V Lasers on an SOI Platform -- References -- Chapter 10: Circuits -- 10.1. Targets, Material Selection, and Challenges for Novel CMOS Technologies.
+</subfield>
+</datafield>
+<datafield tag="505" ind1=" " ind2=" ">
+<subfield code="t">
+10.2. 2D Coplanar Integration Approaches -- 10.2.1. 2D InGaAs/SiGe CMOS Technologies Based on Blanket Integration Techniques -- 10.2.1.1. InGaAs/Ge on Ge Substrates -- 10.2.1.2. InGaAs/SiGe on Si Substrates -- 10.2.1.3. InAs/Ge on Si Substrates -- 10.2.2. 2D InGaAs/SiGe CMOS Technologies Based on Selective Integration Techniques -- 10.2.3. Conclusions and Perspectives -- 10.3. 3D Monolithic Integration Approaches -- 10.3.1. Motivation for InGaAs-Over-Si 3D Monolithic Integration -- 10.3.2. State-of-the-Art in InGaAs-over-Si(Ge) 3D Monolithic Integration for Logic -- 10.3.3. InGaAs-Over-Si(Ge) 3D Monolithic Integration for More-Than-Moore Applications -- 10.3.4. Conclusions and Perspectives -- References -- Index -- Back Cover.
+</subfield>
+</datafield>
+<datafield tag="020" ind1=" " ind2=" ">
+<subfield code="a">9780081020616</subfield>
+<subfield code="u">print version</subfield>
+</datafield>
+<datafield tag="024" ind1="8" ind2=" ">
+<subfield code="a">oai:cds.cern.ch:2631308</subfield>
+<subfield code="p">cerncds:BOOK</subfield>
+</datafield>
+<datafield tag="856" ind1="4" ind2=" ">
+<subfield code="u">https://cds.cern.ch/auth.py?r=EBLIB_P_5433846</subfield>
+<subfield code="y">ebook</subfield>
+</datafield>
+<datafield tag="340" ind1=" " ind2=" ">
+<subfield code="a">ebook</subfield>
+</datafield>
+<datafield tag="595" ind1=" " ind2=" ">
+<subfield code="a">EBL201807</subfield>
+</datafield>
+<datafield tag="650" ind1="1" ind2="7">
+<subfield code="a">Engineering</subfield>
+<subfield code="2">SzGeCERN</subfield>
+</datafield>
+<datafield tag="690" ind1="C" ind2=" ">
+<subfield code="a">BOOK</subfield>
+</datafield>
+<datafield tag="916" ind1=" " ind2=" ">
+<subfield code="s">n</subfield>
+<subfield code="w">201828</subfield>
+<subfield code="d">201807</subfield>
+</datafield>
+<datafield tag="960" ind1=" " ind2=" ">
+<subfield code="a">21</subfield>
+</datafield>
+<datafield tag="963" ind1=" " ind2=" ">
+<subfield code="a">PUBLIC</subfield>
+</datafield>
+<datafield tag="980" ind1=" " ind2=" ">
+<subfield code="a">BOOK</subfield>
+</datafield>
+</record>
+</collection>

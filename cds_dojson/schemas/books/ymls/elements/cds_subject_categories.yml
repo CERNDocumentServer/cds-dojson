@@ -1,0 +1,58 @@
+additionalProperties: false
+description: |-
+    :MARC: ``65017`` with ``2:CERN``
+    The CDS category classifies the subject
+    this record is related to.  
+properties:
+    source:
+        enum:
+        - curator
+        - user
+        - Inspire
+        - arXiv
+        minLength: 1
+        type: string
+    main:
+        description: |-
+            :MARC: If 65017->yes
+            In case there are several subject terms.  
+        type: boolean   
+    term:
+        enum:
+        - AB
+        - AC
+        - AD
+        - AE
+        - BE
+        - BT
+        - CA
+        - CC
+        - DD
+        - EE
+        - EG
+        - FF
+        - FU
+        - GG
+        - HH
+        - JA
+        - JB
+        - JC
+        - JJ
+        - JS
+        - KK
+        - LA
+        - LB
+        - LL
+        - MM
+        - PG
+        - PP
+        - QQ
+        - RR
+        - SG
+        - XX
+        minLength: 1
+        type: string
+required:
+- term
+title: CDS category
+type: object

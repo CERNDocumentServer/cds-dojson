@@ -473,7 +473,7 @@ properties:
         title: List of copyrights to documents in this record
         type: array
         uniqueItems: true
-        
+
     corporate_authors:
         items:
             description: |-
@@ -489,7 +489,6 @@ properties:
         uniqueItems: true
         
     curated:
-    # base ?
         description: |-
             :MARC: `500__a` containing `*Temporary entry*`, `*Temporary
                 record*` or `*Brief entry*` correspond to `false`, otherwise it

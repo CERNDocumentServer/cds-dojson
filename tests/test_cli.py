@@ -26,12 +26,13 @@
 from __future__ import absolute_import
 
 import json
-
+import os
 import pkg_resources
 import pytest
 from click.testing import CliRunner
 
-from cds_dojson.cli import compile_schema
+from cds_dojson.cli import compile_schema, convert_yaml2json
+from click.testing import CliRunner
 
 
 @pytest.mark.parametrize('src, compiled', [
@@ -58,3 +59,26 @@ def test_cli(src, compiled):
                                             compiled), 'r') as f:
         compile_schema_expected = json.load(f)
     assert compile_schema_expected == compiled_schema_result
+
+
+@pytest.mark.parametrize('source, destination', [
+    ('./tests/fixtures', './tests/fixtures')
+])
+def test_cli_convert_yaml2json(source, destination):
+    """Test cds-dojson CLI 'convert_yaml2json' command"""
+    directory = './tests/fixtures'
+    runner = CliRunner()
+
+    result = runner.invoke(convert_yaml2json, [directory, directory])
+
+    assert 0 == result.exit_code
+
+    with open(os.path.join(directory, 'books/books_title_mock.json')) as s:
+        # read the mock JSON file
+        json_mock = json.load(s)
+
+    with open(os.path.join(directory, 'books/books_title.json')) as s:
+        # read the newly created JSON file
+        json_converted = json.load(s)
+
+    assert json_mock == json_converted

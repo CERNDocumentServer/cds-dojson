@@ -19,10 +19,14 @@
 
 from __future__ import absolute_import
 
+import filecmp
+import json
+import os
+
 from dojson.utils import filter_values
 
 from cds_dojson.utils import (MementoDict, convert_date_to_iso_8601,
-                              for_each_squash, not_accessed_keys)
+                              for_each_squash, not_accessed_keys, yaml2json)
 
 
 def test_for_each_squash():
@@ -58,6 +62,7 @@ def test_convert_date_to_iso_8601():
 
 def test_not_accessed_keys():
     """Check not_accessed_keys function."""
+
     d1 = MementoDict([])
     assert not not_accessed_keys(d1)
 
@@ -111,6 +116,7 @@ def test_not_accessed_keys():
 
 def test_memento_dict():
     """Check MementoDict class."""
+
     d = MementoDict({'a': 1, 'b': 2})
     assert d == {'a': 1, 'b': 2}
 
@@ -123,3 +129,20 @@ def test_memento_dict():
     # NOTE: is this the expected behavior?
     d = MementoDict([('a', 1), ('a', [2, 3])])
     assert d == {'a': [1, 2, 3]}
+
+
+def test_yaml2json():
+    """Test yaml to json file conversion"""
+    directory = './tests/fixtures'
+
+    yaml2json(directory, directory)
+
+    with open(os.path.join(directory, 'books/books_title_mock.json')) as s:
+        # read the mock JSON file
+        json_mock = json.load(s)
+
+    with open(os.path.join(directory, 'books/books_title.json')) as s:
+        # read the newly created JSON file
+        json_converted = json.load(s)
+
+    assert json_mock == json_converted

@@ -1,15 +1,15 @@
 $schema: http://json-schema.org/schema#
 additionalProperties: false
-description: JSON data model for the books, proceedings, standards, theses and reports in CDS. 
+description: JSON data model for the books, proceedings, standards, theses and reports in CDS.
 .. note::
-    This model uses as much as possible the data model of Inspire with some adaptation, indicated in the notes. 
-    
+    This model uses as much as possible the data model of Inspire with some adaptation, indicated in the notes.
+
 properties:
     $schema:
         format: uri
         minLength: 1
         type: string
-        
+
     _collections:
         description: |-
             :MARC: ``980__a`` ``690C_a`` ``697C_a``
@@ -26,14 +26,14 @@ properties:
             - LEGSERLIB
             - LEGSERLIBINTLAW
             - LEGSERLIBCIVLAW
-            - LEGSERLIBLEGRES 
+            - LEGSERLIBLEGRES
             minLength: 1
             type: string
         minItems: 1
         title: Collections to which this record belongs
         type: array
         uniqueItems: true
-    
+
     document_type:
         description: |-
             :MARC: ``980__a`` ``690C_a`` ``960__a``
@@ -44,8 +44,8 @@ properties:
             ``book``
                 Published Monograph (usually has an ISBN and a publisher)
             ``proceedings``
-                Proceedings of a conference. 
-                The :ref:`conference_info` field contains the information of the conference. 
+                Proceedings of a conference.
+                The :ref:`conference_info` field contains the information of the conference.
                 If published in a journal, :ref:`publication_info` also contains the journal information.
             ``report``
                 A report. It can be unpublished, but can also be a book or a proceedings. In this case, it keeps the document type Book and Report or Proceedings and Report
@@ -54,7 +54,7 @@ properties:
                 information about the thesis. If published as a book, the
                 :ref:`editions`, :ref:`imprints`, :ref:`isbns` and
                 :ref:`book_series` fields may contain specific metadata about
-                this book and the document type can also be Book. 
+                this book and the document type can also be Book.
             ``standard``
                 A standard.
         items:
@@ -62,11 +62,11 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-    
+
     acquisition_source:
         $ref: elements/acquisition_source.yml
         .. note:: To be checked with CDS team
-        
+
     _private_notes:
         description: |-
             :MARC: ``595``
@@ -78,7 +78,7 @@ properties:
         title: List of private notes
         type: array
         uniqueItems: true
-        
+
     abstracts:
         description: |-
             :MARC: ``520``
@@ -90,10 +90,11 @@ properties:
         title: List of abstracts
         type: array
         uniqueItems: true
-        
+
     accelerator_experiments:
-        description:  ``693``
-        .. note:: In Inspire, there is a link to the record of the experiment, do we want the same in CDS?   
+        description: |-
+            :MARC: ``693``
+            .. note:: In Inspire, there is a link to the record of the experiment, do we want the same in CDS?
         items:
             additionalProperties: false
             properties:
@@ -146,7 +147,7 @@ properties:
         title: List of related accelerators/experiments
         type: array
         uniqueItems: true
-    
+
     arxiv_eprints:
         items:
             additionalProperties: false
@@ -184,7 +185,7 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-    
+
     authors:
         description: |-
             :MARC: ``100``, ``700``
@@ -291,7 +292,7 @@ properties:
                     type: array
                     uniqueItems: true
                 roles:
-                    description: 
+                    description:
                     .. note: different from Inspire (Inspire_role)
                     items:
                         default: author
@@ -350,7 +351,7 @@ properties:
         title: Authors
         type: array
         uniqueItems: false
-        
+
     book_series:
         description: |-
             :MARC: ``490``
@@ -392,7 +393,7 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-        
+
     collaborations:
         items:
             additionalProperties: false
@@ -418,14 +419,14 @@ properties:
         title: List of collaborations
         type: array
         uniqueItems: true
-        
+
     control_number:
         description: |-
             :MARC: ``001``
             Read-only field.
         title: ID of current record
         type: integer
-        
+
     copyright:
         description: |-
             :MARC: ``542``
@@ -442,7 +443,7 @@ properties:
                 material:
                     $ref: elements/material.json
                     description: |-
-                        :MARC: ``542__3`` 
+                        :MARC: ``542__3``
                 statement:
                     description: |-
                         :MARC: ``542__f``
@@ -473,7 +474,7 @@ properties:
         title: List of copyrights to documents in this record
         type: array
         uniqueItems: true
-        
+
     corporate_author:
         items:
             description: |-
@@ -487,7 +488,7 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-        
+
     curated:
     # base ?
         description: |-
@@ -499,10 +500,10 @@ properties:
             are all curated eventually, whereas non-core records are
             not systematically curated.
         type: boolean
-    
+
     dois:
         description:
-        .. Note: This element can be found at the holding level or at the bibliographic record level.  
+        .. note: This element can be found at the holding level or at the bibliographic record level.
         items:
             additionalProperties: false
             properties:
@@ -529,7 +530,7 @@ properties:
         title: List of DOIs
         type: array
         uniqueItems: true
-        
+
     editions:
         description: |-
             :MARC: ``250__a``
@@ -540,7 +541,7 @@ properties:
         title: List of book editions
         type: array
         uniqueItems: true
-        
+
     volume:
         description: |-
             :MARC: ``246__n``
@@ -551,7 +552,7 @@ properties:
         title: Volume number
         type: array
         uniqueItems: true
-        
+
     external_system_identifiers:
         description: |-
             :MARC: ``035``
@@ -585,7 +586,7 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-        
+
     funding_info:
         description: |-
             :MARC: ``536``
@@ -617,7 +618,7 @@ properties:
         title: Funding information
         type: array
         uniqueItems: true
-        
+
     imprints:
         items:
             additionalProperties: false
@@ -659,7 +660,7 @@ properties:
         title: List of imprints
         type: array
         uniqueItems: true
-        
+
     isbns:
         description: |-
             :MARC: ``020``
@@ -684,11 +685,11 @@ properties:
                 description:
                     description: |-
                         :MARC: ``020__u``
-                        :anything in ``020__u`` that does not fit in medium and is not a volume. 
+                        :anything in ``020__u`` that does not fit in medium and is not a volume.
                     .. note: .. Does not exist in Inspire
                     minLength: 1
-                    title: Free text, used to describe the document to ISBN refers to. 
-                    type: string    
+                    title: Free text, used to describe the document to ISBN refers to.
+                    type: string
                 value:
                     description: |-
                         :MARC: ``020__a``
@@ -703,7 +704,7 @@ properties:
         title: List of ISBNs
         type: array
         uniqueItems: true
-        
+
     keywords:
         description: |-
             :MARC: ```6531`` and ``695`` (corresponding to different
@@ -772,7 +773,7 @@ properties:
         title: List of keywords
         type: array
         uniqueItems: true
-        
+
     languages:
         description: |-
             :MARC: ``041__a``
@@ -782,7 +783,7 @@ properties:
         title: List of languages of the document
         type: array
         uniqueItems: true
-        
+
     license:
         description: |-
             :MARC: ``540``
@@ -823,7 +824,7 @@ properties:
         title: List of licenses
         type: array
         uniqueItems: true
-        
+
     preprint_date:
         description: |-
             :MARC: ``269__c``
@@ -834,7 +835,7 @@ properties:
         minLength: 1
         title: Preprint release date
         type: string
-        
+
     public_notes:
         description: |-
             :MARC: ``500``
@@ -850,7 +851,7 @@ properties:
         title: List of public notes
         type: array
         uniqueItems: true
-        
+
     publication_info:
         description: |-
             :MARC: ``773``
@@ -977,7 +978,7 @@ properties:
         title: List of information on publication
         type: array
         uniqueItems: true
-    
+
     record_affiliations:
         description: |-
             :MARC: ``901``
@@ -1013,7 +1014,7 @@ properties:
         title: Affiliations not associated to authors
         type: array
         uniqueItems: true
-        
+
     related_records:
         description: |-
             :MARC: ``787`` ``775``
@@ -1023,12 +1024,12 @@ properties:
         title: List of related records
         type: array
         uniqueItems: true
-        
+
     report_numbers:
         description: |-
             :MARC: ``037`` ``021`` ``088``
             :example: ``DESY-17-036``
-            .. Note:: Used for Standards numbers as well, with the source: standard. 
+            .. note:: Used for Standards numbers as well, with the source: standard.
         items:
             additionalProperties: false
             properties:
@@ -1056,10 +1057,10 @@ properties:
         title: List of report numbers assigned to the record
         type: array
         uniqueItems: true
-        
+
     self:
         $ref: elements/json_reference.json
-        
+
     thesis_info:
         additionalProperties: false
         description: |-
@@ -1104,7 +1105,7 @@ properties:
                 type: array
                 uniqueItems: true
         type: object
-        
+
     title_translations:
         description: |-
             :MARC: ``242``
@@ -1133,7 +1134,7 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-        
+
     titles:
         description: |-
             :MARC: ``245``
@@ -1147,23 +1148,23 @@ properties:
         title: List of titles
         type: array
         uniqueItems: true
-        
+
     urls:
         description: |-
             :MARC: ``8564``
             URLs to external resources related to this record.
             .. note::
-                Links to internal CDS resources are found in another element. 
+                Links to internal CDS resources are found in another element.
         items:
             $ref: elements/url.yml
         minItems: 1
         type: array
         uniqueItems: true
-        
+
     table_of_content:
         description: |-
             :MARC: ``505``
-            List of chapters 
+            List of chapters
             .. note::
                 Does not exist in Inspire
         items:
@@ -1171,11 +1172,11 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-        
+
     conference_info:
         description: |-
             :MARC: ``111/711``
-            .. Notes:: In Inspire there is a separate entity for conferences.
+            .. note:: In Inspire there is a separate entity for conferences.
         items:
             additionalProperties: false
             properties:
@@ -1194,14 +1195,16 @@ properties:
                 minLength: 1
                 type: string
             conference_title:
+                description: |-
                     :MARC: ``111__a``
-                    .. Note: There can be different values there. 
-                    minLength: 1
-                    type: string  
+                    .. note: There can be different values there.
+                minLength: 1
+                type: string
             conference_acronym:
+                description: |-
                     :MARC: ``711__a``
-                    minLength: 1
-                    type: string  
+                minLength: 1
+                type: string
             conference_dates:
                 description: |-
                     :MARC: ``111__d``
@@ -1210,33 +1213,40 @@ properties:
                 minLength: 1
                 type: string
             cern_conference_code:
+                description: |-
                     :MARC: ``111__g``
-                    minLength: 1
-                    type: string        
+                minLength: 1
+                type: string
             inspire_cnum:
+                description: |-
                     :MARC: ``035__a`` when 9:INSPIRE-CNUM
-                    minLength: 1
-                    type: string    
+                minLength: 1
+                type: string
             conference_place:
+                description: |-
                     :MARC: ``111__c``
-                    minLength: 1
-                    type: string    
+                minLength: 1
+                type: string
             conference_series:
+                description: |-
                     :MARC: Does not exist in CDS
-                    minLength: 1
-                    type: string    
+                minLength: 1
+                type: string
             conference_series_number:
+                description: |-
                     :MARC: Does not exist in CDS
-                    minLength: 1
-                    type: integer   
+                minLength: 1
+                type: integer
             conference_year:
+                description: |-
                     :MARC: ``111__f`` *Do we still need?*
-                    minLength: 1
-                    type: string    
+                minLength: 1
+                type: string
             conference_country:
+                description: |-
                     :MARC: ``111__w`` Do we still need?
-                    minLength: 1
-                    type: string   
+                minLength: 1
+                type: string
             required:
             - conference_title
             - conference_place
@@ -1245,7 +1255,7 @@ properties:
         minItems: 1
         type: array
         uniqueItems: true
-             
+
         cds_subject_categories:
             .. note: does not exist in Inspire
             items:
@@ -1254,7 +1264,7 @@ properties:
             title: List of CDS subject
             type: array
             uniqueItems: true
-            
+
         additional_subject_categories:
             .. note: does not exist in Inspire
             items:
@@ -1263,11 +1273,10 @@ properties:
             title: List of other subject (Project specific... ex. EUCARD)
             type: array
             uniqueItems: true
-        
+
         subject_classification:
             description: |-
-            :MARC: ``084``, ``080``, ``050`` and ``082`` 
-            
+                :MARC: ``084``, ``080``, ``050`` and ``082``
             .. note: Subject classification of the document, following standards ; does not exist in Inspire
         items:
             additionalProperties: false
@@ -1283,7 +1292,7 @@ properties:
                             Dewey
                         ``ICS``
                             :MARC: ``084``
-                            .. Note: 084 is also used for YR alphabetical ordering. *To be checked*
+                            .. note: 084 is also used for YR alphabetical ordering. *To be checked*
                             Internation Classification of Standard
                         ``LOC``
                             :MARC: ``050``
@@ -1300,7 +1309,7 @@ properties:
                     $ref: elements/source.json
                 value:
                     description: |-
-                        :MARC: ``084/080/050/082`` 
+                        :MARC: ``084/080/050/082``
                     minLength: 1
                     title: A keyword
                     type: string
@@ -1311,7 +1320,7 @@ properties:
         title: List of keywords
         type: array
         uniqueItems: true
-        
+
         related_records:
         description: |-
             :MARC: ``775``
@@ -1321,9 +1330,9 @@ properties:
         title: List of related records
         type: array
         uniqueItems: true
-    
+
 required:
 - document_type
 - titles
-title: A record in the books, proceedings, standards, theses and reports. 
+title: A record in the books, proceedings, standards, theses and reports.
 type: object

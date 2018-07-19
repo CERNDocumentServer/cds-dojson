@@ -32,6 +32,7 @@ import os
 import click
 
 from .schemas.transform import compile_schema as _compile_schema
+from .utils import yaml2json
 
 
 @click.group()
@@ -49,3 +50,11 @@ def compile_schema(schema):
     base_uri = 'file://{0}/'.format(os.path.dirname(os.path.abspath(schema)))
 
     click.echo(json.dumps(_compile_schema(schema_json, base_uri), indent=2))
+
+
+@cli.command()
+@click.argument('source', type=click.Path(exists=True))
+@click.argument('destination', type=click.Path())
+def convert_yaml2json(source, destination):
+    """Convert files from yaml to json."""
+    yaml2json(source, destination)

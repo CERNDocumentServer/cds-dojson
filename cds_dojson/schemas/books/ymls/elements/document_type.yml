@@ -1,7 +1,7 @@
 default: book
 enum:
-- book
-- proceedings
+- book #1
+- proceedings #2
 - report
 - thesis
 - standard

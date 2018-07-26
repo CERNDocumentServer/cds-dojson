@@ -58,7 +58,7 @@ properties:
             ``standard``
                 A standard.
         items:
-            $ref: elements/document_type.json
+            $ref: elements/document_type.yml
         minItems: 1
         type: array
         uniqueItems: true

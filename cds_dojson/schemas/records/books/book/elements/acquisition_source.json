@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false, 
+  "properties": {
+    "source": {
+      "$ref": "source.json"
+    }, 
+    "internal_uid": {
+      "type": "integer", 
+      "description": ":MARC: ?\nThis only gets populated when `method` is `submitter`.", 
+      "title": "Inspire user ID of the submitter"
+    }, 
+    "submission_number": {
+      "minLength": 1, 
+      "type": "string", 
+      "description": ":MARC: ?\nThis only gets populated when `method` is `submitter`.", 
+      "title": "Holding pen record ID of the submission"
+    }, 
+    "orcid": {
+      "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$", 
+      "minLength": 1, 
+      "type": "string", 
+      "description": ":MARC: ?\nThis only gets populated when `method` is `submitter`.", 
+      "title": "ORCID of the submitter"
+    }, 
+    "method": {
+      "minLength": 1, 
+      "enum": [
+        "submitter", 
+        "oai", 
+        "batchuploader", 
+        "hepcrawl"
+      ], 
+      "type": "string", 
+      "description": "Possible values are:\n`submitter`\n    when obtained from a user submission. In this case, `orcid`,\n    `internal_uid` and `email` store identifiers of the submitter,\n    and `submission_number` an ID of the submission. The submitter can be the cataloger.\n`oai`\n    when obtained by OAI-PMH harvesting.\n`batchuploader`\n    when obtained through the batch uploader.\n`hepcrawl`\n    when obtained from a hepcrawl crawler. In this case, `source`\n    stores the publisher or the repository that was crawled.", 
+      "title": "How the medata was obtained"
+    }, 
+    "email": {
+      "minLength": 1, 
+      "format": "email", 
+      "type": "string", 
+      "description": ":MARC: ``859``\nThis only gets populated when `method` is `submitter`.", 
+      "title": "Email address associated to the submitter's account"
+    }, 
+    "datetime": {
+      "minLength": 1, 
+      "format": "date-time", 
+      "type": "string", 
+      "description": ":MARC: `916__w``,`595__a (with certain conditions)``\nThis does not necessarily coincide with the creation date of the\nrecord, as there might be some delay between the moment the\noriginal information is obtained and a record is finally created in\nthe system.", 
+      "title": "Date on which the metadata was obtained"
+    }
+  }, 
+  "type": "object", 
+  "description": ":MARC: ``595``,``859``,``916``\nOnly the first source is stored: if the record later gets enriched with\nmetadata coming from a second source, the `acquisition_source` is not\nupdated.", 
+  "title": "Origin of the metadata in the record"
+}

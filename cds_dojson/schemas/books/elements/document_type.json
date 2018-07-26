@@ -1,0 +1,12 @@
+{
+  "default": "book", 
+  "minLength": 1, 
+  "enum": [
+    "book", 
+    "proceedings", 
+    "report", 
+    "thesis", 
+    "standard"
+  ], 
+  "type": "string"
+}

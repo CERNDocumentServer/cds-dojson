@@ -84,3 +84,23 @@ def test_document_type(app):
             """, {
                 'document_type': 'PROCEEDINGS',
             })
+
+
+def test_collections(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="980" ind1=" " ind2=" ">
+                <subfield code="b">LEGSERLIB</subfield>
+            </datafield>
+            """, {
+                '_collections': 'LEGSERLIB',
+            })
+        check_transformation(
+            """
+            <datafield tag="980" ind1=" " ind2=" ">
+                <subfield code="a">LEGSERLIB</subfield>
+            </datafield>
+            """, {
+                '_collections': 'LEGSERLIB',
+            })

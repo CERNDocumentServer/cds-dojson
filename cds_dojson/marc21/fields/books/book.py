@@ -20,11 +20,39 @@
 
 from __future__ import absolute_import, print_function
 
+import datetime
+from collections import defaultdict
+
+from dojson.utils import force_list
 
 from ...models.books.book import model
 
 
-@model.over('document_type', '^980_')
+
+@model.over('acquisition_source', '^916_')
+def acquisition_source(self, key, value):
+    """Translates acquisition source field"""
+    _acquisition_source = self.get('acquisition_source', {})
+    timestamp = datetime.datetime.fromtimestamp(201829)
+    for v in force_list(value):
+        try:
+            timestamp = datetime.datetime.fromtimestamp(int(v.get('w')))
+        except Exception as e:
+            pass
+    _acquisition_source.update({'datetime': str(timestamp)})
+    return _acquisition_source
+
+
+@model.over('document_type', '(^980__)|(^960__)')
 def document_type(self, key, value):
     """Translates document type field"""
+    if key == '980__':
+        return str(value.get('a'))
+    elif key == '960__':
+        for v in force_list(value):
+            field_val = int(v.get('a'))
+            if field_val == 21:
+                return "BOOK"
+            elif field_val == 42 or field_val == 43:
+                return "PROCEEDINGS"
     return "BOOK"

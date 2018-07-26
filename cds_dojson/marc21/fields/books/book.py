@@ -28,6 +28,9 @@ from dojson.utils import force_list
 from ...models.books.book import model
 
 
+class UnexpectedValue(Exception):
+    message = "The value in the input data is not allowed"
+
 
 @model.over('acquisition_source', '^916_')
 def acquisition_source(self, key, value):
@@ -46,13 +49,27 @@ def acquisition_source(self, key, value):
 @model.over('document_type', '(^980__)|(^960__)')
 def document_type(self, key, value):
     """Translates document type field"""
+
+    def doc_type_maping(val):
+        val = str(val).strip()
+        if val in ['PROCEEDINGS', "42", "43"]:
+            return 'PROCEEDINGS'
+        elif val in ['BOOK', "21"]:
+            return 'BOOK'
+        else:
+            return val
+        # elif value in ['LEGSERLIB']:
+        #     _collections = self.get('_collection', {})
+        #     _collections.update({'_collection':  val})
+        # else:
+        #     raise UnexpectedValue
+    doc_type = {}
     if key == '980__':
-        return str(value.get('a'))
+        if 'a' in value:
+            doc_type = doc_type_maping(value.get('a'))
+        elif 'b' in value:
+            doc_type = doc_type_maping(value.get('b'))
     elif key == '960__':
-        for v in force_list(value):
-            field_val = int(v.get('a'))
-            if field_val == 21:
-                return "BOOK"
-            elif field_val == 42 or field_val == 43:
-                return "PROCEEDINGS"
-    return "BOOK"
+        doc_type = doc_type_maping(value.get('a'))
+    return doc_type
+

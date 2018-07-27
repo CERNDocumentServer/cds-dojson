@@ -19,11 +19,13 @@
 """The CDS DoJson Utils."""
 
 import functools
+import json
+import os
 from collections import defaultdict
 
 import arrow
 import six
-
+import yaml
 from dojson.utils import GroupableOrderedDict
 
 
@@ -158,3 +160,41 @@ def convert_date_to_iso_8601(date, format_='YYYY-MM-DD', **kwargs):
         'YY',
     ]
     return arrow.get(date, _FORMATS).format(format_) if date else date
+
+
+def yaml2json(source, destination):
+    """Converts recursively yaml files to json."""
+    def _get_current_directory_name(root, source):
+        """Reurns the current directory name.
+
+        .. example:
+            root: './ymls/elements'
+            source: './ymls'
+            return: 'elements'
+        """
+        return root[len(source) + 1:]
+
+    for root, directories, filenames in os.walk(source):
+        for directory in directories:
+            directory_path = os.path.join(destination, directory)
+            if not os.path.exists(directory_path):
+                os.makedirs(directory_path)
+
+        for filename in filenames:
+            filename_ext = os.path.splitext(filename)[1]
+
+            if filename_ext == '.yml' or filename_ext == '.yaml':
+                new_filename = os.path.splitext(filename)[0] + '.json'
+
+                directory = _get_current_directory_name(root, source)
+                read_file_path = os.path.join(root, filename)
+                write_file_path = os.path.join(destination, directory,
+                                               new_filename)
+
+                with open(read_file_path) as stream:
+                    # read the yml file
+                    yaml_data = yaml.safe_load(stream)
+
+                    with open(write_file_path, 'w') as file:
+                        # write the json file
+                        file.write(json.dumps(yaml_data, indent=2))

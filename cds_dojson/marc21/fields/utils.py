@@ -19,14 +19,62 @@
 """General field utils."""
 
 import copy
+import functools
 import re
+from datetime import date, timedelta
 from itertools import chain
 
 import requests
+from dojson.errors import IgnoreKey
 from dojson.utils import force_list
 from six import PY2, iteritems
 
 from ..utils import MementoDict
+
+
+def clean_email(value):
+    email = value.strip().replace(' [CERN]', '@cern.ch')
+    return email
+
+
+def get_week_start(year, week):
+    d = date(year, 1, 1)
+    if d.weekday() > 3:
+        d = d + timedelta(7-d.weekday())
+    else:
+        d = d - timedelta(d.weekday())
+    dlt = timedelta(days=(week-1)*7)
+    return d + dlt
+
+
+def replace_in_list(phrase, replace_with):
+    """Replaces string values in list with given string"""
+    def the_decorator(fn_decorated):
+        def proxy(*args, **kwargs):
+            res = fn_decorated(*args, **kwargs)
+            return [k.replace(phrase, replace_with).strip() for k in res]
+        return proxy
+    return the_decorator
+
+
+def filter_list_values(f):
+    """Remove None values from list of dictionaries"""
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        out = f(*args, **kwargs)
+        return [dict((k, v) for k, v in elem.iteritems() if v is not None) for elem in out]
+    return wrapper
+
+
+def out_strip(fn_decorated):
+    """Decorator cleaning output values of trailing and following spaces"""
+    def proxy(*args, **kwargs):
+        res = fn_decorated(*args, **kwargs)
+        if isinstance(res, str):
+            return res.strip()
+        else:
+            return res
+    return proxy
 
 
 def _get_http_request(url, retry=0):

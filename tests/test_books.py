@@ -46,7 +46,27 @@ def test_acquisition(app):
                 <subfield code="w">201829</subfield>
                 </datafield>
             """, {
-                'acquisition_source': {'datetime': '1970-01-03 09:03:49'},
+                'acquisition_source': {'datetime': '2018-07-16'},
+            })
+
+
+def test_collections(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="980" ind1=" " ind2=" ">
+                <subfield code="b">LEGSERLIB</subfield>
+            </datafield>
+            """, {
+                '_collections': ['LEGSERLIB'],
+            })
+        check_transformation(
+            """
+            <datafield tag="980" ind1=" " ind2=" ">
+                <subfield code="a">LEGSERLIB</subfield>
+            </datafield>
+            """, {
+                '_collections': ['LEGSERLIB'],
             })
 
 
@@ -86,21 +106,146 @@ def test_document_type(app):
             })
 
 
-def test_collections(app):
+def test_document_type_collection(app):
     with app.app_context():
         check_transformation(
             """
             <datafield tag="980" ind1=" " ind2=" ">
                 <subfield code="b">LEGSERLIB</subfield>
             </datafield>
+            <datafield tag="980" ind1=" " ind2=" ">
+                <subfield code="a">BOOK</subfield>
+            </datafield>
             """, {
-                '_collections': 'LEGSERLIB',
+                '_collections': ['LEGSERLIB'],
+                'document_type': 'BOOK',
             })
         check_transformation(
             """
             <datafield tag="980" ind1=" " ind2=" ">
                 <subfield code="a">LEGSERLIB</subfield>
             </datafield>
+            <datafield tag="980" ind1=" " ind2=" ">
+                <subfield code="b">BOOK</subfield>
+            </datafield>
             """, {
-                '_collections': 'LEGSERLIB',
+                '_collections': ['LEGSERLIB'],
+                'document_type': 'BOOK',
             })
+
+
+def test_urls(app):
+    with app.app_context():
+        # TODO
+        # check_transformation(
+        #     """
+        #     <datafield tag="960" ind1=" " ind2=" ">
+        #         <subfield code="a">42</subfield>
+        #     </datafield>
+        #     """, {
+        #         'document_type': 'PROCEEDINGS',
+        #         'urls': ['cds.cern.ch'],
+        #     })
+        check_transformation(
+            """
+            <datafield tag="8564" ind1=" " ind2=" ">
+                <subfield code="u">cds.cern.ch</subfield>
+            </datafield>
+            """, {
+                'urls': ['cds.cern.ch'],
+            })
+
+
+def test_acquisition_email(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="859" ind1=" " ind2=" ">
+                <subfield code="f">karolina.przerwa@cern.ch</subfield>
+            </datafield>
+            """, {
+                'acquisition_source': {'email': 'karolina.przerwa@cern.ch'},
+            })
+        check_transformation(
+            """
+            <datafield tag="916" ind1=" " ind2=" ">
+                <subfield code="s">h</subfield>
+                <subfield code="w">201829</subfield>
+            </datafield>
+            <datafield tag="859" ind1=" " ind2=" ">
+                <subfield code="f">karolina.przerwa@cern.ch</subfield>
+            </datafield>
+            """, {
+                'acquisition_source': {'datetime': '2018-07-16',
+                                       'email': 'karolina.przerwa@cern.ch'},
+            })
+
+
+def test_authors(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="700" ind1=" " ind2=" ">
+                <subfield code="a">Frampton, Paul H</subfield>
+                <subfield code="e">ed.</subfield>
+            </datafield>
+            <datafield tag="700" ind1=" " ind2=" ">
+                <subfield code="a">Glashow, Sheldon Lee</subfield>
+                <subfield code="e">ed.</subfield>
+            </datafield>
+            <datafield tag="700" ind1=" " ind2=" ">
+                <subfield code="a">Van Dam, Hendrik</subfield>
+                <subfield code="e">ed.</subfield>
+            </datafield>
+            """, {
+                'authors': [{'full_name': 'Frampton, Paul H',
+                             'role': 'editor'},
+                            {'full_name': 'Glashow, Sheldon Lee',
+                             'role': 'editor'},
+                            {'full_name': 'Van Dam, Hendrik',
+                             'role': 'editor'},
+                            ],
+            })
+
+
+# better example to be provided
+def test_corporate_author(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="710" ind1=" " ind2=" ">
+                <subfield code="a"> Springer</subfield>
+            </datafield>
+            """, {
+                'corporate_authors': 'Springer',
+            })
+
+
+def test_collaborations(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="710" ind1=" " ind2=" ">
+                <subfield code="5">PH-EP</subfield>
+            </datafield>
+            <datafield tag="710" ind1=" " ind2=" ">
+                <subfield code="g">ATLAS Collaboration</subfield>
+            </datafield> 
+                """,
+            {'collaborations': ['PH-EP', 'ATLAS']}
+        )
+
+
+# def test_publication_info(app):
+#     with app.app_context():
+#         check_transformation(
+#             """
+#             <datafield tag="773" ind1=" " ind2=" ">
+#                 <subfield code="c">1692-1695</subfield>
+#                 <subfield code="n">10</subfield>
+#                 <subfield code="y">2007</subfield>
+#                 <subfield code="p">Radiat. Meas.</subfield>
+#                 <subfield code="v">42</subfield>
+#             </datafield>
+#             """
+#         )

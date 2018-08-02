@@ -474,7 +474,7 @@ properties:
         type: array
         uniqueItems: true
         
-    corporate_author:
+    corporate_authors:
         items:
             description: |-
                 :MARC: ``110__a``
@@ -997,7 +997,7 @@ properties:
                     $ref: elements/json_reference.json
                 value:
                     description: |-
-                        :MARC: ``902__a``
+                        :MARC: ``901__a``
                         Currently, the old
                         :ref:`institutions.json#/properties/legacy_ICN`
                         is used here. In the future, this will

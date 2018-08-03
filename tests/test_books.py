@@ -34,6 +34,9 @@ def check_transformation(marcxml_body, json_body):
         }
     }
     expected.update(**json_body)
+    print(record)
+    print('$$$$$$$$')
+    print(expected)
     assert record == expected
 
 
@@ -68,6 +71,54 @@ def test_collections(app):
             """, {
                 '_collections': ['LEGSERLIB'],
             })
+        check_transformation(
+            """
+            <datafield tag="980" ind1=" " ind2=" ">
+                <subfield code="a">LEGSERLIB</subfield>
+            </datafield>
+            """, {
+                '_collections': ['LEGSERLIB'],
+            })
+        check_transformation(
+            """
+            <datafield tag="697" ind1="C" ind2=" ">
+                <subfield code="a">LEGSERLIBINTLAW</subfield>
+            </datafield>
+            """,
+            {
+                '_collections': ['LEGSERLIBINTLAW'],
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="697" ind1="C" ind2=" ">
+                <subfield code="a">BOOKSHOP</subfield>
+            </datafield>
+            """,
+            {
+                '_collections': ['BOOKSHOP'],
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="697" ind1="C" ind2=" ">
+                <subfield code="a">BOOKSHOP</subfield>
+            </datafield>
+            """,
+            {
+                '_collections': ['BOOKSHOP'],
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="697" ind1="C" ind2=" ">
+                <subfield code="a">LEGSERLIBLEGRES</subfield>
+            </datafield>
+            """,
+            {
+                '_collections': ['LEGSERLIBLEGRES'],
+            }
+        )
 
 
 def test_document_type(app):
@@ -78,7 +129,7 @@ def test_document_type(app):
                 <subfield code="a">BOOK</subfield>
             </datafield>
             """, {
-                'document_type': 'BOOK',
+                'document_type': ['BOOK'],
             })
         check_transformation(
             """
@@ -86,7 +137,7 @@ def test_document_type(app):
                 <subfield code="a">21</subfield>
             </datafield>
             """, {
-                'document_type': 'BOOK',
+                'document_type': ['BOOK'],
             })
         check_transformation(
             """
@@ -94,7 +145,7 @@ def test_document_type(app):
                 <subfield code="a">42</subfield>
             </datafield>
             """, {
-                'document_type': 'PROCEEDINGS',
+                'document_type': ['PROCEEDINGS'],
             })
         check_transformation(
             """
@@ -102,8 +153,19 @@ def test_document_type(app):
                 <subfield code="a">43</subfield>
             </datafield>
             """, {
-                'document_type': 'PROCEEDINGS',
+                'document_type': ['PROCEEDINGS'],
             })
+        check_transformation(
+            """
+            <datafield tag="690" ind1="C" ind2=" ">
+                <subfield code="a">BOOK</subfield>
+            </datafield>
+            <datafield tag="690" ind1="C" ind2=" ">
+                <subfield code="a">REPORT</subfield>
+            </datafield>
+            """,
+            {'document_type': ['BOOK', 'REPORT']}
+        )
 
 
 def test_document_type_collection(app):
@@ -118,7 +180,7 @@ def test_document_type_collection(app):
             </datafield>
             """, {
                 '_collections': ['LEGSERLIB'],
-                'document_type': 'BOOK',
+                'document_type': ['BOOK'],
             })
         check_transformation(
             """
@@ -130,29 +192,31 @@ def test_document_type_collection(app):
             </datafield>
             """, {
                 '_collections': ['LEGSERLIB'],
-                'document_type': 'BOOK',
+                'document_type': ['BOOK'],
             })
 
 
 def test_urls(app):
     with app.app_context():
-        # TODO
-        # check_transformation(
-        #     """
-        #     <datafield tag="960" ind1=" " ind2=" ">
-        #         <subfield code="a">42</subfield>
-        #     </datafield>
-        #     """, {
-        #         'document_type': 'PROCEEDINGS',
-        #         'urls': ['cds.cern.ch'],
-        #     })
+        check_transformation(
+            """
+            <datafield tag="960" ind1=" " ind2=" ">
+                <subfield code="a">42</subfield>
+            </datafield>
+            <datafield tag="8564" ind1=" " ind2=" ">
+                <subfield code="u">cds.cern.ch</subfield>
+            </datafield>
+            """, {
+                'document_type': ['PROCEEDINGS'],
+                'urls': [{'value': 'cds.cern.ch'}],
+            })
         check_transformation(
             """
             <datafield tag="8564" ind1=" " ind2=" ">
                 <subfield code="u">cds.cern.ch</subfield>
             </datafield>
             """, {
-                'urls': ['cds.cern.ch'],
+                'urls': [{'value': 'cds.cern.ch'}],
             })
 
 
@@ -230,22 +294,115 @@ def test_collaborations(app):
             </datafield>
             <datafield tag="710" ind1=" " ind2=" ">
                 <subfield code="g">ATLAS Collaboration</subfield>
-            </datafield> 
-                """,
+            </datafield>
+            """,
             {'collaborations': ['PH-EP', 'ATLAS']}
         )
 
 
-# def test_publication_info(app):
-#     with app.app_context():
-#         check_transformation(
-#             """
-#             <datafield tag="773" ind1=" " ind2=" ">
-#                 <subfield code="c">1692-1695</subfield>
-#                 <subfield code="n">10</subfield>
-#                 <subfield code="y">2007</subfield>
-#                 <subfield code="p">Radiat. Meas.</subfield>
-#                 <subfield code="v">42</subfield>
-#             </datafield>
-#             """
-#         )
+def test_publication_info(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="773" ind1=" " ind2=" ">
+                <subfield code="c">1692-1695</subfield>
+                <subfield code="n">10</subfield>
+                <subfield code="y">2007</subfield>
+                <subfield code="p">Radiat. Meas.</subfield>
+                <subfield code="v">42</subfield>
+            </datafield>
+            """,
+            {
+                'publication_info': [{
+                    'page_start': 1692,
+                    'page_end': 1695,
+                    'year': 2007,
+                    'journal_title': 'Radiat. Meas.',
+                    'journal_issue': '10',
+                }]
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="773" ind1=" " ind2=" ">
+                <subfield code="o">1692 numebrs text etc</subfield>
+                <subfield code="x">Random text</subfield>
+            </datafield>
+            """,
+            {
+                'publication_info': [
+                    {'pubinfo_freetext': '1692 numebrs text etc Random text'}
+                ]
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="773" ind1=" " ind2=" ">
+                <subfield code="c">1692-1695</subfield>
+                <subfield code="n">10</subfield>
+                <subfield code="y">2007</subfield>
+                <subfield code="p">Radiat. Meas.</subfield>
+                <subfield code="o">1692 numebrs text etc</subfield>
+                <subfield code="x">Random text</subfield>
+            </datafield>
+            """,
+            {
+                'publication_info': [{
+                    'page_start': 1692,
+                    'page_end': 1695,
+                    'year': 2007,
+                    'journal_title': 'Radiat. Meas.',
+                    'journal_issue': '10',
+                    'pubinfo_freetext': '1692 numebrs text etc Random text',
+                }]
+            }
+        )
+
+
+def test_related_record(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="775" ind1=" " ind2=" ">
+                <subfield code="b">Test text</subfield>
+                <subfield code="c">Random text</subfield>
+                <subfield code="w">748392</subfield>
+            </datafield>
+            """,
+            {
+                'related_records': [
+                    {'record': '748392'}
+                ]
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="787" ind1=" " ind2=" ">
+                <subfield code="c">Random text</subfield>
+                <subfield code="w">7483924</subfield>
+            </datafield>
+            """,
+            {
+                'related_records': [
+                    {'record': '7483924'}
+                ]
+            }
+        )
+
+
+def test_accelerator_experiments(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="693" ind1=" " ind2=" ">
+                <subfield code="a">CERN LHC</subfield>
+                <subfield code="e">ATLAS</subfield>
+            </datafield>
+            """,
+            {
+                'accelerator_experiments': [
+                    {'accelerator': 'CERN LHC',
+                     'experiment': 'ATLAS'}
+                ]
+            }
+        )

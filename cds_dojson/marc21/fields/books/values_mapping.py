@@ -1,12 +1,25 @@
 DOCUMENT_TYPE = {
         'PROCEEDINGS': ['PROCEEDINGS', '42', '43'],
-        'BOOK': ['BOOK', '21']
+        'BOOK': ['BOOK', '21'],
+        'REPORT': ['REPORT']
 }
 
 AUTHOR_ROLE = {
     'editor': ['ed.', 'ed'],
     'supervisor': ['dir.', 'dir'],
     'ilustrator': ['ill.', 'ill'],
+}
+
+COLLECTION = {
+    'BOOK SUGGESTION': ['BOOKSUGGESTION'],
+    'LEGSERLIB': ['LEGSERLIB'],
+    'YELLOW REPORT': ['YELLOW REPORT'],
+    'CERN': ['CERN'],
+    'DESIGN REPORT': ['DESIGN REPORT', 'Design Report'],
+    'BOOKSHOP': ['BOOKSHOP'],
+    'LEGSERLIBINTLAW': ['LEGSERLIBINTLAW'],
+    'LEGSERLIBCIVLAW': ['LEGSERLIBCIVLAW'],
+    'LEGSERLIBLEGRES': ['LEGSERLIBLEGRES']
 }
 
 

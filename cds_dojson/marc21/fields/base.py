@@ -40,21 +40,6 @@ def agency_code(self, key, value):
     return 'SzGeCERN'
 
 
-@model.over('report_number', '^(037|088)__')
-@for_each_value
-def report_number(self, key, value):
-    """Report number.
-
-    Category and type are also derived from the report number.
-    """
-    rn = value.get('a') or value.get('9')
-    if rn and key.startswith('037__'):
-        # Extract category and type only from main report number, i.e. 037__a
-        self['category'], self['type'] = rn.split('-')[:2]
-    print(self['category'])
-    return rn
-
-
 @model.over('title', '^245_[1_]')
 @filter_values
 def title(self, key, value):
@@ -79,12 +64,6 @@ def translations(self, key, value):
     raise IgnoreKey('translations')
 
 
-@model.over('description', '^520__')
-def description(self, key, value):
-    """Description."""
-    return value.get('a')
-
-
 @model.over('keywords', '^6531_')
 @for_each_value
 @filter_values
@@ -105,18 +84,6 @@ def videos(self, key, value):
     }
 
 
-@model.over('license', '^540__')
-@for_each_value
-@filter_values
-def license(self, key, value):
-    """License."""
-    return {
-        'license': value.get('a'),
-        'material': value.get('3'),
-        'url': value.get('u'),
-    }
-
-
 @model.over('note', '^(5904_|500__)')
 def note(self, key, value):
     """Note."""
@@ -127,17 +94,6 @@ def note(self, key, value):
 def original_source(self, key, value):
     """Original source."""
     return value.get('e')
-
-
-@model.over('external_system_identifiers', '^970__')
-@for_each_value
-def external_system_identifiers(self, key, value):
-    """External unique identifiers."""
-    value = value.get('a', '')
-    return {
-        'value': value,
-        "schema": 'ALEPH' if value.startswith('0000') else value[:3]
-    }
 
 
 @model.over('modified_by', '^937__')

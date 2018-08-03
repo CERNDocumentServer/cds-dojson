@@ -148,7 +148,11 @@ def internal_note(self, key, value):
     _internal_categories.update(self.get('internal_categories', {}))
     _internal_notes = self.get('internal_note', '').splitlines()
     for v in force_list(value):
-        if v.get('a') in ('CERN50', 'CERN EDS', 'Video-SR-F', 'Pilote PICTURAE', 'Press'):
+        if v.get('a') in ('CERN50',
+                          'CERN EDS',
+                          'Video-SR-F',
+                          'Pilote PICTURAE',
+                          'Press'):
             _internal_categories[v.get('a')].append(v.get('s'))
         else:
             _internal_notes.append(v.get('a'))

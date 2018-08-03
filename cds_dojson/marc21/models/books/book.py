@@ -109,6 +109,7 @@ class CDSBook(CDSOverdoBookBase):
         '964',
         '981',
         '963',
+        '020__q',
     }
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):

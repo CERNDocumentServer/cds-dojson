@@ -18,6 +18,8 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """General field utils."""
 
+from __future__ import absolute_import, print_function
+
 import copy
 import functools
 import re
@@ -32,10 +34,58 @@ from six import PY2, iteritems
 from ..utils import MementoDict
 
 
+class UnexpectedValue(Exception):
+    message = "The value in the input data is not allowed"
+
+
+class UnexpectedSubfield(Exception):
+    message = "This subfield is not expected"
+
+
+class MissingRequiredField(Exception):
+    message = 'The required field is missing in the input data'
+
+
+class ManualMigrationRequired(Exception):
+    message = 'This field requires manual cleaning'
+
+
+def clean_str(to_clean, regex_format):
+    if regex_format:
+        pattern = re.compile(regex_format)
+        match = pattern.match(to_clean)
+        if not match:
+            raise UnexpectedValue
+    cleaned = to_clean.strip()
+    if cleaned:
+        return cleaned
+
+
+def clean_val(subfield, value, var_type, req=False, regex_format=None,
+              default=None, manual=False):
+    try:
+        to_clean = value.get(subfield)
+        if manual:
+            raise ManualMigrationRequired
+        if req and to_clean is None:
+            if default:
+                return default
+            raise MissingRequiredField
+        if to_clean is not None:
+            if var_type is str:
+                return clean_str(to_clean, regex_format)
+            elif var_type is bool:
+                return bool(to_clean)
+            elif var_type is int:
+                return int(to_clean)
+            else:
+                raise NotImplementedError
+    except ValueError as e:
+        raise e
+
 def clean_email(value):
     email = value.strip().replace(' [CERN]', '@cern.ch')
     return email
-
 
 def get_week_start(year, week):
     d = date(year, 1, 1)

@@ -24,7 +24,9 @@ from dojson.utils import (IgnoreKey, filter_values, for_each_value, force_list,
                           ignore_value)
 
 from ..models.base import model
-from .utils import build_contributor, build_contributor_from_508
+
+from .utils import build_contributor, \
+    build_contributor_from_508, clean_val
 
 
 @model.over('recid', '^001')
@@ -106,7 +108,7 @@ def description(self, key, value):
 def keywords(self, key, value):
     """Keywords."""
     return {
-        'name': value.get('a'),
+        'name': clean_val('a', value, str),
         'source': value.get('9') or value.get('g'),  # Easier to solve here
     }
 

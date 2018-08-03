@@ -30,7 +30,7 @@ class CDSBook(OverdoJSONSchema):
     __schema__ = 'records/books/book/book-v.0.0.1.json'
 
     __ignore_keys__ = {
-
+        '020__q',
     }
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):

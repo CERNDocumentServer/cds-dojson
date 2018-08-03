@@ -41,21 +41,6 @@ def agency_code(self, key, value):
     return 'SzGeCERN'
 
 
-@model.over('report_number', '^(037|088)__')
-@for_each_value
-def report_number(self, key, value):
-    """Report number.
-
-    Category and type are also derived from the report number.
-    """
-    rn = value.get('a') or value.get('9')
-    if rn and key.startswith('037__'):
-        # Extract category and type only from main report number, i.e. 037__a
-        self['category'], self['type'] = rn.split('-')[:2]
-
-    return rn
-
-
 @model.over('contributors', '^(100|700|508)__')
 def contributors(self, key, value):
     """Contributors."""
@@ -94,12 +79,6 @@ def translations(self, key, value):
     translation['language'] = 'fr'
     self['translations'] = [translation]
     raise IgnoreKey('translations')
-
-
-@model.over('description', '^520__')
-def description(self, key, value):
-    """Description."""
-    return value.get('a')
 
 
 @model.over('keywords', '^6531_')
@@ -143,18 +122,6 @@ def access(self, key, value):
             for s in force_list(value.get('d') or value.get('m', '')) if s
         ])
     return _access
-
-
-@model.over('license', '^540__')
-@for_each_value
-@filter_values
-def license(self, key, value):
-    """License."""
-    return {
-        'license': value.get('a'),
-        'material': value.get('3'),
-        'url': value.get('u'),
-    }
 
 
 @model.over('note', '^(5904_|500__)')

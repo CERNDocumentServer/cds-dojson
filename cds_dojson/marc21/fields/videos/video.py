@@ -148,7 +148,11 @@ def internal_note(self, key, value):
     _internal_categories.update(self.get('internal_categories', {}))
     _internal_notes = self.get('internal_note', '').splitlines()
     for v in force_list(value):
-        if v.get('a') in ('CERN50', 'CERN EDS', 'Video-SR-F', 'Pilote PICTURAE', 'Press'):
+        if v.get('a') in ('CERN50',
+                          'CERN EDS',
+                          'Video-SR-F',
+                          'Pilote PICTURAE',
+                          'Press'):
             _internal_categories[v.get('a')].append(v.get('s'))
         else:
             _internal_notes.append(v.get('a'))
@@ -315,4 +319,37 @@ def audio_characteristics(self, key, value):
     """Audio characteristics."""
     return {
         'playback_channels': value.get('g'),
+    }
+
+
+@model.over('report_number', '^(037|088)__')
+@for_each_value
+def report_number(self, key, value):
+    """Report number.
+
+    Category and type are also derived from the report number.
+    """
+    rn = value.get('a') or value.get('9')
+    if rn and key.startswith('037__'):
+        # Extract category and type only from main report number, i.e. 037__a
+        self['category'], self['type'] = rn.split('-')[:2]
+
+    return rn
+
+
+@model.over('description', '^520__')
+def description(self, key, value):
+    """Description."""
+    return value.get('a')
+
+
+@model.over('license', '^540__')
+@for_each_value
+@filter_values
+def license(self, key, value):
+    """License."""
+    return {
+        'license': value.get('a'),
+        'material': value.get('3'),
+        'url': value.get('u'),
     }

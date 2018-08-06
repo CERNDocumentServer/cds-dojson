@@ -23,13 +23,13 @@ from __future__ import absolute_import, print_function
 import re
 
 from dojson.errors import IgnoreKey
-from dojson.utils import force_list, ignore_value
+from dojson.utils import force_list
 
 from cds_dojson.marc21.fields.books.values_mapping import mapping, \
     DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION
 from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
-    out_strip, replace_in_list, UnexpectedValue, UnexpectedSubfield, clean_val, \
-    ManualMigrationRequired
+    out_strip, UnexpectedValue, clean_val, \
+    ManualMigrationRequired, replace_in_result
 
 from cds_dojson.marc21.fields.utils import get_week_start
 from ...models.books.book import model
@@ -40,36 +40,33 @@ def acquisition_source(self, key, value):
     """Translates acquisition source field"""
     _acquisition_source = self.get('acquisition_source', {})
     if key == '916__':
-        try:
-            year, week = str(value.get('w'))[:4], str(value.get('w'))[4:]
-            datetime = get_week_start(int(year), int(week))
-        except Exception as e:
-            raise e
+        date_num = clean_val('w', value, int, regex_format=r'\d{4}$')
+        year, week = str(date_num)[:4], str(date_num)[4:]
+        datetime = get_week_start(int(year), int(week))
         _acquisition_source.update({'datetime': str(datetime)})
     elif key == '859__' and 'f' in value:
-        _acquisition_source.update({'email': clean_email(value.get('f'))})
+        _acquisition_source.update(
+            {'email': clean_email(clean_val('f', value, str))})
     return _acquisition_source
 
 
 @model.over('_collections', '(^980__)|(^690C_)|(^697C_)')
+@out_strip
 def collection(self, key, value):
     """ Translates collection field - WARNING - also document type field """
 
     _collections = self.get('_collections', [])
 
     def collection_mapping(val):
-        val = val.strip()
-        result = mapping(COLLECTION, val)
-        return result
+        if val:
+            return mapping(COLLECTION, val)
 
     for v in force_list(value):
-        result_a = collection_mapping(v.get('a', ''))
-        result_b = collection_mapping(v.get('b', ''))
+        result_a = collection_mapping(clean_val('a', v, str))
+        result_b = collection_mapping(clean_val('b', v, str))
         if result_a or result_b:
-            if result_a:
-                _collections.append(result_a)
-            if result_b:
-                _collections.append(result_b)
+            _collections.append(result_a)
+            _collections.append(result_b)
         else:
             self['document_type'] = document_type(self, key, value)
             raise IgnoreKey('_collections')
@@ -77,33 +74,18 @@ def collection(self, key, value):
 
 
 @model.over('document_type', '(^980__)|(^960__)|(^690C_)')
+@out_strip
 def document_type(self, key, value):
     """Translates document type field"""
     _doc_type = self.get('document_type', [])
 
     def doc_type_mapping(val):
-        val = str(val).strip()
-        result = mapping(DOCUMENT_TYPE, val)
-        if not result:
-            raise UnexpectedValue
-        return result
+        if val:
+            return mapping(DOCUMENT_TYPE, val)
 
     for v in force_list(value):
-        if key == '980__':
-            if 'a' in v:
-                _doc_type.append(doc_type_mapping(v.get('a')))
-            elif 'b' in v:
-                _doc_type.append(doc_type_mapping(v.get('b')))
-            else:
-                return UnexpectedValue
-        elif key == '960__':
-            if 'a' in v:
-                _doc_type.append(doc_type_mapping(v.get('a')))
-        elif key == '690C_':
-            if 'a' in v:
-                _doc_type.append(doc_type_mapping(v.get('a')))
-        else:
-            raise UnexpectedValue
+        _doc_type.append(doc_type_mapping(clean_val('a', v, str)))
+        _doc_type.append(doc_type_mapping(clean_val('b', v, str)))
     return _doc_type
 
 
@@ -112,41 +94,37 @@ def document_type(self, key, value):
 def authors(self, key, value):
     _authors = self.get('authors', [])
     for v in force_list(value):
-        if value.get('a'):
-            _authors.append({'full_name': v.get('a').strip(),
-                             'role': mapping(AUTHOR_ROLE, v.get('e')),
-                             'affiliation': v.get('u', None),
-                            })
-        else:
-            raise UnexpectedValue
+        _authors.append({'full_name': clean_val('a', v, str, req=True),
+                         'role': mapping(AUTHOR_ROLE,
+                                         clean_val('e', v, str)),
+                         'affiliation': clean_val('u', v, str),
+                         })
     return _authors
 
 
-@model.over('corporate_authors', '^710__')
-@ignore_value
+@model.over('corporate_authors', '^710_[a_]+')
 @out_strip
 def corporate_authors(self, key, value):
     _corporate_authors = self.get('corporate_authors', [])
     for v in force_list(value):
         if 'a' in v:
-            return v.get('a')
+            _corporate_authors.append(clean_val('a', v, str))
         else:
             self['collaborations'] = collaborations(self, key, value)
-            if not _corporate_authors:
-                raise IgnoreKey('corporate_authors')
+            raise IgnoreKey('corporate_authors')
+    return _corporate_authors
 
 
-@model.over('collaborations', '^710__')
-@replace_in_list('Collaboration', '')
+@model.over('collaborations', '^(710__)')
+@replace_in_result('Collaboration', '', key='value')
+@filter_list_values
 def collaborations(self, key, value):
     _collaborations = self.get('collaborations', [])
     for v in force_list(value):
         if 'g' in v:
-            _collaborations.append(v.get('g'))
+            _collaborations.append({'value': clean_val('g', v, str)})
         elif '5' in v:
-            _collaborations.append(v.get('5'))
-        else:
-            raise UnexpectedSubfield
+            _collaborations.append({'value': clean_val('5', v, str)})
     return _collaborations
 
 
@@ -200,8 +178,6 @@ def related_records(self, key, value):
             pass
         _related_records.append(
             {'record': clean_val('w', v, str, req=True)})
-    if not _related_records:
-        raise IgnoreKey('related_records')
     return _related_records
 
 
@@ -213,8 +189,6 @@ def accelerator_experiments(self, key, value):
         _acc_exp.append({'accelerator': clean_val('a', v, str),
                          'experiment': clean_val('e', v, str)
                          })
-    if not _acc_exp:
-        raise IgnoreKey('accelerator_experiments')
     return _acc_exp
 
 
@@ -231,8 +205,6 @@ def urls(self, key, value):
         except ManualMigrationRequired:
             # TODO log
             pass
-    if not _urls:
-        raise IgnoreKey('urls')
     return _urls
 
 

@@ -50,15 +50,16 @@ class ManualMigrationRequired(Exception):
     message = 'This field requires manual cleaning'
 
 
-def clean_str(to_clean, regex_format):
+def clean_str(to_clean, regex_format, req):
     if regex_format:
         pattern = re.compile(regex_format)
         match = pattern.match(to_clean)
         if not match:
             raise UnexpectedValue
     cleaned = to_clean.strip()
-    if cleaned:
-        return cleaned
+    if not cleaned and req:
+        raise MissingRequiredField
+    return cleaned
 
 
 def clean_val(subfield, value, var_type, req=False, regex_format=None,
@@ -73,7 +74,7 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
             raise MissingRequiredField
         if to_clean is not None:
             if var_type is str:
-                return clean_str(to_clean, regex_format)
+                return clean_str(to_clean, regex_format, req)
             elif var_type is bool:
                 return bool(to_clean)
             elif var_type is int:
@@ -83,9 +84,11 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
     except ValueError as e:
         raise e
 
+
 def clean_email(value):
     email = value.strip().replace(' [CERN]', '@cern.ch')
     return email
+
 
 def get_week_start(year, week):
     d = date(year, 1, 1)
@@ -97,12 +100,19 @@ def get_week_start(year, week):
     return d + dlt
 
 
-def replace_in_list(phrase, replace_with):
+def replace_in_result(phrase, replace_with, key=None):
     """Replaces string values in list with given string"""
     def the_decorator(fn_decorated):
         def proxy(*args, **kwargs):
             res = fn_decorated(*args, **kwargs)
-            return [k.replace(phrase, replace_with).strip() for k in res]
+            if res:
+                if not key:
+                    return [k.replace(phrase, replace_with).strip()
+                            for k in res]
+                else:
+                    return [dict((k, v.replace(phrase, replace_with).strip())
+                                 for k, v in elem.iteritems()) for elem in res]
+            return res
         return proxy
     return the_decorator
 
@@ -110,18 +120,30 @@ def replace_in_list(phrase, replace_with):
 def filter_list_values(f):
     """Remove None values from list of dictionaries"""
     @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        out = f(*args, **kwargs)
-        return [dict((k, v) for k, v in elem.iteritems() if v is not None) for elem in out]
+    def wrapper(self, key, value, **kwargs):
+        out = f(self, key, value)
+        if out:
+            clean_list = [dict((k, v) for k, v in elem.iteritems()
+                               if v is not None) for elem in out if elem]
+            if not clean_list:
+                raise IgnoreKey(key)
+            return clean_list
+        else:
+            raise IgnoreKey(key)
     return wrapper
 
 
 def out_strip(fn_decorated):
     """Decorator cleaning output values of trailing and following spaces"""
-    def proxy(*args, **kwargs):
-        res = fn_decorated(*args, **kwargs)
+    def proxy(self, key, value, **kwargs):
+        res = fn_decorated(self, key, value, **kwargs)
         if isinstance(res, str):
             return res.strip()
+        elif isinstance(res, list):
+            cleaned = [elem.strip() for elem in res if elem]
+            if not cleaned:
+                raise IgnoreKey(key)
+            return cleaned
         else:
             return res
     return proxy

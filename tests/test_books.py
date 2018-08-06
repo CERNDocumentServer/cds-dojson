@@ -34,9 +34,6 @@ def check_transformation(marcxml_body, json_body):
         }
     }
     expected.update(**json_body)
-    print(record)
-    print('$$$$$$$$')
-    print(expected)
     assert record == expected
 
 
@@ -281,7 +278,7 @@ def test_corporate_author(app):
                 <subfield code="a"> Springer</subfield>
             </datafield>
             """, {
-                'corporate_authors': 'Springer',
+                'corporate_authors': ['Springer'],
             })
 
 
@@ -296,7 +293,7 @@ def test_collaborations(app):
                 <subfield code="g">ATLAS Collaboration</subfield>
             </datafield>
             """,
-            {'collaborations': ['PH-EP', 'ATLAS']}
+            {'collaborations': [{'value': 'PH-EP'}, {'value': 'ATLAS'}]}
         )
 
 

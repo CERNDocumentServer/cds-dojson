@@ -20,6 +20,7 @@
 
 from ....overdo import OverdoJSONSchema
 from ..base import model as cds_base
+from .base import model as videos_base
 
 
 class CDSVideo(OverdoJSONSchema):
@@ -90,4 +91,5 @@ class CDSVideo(OverdoJSONSchema):
 
 
 model = CDSVideo(
-    bases=(cds_base, ), entry_point_group='cds_dojson.marc21.video')
+    bases=(videos_base, cds_base, ),
+    entry_point_group='cds_dojson.marc21.video')

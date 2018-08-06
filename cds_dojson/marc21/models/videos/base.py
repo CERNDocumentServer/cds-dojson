@@ -16,41 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Video Project model."""
+"""Base models for common videos fields."""
 
 from ....overdo import OverdoJSONSchema
 from ..base import model as cds_base
-from .base import model as videos_base
 
 
-class CDSVideoProject(OverdoJSONSchema):
-    """Translation Index for CDS Video Projects."""
-
-    __query__ = '970__:project -980__:DELETED'
-
-    __schema__ = 'records/videos/project/project-v1.0.0.json'
-
-    __ignore_keys__ = {
-        '005',
-        '260__a',
-        '260__c',
-        '269__c',
-        '5061_a',
-        '690C_a',
-        '774__o',
-        '774__r',
-        '937__c',
-        '960__a',
-        '961__c',
-        '961__h',
-        '961__l',
-        '961__x',
-        '980__a',
-        '980__b',
-        '981__a',
-    }
+class VideosBase(OverdoJSONSchema):
+    """Base model conversion MARC21 to JSON."""
 
 
-model = CDSVideoProject(
-    bases=(videos_base, cds_base, ),
-    entry_point_group='cds_dojson.marc21.video')
+model = VideosBase(bases=(cds_base, ),
+                   entry_point_group='cds_dojson.marc21.videos')

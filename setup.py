@@ -101,11 +101,14 @@ setup(
     entry_points={
         'cds_dojson.marc21.models': [
             'videos_video = cds_dojson.marc21.models.videos.video:model',
-            'videos_project = cds_dojson.marc21.models.videos.project:model'
-            'books_book = cds_dojson.marc21.models.books.book:model'
+            'videos_project = cds_dojson.marc21.models.videos.project:model',
+            'books_book = cds_dojson.marc21.models.books.book:model',
         ],
         'cds_dojson.marc21.base': [
-            'base = cds_dojson.marc21.fields.base'
+            'base = cds_dojson.marc21.fields.base',
+        ],
+        'cds_dojson.marc21.videos': [
+            'base = cds_dojson.marc21.fields.videos.base',
         ],
         'cds_dojson.marc21.video': [
             'video = cds_dojson.marc21.fields.videos.video',

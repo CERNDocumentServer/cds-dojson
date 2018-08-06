@@ -25,8 +25,7 @@ from dojson.utils import (IgnoreKey, filter_values, for_each_value, force_list,
 
 from ..models.base import model
 
-from .utils import build_contributor, \
-    build_contributor_from_508, clean_val
+from .utils import clean_val
 
 
 @model.over('recid', '^001')
@@ -52,24 +51,8 @@ def report_number(self, key, value):
     if rn and key.startswith('037__'):
         # Extract category and type only from main report number, i.e. 037__a
         self['category'], self['type'] = rn.split('-')[:2]
-
+    print(self['category'])
     return rn
-
-
-@model.over('contributors', '^(100|700|508)__')
-def contributors(self, key, value):
-    """Contributors."""
-    authors = self.get('contributors', [])
-    if key in ['100__', '700__']:
-        items = build_contributor(value)
-    else:
-        items = build_contributor_from_508(value)
-    # add only contributors that are not part of the authors
-    if items:
-        authors.extend(
-            [item for item in items if item and item not in authors]
-        )
-    return authors
 
 
 @model.over('title', '^245_[1_]')
@@ -120,29 +103,6 @@ def videos(self, key, value):
     return {
         '$ref': value.get('u')
     }
-
-
-@model.over('_access', '(^859__)|(^506[1_]_)')
-def access(self, key, value):
-    """Access rights.
-
-    It includes read/update access.
-    - 859__f contains the email of the submitter.
-    - 506__m/5061_d list of groups or emails of people who can access the
-      record. The groups are in the form <group-name> [CERN] which needs to be
-      transform into the email form.
-    """
-    _access = self.get('_access', {})
-    if key == '859__' and 'f' in value:
-        _access.setdefault('update', [])
-        _access['update'].append(value.get('f'))
-    elif key.startswith('506'):
-        _access.setdefault('read', [])
-        _access['read'].extend([
-            s.replace(' [CERN]', '@cern.ch')
-            for s in force_list(value.get('d') or value.get('m', '')) if s
-        ])
-    return _access
 
 
 @model.over('license', '^540__')

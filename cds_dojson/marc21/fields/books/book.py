@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Video fields."""
+"""Books fields."""
 
 from __future__ import absolute_import, print_function
 
@@ -25,10 +25,11 @@ import re
 from dojson.errors import IgnoreKey
 from dojson.utils import force_list
 
+from cds_dojson.marc21.fields.books.errors import UnexpectedValue
 from cds_dojson.marc21.fields.books.values_mapping import mapping, \
     DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION
 from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
-    out_strip, UnexpectedValue, clean_val, \
+    out_strip, clean_val, \
     ManualMigrationRequired, replace_in_result
 
 from cds_dojson.marc21.fields.utils import get_week_start
@@ -37,7 +38,7 @@ from ...models.books.book import model
 
 @model.over('acquisition_source', '(^916__)|(^859__)')
 def acquisition_source(self, key, value):
-    """Translates acquisition source field"""
+    """Translates acquisition source field."""
     _acquisition_source = self.get('acquisition_source', {})
     if key == '916__':
         date_num = clean_val('w', value, int, regex_format=r'\d{4}$')
@@ -53,8 +54,7 @@ def acquisition_source(self, key, value):
 @model.over('_collections', '(^980__)|(^690C_)|(^697C_)')
 @out_strip
 def collection(self, key, value):
-    """ Translates collection field - WARNING - also document type field """
-
+    """Translates collection field - WARNING - also document type field."""
     _collections = self.get('_collections', [])
 
     def collection_mapping(val):
@@ -76,7 +76,7 @@ def collection(self, key, value):
 @model.over('document_type', '(^980__)|(^960__)|(^690C_)')
 @out_strip
 def document_type(self, key, value):
-    """Translates document type field"""
+    """Translates document type field."""
     _doc_type = self.get('document_type', [])
 
     def doc_type_mapping(val):
@@ -92,6 +92,7 @@ def document_type(self, key, value):
 @model.over('authors', '^700__')
 @filter_list_values
 def authors(self, key, value):
+    """Translates the authors field."""
     _authors = self.get('authors', [])
     for v in force_list(value):
         _authors.append({'full_name': clean_val('a', v, str, req=True),
@@ -105,6 +106,7 @@ def authors(self, key, value):
 @model.over('corporate_authors', '^710_[a_]+')
 @out_strip
 def corporate_authors(self, key, value):
+    """Translates the corporate authors field."""
     _corporate_authors = self.get('corporate_authors', [])
     for v in force_list(value):
         if 'a' in v:
@@ -119,6 +121,7 @@ def corporate_authors(self, key, value):
 @replace_in_result('Collaboration', '', key='value')
 @filter_list_values
 def collaborations(self, key, value):
+    """Translates collaborations."""
     _collaborations = self.get('collaborations', [])
     for v in force_list(value):
         if 'g' in v:
@@ -128,11 +131,14 @@ def collaborations(self, key, value):
     return _collaborations
 
 
-# TODO not sure yet if x and o can happen in the same time and if
-# TODO the text is a concatenation of those two
 @model.over('publication_info', '^773__')
 @filter_list_values
 def publication_info(self, key, value):
+    """Translates publication_info field.
+
+    if x and o subfields are present simultaneously
+    it concatenates the text
+    """
     _publication_info = self.get('publication_info', [])
     for v in force_list(value):
         temp_info = {}
@@ -165,6 +171,7 @@ def publication_info(self, key, value):
 @model.over('related_records', '(^775__)|(^787__)')
 @filter_list_values
 def related_records(self, key, value):
+    """Translates related_records field."""
     _related_records = self.get('related_records', [])
     for v in force_list(value):
         try:
@@ -184,6 +191,7 @@ def related_records(self, key, value):
 @model.over('accelerator_experiments', '^693__')
 @filter_list_values
 def accelerator_experiments(self, key, value):
+    """Translates accelerator_experiments field."""
     _acc_exp = self.get('accelerator_experiments', [])
     for v in force_list(value):
         _acc_exp.append({'accelerator': clean_val('a', v, str),
@@ -197,6 +205,7 @@ def accelerator_experiments(self, key, value):
 @model.over('urls', '^8564_')
 @filter_list_values
 def urls(self, key, value):
+    """Translates urls field."""
     _urls = self.get('urls', [])
     for v in force_list(value):
         _urls.append({'value': clean_val('u', v, str, req=True)})
@@ -206,5 +215,3 @@ def urls(self, key, value):
             # TODO log
             pass
     return _urls
-
-

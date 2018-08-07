@@ -166,6 +166,7 @@ def subject(self, key, value):
         'term': value.get('a')
     }
 
+
 @model.over('accelerator_experiment', '^693__')
 @filter_values
 def accelerator_experiment(self, key, value):
@@ -307,6 +308,7 @@ def _files(self, key, value):
         result['key'] = 'posterframe{0}'.format(ext)
 
     return result
+
 
 @model.over('audio_characteristics', '^344__')
 def audio_characteristics(self, key, value):

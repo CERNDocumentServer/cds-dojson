@@ -64,29 +64,27 @@ def clean_str(to_clean, regex_format, req):
 
 def clean_val(subfield, value, var_type, req=False, regex_format=None,
               default=None, manual=False):
-    try:
-        to_clean = value.get(subfield)
-        if manual:
-            raise ManualMigrationRequired
-        if req and to_clean is None:
-            if default:
-                return default
-            raise MissingRequiredField
-        if to_clean is not None:
-            if var_type is str:
-                return clean_str(to_clean, regex_format, req)
-            elif var_type is bool:
-                return bool(to_clean)
-            elif var_type is int:
-                return int(to_clean)
-            else:
-                raise NotImplementedError
-    except ValueError as e:
-        raise e
+    to_clean = value.get(subfield)
+    if manual:
+        raise ManualMigrationRequired
+    if req and to_clean is None:
+        if default:
+            return default
+        raise MissingRequiredField
+    if to_clean is not None:
+        if var_type is str:
+            return clean_str(to_clean, regex_format, req)
+        elif var_type is bool:
+            return bool(to_clean)
+        elif var_type is int:
+            return int(to_clean)
+        else:
+            raise NotImplementedError
 
 
 def clean_email(value):
-    email = value.strip().replace(' [CERN]', '@cern.ch')
+    email = value.strip().replace(' [CERN]', '@cern.ch').\
+        replace('[CERN]', '@cern.ch')
     return email
 
 
@@ -118,13 +116,14 @@ def replace_in_result(phrase, replace_with, key=None):
 
 
 def filter_list_values(f):
-    """Remove None values from list of dictionaries"""
+    """Remove None and blank string values from list of dictionaries"""
     @functools.wraps(f)
     def wrapper(self, key, value, **kwargs):
         out = f(self, key, value)
         if out:
             clean_list = [dict((k, v) for k, v in elem.iteritems()
-                               if v is not None) for elem in out if elem]
+                               if v) for elem in out if elem]
+            clean_list = [elem for elem in clean_list if elem]
             if not clean_list:
                 raise IgnoreKey(key)
             return clean_list
@@ -137,7 +136,11 @@ def out_strip(fn_decorated):
     """Decorator cleaning output values of trailing and following spaces"""
     def proxy(self, key, value, **kwargs):
         res = fn_decorated(self, key, value, **kwargs)
+        if not res:
+            raise IgnoreKey(key)
         if isinstance(res, str):
+            # the value is not checked for empty strings here because clean_val
+            # does the job, it will be None caught before
             return res.strip()
         elif isinstance(res, list):
             cleaned = [elem.strip() for elem in res if elem]

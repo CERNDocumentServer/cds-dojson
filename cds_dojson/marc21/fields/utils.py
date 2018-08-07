@@ -31,26 +31,13 @@ from dojson.errors import IgnoreKey
 from dojson.utils import force_list
 from six import PY2, iteritems
 
+from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
+    MissingRequiredField, ManualMigrationRequired
 from ..utils import MementoDict
 
 
-class UnexpectedValue(Exception):
-    message = "The value in the input data is not allowed"
-
-
-class UnexpectedSubfield(Exception):
-    message = "This subfield is not expected"
-
-
-class MissingRequiredField(Exception):
-    message = 'The required field is missing in the input data'
-
-
-class ManualMigrationRequired(Exception):
-    message = 'This field requires manual cleaning'
-
-
 def clean_str(to_clean, regex_format, req):
+    """Cleans string marcxml values."""
     if regex_format:
         pattern = re.compile(regex_format)
         match = pattern.match(to_clean)
@@ -64,6 +51,18 @@ def clean_str(to_clean, regex_format, req):
 
 def clean_val(subfield, value, var_type, req=False, regex_format=None,
               default=None, manual=False):
+    """
+    Tests values using common rules.
+
+    :param subfield: marcxml subfield indicator
+    :param value: mxrcxml value
+    :param var_type: expected type for value to be cleaned
+    :param req: specifies if the value is required in the end schema
+    :param regex_format: specifies if the value should have a pattern
+    :param default: if value is missing and required it outputs default
+    :param manual: if the value should be cleaned manually durign the migration
+    :return: cleaned output value
+    """
     to_clean = value.get(subfield)
     if manual:
         raise ManualMigrationRequired
@@ -83,23 +82,25 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
 
 
 def clean_email(value):
+    """Cleans the email field."""
     email = value.strip().replace(' [CERN]', '@cern.ch').\
         replace('[CERN]', '@cern.ch')
     return email
 
 
 def get_week_start(year, week):
+    """Translates cds book yearweek format to starting date."""
     d = date(year, 1, 1)
     if d.weekday() > 3:
-        d = d + timedelta(7-d.weekday())
+        d = d + timedelta(7 - d.weekday())
     else:
         d = d - timedelta(d.weekday())
-    dlt = timedelta(days=(week-1)*7)
+    dlt = timedelta(days=(week - 1) * 7)
     return d + dlt
 
 
 def replace_in_result(phrase, replace_with, key=None):
-    """Replaces string values in list with given string"""
+    """Replaces string values in list with given string."""
     def the_decorator(fn_decorated):
         def proxy(*args, **kwargs):
             res = fn_decorated(*args, **kwargs)
@@ -116,7 +117,7 @@ def replace_in_result(phrase, replace_with, key=None):
 
 
 def filter_list_values(f):
-    """Remove None and blank string values from list of dictionaries"""
+    """Remove None and blank string values from list of dictionaries."""
     @functools.wraps(f)
     def wrapper(self, key, value, **kwargs):
         out = f(self, key, value)
@@ -133,7 +134,7 @@ def filter_list_values(f):
 
 
 def out_strip(fn_decorated):
-    """Decorator cleaning output values of trailing and following spaces"""
+    """Decorator cleaning output values of trailing and following spaces."""
     def proxy(self, key, value, **kwargs):
         res = fn_decorated(self, key, value, **kwargs)
         if not res:

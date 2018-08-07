@@ -62,4 +62,3 @@ def access(self, key, value):
             for s in force_list(value.get('d') or value.get('m', '')) if s
         ])
     return _access
-

@@ -98,7 +98,8 @@ class CDSOverdoBase(OverdoJSONSchema):
 class CDSBook(CDSOverdoBase):
     """Translation Index for CDS Videos."""
 
-    __query__ = '980__:BOOK -980__:PROCEEDINGS -980__:DELETED'
+    __query__ = '980__:BOOK | 960__:21 -980__:DELETED -980__:PROCEEDINGS ' \
+                '-960__:42 -960__:43'
 
     __schema__ = 'records/books/book/book-v.0.0.1.json'
 

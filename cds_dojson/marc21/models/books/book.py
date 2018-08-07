@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Book model"""
+"""Book model."""
 
 from cds_dojson.overdo import OverdoJSONSchema
 from cds_dojson.marc21.fields.base import model as cds_base
@@ -25,7 +25,8 @@ from dojson.errors import IgnoreKey, MissingRule
 from dojson.utils import GroupableOrderedDict
 
 
-class CDSOverdoBase(OverdoJSONSchema):
+class CDSOverdoBookBase(OverdoJSONSchema):
+    """Translation base Index for CDS Books."""
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Translate blob values and instantiate new model instance.
@@ -95,8 +96,8 @@ class CDSOverdoBase(OverdoJSONSchema):
         return output
 
 
-class CDSBook(CDSOverdoBase):
-    """Translation Index for CDS Videos."""
+class CDSBook(CDSOverdoBookBase):
+    """Translation Index for CDS Books."""
 
     __query__ = '980__:BOOK | 960__:21 -980__:DELETED -980__:PROCEEDINGS ' \
                 '-960__:42 -960__:43'

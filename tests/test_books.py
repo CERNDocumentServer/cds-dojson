@@ -17,7 +17,9 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 """Book fields tests."""
+import pytest
 
+from cds_dojson.marc21.fields.books.errors import UnexpectedValue
 from cds_dojson.marc21.models.books.book import model
 from cds_dojson.marc21.utils import create_record
 
@@ -354,6 +356,29 @@ def test_publication_info(app):
                 }]
             }
         )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="773" ind1=" " ind2=" ">
+                    <subfield code="c">1692-1695-2000</subfield>
+                    <subfield code="n">10</subfield>
+                    <subfield code="y">2007</subfield>
+                    <subfield code="p">Radiat. Meas.</subfield>
+                    <subfield code="o">1692 numebrs text etc</subfield>
+                    <subfield code="x">Random text</subfield>
+                </datafield>
+                """,
+                {
+                    'publication_info': [{
+                        'page_start': 1692,
+                        'page_end': 1695,
+                        'year': 2007,
+                        'journal_title': 'Radiat. Meas.',
+                        'journal_issue': '10',
+                        'pubinfo_freetext': '1692 numebrs text etc Random text',
+                    }]
+                }
+            )
 
 
 def test_related_record(app):

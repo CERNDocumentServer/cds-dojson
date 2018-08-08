@@ -128,7 +128,7 @@ properties:
     
     description:
         description: |-
-            :MARC: No Marc - BibCirculation field ``description``
+            :MARC: In BibCirculation field ``description`` or for electronic holding: 0247__q or ``8564_y``
         minLength: 1
         title: Holding description
         type: string

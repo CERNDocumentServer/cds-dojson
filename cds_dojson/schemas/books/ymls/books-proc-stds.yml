@@ -889,7 +889,7 @@ properties:
                 cern_conference_code:
                     description: |-
                         :MARC: ``962__b``
-	            minLength: 1 
+	            minLength: 1
 	            type: string
                 curated_relation:
                     type: boolean

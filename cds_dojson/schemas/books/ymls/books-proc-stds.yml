@@ -58,7 +58,7 @@ properties:
             ``standard``
                 A standard.
         items:
-            $ref: elements/document_type.json
+            $ref: elements/document_type.yml
         minItems: 1
         type: array
         uniqueItems: true
@@ -473,8 +473,8 @@ properties:
         title: List of copyrights to documents in this record
         type: array
         uniqueItems: true
-        
-    corporate_author:
+
+    corporate_authors:
         items:
             description: |-
                 :MARC: ``110__a``
@@ -489,7 +489,6 @@ properties:
         uniqueItems: true
         
     curated:
-    # base ?
         description: |-
             :MARC: `500__a` containing `*Temporary entry*`, `*Temporary
                 record*` or `*Brief entry*` correspond to `false`, otherwise it
@@ -997,7 +996,7 @@ properties:
                     $ref: elements/json_reference.json
                 value:
                     description: |-
-                        :MARC: ``902__a``
+                        :MARC: ``901__a``
                         Currently, the old
                         :ref:`institutions.json#/properties/legacy_ICN`
                         is used here. In the future, this will

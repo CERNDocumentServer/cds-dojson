@@ -116,29 +116,15 @@ def isbns(self, key, value):
     return f
 
 
-@model.over('report_numbers', '(^021__)|(^037__)')
-@for_each_value
-@filter_values
-def report_numbers(self, key, value):
-    """Translates report_numbers fields."""
-
-    if key == '035__' and value.get('9') == 'arXiv':
-        return
-
-    f = {}
-    if 'a' in value:
-        f['value'] = value.get('a')
-    else:
-        raise ValueError('Value not provided for a required field.', key, 'a')
-
-    return f
-
-
 @model.over('dois', '^0247_')
 @for_each_value
 @filter_values
 def dois(self, key, value):
     """Translates dois fields."""
+
+    field_type = value.get('2')
+    if field_type and field_type.lower() != 'doi':
+        return
 
     f = {}
     material_types = [
@@ -163,11 +149,27 @@ def dois(self, key, value):
     if q and q in material_types:
         f['material'] = value.get('q')
     else:
-        raise ValueError('This field is not matching the data model.', key, 'q')
+        raise ValueError('Field not matching the data model.', key, 'q')
 
     f['source'] = value.get('9')
 
     return f
+
+
+@model.over('external_system_identifiers', '^0247_')
+@for_each_value
+@filter_values
+def external_system_identifiers(self, key, value):
+    """Translates external_system_identifiers fields."""
+
+    field_type = value.get('2')
+    if field_type and field_type.lower() != 'asin':
+        return
+    # FIXME schema, value required but for asin we dont have a schema
+    # MOVE BELOW??
+    return {
+        'value': value.get('a'),
+    }
 
 
 @model.over('external_system_identifiers', '(^035__)|(^036__)')
@@ -177,7 +179,12 @@ def external_system_identifiers(self, key, value):
     """Translates external_system_identifiers fields."""
     f = {}
 
-    # FIXME when CERCER 035__a
+    if key == '035__':
+        field_type = value.get('9')
+        if field_type and field_type.lower() == 'cercer':
+            # FIXME no info provided for this
+            return
+
     if '9' in value:
         f['schema'] = value.get('9')
     else:
@@ -191,11 +198,42 @@ def external_system_identifiers(self, key, value):
     return f
 
 
+@model.over('report_numbers', '(^037__)(^088__)')
+@for_each_value
+@filter_values
+def report_numbers(self, key, value):
+    """Translates report_numbers fields."""
+
+    f = {}
+
+    if key == '037__':
+        if value.get('9') == 'arXiv':
+            return
+        else:
+            f['value'] = value.get('z')
+            f['hidden'] = True
+
+    if key == '088__':
+        f['value'] = value.get('9')
+        f['hidden'] = True
+
+    if 'a' in value:
+        f['value'] = value.get('a')
+        f['hidden'] = True
+    else:
+        raise ValueError('Value not provided for a required field.', key, 'a')
+
+    return f
+
+
 @model.over('arxiv_eprints', '^037__')
+@for_each_value
+@filter_values
 def arxiv_eprints(self, key, value):
     """Translates arxiv_eprints fields."""
 
-    if value.get('9') != 'arXiv':
+    field_type = value.get('9')
+    if field_type and field_type.lower() != 'arxiv':
         return
 
     f = {}
@@ -215,9 +253,12 @@ def arxiv_eprints(self, key, value):
 
 
 @model.over('languages', '^041__')
+@for_each_value
+@filter_values
 def languages(self, key, value):
     """Translates languages fields."""
 
+    # FIXME add languages enum?
     f = {}
     _languages = value.get('languages', [])
 
@@ -229,15 +270,25 @@ def languages(self, key, value):
     return f
 
 
-# @model.over('subject_classification', '^(050)|(080)|(082)(084)__')
+# @model.over('subject_classification', '(^050__)|(^080__)|(^082__)(^084__)')
 # def subject_classification(self, key, value):
 #     """Translates subject_classification fields."""
+#     # FIXME check what is going on here
+#     f = {}
+#     return f
 
+
+# @model.over('keywords', '^(084)__')
+# def keywords(self, key, value):
+#     """Translates keywords fields."""
+#     # FIXME check what is going on here
 #     f = {}
 #     return f
 
 
 @model.over('corporate_author', '^110__')
+@for_each_value
+@filter_values
 def corporate_author(self, key, value):
     """Translates corporate_author fields."""
 
@@ -261,14 +312,34 @@ def corporate_author(self, key, value):
 
 
 # @model.over('title_translations', '^242__')
+# @for_each_value
+# @filter_values
 # def title_translations(self, key, value):
 #     """Translates title_translations fields."""
 
 #     f = {}
+
+#     # FIXME there is no example with language. Should this be required?
+#     if 'a' in value:
+#         f['language'] = value.get('a')
+#     else:
+#         raise ValueError('Value not provided for a required field.', key, 'a')
+
+#     if 'a' in value:
+#         f['title'] = value.get('a')
+#     else:
+#         raise ValueError('Value not provided for a required field.', key, 'a')
+
+#     # FIXME there is no example with source and subtitle
+#     # f['source'] = value.get('a')
+#     # f['subtitle'] = value.get('a')
+
 #     return f
 
 
 @model.over('editions', '^250__')
+@for_each_value
+@filter_values
 def editions(self, key, value):
     """Translates editions fields."""
 
@@ -284,51 +355,42 @@ def editions(self, key, value):
 
 
 @model.over('imprints', '^260__')
+@for_each_value
+@filter_values
 def imprints(self, key, value):
     """Translates imprints fields."""
 
-    _imprints = self.get('imprints', {})
-
-    if 'a' in value:
-        _imprints.update({'place': str(value.get('a'))})
-
-    if 'b' in value:
-        _imprints.update({'publisher': str(value.get('b'))})
-
-    if 'c' in value:
-        _imprints.update({'date': str(value.get('c'))})
-
-    if 'g' in value:
-        _imprints.update({'reprint': str(value.get('g'))})
-
-    return _imprints
+    return {
+        'date': value.get('c'),
+        'place': value.get('a'),
+        'publisher': value.get('b'),
+        'reprint': value.get('g'),
+    }
 
 
 @model.over('preprint_date', '^269__')
+@filter_values
 def preprint_date(self, key, value):
     """Translates preprint_date fields."""
 
-    _preprint_date = self.get('preprint_date', {})
-
-    if 'c' in value:
-        _preprint_date.update({'date': str(value.get('c'))})
-
-    return _preprint_date
+    return {
+        'preprint_date': value.get('c'),
+    }
 
 
 @model.over('number_of_pages', '^300__')
+@filter_values
 def number_of_pages(self, key, value):
     """Translates number_of_pages fields."""
 
-    f = {}
-    if 'b' in value:
-        # remove non numeric characters and cast it to int
-        f['number_of_pages'] = int(re.sub('[^0-9]', '', value.get('b')))
-
-    return f
+    # remove non numeric characters and cast it to int
+    return {
+        'number_of_pages': int(re.sub('[^0-9]', '', value.get('b'))),
+    }
 
 
 @model.over('book_series', '^490__')
+@filter_values
 def book_series(self, key, value):
     """Translates book_series fields."""
 
@@ -339,11 +401,8 @@ def book_series(self, key, value):
     else:
         raise ValueError('Value not provided for a required field.', key, 'a')
 
-    if 'v' in value:
-        f['volume'] = value.get('v')
-
-    if 'x' in value:
-        f['issn'] = value.get('x')
+    f['volume'] = value.get('v')
+    f['issn'] = value.get('x')
 
     return f
 

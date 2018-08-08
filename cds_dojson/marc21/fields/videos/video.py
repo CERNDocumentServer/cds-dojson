@@ -353,3 +353,14 @@ def license(self, key, value):
         'material': value.get('3'),
         'url': value.get('u'),
     }
+
+
+@model.over('external_system_identifiers', '^970__')
+@for_each_value
+def external_system_identifiers(self, key, value):
+    """External unique identifiers."""
+    value = value.get('a', '')
+    return {
+        'value': value,
+        "schema": 'ALEPH' if value.startswith('0000') else value[:3]
+    }

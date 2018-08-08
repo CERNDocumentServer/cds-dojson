@@ -145,6 +145,20 @@ def test_report_numbers(app):
                 }],
             })
 
+        check_transformation(
+            """
+            <datafield tag="088" ind1=" " ind2=" ">
+              <subfield code="a">13.140</subfield>
+            </datafield>
+            <datafield tag="088" ind1=" " ind2=" ">
+                <subfield code="9">ATL-COM-SOFT-2018-088</subfield>
+            </datafield>
+            """, {
+                'report_numbers': [{
+
+                }],
+            })
+
 
 def test_dois(app):
     with app.app_context():
@@ -180,17 +194,41 @@ def test_external_system_identifiers(app):
                 }],
             })
 
+        # check_transformation(
+        #     """
+        #     <datafield tag="035" ind1=" " ind2=" ">
+        #         <subfield code="9">CERCER</subfield>
+        #         <subfield code="a">2365039</subfield>
+        #     </datafield>
+        #     """, {
+        #         'external_system_identifiers': [{
+        #             'schema': 'EBL',
+        #             'value': '5231528',
+        #         }],
+        #     })
+
         check_transformation(
             """
             <datafield tag="036" ind1=" " ind2=" ">
                 <subfield code="9">DLC</subfield>
                 <subfield code="a">92074207</subfield>
             </datafield>
-
             """, {
                 'external_system_identifiers': [{
                     'schema': 'DLC',
                     'value': '92074207',
+                }],
+            })
+
+        check_transformation(
+            """
+            <datafield tag="024" ind1="7" ind2=" ">
+                <subfield code="2">ASIN</subfield>
+                <subfield code="a">9402409580</subfield>
+            </datafield>
+            """, {
+                'external_system_identifiers': [{
+                    'value': '9402409580',
                 }],
             })
 
@@ -205,10 +243,10 @@ def test_arxiv_eprints(app):
                 <subfield code="c">math-ph</subfield>
             </datafield>
             """, {
-                'arxiv_eprints': {
+                'arxiv_eprints': [{
                     'categories': ['math-ph'],
                     'value': 'arXiv:1209.5665',
-                },
+                }],
             })
 
 
@@ -220,9 +258,9 @@ def test_languages(app):
                 <subfield code="a">eng</subfield>
             </datafield>
             """, {
-                'languages': {
+                'languages': [{
                     'languages': ['eng'],
-                },
+                }],
             })
 
 
@@ -249,6 +287,25 @@ def test_languages(app):
 #             })
 
 
+# def keywords(app):
+#     with app.app_context():
+#         check_transformation(
+#             """
+#             <datafield tag="084" ind1=" " ind2=" ">
+#                 <subfield code="a">13.140</subfield>
+#             </datafield>
+#             <datafield tag="084" ind1=" " ind2=" ">
+#              <subfield code="a">17.140.20</subfield>
+#             </datafield>
+#             """, {
+#                 'keywords': [{
+#                     'source': '',
+#                     'value': '',
+#                     'schema': '',
+#                 }],
+#             })
+
+
 def test_corporate_author(app):
     with app.app_context():
         check_transformation(
@@ -257,9 +314,9 @@ def test_corporate_author(app):
                 <subfield code="a">Marston, R M</subfield>
             </datafield>
             """, {
-                'corporate_author': {
+                'corporate_author': [{
                     'corporate_author': ['Marston, R M'],
-                },
+                }],
             })
 
 
@@ -279,11 +336,19 @@ def test_corporate_author(app):
 #     with app.app_context():
 #         check_transformation(
 #             """
-
+#             <datafield tag="242" ind1=" " ind2=" ">
+#                 <subfield code="a">la</subfield>
+#                 <subfield code="a">so</subfield>
+#                 <subfield code="a">su</subfield>
+#                 <subfield code="a">ti</subfield>
+#             </datafield>
 #             """, {
-#                 'title_translations': {
-
-#                 },
+#                 'title_translations': [{
+#                     'language': 'la',
+#                     'source': 'so',
+#                     'subtitle': 'su',
+#                     'title': 'ti',
+#                 }],
 #             })
 
 
@@ -295,9 +360,9 @@ def test_editions(app):
                 <subfield code="a">3rd ed.</subfield>
             </datafield>
             """, {
-                'editions': {
+                'editions': [{
                     'editions': ['3rd ed.'],
-                },
+                }],
             })
 
 
@@ -312,17 +377,16 @@ def test_imprints(app):
                 <subfield code="g">2015</subfield>
             </datafield>
             """, {
-                'imprints': {
+                'imprints': [{
                     'place': 'Sydney',
                     'publisher': 'Allen & Unwin',
                     'date': '2013',
                     'reprint': '2015',
-                },
+                }],
             })
 
 
 def test_preprint_date(app):
-    # FIXME should we ignore a and b fields??
     with app.app_context():
         check_transformation(
             """
@@ -333,7 +397,7 @@ def test_preprint_date(app):
             </datafield>
             """, {
                 'preprint_date': {
-                    'date': '19 Jan 2016',
+                    'preprint_date': '19 Jan 2016',
                 },
             })
 

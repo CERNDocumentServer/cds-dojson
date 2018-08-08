@@ -8,10 +8,11 @@ properties:
     record:
         $ref: json_reference.json
         description: |-
-            :MARC: ``775`
+            :MARC: ``775__w``
         title: URL of related record
     relation:
         description: |-
+            :MARC: depending on ``775__b`` and ``775__c``
             The possible values are:
             ``other edition``
             ``other language``
@@ -27,6 +28,24 @@ properties:
         minLength: 1
         title: Relation of the linked record to this one
         type: string
+    related_record_year:
+        description: 775__c
+            :MARC: 
+            Do we need? or can it be extracted from the corresponding record?
+        minLength: 1
+        type: string
+    related_record_edition:
+        description: 775__b
+            :MARC: 
+            Do we need? or can it be extracted from the corresponding record?
+        minLength: 1
+        type: string
+    related_record_language:
+        description: 775__b
+            :MARC: 
+            Do we need? or can it be extracted from the corresponding record?
+        minLength: 1
+        type: string
     relation_freetext:
         description: |-
             :MARC: 
@@ -37,7 +56,7 @@ properties:
     note_freetext:
         description: |-
             :MARC: 
-            If a note is necessary to describe better the link
+            If a note is necessary to describe better the link between the records
         minLength: 1
         type: string
 required:

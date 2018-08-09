@@ -36,6 +36,28 @@ from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
 from ..utils import MementoDict
 
 
+# TODO to be decided where is the config value for domain
+def rel_url(value):
+    """Builds related records urls."""
+    return '{0}{1}'.format('https://cds.cern.ch/record/', value)
+
+
+def clean_pages(pages_subfield, value):
+    """Builds pages dictionary."""
+    page_regex = '\d+(?:[\-‐‑‒–—―⁻₋−﹘﹣－]*\d*)$'
+    pages_val = clean_val(pages_subfield, value, str, regex_format=page_regex)
+    if pages_val:
+        pages = re.split('[\-‐‑‒–—―⁻₋−﹘﹣－]+', pages_val)
+        if len(pages) == 1:
+            result = {'page_start': int(pages[0])}
+            return result
+
+        else:
+            result = {'page_start': int(pages[0]),
+                      'page_end': int(pages[1])}
+            return result
+
+
 def clean_str(to_clean, regex_format, req):
     """Cleans string marcxml values."""
     if regex_format:
@@ -64,7 +86,7 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
     :return: cleaned output value
     """
     to_clean = value.get(subfield)
-    if manual:
+    if manual and to_clean:
         raise ManualMigrationRequired
     if req and to_clean is None:
         if default:

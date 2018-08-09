@@ -25,3 +25,4 @@ recursive-include dojson *.json
 recursive-include dojson *.py
 recursive-include tests *.py
 recursive-include tests *.xml
+recursive-include cds_dojson *.yml

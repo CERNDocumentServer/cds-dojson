@@ -1,0 +1,9 @@
+default: book
+enum:
+- book
+- proceedings
+- report
+- thesis
+- standard
+minLength: 1
+type: string

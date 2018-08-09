@@ -20,11 +20,12 @@
 from dojson.contrib import marc21 as default
 
 from cds_dojson.marc21.models.videos import project, video
+from cds_dojson.marc21.models.books import book
 from cds_dojson.matcher import matcher
 
 
-def test_marc21_matcher():
-    """Test CDS DoJSON matcher."""
+def test_marc21_matcher_videos():
+    """Test CDS DoJSON matcher - videos"""
     video_blob1 = {'980__': [{'a': 'PUBLVIDEOMOVIE'}, {'b': 'VIDEOMEDIALAB'}]}
     video_blob2 = {'980__': [{'a': 'PUBLVIDEOMOVIE'}, {'c': 'DELETED'}]}
     video_blob3 = {'980__': {'a': 'VIDEOARC'}}
@@ -43,4 +44,15 @@ def test_marc21_matcher():
     assert project.model == matcher(video_blob5, 'cds_dojson.marc21.models')
     assert default.model == matcher(video_blob6, 'cds_dojson.marc21.models')
     assert project.model == matcher(video_blob7, 'cds_dojson.marc21.models')
+    assert default.model == matcher(not_match, 'cds_dojson.marc21.models')
+
+
+def test_marc21_matcher_books():
+    """Test CDS DoJSON matcher - books."""
+    book_blob1 = {'980__': [{'a': 'BOOK'}]}
+    book_blob2 = {'960__': [{'a': '21'}]}
+    not_match = {'foo': 'bar'}
+
+    assert book.model == matcher(book_blob1, 'cds_dojson.marc21.models')
+    assert book.model == matcher(book_blob2, 'cds_dojson.marc21.models')
     assert default.model == matcher(not_match, 'cds_dojson.marc21.models')

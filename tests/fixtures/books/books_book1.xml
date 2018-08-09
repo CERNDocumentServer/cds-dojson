@@ -1,0 +1,78 @@
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+<record>
+<controlfield tag="001">2631445</controlfield>
+<controlfield tag="003">SzGeCERN</controlfield>
+<controlfield tag="005">20180716233716.0</controlfield>
+<datafield tag="595" ind1=" " ind2=" ">
+<subfield code="a">CBO201807</subfield>
+</datafield>
+<datafield tag="980" ind1=" " ind2=" ">
+<subfield code="a">BOOK</subfield>
+</datafield>
+<datafield tag="700" ind1=" " ind2=" ">
+<subfield code="a">Surzhikov, Sergey T</subfield>
+</datafield>
+<datafield tag="490" ind1=" " ind2=" ">
+<subfield code="a">Cambridge aerospace series</subfield>
+<subfield code="v">43</subfield>
+</datafield>
+<datafield tag="690" ind1="C" ind2=" ">
+<subfield code="a">BOOK</subfield>
+</datafield>
+<datafield tag="340" ind1=" " ind2=" ">
+<subfield code="a">ebook</subfield>
+</datafield>
+<datafield tag="650" ind1="1" ind2="7">
+<subfield code="2">SzGeCERN</subfield>
+<subfield code="a">Astrophysics and Astronomy</subfield>
+</datafield>
+<datafield tag="520" ind1=" " ind2=" ">
+<subfield code="a">
+This valuable resource summarizes the past fifty years' basic research accomplishments in plasma dynamics for aerospace engineering, presenting these results in a comprehensive volume that will be an asset to any professional in the field. It offers a comprehensive review of the foundation of plasma dynamics while integrating the most recently developed modeling and simulation techniques with the theoretic physics, including the state-of-the-art numerical algorithms. Several first-ever demonstrations for innovations and incisive explanations for previously unexplained observations are included. All the necessary formulations for technical evaluation to engineering applications are derived from the first principle by statistic and quantum mechanics, and led to physics-based computational simulations for practical applications. The computer-aided procedures directly engage the reader to duplicate findings that are nearly impossible by using ground-based experimental facilities. Plasma Dynamics for Aerospace Engineering will allow readers to reach an incisive understanding of plasma physics.
+</subfield>
+</datafield>
+<datafield tag="916" ind1=" " ind2=" ">
+<subfield code="d">201807</subfield>
+<subfield code="e">CBO</subfield>
+<subfield code="s">h</subfield>
+<subfield code="w">201829</subfield>
+</datafield>
+<datafield tag="300" ind1=" " ind2=" ">
+<subfield code="a">388 p</subfield>
+</datafield>
+<datafield tag="245" ind1=" " ind2=" ">
+<subfield code="a">Plasma dynamics for aerospace engineering</subfield>
+</datafield>
+<datafield tag="024" ind1="7" ind2=" ">
+<subfield code="2">DOI</subfield>
+<subfield code="a">10.1017/9781108292566</subfield>
+<subfield code="q">ebook</subfield>
+</datafield>
+<datafield tag="024" ind1="8" ind2=" ">
+<subfield code="a">oai:cds.cern.ch:2631445</subfield>
+<subfield code="p">cerncds:BOOK</subfield>
+</datafield>
+<datafield tag="260" ind1=" " ind2=" ">
+<subfield code="a">Cambridge</subfield>
+<subfield code="b">Cambridge University Press</subfield>
+<subfield code="c">2018</subfield>
+</datafield>
+<datafield tag="020" ind1=" " ind2=" ">
+<subfield code="a">9781108418973</subfield>
+<subfield code="u">print version, hardback</subfield>
+</datafield>
+<datafield tag="020" ind1=" " ind2=" ">
+<subfield code="a">9781108292566</subfield>
+<subfield code="u">electronic version</subfield>
+</datafield>
+<datafield tag="100" ind1=" " ind2=" ">
+<subfield code="a">Shang, Joseph</subfield>
+</datafield>
+<datafield tag="041" ind1=" " ind2=" ">
+<subfield code="a">eng</subfield>
+</datafield>
+<datafield tag="960" ind1=" " ind2=" ">
+<subfield code="a">21</subfield>
+</datafield>
+</record>
+</collection>

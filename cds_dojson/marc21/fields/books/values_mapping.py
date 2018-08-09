@@ -25,21 +25,26 @@ DOCUMENT_TYPE = {
 }
 
 AUTHOR_ROLE = {
-    'editor': ['ed.', 'ed'],
-    'supervisor': ['dir.', 'dir'],
-    'ilustrator': ['ill.', 'ill'],
+    'editor': ['ED.', 'ED'],
+    'supervisor': ['DIR.', 'DIR'],
+    'ilustrator': ['ILL.', 'ILL'],
 }
 
 COLLECTION = {
     'BOOK SUGGESTION': ['BOOKSUGGESTION'],
     'LEGSERLIB': ['LEGSERLIB'],
-    'YELLOW REPORT': ['YELLOW REPORT'],
+    'YELLOW REPORT': ['YELLOW REPORT', 'YELLOWREPORT'],
     'CERN': ['CERN'],
-    'DESIGN REPORT': ['DESIGN REPORT', 'Design Report'],
+    'DESIGN REPORT': ['DESIGN REPORT', 'DESIGNREPORT'],
     'BOOKSHOP': ['BOOKSHOP'],
     'LEGSERLIBINTLAW': ['LEGSERLIBINTLAW'],
     'LEGSERLIBCIVLAW': ['LEGSERLIBCIVLAW'],
     'LEGSERLIBLEGRES': ['LEGSERLIBLEGRES']
+}
+
+ACQUISITION_METHOD = {
+    'submitter': ['h'],
+    'batchuploader': ['n', 'm'],
 }
 
 
@@ -47,6 +52,8 @@ def mapping(field_map, val):
     """
     Maps the old value to a new one according to the map.
 
+    important: the maps values must be uppercase, in order to catch all the
+    possible values in the field
     :param field_map: one of the maps specified
     :param val: old value
     :return: output value matched in map
@@ -55,5 +62,5 @@ def mapping(field_map, val):
         val = val.strip()
     if val:
         for k, v in field_map.items():
-            if val in v:
+            if val.upper() in v:
                 return k

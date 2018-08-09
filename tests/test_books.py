@@ -19,7 +19,8 @@
 """Book fields tests."""
 import pytest
 
-from cds_dojson.marc21.fields.books.errors import UnexpectedValue
+from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
+    ManualMigrationRequired
 from cds_dojson.marc21.models.books.book import model
 from cds_dojson.marc21.utils import create_record
 
@@ -217,6 +218,17 @@ def test_urls(app):
             """, {
                 'urls': [{'value': 'cds.cern.ch'}],
             })
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="8564" ind1=" " ind2=" ">
+                    <subfield code="u">cds.cern.ch</subfield>
+                    <subfield code="y">description</subfield>
+                </datafield>
+                """, {
+                    'urls': [{'value': 'cds.cern.ch',
+                              'description': 'description'}],
+                })
 
 
 def test_acquisition_email(app):
@@ -260,9 +272,13 @@ def test_authors(app):
                 <subfield code="a">Van Dam, Hendrik</subfield>
                 <subfield code="e">ed.</subfield>
             </datafield>
+            <datafield tag="720" ind1=" " ind2=" ">
+                <subfield code="a">Neubert, Matthias</subfield>
+            </datafield>
             """, {
                 'authors': [{'full_name': 'Frampton, Paul H',
-                             'role': 'editor'},
+                             'role': 'editor',
+                             'alternative_names': 'Neubert, Matthias'},
                             {'full_name': 'Glashow, Sheldon Lee',
                              'role': 'editor'},
                             {'full_name': 'Van Dam, Hendrik',
@@ -310,6 +326,9 @@ def test_publication_info(app):
                 <subfield code="p">Radiat. Meas.</subfield>
                 <subfield code="v">42</subfield>
             </datafield>
+            <datafield tag="962" ind1=" " ind2=" ">
+                <subfield code="n">BOOK</subfield>
+            </datafield>
             """,
             {
                 'publication_info': [{
@@ -318,9 +337,58 @@ def test_publication_info(app):
                     'year': 2007,
                     'journal_title': 'Radiat. Meas.',
                     'journal_issue': '10',
+                    'journal_volume': '42',
+                    'material': 'BOOK',
                 }]
             }
         )
+        check_transformation(
+            """
+            <datafield tag="773" ind1=" " ind2=" ">
+                <subfield code="c">1692-1695</subfield>
+                <subfield code="n">10</subfield>
+                <subfield code="y">2007</subfield>
+                <subfield code="p">Radiat. Meas.</subfield>
+                <subfield code="v">42</subfield>
+            </datafield>
+            <datafield tag="962" ind1=" " ind2=" ">
+                <subfield code="n">fsihfifri</subfield>
+            </datafield>
+            """,
+            {
+                'publication_info': [{
+                    'page_start': 1692,
+                    'page_end': 1695,
+                    'year': 2007,
+                    'journal_title': 'Radiat. Meas.',
+                    'journal_issue': '10',
+                    'journal_volume': '42',
+                    'cern_conference_code': 'fsihfifri',
+                }]
+            }
+        )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="773" ind1=" " ind2=" ">
+                    <subfield code="c">10-95-5</subfield>
+                    <subfield code="n">10</subfield>
+                    <subfield code="y">2007</subfield>
+                    <subfield code="p">Radiat. Meas.</subfield>
+                    <subfield code="v">42</subfield>
+                </datafield>
+                """,
+                {
+                    'publication_info': [{
+                        'page_start': 1692,
+                        'page_end': 1695,
+                        'year': 2007,
+                        'journal_title': 'Radiat. Meas.',
+                        'journal_issue': '10',
+                        'journal_volume': '42',
+                    }]
+                }
+            )
         check_transformation(
             """
             <datafield tag="773" ind1=" " ind2=" ">
@@ -331,6 +399,23 @@ def test_publication_info(app):
             {
                 'publication_info': [
                     {'pubinfo_freetext': '1692 numebrs text etc Random text'}
+                ]
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="962" ind1=" " ind2=" ">
+                <subfield code="b">2155631</subfield>
+                <subfield code="n">genoa20160330</subfield>
+                <subfield code="k">1</subfield>
+            </datafield>
+            """,
+            {
+                'publication_info': [
+                    {'page_start': 1,
+                     'cern_conference_code': 'genoa20160330',
+                     'parent_record':
+                         {'$ref': 'https://cds.cern.ch/record/2155631'}}
                 ]
             }
         )
@@ -375,7 +460,8 @@ def test_publication_info(app):
                         'year': 2007,
                         'journal_title': 'Radiat. Meas.',
                         'journal_issue': '10',
-                        'pubinfo_freetext': '1692 numebrs text etc Random text',
+                        'pubinfo_freetext': '1692 numebrs '
+                                            'text etc Random text',
                     }]
                 }
             )
@@ -383,30 +469,50 @@ def test_publication_info(app):
 
 def test_related_record(app):
     with app.app_context():
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="775" ind1=" " ind2=" ">
+                    <subfield code="b">Test text</subfield>
+                    <subfield code="c">Random text</subfield>
+                    <subfield code="w">748392</subfield>
+                </datafield>
+                """,
+                {
+                    'related_records': [
+                        {'record':
+                            {'$ref': 'https://cds.cern.ch/record/748392'}}
+                    ]
+                }
+            )
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="787" ind1=" " ind2=" ">
+                    <subfield code="i">Random text</subfield>
+                    <subfield code="w">7483924</subfield>
+                </datafield>
+                """,
+                {
+                    'related_records': [
+                        {'record':
+                            {'$ref': 'https://cds.cern.ch/record/7483924'}}
+                    ]
+                }
+            )
         check_transformation(
             """
             <datafield tag="775" ind1=" " ind2=" ">
-                <subfield code="b">Test text</subfield>
-                <subfield code="c">Random text</subfield>
-                <subfield code="w">748392</subfield>
-            </datafield>
-            """,
-            {
-                'related_records': [
-                    {'record': '748392'}
-                ]
-            }
-        )
-        check_transformation(
-            """
-            <datafield tag="787" ind1=" " ind2=" ">
-                <subfield code="c">Random text</subfield>
                 <subfield code="w">7483924</subfield>
             </datafield>
+            <datafield tag="787" ind1=" " ind2=" ">
+                <subfield code="w">748</subfield>
+            </datafield>
             """,
             {
                 'related_records': [
-                    {'record': '7483924'}
+                    {'record': {'$ref': 'https://cds.cern.ch/record/7483924'}},
+                    {'record': {'$ref': 'https://cds.cern.ch/record/748'}}
                 ]
             }
         )
@@ -420,11 +526,17 @@ def test_accelerator_experiments(app):
                 <subfield code="a">CERN LHC</subfield>
                 <subfield code="e">ATLAS</subfield>
             </datafield>
+            <datafield tag="693" ind1=" " ind2=" ">
+                <subfield code="a">CERN LHC</subfield>
+                <subfield code="e">CMS</subfield>
+            </datafield>
             """,
             {
                 'accelerator_experiments': [
                     {'accelerator': 'CERN LHC',
-                     'experiment': 'ATLAS'}
+                     'experiment': 'ATLAS'},
+                    {'accelerator': 'CERN LHC',
+                     'experiment': 'CMS'}
                 ]
             }
         )

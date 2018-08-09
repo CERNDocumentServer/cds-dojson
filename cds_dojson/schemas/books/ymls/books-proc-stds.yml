@@ -891,6 +891,11 @@ properties:
                     minLength: 1
                     title: Conference acronym
                     type: string
+                cern_conference_code:
+                     description: |-
+                        :MARC: ``962__b``
+	                minLength: 1 
+	                type: string
                 curated_relation:
                     type: boolean
                 journal_issue:

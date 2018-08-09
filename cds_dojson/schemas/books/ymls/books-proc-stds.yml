@@ -530,13 +530,9 @@ properties:
     volume:
         description: |-
             :MARC: ``246__n``
-        items:
-            minLength: 1
-            type: string
         minItems: 1
         title: Volume number
-        type: array
-        uniqueItems: true
+        type: string
 
     external_system_identifiers:
         description: |-

@@ -24,7 +24,26 @@ from dojson.errors import IgnoreKey
 
 from cds_dojson.marc21.fields.utils import clean_str, MissingRequiredField, \
     UnexpectedValue, clean_val, ManualMigrationRequired, clean_email, \
-    get_week_start, replace_in_result, filter_list_values, out_strip
+    get_week_start, replace_in_result, filter_list_values, out_strip, rel_url, \
+    clean_pages
+
+
+def test_clean_pages():
+    """Test if pages are extracted properly"""
+    pages_field = {'a': '12-14'}
+    assert clean_pages('a', pages_field) == {'page_start': 12, 'page_end': 14}
+
+    pages_field = {'a': '1'}
+    assert clean_pages('a', pages_field) == {'page_start': 1}
+
+    with pytest.raises(UnexpectedValue):
+        pages_field = {'a': '12-14-45'}
+        clean_pages('a', pages_field)
+
+
+def test_rel_url():
+    """Test if build of related record url works."""
+    assert rel_url(245432) == 'https://cds.cern.ch/record/245432'
 
 
 @pytest.mark.parametrize('to_clean, regex_format, req, output',

@@ -20,12 +20,18 @@
 import pytest
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
-    ManualMigrationRequired
+    ManualMigrationRequired, MissingRequiredField
+from cds_dojson.marc21.fields.books.values_mapping import mapping, MATERIALS
 from cds_dojson.marc21.models.books.book import model
 from cds_dojson.marc21.utils import create_record
 
 marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
            """<record>{0}</record></collection>""")
+
+
+def test_mapping():
+    with pytest.raises(UnexpectedValue):
+        assert mapping(MATERIALS, 'softwa', raise_exception=True) == 'software'
 
 
 def check_transformation(marcxml_body, json_body):
@@ -47,10 +53,42 @@ def test_acquisition(app):
             <datafield tag="916" ind1=" " ind2=" ">
                 <subfield code="s">h</subfield>
                 <subfield code="w">201829</subfield>
-                </datafield>
+            </datafield>
             """, {
                 'acquisition_source': {'datetime': '2018-07-16'},
             })
+        check_transformation(
+            """
+            <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">SPR201701</subfield>
+            </datafield>
+            """, {
+                'acquisition_source': {'datetime': '2017-01-01',
+                                       'source': 'SPR'},
+            })
+        check_transformation(
+            """
+            <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">random text</subfield>
+            </datafield>
+            """, {
+                '_private_notes': [
+                    {'value': 'random text'},
+                ]
+            })
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="916" ind1=" " ind2=" ">
+                    <subfield code="s">h</subfield>
+                    <subfield code="w">201829</subfield>
+                </datafield>
+                <datafield tag="595" ind1=" " ind2=" ">
+                    <subfield code="a">SPR201701</subfield>
+                </datafield>
+                """, {
+                    'acquisition_source': {'datetime': '2018-07-16'},
+                })
 
 
 def test_collections(app):
@@ -272,18 +310,37 @@ def test_authors(app):
                 <subfield code="a">Van Dam, Hendrik</subfield>
                 <subfield code="e">ed.</subfield>
             </datafield>
+            <datafield tag="100" ind1=" " ind2=" ">
+                <subfield code="a">Seyfert, Paul</subfield>
+                <subfield code="0">AUTHOR|(INSPIRE)INSPIRE-00341737</subfield>
+                <subfield code="0">AUTHOR|(SzGeCERN)692828</subfield>
+                <subfield code="0">AUTHOR|(CDS)2079441</subfield>
+                <subfield code="u">CERN</subfield>
+                <subfield code="m">paul.seyfert@cern.ch</subfield>
+            </datafield>
             <datafield tag="720" ind1=" " ind2=" ">
                 <subfield code="a">Neubert, Matthias</subfield>
             </datafield>
             """, {
-                'authors': [{'full_name': 'Frampton, Paul H',
-                             'role': 'editor',
-                             'alternative_names': 'Neubert, Matthias'},
-                            {'full_name': 'Glashow, Sheldon Lee',
-                             'role': 'editor'},
-                            {'full_name': 'Van Dam, Hendrik',
-                             'role': 'editor'},
-                            ],
+                'authors': [
+                    {
+                        'full_name': 'Frampton, Paul H',
+                        'role': 'editor',
+                        'alternative_names': 'Neubert, Matthias'
+                    },
+                    {
+                        'full_name': 'Glashow, Sheldon Lee',
+                        'role': 'editor'
+                    },
+                    {
+                        'full_name': 'Van Dam, Hendrik',
+                        'role': 'editor'
+                    },
+                    {
+                        'full_name': 'Seyfert, Paul',
+                        'affiliation': 'CERN',
+                    }
+                ],
             })
 
 
@@ -304,9 +361,9 @@ def test_corporate_author(app):
                 <subfield code="a">Marston, R M</subfield>
             </datafield>
             """, {
-                'corporate_author': {
-                    'corporate_author': ['Marston, R M'],
-                },
+                'corporate_authors': [
+                    'Marston, R M',
+                ],
             })
 
 
@@ -575,6 +632,123 @@ def test_isbns(app):
                     'medium': 'electronic version',
                 }],
             })
+        check_transformation(
+            """
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">0691090858</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9780691090856</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781400889167</subfield>
+                <subfield code="q">(electronic bk.)</subfield>
+                <subfield code="u">electronic version</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="u">electronic version</subfield>
+                <subfield code="z">9780691090849</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="u">electronic version</subfield>
+                <subfield code="z">9780691090849</subfield>
+            </datafield>
+            """,
+            {'isbns': [
+                {'value': '0691090858'},
+                {'value': '9780691090856'},
+                {'value': '9781400889167', 'medium': 'electronic version'},
+                {'value': '9780691090849', 'medium': 'electronic version'},
+            ],
+            }
+        )
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="020" ind1=" " ind2=" ">
+                    <subfield code="q">(electronic bk.)</subfield>
+                    <subfield code="u">electronic version</subfield>
+                    <subfield code="b">electronic version</subfield>
+                </datafield>
+                <datafield tag="020" ind1=" " ind2=" ">
+                    <subfield code="u">electronic version</subfield>
+                </datafield>
+                """, {
+                    'isbns': [{
+                        'medium': 'electronic version',
+                    }, {
+                        'medium': 'electronic version',
+                    }],
+                })
+        check_transformation(
+            """
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781630814434</subfield>
+                <subfield code="q">(electronic bk.)</subfield>
+                <subfield code="u">electronic version</subfield>
+                <subfield code="b">electronic version</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781630811051</subfield>
+                <subfield code="u">electronic version (v.1)</subfield>
+            </datafield>
+            """, {
+                'isbns': [{
+                    'value': '9781630814434',
+                    'medium': 'electronic version',
+                }, {
+                    'value': '9781630811051',
+                    'medium': 'electronic version',
+                }],
+                'volume': '(v.1)',
+            })
+
+        check_transformation(
+            """
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781630814434</subfield>
+                <subfield code="q">(electronic bk.)</subfield>
+                <subfield code="u">description</subfield>
+                <subfield code="b">electronic version</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781630811051</subfield>
+                <subfield code="u">electronic version (v.1)</subfield>
+            </datafield>
+            """, {
+                'isbns': [{
+                    'value': '9781630814434',
+                    'description': 'description',
+                }, {
+                    'value': '9781630811051',
+                    'medium': 'electronic version',
+                }],
+                'volume': '(v.1)',
+            })
+
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="020" ind1=" " ind2=" ">
+                    <subfield code="a">9781630814434</subfield>
+                    <subfield code="q">(electronic bk.)</subfield>
+                    <subfield code="u">electronic version (v.2)</subfield>
+                    <subfield code="b">electronic version</subfield>
+                </datafield>
+                <datafield tag="020" ind1=" " ind2=" ">
+                    <subfield code="a">9781630811051</subfield>
+                    <subfield code="u">electronic version (v.1)</subfield>
+                </datafield>
+                """, {
+                    'isbns': [{
+                        'value': '9781630814434',
+                        'medium': 'electronic version',
+                    }, {
+                        'value': '9781630811051',
+                        'medium': 'electronic version',
+                    }],
+                    'volume': '(v.1)',
+                })
 
 
 def test_report_numbers(app):
@@ -582,28 +756,90 @@ def test_report_numbers(app):
         check_transformation(
             """
             <datafield tag="037" ind1=" " ind2=" ">
-                <subfield code="9">9</subfield>
-                <subfield code="a">a</subfield>
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">arXiv:1808.02335</subfield>
+            </datafield>
+            """, {
+                'arxiv_eprints': [{
+                    'value': 'arXiv:1808.02335',
+                }],
+            })
+        check_transformation(
+            """
+            <datafield tag="037" ind1=" " ind2=" ">
+                <subfield code="a">hep-th/9509119</subfield>
             </datafield>
             """, {
                 'report_numbers': [{
-                    'value': 'a',
+                    'value': 'hep-th/9509119',
+                }],
+            })
+        check_transformation(
+            """
+            <datafield tag="037" ind1=" " ind2=" ">
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">arXiv:1808.02335</subfield>
+                <subfield code="c">hep-ex</subfield>
+            </datafield>
+            """, {
+                'arxiv_eprints': [{
+                    'value': 'arXiv:1808.02335',
+                    'categories': ['hep-ex'],
+                }],
+            })
+
+        check_transformation(
+            """
+            <datafield tag="037" ind1=" " ind2=" ">
+                <subfield code="z">CERN-THESIS-2018-004</subfield>
+            </datafield>
+            """, {
+                'report_numbers': [{
+                    'value': 'CERN-THESIS-2018-004', 'hidden': True
+                }],
+            })
+
+        check_transformation(
+            """
+            <datafield tag="037" ind1=" " ind2=" ">
+                <subfield code="9">CERN-ISOLDE-2018-001</subfield>
+            </datafield>
+            """, {
+                'report_numbers': [{
+                    'value': 'CERN-ISOLDE-2018-001', 'hidden': True
                 }],
             })
 
         check_transformation(
             """
             <datafield tag="088" ind1=" " ind2=" ">
-              <subfield code="a">13.140</subfield>
+                <subfield code="a">NAPAC-2016-MOPOB23</subfield>
             </datafield>
             <datafield tag="088" ind1=" " ind2=" ">
-                <subfield code="9">ATL-COM-SOFT-2018-088</subfield>
+                <subfield code="9">ATL-COM-PHYS-2018-980</subfield>
+            </datafield>
+            <datafield tag="088" ind1=" " ind2=" ">
+                <subfield code="z">ATL-COM-PHYS-2017</subfield>
             </datafield>
             """, {
-                'report_numbers': [{
-
-                }],
+                'report_numbers': [
+                    {'value': 'NAPAC-2016-MOPOB23'},
+                    {'value': 'ATL-COM-PHYS-2018-980', 'hidden': True},
+                    {'value': 'ATL-COM-PHYS-2017', 'hidden': True},
+                ],
             })
+
+        with pytest.raises(MissingRequiredField):
+            check_transformation(
+                """
+                <datafield tag="037" ind1=" " ind2=" ">
+                    <subfield code="x">hep-th/9509119</subfield>
+                </datafield>
+                """, {
+                    'report_numbers': [{
+                        'value': 'hep-th/9509119',
+                    }],
+                })
 
 
 def test_dois(app):
@@ -640,19 +876,103 @@ def test_external_system_identifiers(app):
                 }],
             })
 
-        # check_transformation(
-        #     """
-        #     <datafield tag="035" ind1=" " ind2=" ">
-        #         <subfield code="9">CERCER</subfield>
-        #         <subfield code="a">2365039</subfield>
-        #     </datafield>
-        #     """, {
-        #         'external_system_identifiers': [{
-        #             'schema': 'EBL',
-        #             'value': '5231528',
-        #         }],
-        #     })
+        check_transformation(
+            """
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">inspire-cnum</subfield>
+                <subfield code="a">2365039</subfield>
+            </datafield>
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">Random</subfield>
+                <subfield code="a">2365039</subfield>
+            </datafield>
+            """, {
+                'inspire_cnum': '2365039',
+                'external_system_identifiers': [{
+                    'schema': 'Random',
+                    'value': '2365039',
+                }],
+            })
 
+        check_transformation(
+            """
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">Random</subfield>
+                <subfield code="a">2365039</subfield>
+            </datafield>
+            """, {
+                'external_system_identifiers': [{
+                    'schema': 'Random',
+                    'value': '2365039',
+                }],
+            })
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="035" ind1=" " ind2=" ">
+                    <subfield code="9">CERCER</subfield>
+                    <subfield code="a">2365039</subfield>
+                </datafield>
+                """, {
+                    'external_system_identifiers': [{
+                        'schema': 'Random',
+                        'value': '2365039',
+                    }],
+                })
+
+        check_transformation(
+            """
+            <datafield tag="024" ind1="7" ind2=" ">
+                <subfield code="2">ASIN</subfield>
+                <subfield code="a">9402409580</subfield>
+                <subfield code="9">DLC</subfield>
+            </datafield>
+            """, {
+                'external_system_identifiers': [{
+                    'value': '9402409580',
+                    'schema': 'DLC'
+                }],
+            })
+        check_transformation(
+            """
+            <datafield tag="024" ind1="7" ind2=" ">
+                <subfield code="2">DOI</subfield>
+                <subfield code="a">10.1007/s00269-016-0862-1</subfield>
+            </datafield>
+            <datafield tag="024" ind1="7" ind2=" ">
+                <subfield code="2">DOI</subfield>
+                <subfield code="a">10.1103/PhysRevLett.121.052004</subfield>
+            </datafield>
+            <datafield tag="024" ind1="7" ind2=" ">
+                <subfield code="2">DOI</subfield>
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">10.1103/PhysRevLett.121.052004</subfield>
+                <subfield code="q">publication</subfield>
+            </datafield>
+            """, {
+                'dois': [
+                    {'value': '10.1007/s00269-016-0862-1'},
+                    {'value': '10.1103/PhysRevLett.121.052004'},
+                    {'value': '10.1103/PhysRevLett.121.052004',
+                     'material': 'publication',
+                     'source': 'arXiv',
+                     }
+                ],
+            })
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="024" ind1="7" ind2=" ">
+                    <subfield code="2">ASINss</subfield>
+                    <subfield code="a">9402409580</subfield>
+                    <subfield code="9">DLC</subfield>
+                </datafield>
+                """, {
+                    'external_system_identifiers': [{
+                        'value': '9402409580',
+                        'schema': 'DLC'
+                    }],
+                })
         check_transformation(
             """
             <datafield tag="036" ind1=" " ind2=" ">
@@ -663,18 +983,6 @@ def test_external_system_identifiers(app):
                 'external_system_identifiers': [{
                     'schema': 'DLC',
                     'value': '92074207',
-                }],
-            })
-
-        check_transformation(
-            """
-            <datafield tag="024" ind1="7" ind2=" ">
-                <subfield code="2">ASIN</subfield>
-                <subfield code="a">9402409580</subfield>
-            </datafield>
-            """, {
-                'external_system_identifiers': [{
-                    'value': '9402409580',
                 }],
             })
 
@@ -694,6 +1002,38 @@ def test_arxiv_eprints(app):
                     'value': 'arXiv:1209.5665',
                 }],
             })
+        check_transformation(
+            """
+            <datafield tag="037" ind1=" " ind2=" ">
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">arXiv:1209.5665</subfield>
+                <subfield code="c">math-ph</subfield>
+            </datafield>
+            <datafield tag="037" ind1=" " ind2=" ">
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">arXiv:1209.5665</subfield>
+                <subfield code="c">math.GT</subfield>
+            </datafield>
+            """, {
+                'arxiv_eprints': [{
+                    'categories': ['math-ph', 'math.GT'],
+                    'value': 'arXiv:1209.5665',
+                }],
+            })
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="037" ind1=" " ind2=" ">
+                    <subfield code="9">arXiv</subfield>
+                    <subfield code="a">arXiv:1209.5665</subfield>
+                    <subfield code="c">math-phss</subfield>
+                </datafield>
+                """, {
+                    'arxiv_eprints': [{
+                        'categories': ['math-ph'],
+                        'value': 'arXiv:1209.5665',
+                    }],
+                })
 
 
 def test_languages(app):
@@ -704,65 +1044,17 @@ def test_languages(app):
                 <subfield code="a">eng</subfield>
             </datafield>
             """, {
-                'languages': [{
-                    'languages': ['eng'],
-                }],
+                'languages': ['en'],
             })
-
-
-# def test_subject_classification(app):
-#     with app.app_context():
-#         check_transformation(
-#             """
-#             <datafield tag="050" ind1=" " ind2="4">
-#                 <subfield code="a">QA171 .H355 2018</subfield>
-#             </datafield>
-#             <datafield tag="080" ind1=" " ind2=" ">
-#                 <subfield code="a">512.77</subfield>
-#             </datafield>
-#             <datafield tag="080" ind1=" " ind2=" ">
-#                 <subfield code="a">512.64</subfield>
-#             </datafield>
-#             <datafield tag="082" ind1=" " ind2=" ">
-#                 <subfield code="a">512/.2</subfield>
-#             </datafield>
-#             """, {
-#                 'subject_classification': {
-
-#                 },
-#             })
-
-
-# def test_conference_info(app):
-#     with app.app_context():
-#         check_transformation(
-#             """
-
-#             """, {
-#                 'conference_info': {
-
-#                 },
-#             })
-
-
-# def test_title_translations(app):
-#     with app.app_context():
-#         check_transformation(
-#             """
-#             <datafield tag="242" ind1=" " ind2=" ">
-#                 <subfield code="a">la</subfield>
-#                 <subfield code="a">so</subfield>
-#                 <subfield code="a">su</subfield>
-#                 <subfield code="a">ti</subfield>
-#             </datafield>
-#             """, {
-#                 'title_translations': [{
-#                     'language': 'la',
-#                     'source': 'so',
-#                     'subtitle': 'su',
-#                     'title': 'ti',
-#                 }],
-#             })
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="041" ind1=" " ind2=" ">
+                    <subfield code="a">english</subfield>
+                </datafield>
+                """, {
+                    'languages': ['en'],
+                })
 
 
 def test_editions(app):
@@ -773,9 +1065,9 @@ def test_editions(app):
                 <subfield code="a">3rd ed.</subfield>
             </datafield>
             """, {
-                'editions': [{
-                    'editions': ['3rd ed.'],
-                }],
+                'editions': [
+                    '3rd ed.'
+                ],
             })
 
 
@@ -809,10 +1101,28 @@ def test_preprint_date(app):
                 <subfield code="c">19 Jan 2016</subfield>
             </datafield>
             """, {
-                'preprint_date': {
-                    'preprint_date': '19 Jan 2016',
-                },
+                'preprint_date': '2016-01-19',
             })
+        check_transformation(
+            """
+            <datafield tag="269" ind1=" " ind2=" ">
+                <subfield code="a">Geneva</subfield>
+                <subfield code="b">CERN</subfield>
+            </datafield>
+            """, {
+
+            })
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="269" ind1=" " ind2=" ">
+                    <subfield code="a">Geneva</subfield>
+                    <subfield code="b">CERN</subfield>
+                    <subfield code="c">33 Jan 2016</subfield>
+                </datafield>
+                """, {
+                    'preprint_date': '2016-01-19',
+                })
 
 
 def test_number_of_pages(app):
@@ -820,70 +1130,53 @@ def test_number_of_pages(app):
         check_transformation(
             """
             <datafield tag="300" ind1=" " ind2=" ">
-                <subfield code="b">373 p</subfield>
+                <subfield code="a">373 p</subfield>
             </datafield>
             """, {
-                'number_of_pages': {
-                    'number_of_pages': 373,
-                },
+                'number_of_pages': 373,
             })
-
-
-def test_book_series(app):
-    with app.app_context():
         check_transformation(
             """
-            <datafield tag="490" ind1=" " ind2=" ">
-                <subfield code="a">CISM International Centre</subfield>
-                <subfield code="v">490</subfield>
-                <subfield code="x">0317-8471</subfield>
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">480 p. ; 1 CD-ROM suppl</subfield>
             </datafield>
             """, {
-                'book_series': {
-                    'title': 'CISM International Centre',
-                    'volume': '490',
-                    'issn': '0317-8471',
-                },
+                'number_of_pages': 480,
             })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a"></subfield>
+            </datafield>
+            """, {
 
+            })
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="300" ind1=" " ind2=" ">
+                    <subfield code="a">p</subfield>
+                </datafield>
+                """, {
 
-# def test_thesis_info(app):
+                })
+
+# for book series model
+# def test_book_series(app):
 #     with app.app_context():
 #         check_transformation(
 #             """
-#             <datafield tag="502" ind1=" " ind2=" ">
-#                 <subfield code="a">PhD</subfield>
-#                 <subfield code="b">Uppsala U.</subfield>
-#                 <subfield code="c">1972</subfield>
+#             <datafield tag="490" ind1=" " ind2=" ">
+#                 <subfield code="a">CISM International Centre</subfield>
+#                 <subfield code="v">490</subfield>
+#                 <subfield code="x">0317-8471</subfield>
 #             </datafield>
 #             """, {
-#                 'thesis_info': {
-#                     'date': 'd',
-#                     'defense_date': 'a',
-#                     'degree_type': 'b',
-#                     'institutions': [{
-#                         'name': '',
-#                         'record': 'elements/json_reference.json',  # FIXME
-#                         'curated_relation': True,
-#                     }],
+#                 'book_series': {
+#                     'title': 'CISM International Centre',
+#                     'volume': '490',
+#                     'issn': '0317-8471',
 #                 },
-#             })
-
-
-# def test_table_of_content(app):
-#     with app.app_context():
-#         check_transformation(
-#             """
-#             <datafield tag="505" ind1="0" ind2=" ">
-#                 <subfield code="a">I Quantitative...</subfield>
-#             </datafield>
-#             <datafield tag="505" ind1="0" ind2=" ">
-#                 <subfield code="a">I Modelling of Transport...</subfield>
-#             </datafield>
-#             """, {
-#                 'table_of_content': [
-
-#                 ]
 #             })
 
 
@@ -910,17 +1203,52 @@ def test_funding_info(app):
         check_transformation(
             """
             <datafield tag="536" ind1=" " ind2=" ">
-                <subfield code="z">a</subfield>
-                <subfield code="c">c</subfield>
-                <subfield code="f">f</subfield>
+                <subfield code="a">CERN Technical Student Program</subfield>
+            </datafield>
+            <datafield tag="536" ind1=" " ind2=" ">
+                <subfield code="a">FP7</subfield>
+                <subfield code="c">654168</subfield>
+                <subfield code="f">AIDA-2020</subfield>
+                <subfield code="r">openAccess</subfield>
             </datafield>
             """, {
-                'funding_info': [{
-                    'agency': 'a',
-                    'grant_number': 'c',
-                    'project_number': 'f',
-                }]
+                'funding_info': [
+                    {
+                        'agency': 'CERN Technical Student Program',
+                    },
+                    {
+                        'agency': 'FP7',
+                        'grant_number': '654168',
+                        'project_number': 'AIDA-2020',
+                        'openaccess': True,
+                    },
+                ]
             })
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="536" ind1=" " ind2=" ">
+                    <subfield code="a">CERN Technical Student Program</subfield>
+                </datafield>
+                <datafield tag="536" ind1=" " ind2=" ">
+                    <subfield code="a">FP7</subfield>
+                    <subfield code="c">654168</subfield>
+                    <subfield code="f">AIDA-2020</subfield>
+                    <subfield code="r">openAccedafss</subfield>
+                </datafield>
+                """, {
+                    'funding_info': [
+                        {
+                            'agency': 'CERN Technical Student Program',
+                        },
+                        {
+                            'agency': 'FP7',
+                            'grant_number': '654168',
+                            'project_number': 'AIDA-2020',
+                            'openaccess': True,
+                        },
+                    ]
+                })
 
 
 def test_license(app):
@@ -928,19 +1256,38 @@ def test_license(app):
         check_transformation(
             """
             <datafield tag="540" ind1=" " ind2=" ">
-                <subfield code="3">3</subfield>
-                <subfield code="a">a</subfield>
-                <subfield code="b">b</subfield>
-                <subfield code="u">u</subfield>
+                <subfield code="b">arXiv</subfield>
+            <subfield code="u">
+                http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+            </subfield>
             </datafield>
-
+            <datafield tag="540" ind1=" " ind2=" ">
+                <subfield code="3">Preprint</subfield>
+                <subfield code="a">CC-BY-4.0</subfield>
+            </datafield>
+            <datafield tag="540" ind1=" " ind2=" ">
+                <subfield code="3">Publication</subfield>
+                <subfield code="a">CC-BY-4.0</subfield>
+                <subfield code="f">SCOAP3</subfield>
+                <subfield code="g">DAI/7161287</subfield>
+            </datafield>
             """, {
-                'license': [{
-                    'material': '3',
-                    'license': 'a',
-                    'imposing': 'b',
-                    'url': 'u',
-                }]
+                'licenses': [
+                    {
+                        'imposing': 'arXiv',
+                        'url': 'http://arxiv.org/licenses/nonexclusive-distrib/1.0/',
+                    },
+                    {
+                        'license': 'CC-BY-4.0',
+                        'material': 'preprint',
+                    },
+                    {
+                        'license': 'CC-BY-4.0',
+                        'material': 'publication',
+                        'funder': 'SCOAP3',
+                        'admin_info': 'DAI/7161287',
+                    }
+                ]
             })
 
 
@@ -949,26 +1296,296 @@ def test_copyright(app):
         check_transformation(
             """
             <datafield tag="542" ind1=" " ind2=" ">
-                <subfield code="3">3</subfield>
                 <subfield code="d">d</subfield>
                 <subfield code="f">f</subfield>
-                <subfield code="g">g</subfield>
+                <subfield code="g">2013</subfield>
                 <subfield code="u">u</subfield>
             </datafield>
+            <datafield tag="542" ind1=" " ind2=" ">
+                <subfield code="3">Preprint</subfield>
+                <subfield code="d">CERN</subfield>
+                <subfield code="g">2018</subfield>
+            </datafield>
+            <datafield tag="542" ind1=" " ind2=" ">
+                <subfield code="f">This work is licensed.</subfield>
+                <subfield code="u">http://creativecommons.org/licenses/by/4.0</subfield>
+            </datafield>
             """, {
-                'copyright': [{
-                    'material': '3',
-                    'holder': 'd',
-                    'statement': 'f',
-                    'year': 'g',
-                    'url': 'u',
-                }]
+                'copyrights': [
+                    {
+                        'holder': 'd',
+                        'statement': 'f',
+                        'year': 2013,
+                        'url': 'u',
+                    },
+                    {
+                        'material': 'preprint',
+                        'holder': 'CERN',
+                        'year': 2018
+                    },
+                    {
+                        'statement': 'This work is licensed.',
+                        'url': 'http://creativecommons.org/licenses/by/4.0',
+                    }
+                ]
             })
 
 
-# <datafield tag="595" ind1=" " ind2=" ">
-# <subfield code="a">Engineering</subfield>
-# </datafield>
-# <datafield tag="595" ind1=" " ind2=" ">
-# <subfield code="a">SPR201504</subfield>
-# </datafield>
+def test_conference_info(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="111" ind1=" " ind2=" ">
+                <subfield code="9">20040621</subfield>
+                <subfield code="a">2nd Workshop on Science with
+                 the New Generation of High Energy Gamma-ray Experiments:
+                 between Astrophysics and Astroparticle Physics
+                </subfield>
+                <subfield code="c">Bari, Italy</subfield>
+                <subfield code="d">21 Jun 2004</subfield>
+                <subfield code="f">2004</subfield>
+                <subfield code="g">bari20040621</subfield>
+                <subfield code="n">2</subfield>
+                <subfield code="w">IT</subfield>
+                <subfield code="z">20040621</subfield>
+            </datafield>
+            <datafield tag="270" ind1=" " ind2=" ">
+                <subfield code="m">arantza.de.oyanguren.campos@cern.ch
+                </subfield>
+            </datafield>
+            """,
+            {'conference_info': [
+                {'title': """2nd Workshop on Science with
+                 the New Generation of High Energy Gamma-ray Experiments:
+                 between Astrophysics and Astroparticle Physics""",
+                 'place': 'Bari, Italy',
+                 'cern_conference_code': 'bari20040621',
+                 'opening_date': '2004-06-21',
+                 'series_number': 2,
+                 'country_code': 'IT',
+                 'closing_date': '2004-06-21',
+                 'contact':
+                    'arantza.de.oyanguren.campos@cern.ch'
+                 }
+            ]}
+        )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="111" ind1=" " ind2=" ">
+                    <subfield code="9">20040621</subfield>
+                    <subfield code="a">2nd Workshop on Science with
+                     the New Generation of High Energy Gamma-ray Experiments:
+                     between Astrophysics and Astroparticle Physics
+                    </subfield>
+                    <subfield code="c">Bari, Italy</subfield>
+                    <subfield code="d">21 Jun 2004</subfield>
+                    <subfield code="f">2004</subfield>
+                    <subfield code="g">bari20040621</subfield>
+                    <subfield code="n">2</subfield>
+                    <subfield code="w">ITALIA</subfield>
+                    <subfield code="z">20040621</subfield>
+                </datafield>
+                <datafield tag="270" ind1=" " ind2=" ">
+                    <subfield code="m">arantza.de.oyanguren.campos@cern.ch
+                    </subfield>
+                </datafield>
+                """,
+                {'conference_info': [
+                    {'title': """2nd Workshop on Science with
+                             the New Generation of High Energy Gamma-ray Experiments:
+                             between Astrophysics and Astroparticle Physics""",
+                     'place': 'Bari, Italy',
+                     'cern_conference_code': 'bari20040621',
+                     'opening_date': '2004-06-21',
+                     'series_number': 2,
+                     'country_code': 'IT',
+                     'closing_date': '2004-06-21',
+                     'contact':
+                         'arantza.de.oyanguren.campos@cern.ch'
+                     }
+                ]}
+            )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="111" ind1=" " ind2=" ">
+                    <subfield code="9">2gtrw</subfield>
+                    <subfield code="a">2nd Workshop on Science with
+                     the New Generation of High Energy Gamma-ray Experiments:
+                     between Astrophysics and Astroparticle Physics
+                    </subfield>
+                    <subfield code="c">Bari, Italy</subfield>
+                    <subfield code="d">gbrekgk</subfield>
+                    <subfield code="f">2004</subfield>
+                    <subfield code="g">bari20040621</subfield>
+                    <subfield code="n">2</subfield>
+                    <subfield code="w">IT</subfield>
+                    <subfield code="z">2treht</subfield>
+                </datafield>
+                <datafield tag="270" ind1=" " ind2=" ">
+                    <subfield code="m">arantza.de.oyanguren.campos@cern.ch
+                    </subfield>
+                </datafield>
+                """,
+                {'conference_info': [
+                    {'title': """2nd Workshop on Science with
+                             the New Generation of High Energy Gamma-ray Experiments:
+                             between Astrophysics and Astroparticle Physics""",
+                     'place': 'Bari, Italy',
+                     'cern_conference_code': 'bari20040621',
+                     'opening_date': '2004-06-21',
+                     'series_number': 2,
+                     'country_code': 'IT',
+                     'closing_date': '2004-06-21',
+                     'contact':
+                         'arantza.de.oyanguren.campos@cern.ch'
+                     }
+                ]}
+            )
+        with pytest.raises(MissingRequiredField):
+            check_transformation(
+                """
+                <datafield tag="270" ind1=" " ind2=" ">
+                    <subfield code="m">arantza.de.oyanguren.campos@cern.ch
+                    </subfield>
+                </datafield>
+                """, {
+                    'conference_info':
+                        {'contact':
+                            'arantza.de.oyanguren.campos@cern.ch'}}
+            )
+
+
+def test_title_translations(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="242" ind1=" " ind2=" ">
+                <subfield code="9">submitter</subfield>
+                <subfield code="a">Study of the impact of stacking on simple
+                      hard diffraction events in CMS/LHC</subfield>
+                <subfield code="b">Subtitle/LHC</subfield>
+            </datafield>
+            """,
+            {'title_translations': [
+                {'title': """Study of the impact of stacking on simple
+                      hard diffraction events in CMS/LHC""",
+                 'subtitle': 'Subtitle/LHC',
+                 'language': 'en',
+                 }]
+             }
+        )
+
+
+def test_titles(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="245" ind1=" " ind2=" ">
+                <subfield code="a">Incoterms 2010</subfield>
+                <subfield code="b">les règles de l'ICC pour l'utilisation
+                 des termes de commerce nationaux et internationaux
+                </subfield>
+            </datafield>
+            <datafield tag="245" ind1=" " ind2=" ">
+                <subfield code="a">Titre test</subfield>
+            </datafield>
+            """,
+            {'titles': [
+                {'title': 'Incoterms 2010',
+                 'subtitle': u"""les règles de l'ICC pour l'utilisation
+                 des termes de commerce nationaux et internationaux""",
+                 },
+                {'title': 'Titre test'}
+            ]}
+        )
+
+
+def test_public_notes(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="500" ind1=" " ind2=" ">
+            <subfield code="a">
+            Translated from the 2nd American edition : Fluid mechanics :
+            fundamentals and applications, 2nd ed., 2010
+            </subfield>
+            </datafield>
+            <datafield tag="500" ind1=" " ind2=" ">
+            <subfield code="a">No CD-ROM</subfield>
+            </datafield>
+            """,
+            {'public_notes': [
+                """Translated from the 2nd American edition : Fluid mechanics :
+            fundamentals and applications, 2nd ed., 2010""",
+                'No CD-ROM',
+            ]}
+        )
+
+
+def test_table_of_contents(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="505" ind1="0" ind2=" ">
+                <subfield code="a">
+                2nd Advanced School on Exoplanetary Science: Astrophysics of Exoplanetary Atmospheres -- Chapter 1: Modeling Exoplanetary Atmospheres, by Jonathan J. Fortney -- Chapter 2: Observational Techniques, by David Sing -- Chapter 3: Molecular spectroscopy for Exoplanets by Jonathan Tennyson -- Chapter 4: Solar system atmospheres by Davide Grassi.
+                </subfield>
+            </datafield>
+            """,
+            {'table_of_content': [
+                '2nd Advanced School on Exoplanetary Science: Astrophysics of Exoplanetary Atmospheres',
+                'Chapter 1: Modeling Exoplanetary Atmospheres, by Jonathan J. Fortney',
+                'Chapter 2: Observational Techniques, by David Sing',
+                'Chapter 3: Molecular spectroscopy for Exoplanets by Jonathan Tennyson',
+                'Chapter 4: Solar system atmospheres by Davide Grassi.'
+            ]}
+        )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="505" ind1="0" ind2=" ">
+                    <subfield code="a">
+                    </subfield>
+                </datafield>
+                """,
+                {'table_of_content': [
+
+                ]}
+            )
+
+
+def test_standard_numbers(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="021" ind1=" " ind2=" ">
+                <subfield code="a">FD-X-60-000</subfield>
+            </datafield>
+            <datafield tag="021" ind1=" " ind2=" ">
+                <subfield code="a">NF-EN-13306</subfield>
+            </datafield>
+            <datafield tag="021" ind1=" " ind2=" ">
+                <subfield code="b">BS-EN-ISO-6507-2</subfield>
+            </datafield>
+            """,
+            {'standard_numbers': [
+                {'value': 'FD-X-60-000'},
+                {'value': 'NF-EN-13306'},
+                {'value': 'BS-EN-ISO-6507-2', 'hidden': True},
+            ]}
+        )
+        with pytest.raises(MissingRequiredField):
+            check_transformation(
+                """
+                <datafield tag="021" ind1=" " ind2=" ">
+                    <subfield code="c">FD-X-60-000</subfield>
+                </datafield>
+                """,
+                {'standard_numbers': [
+                    {'value': 'FD-X-60-000'},
+                    {'value': 'NF-EN-13306'},
+                    {'value': 'BS-EN-ISO-6507-2', 'hidden': True},
+                ]}
+            )

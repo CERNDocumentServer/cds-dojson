@@ -56,6 +56,16 @@ def contributors(self, key, value):
     return authors
 
 
+@model.over('title', '^245_[1_]')
+@filter_values
+def title(self, key, value):
+    """Title."""
+    return {
+        'title': value.get('a'),
+        'subtitle': value.get('b'),
+    }
+
+
 @model.over('description', '^520__')
 def description(self, key, value):
     """Description."""
@@ -106,3 +116,9 @@ def external_system_identifiers(self, key, value):
         'value': value,
         "schema": 'ALEPH' if value.startswith('0000') else value[:3]
     }
+
+
+@model.over('note', '^(5904_|500__)')
+def note(self, key, value):
+    """Note."""
+    return value.get('a')

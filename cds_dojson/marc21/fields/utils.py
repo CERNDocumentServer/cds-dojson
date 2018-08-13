@@ -58,7 +58,7 @@ def clean_pages(pages_subfield, value):
             return result
 
 
-def clean_str(to_clean, regex_format, req):
+def clean_str(to_clean, regex_format, req, transform=None):
     """Cleans string marcxml values."""
     if regex_format:
         pattern = re.compile(regex_format)
@@ -68,11 +68,13 @@ def clean_str(to_clean, regex_format, req):
     cleaned = to_clean.strip()
     if not cleaned and req:
         raise MissingRequiredField
+    if transform and hasattr(cleaned, transform):
+        cleaned = getattr(cleaned, transform)()
     return cleaned
 
 
 def clean_val(subfield, value, var_type, req=False, regex_format=None,
-              default=None, manual=False):
+              default=None, manual=False, transform=None):
     """
     Tests values using common rules.
 
@@ -83,6 +85,7 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
     :param regex_format: specifies if the value should have a pattern
     :param default: if value is missing and required it outputs default
     :param manual: if the value should be cleaned manually durign the migration
+    :param transform: string transform function
     :return: cleaned output value
     """
     to_clean = value.get(subfield)
@@ -93,8 +96,8 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
             return default
         raise MissingRequiredField
     if to_clean is not None:
-        if var_type is str:
-            return clean_str(to_clean, regex_format, req)
+        if var_type is str or var_type is unicode:
+            return clean_str(to_clean, regex_format, req, transform)
         elif var_type is bool:
             return bool(to_clean)
         elif var_type is int:
@@ -105,9 +108,10 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
 
 def clean_email(value):
     """Cleans the email field."""
-    email = value.strip().replace(' [CERN]', '@cern.ch').\
-        replace('[CERN]', '@cern.ch')
-    return email
+    if value:
+        email = value.strip().replace(' [CERN]', '@cern.ch').\
+            replace('[CERN]', '@cern.ch')
+        return email
 
 
 def get_week_start(year, week):

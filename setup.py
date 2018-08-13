@@ -83,6 +83,7 @@ setup(
         'invenio-query-parser>=0.5.0',
         'requests>=2.17.3',
         'pycountry>=17.5.14',
+        'python-dateutil>=2.7.3'
     ],
     extras_require=extras_require,
     classifiers=[

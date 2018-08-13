@@ -57,6 +57,8 @@ def test_clean_str(to_clean, regex_format, req, output):
     """Test if clean str works correctly"""
     assert clean_str(to_clean, regex_format, req) == output
 
+    assert clean_str('TEST', None, False, transform='lower') == 'test'
+
 
 @pytest.mark.xfail(raises=MissingRequiredField)
 def test_clean_str_required():

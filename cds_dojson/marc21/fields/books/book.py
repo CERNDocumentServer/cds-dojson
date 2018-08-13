@@ -20,13 +20,19 @@
 
 from __future__ import absolute_import, print_function
 
+import pycountry
+from dateutil import parser
+import datetime
 from dojson.errors import IgnoreKey
 
 import re
-from dojson.utils import force_list, for_each_value, filter_values
+from dojson.utils import force_list, for_each_value, filter_values, flatten
 
+from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
+    MissingRequiredField
 from cds_dojson.marc21.fields.books.values_mapping import mapping, \
-    DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION, ACQUISITION_METHOD
+    DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION, ACQUISITION_METHOD, MEDIUM_TYPES, \
+    ARXIV_CATEGORIES, MATERIALS
 from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
     out_strip, clean_val, \
     ManualMigrationRequired, replace_in_result, rel_url, clean_pages
@@ -35,7 +41,7 @@ from cds_dojson.marc21.fields.utils import get_week_start
 from ...models.books.book import model
 
 
-@model.over('acquisition_source', '(^916__)|(^859__)')
+@model.over('acquisition_source', '(^916__)|(^859__)|(^595__)')
 @filter_values
 def acquisition_source(self, key, value):
     """Translates acquisition source field."""
@@ -43,15 +49,44 @@ def acquisition_source(self, key, value):
     if key == '916__':
         date_num = clean_val('w', value, int, regex_format=r'\d{4}$')
         year, week = str(date_num)[:4], str(date_num)[4:]
-        datetime = get_week_start(int(year), int(week))
+        acq_date = get_week_start(int(year), int(week))
         _acquisition_source.update(
-            {'datetime': str(datetime),
+            {'datetime': str(acq_date),
              'method': mapping(ACQUISITION_METHOD,
                                clean_val('s', value, str))})
     elif key == '859__' and 'f' in value:
         _acquisition_source.update(
             {'email': clean_email(clean_val('f', value, str))})
+    elif key == '595__':
+        try:
+            sub_a = clean_val('a', value, str,
+                              regex_format=r'[A-Z]{3}[0-9]{6}$')
+            source = sub_a[:3]
+            year, month = int(sub_a[3:7]), int(sub_a[7:])
+            if 'datetime' in _acquisition_source:
+                raise ManualMigrationRequired
+            _acquisition_source.update(
+                {'datetime': datetime.date(year, month, 1).isoformat(),
+                 'source': source or clean_val('9', value, str)})
+        except UnexpectedValue as e:
+            self['_private_notes'] = private_notes(self, key, value)
+            raise IgnoreKey('acquisition_source')
+
     return _acquisition_source
+
+
+@model.over('_private_notes', '^595__')
+@filter_list_values
+def private_notes(self, key, value):
+    """Translates private notes field."""
+    _priv_notes = self.get('_private_notes', [])
+
+    for v in force_list(value):
+        note = {'value': clean_val('a', v, str, req=True),
+                'source': clean_val('9', v, str),
+                }
+        _priv_notes.append(note)
+    return _priv_notes
 
 
 @model.over('_collections', '(^980__)|(^690C_)|(^697C_)')
@@ -88,7 +123,7 @@ def document_type(self, key, value):
     return _doc_type
 
 
-@model.over('authors', '^700__')
+@model.over('authors', '(^100__)|(^700__)')
 @filter_list_values
 def authors(self, key, value):
     """Translates the authors field."""
@@ -113,17 +148,21 @@ def alt_authors(self, key, value):
     return _authors
 
 
-@model.over('corporate_authors', '^710_[a_]+')
+@model.over('corporate_authors', '(^110)|(^710_[a_]+)')
 @out_strip
 def corporate_authors(self, key, value):
     """Translates the corporate authors field."""
     _corporate_authors = self.get('corporate_authors', [])
+
     for v in force_list(value):
-        if 'a' in v:
-            _corporate_authors.append(clean_val('a', v, str))
+        if key == '710__':
+            if 'a' in v:
+                _corporate_authors.append(clean_val('a', v, str))
+            else:
+                self['collaborations'] = collaborations(self, key, value)
+                raise IgnoreKey('corporate_authors')
         else:
-            self['collaborations'] = collaborations(self, key, value)
-            raise IgnoreKey('corporate_authors')
+            _corporate_authors.append(clean_val('a', v, str))
     return _corporate_authors
 
 
@@ -231,8 +270,8 @@ def accelerator_experiments(self, key, value):
 # TODO - discuss how we would like to keep links to holdings (files and ebooks)
 # TODO maybe regex for links?
 @model.over('urls', '^8564_')
-@filter_list_values
 @for_each_value
+@filter_values
 def urls(self, key, value):
     """Translates urls field."""
     try:
@@ -243,282 +282,250 @@ def urls(self, key, value):
 
 
 @model.over('isbns', '^020__')
-@for_each_value
-@filter_values
+@filter_list_values
 def isbns(self, key, value):
     """Translates isbns fields."""
+    _isbns = self.get('isbns', [])
+    for v in force_list(value):
+        subfield_u = clean_val('u', v, str)
+        isbn = {'value': clean_val('a', v, str) or clean_val('z', v, str)}
+        if not isbn['value']:
+            raise ManualMigrationRequired
+        if subfield_u:
+            volume = re.search(r'(\(*v[.| ]*\d+.*\)*)', subfield_u)
 
-    f = {}
-    medium_types = [
-        'electronic version',
-        'print version',
-        'print version, hardback',
-        'print version, paperback',
-        'print version, spiral-bound',
-        'CD-ROM',
-        'audiobook',
-        'DVD',
-    ]
-    u = value.get('u')
+            if volume:
+                volume = volume.group(1)
+                subfield_u = subfield_u.replace(volume, '').strip()
+                existing_volume = self.get('volume')
+                if existing_volume:
+                    raise ManualMigrationRequired
+                self['volume'] = volume
+            if subfield_u.upper() in MEDIUM_TYPES:
+                isbn.update({'medium': subfield_u})
+            else:
+                isbn.update({'description': subfield_u})
+        # TODO subfield C
+        if isbn not in _isbns:
+            _isbns.append(isbn)
+    return _isbns
 
-    if 'a' in value:
-        f['value'] = value.get('a')
-    else:
-        raise ValueError('Value not provided for a required field.', key, 'a')
 
-    if 'b' in value:
-        f['medium'] = value.get('b')
+@model.over('standard_numbers', '^021__')
+@for_each_value
+@filter_values
+def standard_numbers(self, key, value):
+    """Translates standard numbers values."""
+    a = clean_val('a', value, str)
+    b = clean_val('b', value, str)
+    sn = a or b
+    if sn:
+        return {'value': sn,
+                'hidden': True if b else None}
+    raise MissingRequiredField
 
-    if u in medium_types:
-        medium = f.get('medium')
-        if medium and medium != u:
-            raise ValueError(
-                'Trying to override <medium> field with a different value.',
-                key, 'b')
+
+@model.over('external_system_identifiers', '(^0247_)|(^035__)|(^036__)')
+@for_each_value
+@filter_values
+def external_system_identifiers(self, key, value):
+    """Translates external_system_identifiers fields."""
+    field_type = clean_val('2', value, str)
+
+    system_id = {}
+    if key == '0247_':
+        if field_type and field_type.lower() == 'doi':
+            self['dois'] = dois(self, key, value)
+            raise IgnoreKey('external_system_identifiers')
+        elif field_type and field_type.lower() == 'asin':
+            system_id.update({'value': clean_val('a', value, str, req=True),
+                              'schema': clean_val('9', value, str, req=True),
+                              })
         else:
-            f['medium'] = u
-    else:
-        f['description'] = u
-
-    return f
+            raise UnexpectedValue
+    if key == '035__':
+        sub_9 = clean_val('9', value, str, req=True)
+        sub_a = clean_val('a', value, str, req=True)
+        if 'inspire-cnum' == sub_9.lower() or 'inspirecnum' == sub_9.lower():
+            # TODO check this
+            self['inspire_cnum'] = sub_a
+            raise IgnoreKey('external_system_identifiers')
+        elif 'CERCER' not in sub_9:
+            system_id.update({'value': sub_a,
+                              'schema': sub_9})
+        else:
+            # TODO check with CDS
+            raise ManualMigrationRequired
+    if key == '036__':
+        system_id.update({'value': clean_val('a', value, str, req=True),
+                          'schema': clean_val('9', value, str, req=True),
+                          })
+    return system_id
 
 
 @model.over('dois', '^0247_')
-@for_each_value
-@filter_values
+@filter_list_values
 def dois(self, key, value):
-    """Translates dois fields."""
+    """Translates dois fields.
 
-    field_type = value.get('2')
-    if field_type and field_type.lower() != 'doi':
-        return
+    This is holding specific. To move to holding.py
+    """
+    _dois = self.get('dois', [])
+    for v in force_list(value):
+        material = mapping(MATERIALS,
+                           clean_val('q', v, str, transform='lower'),
+                           raise_exception=True)
 
-    f = {}
-    material_types = [
-        'addendum',
-        'additional material',
-        'data',
-        'erratum',
-        'editorial note',
-        'preprint',
-        'publication',
-        'reprint',
-        'software',
-        'translation',
-    ]
-    q = value.get('q')
-
-    if 'a' in value:
-        f['value'] = value.get('a')
-    else:
-        raise ValueError('Value not provided for a required field.', key, 'a')
-
-    if q and q in material_types:
-        f['material'] = value.get('q')
-    else:
-        raise ValueError('Field not matching the data model.', key, 'q')
-
-    f['source'] = value.get('9')
-
-    return f
+        _dois.append({'value': clean_val('a', v, str, req=True),
+                      'material': material,
+                      'source': clean_val('9', v, str),
+                      })
+    return _dois
 
 
-@model.over('external_system_identifiers', '^0247_')
-@for_each_value
-@filter_values
-def external_system_identifiers(self, key, value):
-    """Translates external_system_identifiers fields."""
-
-    field_type = value.get('2')
-    if field_type and field_type.lower() != 'asin':
-        return
-    # FIXME schema, value required but for asin we dont have a schema
-    # MOVE BELOW??
-    return {
-        'value': value.get('a'),
-    }
-
-
-@model.over('external_system_identifiers', '(^035__)|(^036__)')
-@for_each_value
-@filter_values
-def external_system_identifiers(self, key, value):
-    """Translates external_system_identifiers fields."""
-    f = {}
-
-    if key == '035__':
-        field_type = value.get('9')
-        if field_type and field_type.lower() == 'cercer':
-            # FIXME no info provided for this
-            return
-
-    if '9' in value:
-        f['schema'] = value.get('9')
-    else:
-        raise ValueError('Value not provided for a required field.', key, '9')
-
-    if 'a' in value:
-        f['value'] = value.get('a')
-    else:
-        raise ValueError('Value not provided for a required field.', key, 'a')
-
-    return f
-
-
-@model.over('report_numbers', '(^037__)(^088__)')
+@model.over('report_numbers', '(^037__)|(^088__)')
 @for_each_value
 @filter_values
 def report_numbers(self, key, value):
     """Translates report_numbers fields."""
+    def get_value_rn(f_a, f_z, f_9, rn_obj):
+        f.update({'value': f_a or f_z or f_9})
+        if f_z or f_9:
+            rn_obj.update({'hidden': True})
 
     f = {}
+    sub_9 = clean_val('9', value, str)
+    sub_a = clean_val('a', value, str)
+    sub_z = clean_val('z', value, str)
+
+    if not (sub_z or sub_a or sub_9):
+        raise MissingRequiredField
 
     if key == '037__':
-        if value.get('9') == 'arXiv':
-            return
+        if sub_9 == 'arXiv':
+            self['arxiv_eprints'] = arxiv_eprints(self, key, value)
+            raise IgnoreKey('report_numbers')
         else:
-            f['value'] = value.get('z')
-            f['hidden'] = True
+            get_value_rn(sub_a, sub_z, sub_9, f)
 
     if key == '088__':
-        f['value'] = value.get('9')
-        f['hidden'] = True
-
-    if 'a' in value:
-        f['value'] = value.get('a')
-        f['hidden'] = True
-    else:
-        raise ValueError('Value not provided for a required field.', key, 'a')
+        get_value_rn(sub_a, sub_z, sub_9, f)
 
     return f
 
 
 @model.over('arxiv_eprints', '^037__')
-@for_each_value
-@filter_values
+@filter_list_values
 def arxiv_eprints(self, key, value):
     """Translates arxiv_eprints fields."""
+    def check_category(v):
+        sub_c = clean_val('c', v, str)
+        if sub_c:
+            if sub_c in ARXIV_CATEGORIES:
+                return sub_c
+            else:
+                raise UnexpectedValue
 
-    field_type = value.get('9')
-    if field_type and field_type.lower() != 'arxiv':
-        return
+    _arxiv_eprints = self.get('arxiv_eprints', [])
+    for v in force_list(value):
+        eprint_id = clean_val('a', v, str, req=True)
+        duplicated = [elem for i, elem in enumerate(_arxiv_eprints)
+                      if elem['value'] == eprint_id]
+        if not duplicated:
+            eprint = {'value': eprint_id}
+            sub_c = check_category(v)
+            if sub_c:
+                eprint.update({'categories': [sub_c]})
+            _arxiv_eprints.append(eprint)
+        else:
+            sub_c = check_category(v)
+            duplicated[0]['categories'].append(sub_c)
 
-    f = {}
-    _categories = value.get('categories', [])
-
-    if 'a' in value:
-        f['value'] = value.get('a')
-    else:
-        raise ValueError('Value not provided for a required field.', key, 'a')
-
-    if 'c' in value:
-        _categories.append(value.get('c'))
-
-    f['categories'] = _categories
-
-    return f
+    return _arxiv_eprints
 
 
 @model.over('languages', '^041__')
 @for_each_value
-@filter_values
+@out_strip
 def languages(self, key, value):
     """Translates languages fields."""
+    lang = clean_val('a', value, str).lower()
+    try:
+        iso_lang = pycountry.languages.get(alpha_3=lang).alpha_2
+    except (KeyError, AttributeError):
+        raise UnexpectedValue
 
-    # FIXME add languages enum?
-    f = {}
-    _languages = value.get('languages', [])
-
-    if 'a' in value:
-        _languages.append(value.get('a'))
-
-    f['languages'] = _languages
-
-    return f
+    return iso_lang
 
 
-# @model.over('subject_classification', '(^050__)|(^080__)|(^082__)(^084__)')
-# def subject_classification(self, key, value):
-#     """Translates subject_classification fields."""
-#     # FIXME check what is going on here
-#     f = {}
-#     return f
+@model.over('conference_info', '(^111__)|(^270__)')
+@filter_list_values
+def conference_info(self, key, value):
+    """Translates conference info."""
+    _conference_info = self.get('conference_info', [])
+    for v in force_list(value):
+        if key == '111__':
+            try:
+                opening_date = parser.parse(clean_val('9', v, str, req=True))
+                closing_date = parser.parse(clean_val('z', v, str, req=True))
+            except ValueError:
+                raise UnexpectedValue
+            country_code = clean_val('w', v, str)
+            if country_code:
+                try:
+                    country_code = str(pycountry.countries.get(
+                        alpha_2=country_code).alpha_2)
+                except (KeyError, AttributeError):
+                    raise UnexpectedValue
+
+            _conference_info.append({
+                'title': clean_val('a', v, str, req=True),
+                'place': clean_val('c', v, str, req=True),
+                'opening_date': opening_date.date().isoformat(),
+                'closing_date': closing_date.date().isoformat(),
+                'cern_conference_code': clean_val('g', v, str),
+                'series_number': clean_val('n', v, int),
+                'country_code': country_code,
+            })
+        else:
+            contact = clean_email(clean_val('m', v, str))
+            if contact and _conference_info:
+                _conference_info[-1].update({'contact': contact})
+            else:
+                raise MissingRequiredField
+    return _conference_info
 
 
-# @model.over('keywords', '^(084)__')
-# def keywords(self, key, value):
-#     """Translates keywords fields."""
-#     # FIXME check what is going on here
-#     f = {}
-#     return f
-
-
-@model.over('corporate_author', '^110__')
+@model.over('title_translations', '(^242__)|(^246__)')
 @for_each_value
 @filter_values
-def corporate_author(self, key, value):
-    """Translates corporate_author fields."""
-
-    f = {}
-    _corporate_author = value.get('corporate_author', [])
-
-    if 'a' in value:
-        _corporate_author.append(value.get('a'))
-
-    f['corporate_author'] = _corporate_author
-
-    return f
+def title_translations(self, key, value):
+    """Translates title translations."""
+    # TODO n, p of 246 subfields will be migrated as books series references
+    return {
+        'title': clean_val('a', value, str, req=True),
+        'language': 'en',
+        'subtitle': clean_val('b', value, str),
+    }
 
 
-# @model.over('conference_info', '^111__')
-# def conference_info(self, key, value):
-#     """Translates conference_info fields."""
-
-#     f = {}
-#     return f
-
-
-# @model.over('title_translations', '^242__')
-# @for_each_value
-# @filter_values
-# def title_translations(self, key, value):
-#     """Translates title_translations fields."""
-
-#     f = {}
-
-#     # FIXME there is no example with language. Should this be required?
-#     if 'a' in value:
-#         f['language'] = value.get('a')
-#     else:
-#         raise ValueError('Value not provided for a required field.', key, 'a')
-
-#     if 'a' in value:
-#         f['title'] = value.get('a')
-#     else:
-#         raise ValueError('Value not provided for a required field.', key, 'a')
-
-#     # FIXME there is no example with source and subtitle
-#     # f['source'] = value.get('a')
-#     # f['subtitle'] = value.get('a')
-
-#     return f
+@model.over('titles', '^245__')
+@for_each_value
+@filter_values
+def titles(self, key, value):
+    """Translates titles."""
+    return {
+        'title': clean_val('a', value, str, req=True),
+        'subtitle': clean_val('b', value, str),
+    }
 
 
 @model.over('editions', '^250__')
+@out_strip
 @for_each_value
-@filter_values
 def editions(self, key, value):
     """Translates editions fields."""
-
-    f = {}
-    _editions = value.get('editions', [])
-
-    if 'a' in value:
-        _editions.append(value.get('a'))
-
-    f['editions'] = _editions
-
-    return f
+    return clean_val('a', value, str)
 
 
 @model.over('imprints', '^260__')
@@ -526,124 +533,130 @@ def editions(self, key, value):
 @filter_values
 def imprints(self, key, value):
     """Translates imprints fields."""
+    reprint = clean_val('g', value, str)
+    if reprint:
+        reprint = reprint.lower().replace('repr.', '').strip()
 
     return {
-        'date': value.get('c'),
-        'place': value.get('a'),
-        'publisher': value.get('b'),
-        'reprint': value.get('g'),
+        'date': clean_val('c', value, str),
+        'place': clean_val('a', value, str),
+        'publisher': clean_val('b', value, str),
+        'reprint': reprint,
     }
 
 
 @model.over('preprint_date', '^269__')
-@filter_values
+@out_strip
 def preprint_date(self, key, value):
     """Translates preprint_date fields."""
-
-    return {
-        'preprint_date': value.get('c'),
-    }
+    date = clean_val('c', value, str)
+    if date:
+        try:
+            date = parser.parse(date)
+            return date.date().isoformat()
+        except (ValueError, AttributeError):
+            raise ManualMigrationRequired
+    else:
+        raise IgnoreKey('preprint_date')
 
 
 @model.over('number_of_pages', '^300__')
-@filter_values
 def number_of_pages(self, key, value):
     """Translates number_of_pages fields."""
-
-    # remove non numeric characters and cast it to int
-    return {
-        'number_of_pages': int(re.sub('[^0-9]', '', value.get('b'))),
-    }
-
-
-@model.over('book_series', '^490__')
-@filter_values
-def book_series(self, key, value):
-    """Translates book_series fields."""
-
-    f = {}
-
-    if 'a' in value:
-        f['title'] = value.get('a')
-    else:
-        raise ValueError('Value not provided for a required field.', key, 'a')
-
-    f['volume'] = value.get('v')
-    f['issn'] = value.get('x')
-
-    return f
+    pages = clean_val('a', value, str)
+    if not pages:
+        raise IgnoreKey('number_of_pages')
+    pages = re.search('(^[0-9]+) *p', pages)
+    if pages:
+        pages = int(pages.group(1))
+        return pages
+    raise UnexpectedValue
 
 
-# @model.over('thesis_info', '^502__')
-# def thesis_info(self, key, value):
-#     """Translates thesis_info fields."""
-
-#     f = {}
-#     return f
-
-
-# @model.over('table_of_content', '^505')
-# def table_of_content(self, key, value):
-#     """Translates table_of_content fields."""
-
-#     f = {}
-#     return f
+@model.over('public_notes', '^500__')
+@for_each_value
+@out_strip
+def public_notes(self, key, value):
+    """Translates public notes."""
+    return clean_val('a', value, str)
 
 
 @model.over('abstracts', '^520__')
+@for_each_value
+@out_strip
 def abstracts(self, key, value):
     """Translates abstracts fields."""
-
-    _abstracts = self.get('abstracts', [])
-
-    if 'a' in value:
-        _abstracts.append(value.get('a'))
-
-    return _abstracts
+    return clean_val('a', value, str)
 
 
 @model.over('funding_info', '^536__')
-def funding_info(self, key, value):
-    """Translates funding_info fields."""
-
-    f = {}
-    _funding_info = self.get('funding_info', [])
-
-    if 'a' in value:
-        f['agency'] = value.get('a')
-    if 'c' in value:
-        f['grant_number'] = value.get('c')
-    if 'f' in value:
-        f['project_number'] = value.get('f')
-
-    _funding_info.append(f)
-
-    return _funding_info
-
-
-@model.over('license', '^540__')
 @for_each_value
 @filter_values
-def license(self, key, value):
+def funding_info(self, key, value):
+    """Translates funding_info fields."""
+    openaccess = clean_val('r', value, str)
+    if openaccess and openaccess.lower() == 'openaccess':
+        openaccess = True
+    elif openaccess and openaccess.lower() != 'openaccess':
+        raise UnexpectedValue
+    else:
+        openaccess = None
+
+    return {'agency': clean_val('a', value, str),
+            'grant_number': clean_val('c', value, str),
+            'project_number': clean_val('f', value, str),
+            'openaccess': openaccess,
+            }
+
+
+@model.over('licenses', '^540__')
+@for_each_value
+@filter_values
+def licenses(self, key, value):
     """Translates license fields."""
+    material = mapping(MATERIALS,
+                       clean_val('3', value, str, transform='lower'),
+                       raise_exception=True)
+
     return {
-        'material': value.get('3'),
-        'license': value.get('a'),
-        'imposing': value.get('b'),
-        'url': value.get('u'),
+        'material': material,
+        'license': clean_val('a', value, str),
+        'imposing': clean_val('b', value, str),
+        'url': clean_val('u', value, str),
+        'funder': clean_val('f', value, str),
+        'admin_info': clean_val('g', value, str),
     }
 
 
-@model.over('copyright', '^542__')
+@model.over('copyrights', '^542__')
 @for_each_value
 @filter_values
 def copyright(self, key, value):
     """Translates copyright fields."""
+    material = mapping(MATERIALS,
+                       clean_val('3', value, str, transform='lower'),
+                       raise_exception=True)
+
     return {
-        'material': value.get('3'),
-        'holder': value.get('d'),
-        'statement': value.get('f'),
-        'year': value.get('g'),
-        'url': value.get('u'),
+        'material': material,
+        'holder': clean_val('d', value, str),
+        'statement': clean_val('f', value, str),
+        'year': clean_val('g', value, int),
+        'url': clean_val('u', value, str),
     }
 
+
+@model.over('table_of_content', '(^505__)|(^5050_)')
+@out_strip
+@flatten
+@for_each_value
+def table_of_content(self, key, value):
+    """Translates table of content field."""
+    text = '{0} -- {1}'.format(
+        clean_val('a', value, str) or '',
+        clean_val('t', value, str) or '').strip()
+    if text != '--':
+        chapters = re.split(r'; | -- |--', text)
+        return chapters
+    else:
+        raise UnexpectedValue

@@ -40,16 +40,6 @@ def agency_code(self, key, value):
     return 'SzGeCERN'
 
 
-@model.over('title', '^245_[1_]')
-@filter_values
-def title(self, key, value):
-    """Title."""
-    return {
-        'title': value.get('a'),
-        'subtitle': value.get('b'),
-    }
-
-
 @model.over('translations', '(^246_[1_])|(590__)')
 @ignore_value
 def translations(self, key, value):
@@ -82,12 +72,6 @@ def videos(self, key, value):
     return {
         '$ref': value.get('u')
     }
-
-
-@model.over('note', '^(5904_|500__)')
-def note(self, key, value):
-    """Note."""
-    return value.get('a')
 
 
 @model.over('original_source', '^541__')

@@ -96,7 +96,7 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
             return default
         raise MissingRequiredField
     if to_clean is not None:
-        if var_type is str or var_type is unicode:
+        if var_type is str:
             return clean_str(to_clean, regex_format, req, transform)
         elif var_type is bool:
             return bool(to_clean)

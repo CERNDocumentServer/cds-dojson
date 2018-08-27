@@ -110,6 +110,24 @@ class CDSBook(CDSOverdoBookBase):
         '981',
         '963',
         '020__q',
+
+        # '65017a',
+        # '961__l',
+        # '650172',
+        # '961__h',
+        # '0248_p',
+        # '961__c',
+        # '964__a',
+        # '963__a',
+        # '961__x',
+        # '0248_a',
+        # '080__a',
+        # '084__a',
+        # '852__c',
+        # '340__a',
+        # '852__h',
+        # '490__a',
+        # '490__v',
     }
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
@@ -119,7 +137,6 @@ class CDSBook(CDSOverdoBookBase):
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
         json['$schema'] = {'$ref': self.__class__.__schema__}
-
         return json
 
 

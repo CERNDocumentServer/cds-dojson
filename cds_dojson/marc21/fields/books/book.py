@@ -18,7 +18,7 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Books fields."""
 
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import pycountry
 from dateutil import parser
@@ -47,11 +47,12 @@ def acquisition_source(self, key, value):
     """Translates acquisition source field."""
     _acquisition_source = self.get('acquisition_source', {})
     if key == '916__':
-        date_num = clean_val('w', value, int, regex_format=r'\d{4}$')
-        year, week = str(date_num)[:4], str(date_num)[4:]
-        acq_date = get_week_start(int(year), int(week))
+        date = clean_val('w', value, int, regex_format=r'\d{4}$')
+        if date:
+            year, week = str(date)[:4], str(date)[4:]
+            date = get_week_start(int(year), int(week))
         _acquisition_source.update(
-            {'datetime': str(acq_date),
+            {'datetime': str(date),
              'method': mapping(ACQUISITION_METHOD,
                                clean_val('s', value, str))})
     elif key == '859__' and 'f' in value:
@@ -61,13 +62,14 @@ def acquisition_source(self, key, value):
         try:
             sub_a = clean_val('a', value, str,
                               regex_format=r'[A-Z]{3}[0-9]{6}$')
-            source = sub_a[:3]
-            year, month = int(sub_a[3:7]), int(sub_a[7:])
-            if 'datetime' in _acquisition_source:
-                raise ManualMigrationRequired
-            _acquisition_source.update(
-                {'datetime': datetime.date(year, month, 1).isoformat(),
-                 'source': source or clean_val('9', value, str)})
+            if sub_a:
+                source = sub_a[:3]
+                year, month = int(sub_a[3:7]), int(sub_a[7:])
+                if 'datetime' in _acquisition_source:
+                    raise ManualMigrationRequired
+                _acquisition_source.update(
+                    {'datetime': datetime.date(year, month, 1).isoformat(),
+                     'source': source})
         except UnexpectedValue as e:
             self['_private_notes'] = private_notes(self, key, value)
             raise IgnoreKey('acquisition_source')
@@ -118,8 +120,12 @@ def document_type(self, key, value):
             return mapping(DOCUMENT_TYPE, val)
 
     for v in force_list(value):
-        _doc_type.append(doc_type_mapping(clean_val('a', v, str)))
-        _doc_type.append(doc_type_mapping(clean_val('b', v, str)))
+        val_a = doc_type_mapping(clean_val('a', v, str))
+        val_b = doc_type_mapping(clean_val('b', v, str))
+        if val_a not in _doc_type:
+            _doc_type.append(val_a)
+        if val_b not in _doc_type:
+            _doc_type.append(val_b)
     return _doc_type
 
 
@@ -332,21 +338,21 @@ def standard_numbers(self, key, value):
 def external_system_identifiers(self, key, value):
     """Translates external_system_identifiers fields."""
     field_type = clean_val('2', value, str)
-
+    sub_a = clean_val('a', value, str, req=True)
     system_id = {}
+
     if key == '0247_':
         if field_type and field_type.lower() == 'doi':
             self['dois'] = dois(self, key, value)
             raise IgnoreKey('external_system_identifiers')
         elif field_type and field_type.lower() == 'asin':
-            system_id.update({'value': clean_val('a', value, str, req=True),
+            system_id.update({'value': sub_a,
                               'schema': clean_val('9', value, str, req=True),
                               })
         else:
             raise UnexpectedValue
     if key == '035__':
         sub_9 = clean_val('9', value, str, req=True)
-        sub_a = clean_val('a', value, str, req=True)
         if 'inspire-cnum' == sub_9.lower() or 'inspirecnum' == sub_9.lower():
             # TODO check this
             self['inspire_cnum'] = sub_a
@@ -358,7 +364,7 @@ def external_system_identifiers(self, key, value):
             # TODO check with CDS
             raise ManualMigrationRequired
     if key == '036__':
-        system_id.update({'value': clean_val('a', value, str, req=True),
+        system_id.update({'value': sub_a,
                           'schema': clean_val('9', value, str, req=True),
                           })
     return system_id

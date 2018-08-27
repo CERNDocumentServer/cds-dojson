@@ -64,13 +64,11 @@ def matcher(record, entry_point_group):
     for entry_point in pkg_resources.iter_entry_points(entry_point_group):
         model = entry_point.load()
         query = Query(model.__query__)
-
         if query.match(record):
             logger.info("Model `{0}` found matching the query {1}.".format(
                 entry_point.name, model
             ))
             _matches.append([entry_point.name, model])
-
     try:
         if len(_matches) > 1:
             logger.error(

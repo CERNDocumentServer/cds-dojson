@@ -23,22 +23,16 @@ from dojson.errors import DoJSONException
 class UnexpectedValue(DoJSONException):
     """The corresponding value is unexpected."""
 
-    message = "The value in the input data is not allowed"
-
-
-class UnexpectedSubfield(DoJSONException):
-    """The corresponding subfield is unexpected."""
-
-    message = "This subfield is not expected"
+    message = '[UNEXPECTED INPUT VALUE]'
 
 
 class MissingRequiredField(DoJSONException):
     """The corresponding value is required."""
 
-    message = 'The required field is missing in the input data'
+    message = '[MISSING REQUIRED FIELD]'
 
 
 class ManualMigrationRequired(DoJSONException):
     """The corresponding field should be manually migrated."""
 
-    message = 'This field requires manual cleaning'
+    message = '[MANUAL MIGRATION REQUIRED]'

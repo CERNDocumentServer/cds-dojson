@@ -68,6 +68,12 @@ def test_clean_str_required():
 
 
 @pytest.mark.xfail(raises=UnexpectedValue)
+def test_clean_str_none():
+    """Test if it fails when it gets none value."""
+    assert clean_str(None, None, req=False)
+
+
+@pytest.mark.xfail(raises=UnexpectedValue)
 def test_clean_str_regex():
     """Test if it fails when require val is needed"""
     assert clean_str('300500', r'\d+(?:[\-‐‑‒–—―⁻₋−﹘﹣－]\d+)$', req=True)

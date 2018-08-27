@@ -22,7 +22,7 @@ from __future__ import absolute_import, print_function
 from dojson.utils import force_list, for_each_value, filter_values
 
 from ...fields.utils import build_contributor, build_contributor_from_508
-from ...models.base import model
+from ...models.videos.base import model
 
 
 @model.over('report_number', '^(037|088)__')

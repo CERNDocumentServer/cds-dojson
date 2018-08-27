@@ -1571,8 +1571,8 @@ def test_standard_numbers(app):
             </datafield>
             """,
             {'standard_numbers': [
-                {'value': 'FD-X-60-000'},
-                {'value': 'NF-EN-13306'},
+                {'value': 'FD-X-60-000', 'hidden': False},
+                {'value': 'NF-EN-13306', 'hidden': False},
                 {'value': 'BS-EN-ISO-6507-2', 'hidden': True},
             ]}
         )
@@ -1584,8 +1584,8 @@ def test_standard_numbers(app):
                 </datafield>
                 """,
                 {'standard_numbers': [
-                    {'value': 'FD-X-60-000'},
-                    {'value': 'NF-EN-13306'},
+                    {'value': 'FD-X-60-000', 'hidden': False},
+                    {'value': 'NF-EN-13306', 'hidden': False},
                     {'value': 'BS-EN-ISO-6507-2', 'hidden': True},
                 ]}
             )

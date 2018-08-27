@@ -35,7 +35,7 @@ from cds_dojson.marc21.fields.books.values_mapping import mapping, \
     ARXIV_CATEGORIES, MATERIALS
 from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
     out_strip, clean_val, \
-    ManualMigrationRequired, replace_in_result, rel_url, clean_pages
+    ManualMigrationRequired, replace_in_result, related_url, clean_pages_range
 
 from cds_dojson.marc21.fields.utils import get_week_start
 from ...models.books.book import model
@@ -191,7 +191,7 @@ def publication_info(self, key, value):
     _publication_info = self.get('publication_info', [])
     for v in force_list(value):
         temp_info = {}
-        pages = clean_pages('c', v)
+        pages = clean_pages_range('c', v)
         if pages:
             temp_info.update(pages)
         temp_info.update({
@@ -220,13 +220,13 @@ def publication_additional(self, key, value):
     empty = not bool(_publication_info)
     for i, v in enumerate(force_list(value)):
         temp_info = {}
-        pages = clean_pages('k', v)
+        pages = clean_pages_range('k', v)
         if pages:
             temp_info.update(pages)
         rel_recid = clean_val('b', v, str)
         if rel_recid:
             temp_info.update(
-                {'parent_record': {'$ref': rel_url(rel_recid)}})
+                {'parent_record': {'$ref': related_url(rel_recid)}})
         n_subfield = clean_val('n', v, str)
         if n_subfield.upper() == 'BOOK':
             temp_info.update({'material': 'BOOK'})
@@ -254,7 +254,8 @@ def related_records(self, key, value):
     except ManualMigrationRequired as e:
         # TODO logs
         raise e
-    return {'record': {'$ref': rel_url(clean_val('w', value, str, req=True))}}
+    return {'record': {
+        '$ref': related_url(clean_val('w', value, str, req=True))}}
 
 
 @model.over('accelerator_experiments', '^693__')
@@ -321,7 +322,7 @@ def standard_numbers(self, key, value):
     sn = a or b
     if sn:
         return {'value': sn,
-                'hidden': True if b else None}
+                'hidden': True if b else False}
     raise MissingRequiredField
 
 

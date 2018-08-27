@@ -37,12 +37,12 @@ from ..utils import MementoDict
 
 
 # TODO to be decided where is the config value for domain
-def rel_url(value):
+def related_url(value):
     """Builds related records urls."""
     return '{0}{1}'.format('https://cds.cern.ch/record/', value)
 
 
-def clean_pages(pages_subfield, value):
+def clean_pages_range(pages_subfield, value):
     """Builds pages dictionary."""
     page_regex = '\d+(?:[\-‐‑‒–—―⁻₋−﹘﹣－]*\d*)$'
     pages_val = clean_val(pages_subfield, value, str, regex_format=page_regex)

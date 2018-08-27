@@ -65,7 +65,10 @@ def clean_str(to_clean, regex_format, req, transform=None):
         match = pattern.match(to_clean)
         if not match:
             raise UnexpectedValue
-    cleaned = to_clean.strip()
+    try:
+        cleaned = to_clean.strip()
+    except AttributeError:
+        raise UnexpectedValue
     if not cleaned and req:
         raise MissingRequiredField
     if transform and hasattr(cleaned, transform):

@@ -915,7 +915,7 @@ def test_external_system_identifiers(app):
                 </datafield>
                 """, {
                     'external_system_identifiers': [{
-                        'schema': 'Random',
+                        'schema': 'CERCER',
                         'value': '2365039',
                     }],
                 })

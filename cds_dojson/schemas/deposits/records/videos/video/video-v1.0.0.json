@@ -425,7 +425,7 @@
             "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
           },
           "language": {
-            "default": "en",
+            "default": "en", 
             "enum": [
               "ar",
               "ast",
@@ -515,17 +515,7 @@
       "type": "string",
       "description": "Internal note.",
       "title": "Internal note"
-    },
-    "internal_categories": {
-      "description": "FIXME: temporary location for potential future communities",
-      "type": "object"
-    },
-    "Press": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
+    }, 
     "doi": {
       "type": "string",
       "description": "Record DOI identifier (string)."

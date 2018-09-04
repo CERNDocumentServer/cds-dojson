@@ -106,10 +106,10 @@ class OverdoJSONSchema(Overdo):
             exception_handlers=exception_handlers)
         if HAS_FLASK:
             json_schema = current_app.extensions['invenio-jsonschemas']
-            json['$schema'] = {
-                '$ref': json_schema.path_to_url(self.__class__.__schema__)
-            }
+            json['$schema'] = json_schema.path_to_url(
+                self.__class__.__schema__
+            )
         else:
-            json['$schema'] = {'$ref': self.__class__.__schema__}
+            json['$schema'] = self.__class__.__schema__
 
         return json

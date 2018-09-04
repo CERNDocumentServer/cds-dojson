@@ -49,3 +49,6 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 /tests/fixtures/books/results/*
+
+# Editor settings
+.vscode/

@@ -110,7 +110,63 @@
     },
     "keywords": {
       "items": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      },
+      "type": "array"
+    },
+    "_file": {
+      "items": {
+        "type": "object",
+        "description": "A file object described using some basic subfields. (Usually to be extended).",
+        "properties": {
+          "bucket_id": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "content_type": {
+            "type": "string"
+          },
+          "context_type": {
+            "enum": [
+              "frame",
+              "frames-preview",
+              "subtitle",
+              "master",
+              "subformat",
+              "playlist",
+              "poster"
+            ],
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "version_id": {
+            "type": "string"
+          }
+        }
       },
       "type": "array"
     },
@@ -158,8 +214,8 @@
         "da",
         "de",
         "el",
-        "en",
         "en-fr",
+        "en",
         "es",
         "et",
         "eu",
@@ -198,7 +254,8 @@
         "ur",
         "zh",
         "zh_CN",
-        "zh_TW"
+        "zh_TW",
+        "zh"
       ],
       "type": "string"
     },
@@ -382,6 +439,81 @@
           "type": "string"
         },
         "term": {
+          "type": "string"
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "properties": {
+        "file_upload": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_download": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_transcode": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_video_extract_frames": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_video_metadata_extraction": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
           "type": "string"
         }
       }

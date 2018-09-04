@@ -73,7 +73,6 @@
       ]
     },
     "_files": {
-      "description": "Files",
       "description": "Internal listing of files attached to deposit.",
       "type": "array",
       "name": "_files",

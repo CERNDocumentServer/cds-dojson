@@ -80,10 +80,8 @@ def test_fields(app):
         blob = create_record(marcxml.format(marcxml_body))
         record = model.do(blob)
         expected = {
-            '$schema': {
-                '$ref': ('https://cds.cern.ch/schemas/'
-                         'records/videos/project/project-v1.0.0.json')
-            }
+            '$schema': 'https://cds.cern.ch/schemas/'
+                       'records/videos/project/project-v1.0.0.json'
         }
         expected.update(**json_body)
         assert record == expected

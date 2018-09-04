@@ -6,9 +6,7 @@
     },
     {
       "properties": {
-        "title": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/title"
-        },
+        "title": { "$ref": "../../definitions-v1.0.0.json#/definitions/title" },
         "keywords": {
           "$ref": "../../definitions-v1.0.0.json#/definitions/keywords"
         },
@@ -114,10 +112,7 @@
           "type": "object",
           "properties": {
             "state": {
-              "type": "object"
-            },
-            "extracted_metadata": {
-              "type": "object"
+              "$ref": "../../definitions-v1.0.0.json#/definitions/state"
             },
             "modified_by": {
               "type": "integer"

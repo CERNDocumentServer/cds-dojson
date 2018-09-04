@@ -36,6 +36,18 @@ Build the final schemas from definitions: ::
 
   cds-dojson compile-schema <path_to_-src-_schema>/ > output_file.json
 
+Installation
+============
+  `python setup.py install`
+
+Usage
+=====
+  > Attention! The deposit schemas, inherit from the record schemas.
+   First build `schemas/records/videos...` and then `schemas/deposits/records...`
+
+  Schemas are generated from their `*_src.json` file, navigate to src path and execute
+
+  `$ cds-dojson compile_schema project_src-v1.0.0.json > project-v1.0.0.json`
 
 
 Documentation

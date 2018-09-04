@@ -1,24 +1,24 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#", 
   "required": [
-    "category",
-    "contributors",
-    "copyright",
-    "date",
-    "description",
-    "duration",
-    "language",
-    "license",
-    "publication_date",
-    "recid",
-    "report_number",
-    "title",
+    "category", 
+    "contributors", 
+    "copyright", 
+    "date", 
+    "description", 
+    "duration", 
+    "language", 
+    "license", 
+    "publication_date", 
+    "recid", 
+    "report_number", 
+    "title", 
     "type"
-  ],
-  "type": "object",
+  ], 
+  "type": "object", 
   "properties": {
     "contributors": {
-      "minItems": 1,
+      "minItems": 1, 
       "items": {
         "additionalProperties": false,
         "required": ["name"],
@@ -26,238 +26,267 @@
         "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.",
         "properties": {
           "name": {
-            "type": "string",
+            "type": "string", 
             "description": "Full name of person. Personal name format: family, given."
-          },
+          }, 
           "ids": {
-            "uniqueItems": true,
+            "uniqueItems": true, 
             "items": {
-              "additionalProperties": false,
-              "type": "object",
+              "additionalProperties": false, 
+              "type": "object", 
               "properties": {
                 "source": {
                   "type": "string"
-                },
+                }, 
                 "value": {
                   "type": "string"
                 }
               }
-            },
-            "type": "array",
+            }, 
+            "type": "array", 
             "description": "List of IDs related with the person."
-          },
+          }, 
           "affiliations": {
-            "uniqueItems": true,
+            "uniqueItems": true, 
             "items": {
               "type": "string"
-            },
-            "type": "array",
+            }, 
+            "type": "array", 
             "description": "Affiliation(s) for the purpose of this specific record."
-          },
+          }, 
           "role": {
             "enum": [
-              "Animations by",
-              "Camera Operator",
-              "Comments by",
-              "Co-Producer",
-              "Creator",
-              "Credits",
-              "Director",
-              "Editor",
-              "Music by",
-              "Narrator",
-              "Photography",
-              "Producer",
-              "Reporter",
-              "Screenwriter",
-              "Speaker",
+              "Animations by", 
+              "Camera Operator", 
+              "Comments by", 
+              "Co-Producer", 
+              "Creator", 
+              "Credits", 
+              "Director", 
+              "Editor", 
+              "Music by", 
+              "Narrator", 
+              "Photography", 
+              "Producer", 
+              "Reporter", 
+              "Screenwriter", 
+              "Speaker", 
               "Translator"
-            ],
+            ], 
             "type": "string"
-          },
+          }, 
           "contribution": {
-            "type": "string",
+            "type": "string", 
             "description": "Specific contribution of the person to this specific record."
-          },
+          }, 
           "email": {
-            "type": "string",
-            "description": "Contact email for the purpose of this specific record.",
+            "type": "string", 
+            "description": "Contact email for the purpose of this specific record.", 
             "format": "email"
           }
         }
-      },
+      }, 
       "type": "array"
-    },
+    }, 
     "report_number": {
       "items": {
         "type": "string"
-      },
+      }, 
       "type": "array"
-    },
+    }, 
     "physical_medium": {
       "items": {
-        "additionalProperties": false,
+        "additionalProperties": false, 
         "properties": {
           "shelf": {
             "type": "string"
-          },
+          }, 
           "copy_number": {
             "type": "string"
-          },
+          }, 
           "arrangement": {
             "type": "string"
-          },
+          }, 
           "note": {
             "type": "string"
-          },
+          }, 
           "camera": {
             "type": "string"
-          },
+          }, 
           "location": {
             "type": "string"
-          },
+          }, 
           "bar_code": {
             "type": "string"
-          },
+          }, 
           "medium_standard": {
             "type": "string"
-          },
+          }, 
           "sequence_number": {
             "items": {
               "type": "string"
-            },
+            }, 
             "type": "array"
-          },
+          }, 
           "internal_note": {
             "type": "string"
           }
         }
-      },
-      "type": "array",
-      "description": "Physical medium, typically used for archive resources.",
+      }, 
+      "type": "array", 
+      "description": "Physical medium, typically used for archive resources.", 
       "title": "Physical medium"
-    },
-    "_cds": {
-      "type": "object",
-      "properties": {
-        "state": {
-          "type": "object"
-        },
-        "modified_by": {
-          "type": "integer"
-        },
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
-    },
+    }, 
+    "vr": {
+      "type": "boolean"
+    }, 
     "keywords": {
       "items": {
-        "type": "object"
-      },
+        "type": "object", 
+        "properties": {
+          "source": {
+            "type": "string"
+          }, 
+          "name": {
+            "type": "string"
+          }
+        }
+      }, 
       "type": "array"
-    },
+    }, 
     "featured": {
       "type": "boolean"
-    },
+    }, 
     "_access": {
-      "type": "object",
+      "type": "object", 
       "properties": {
         "read": {
           "items": {
-            "type": "string",
+            "type": "string", 
             "title": "Read"
-          },
+          }, 
           "type": "array"
-        },
+        }, 
         "update": {
           "items": {
-            "type": "string",
+            "type": "string", 
             "title": "Update"
-          },
+          }, 
           "type": "array"
         }
       }
-    },
+    }, 
     "duration": {
       "type": "string"
-    },
+    }, 
     "external_system_identifiers": {
       "items": {
-        "additionalProperties": false,
+        "additionalProperties": false, 
         "properties": {
           "value": {
             "type": "string"
-          },
+          }, 
           "schema": {
             "type": "string"
           }
         }
-      },
-      "type": "array",
-      "description": "List of identifiers on external systems.",
+      }, 
+      "type": "array", 
+      "description": "List of identifiers on external systems.", 
       "title": "External identifiers"
-    },
+    }, 
+    "$schema": {
+      "type": "string"
+    }, 
     "subject": {
-      "additionalProperties": false,
-      "description": "Subject.",
-      "type": "object",
+      "additionalProperties": false, 
+      "description": "Subject.", 
+      "type": "object", 
       "properties": {
         "source": {
           "type": "string"
-        },
+        }, 
         "term": {
           "type": "string"
         }
-      },
+      }, 
       "title": "Subject"
-    },
+    }, 
     "category": {
-      "type": "string",
+      "type": "string", 
       "description": "Category of the project."
-    },
-    "related_links": {
-      "uniqueItems": true,
+    }, 
+    "license": {
+      "uniqueItems": true, 
       "items": {
-        "additionalProperties": false,
-        "type": "object",
+        "additionalProperties": false, 
+        "type": "object", 
         "properties": {
           "url": {
-            "title": "Related URL",
-            "type": "string",
+            "title": "URL of the license", 
+            "type": "string", 
             "format": "url"
-          },
+          }, 
+          "credit": {
+            "type": "string", 
+            "title": "Credit"
+          }, 
+          "material": {
+            "type": "string", 
+            "title": "Material"
+          }, 
+          "license": {
+            "type": "string", 
+            "title": "License name"
+          }
+        }, 
+        "title": "License"
+      }, 
+      "type": "array", 
+      "title": "License information"
+    }, 
+    "related_links": {
+      "uniqueItems": true, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "url": {
+            "title": "Related URL", 
+            "type": "string", 
+            "format": "url"
+          }, 
           "name": {
-            "type": "string",
+            "type": "string", 
             "title": "Related link name"
           }
-        },
+        }, 
         "title": "Related links"
-      },
-      "type": "array",
+      }, 
+      "type": "array", 
       "title": "Related links information"
-    },
+    }, 
     "agency_code": {
       "type": "string"
-    },
+    }, 
     "copyright": {
-      "type": "object",
+      "type": "object", 
       "properties": {
         "url": {
-          "type": "string",
+          "type": "string", 
           "format": "url"
-        },
+        }, 
         "holder": {
-          "type": "string",
+          "type": "string", 
           "description": "The party holding the legal copyright to the record."
-        },
+        }, 
         "year": {
-          "type": "string",
-          "description": "The year during which the claimed copyright for the CreativeWork was first asserted.",
+          "type": "string", 
+          "description": "The year during which the claimed copyright for the CreativeWork was first asserted.", 
           "format": "date-time"
         }
       }
-    },
+    }, 
     "title": {
       "additionalProperties": false,
       "required": ["title"],
@@ -266,16 +295,16 @@
       "properties": {
         "subtitle": {
           "type": "string"
-        },
+        }, 
         "title": {
           "type": "string"
         }
       }
-    },
+    }, 
     "_files": {
       "items": {
-        "type": "object",
-        "description": "A file object described using some basic subfields. (Usually to be extended).",
+        "type": "object", 
+        "description": "A file object described using some basic subfields. (Usually to be extended).", 
         "properties": {
           "category": {
             "enum": ["Master", "Slave", "Subtitle", "Other"],
@@ -284,112 +313,288 @@
           },
           "quality": {
             "type": "string"
-          },
+          }, 
+          "content_type": {
+            "type": "string"
+          }, 
+          "context_type": {
+            "enum": [
+              "frame", 
+              "frames-preview", 
+              "subtitle", 
+              "master", 
+              "subformat", 
+              "playlist", 
+              "poster"
+            ], 
+            "type": "string"
+          }, 
           "checksum": {
             "type": "string"
-          },
-          "bucket": {
-            "type": "string"
-          },
+          }, 
+          "completed": {
+            "type": "boolean"
+          }, 
           "version_id": {
             "type": "string"
-          },
-          "height": {
+          }, 
+          "subformat": {
+            "items": {
+              "type": "object", 
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "key": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }, 
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "content_type": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }
+              }
+            }, 
+            "type": "array"
+          }, 
+          "frames-preview": {
+            "items": {
+              "type": "object", 
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "key": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }, 
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "content_type": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }
+              }
+            }, 
+            "type": "array"
+          }, 
+          "file_id": {
             "type": "string"
-          },
-          "width": {
-            "type": "string"
-          },
-          "bitrate": {
-            "type": "string"
-          },
+          }, 
           "key": {
             "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "description": "File type extension."
-          },
-          "thumbnail": {
+          }, 
+          "media_type": {
             "type": "string"
-          },
+          }, 
+          "frame": {
+            "items": {
+              "type": "object", 
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "key": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }, 
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "content_type": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }
+              }
+            }, 
+            "type": "array"
+          }, 
           "size": {
             "type": "integer"
           }
         }
-      },
+      }, 
       "type": "array"
-    },
+    }, 
     "note": {
-      "type": "string",
-      "description": "Note.",
+      "type": "string", 
+      "description": "Note.", 
       "title": "Note"
-    },
+    }, 
     "location": {
-      "type": "string",
-      "description": "Place or location.",
+      "type": "string", 
+      "description": "Place or location.", 
       "title": "Place or location"
-    },
+    }, 
     "_deposit": {
-      "type": "object",
+      "type": "object", 
       "properties": {
+        "status": {
+          "enum": [
+            "published", 
+            "draft"
+          ], 
+          "type": "string"
+        }, 
         "owners": {
           "items": {
             "type": "integer"
-          },
-          "title": "Owners",
-          "type": "array",
-          "description": "Owners of the record (a list of user's IDs).",
-          "name": "owners"
-        },
+          }, 
+          "type": "array", 
+          "description": "Owners of the record (a list of user's IDs).", 
+          "name": "owners", 
+          "title": "Owners"
+        }, 
+        "pid": {
+          "type": "object", 
+          "properties": {
+            "revision_id": {
+              "type": "integer"
+            }, 
+            "type": {
+              "type": "string"
+            }, 
+            "value": {
+              "type": "string"
+            }
+          }
+        }, 
         "id": {
           "type": "string"
-        },
+        }, 
         "created_by": {
           "type": "integer"
         }
       }
-    },
+    }, 
+    "Press": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array"
+    }, 
     "type": {
-      "type": "string",
+      "type": "string", 
       "description": "Type of the project."
-    },
+    }, 
     "description": {
-      "type": "string",
+      "type": "string", 
       "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
-    },
+    }, 
     "_oai": {
-      "additionalProperties": false,
-      "type": "object",
-      "description": "OAI-PMH specific information.",
+      "additionalProperties": false, 
+      "type": "object", 
+      "description": "OAI-PMH specific information.", 
       "properties": {
         "updated": {
-          "type": "string",
+          "type": "string", 
           "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
-        },
+        }, 
         "id": {
-          "type": "string",
+          "type": "string", 
           "description": "OAI-PMH record identifier."
-        },
+        }, 
         "sets": {
           "items": {
             "type": "string"
-          },
-          "type": "array",
+          }, 
+          "type": "array", 
           "description": "OAI-PMH sets for record."
         }
       }
-    },
+    }, 
     "translations": {
       "items": {
-        "type": "object",
+        "type": "object", 
         "properties": {
           "description": {
-            "type": "string",
+            "type": "string", 
             "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
-          },
+          }, 
           "language": {
-            "default": "en",
+            "default": "en", 
             "enum": [
               "ar",
               "ast",
@@ -445,7 +650,7 @@
             ],
             "type": "string",
             "description": "A language of the resource."
-          },
+          }, 
           "title": {
             "additionalProperties": false,
             "required": ["title"],
@@ -454,78 +659,42 @@
             "properties": {
               "subtitle": {
                 "type": "string"
-              },
+              }, 
               "title": {
                 "type": "string"
               }
             }
           }
         }
-      },
+      }, 
       "type": "array"
-    },
+    }, 
     "date": {
-      "type": "string",
-      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",
+      "type": "string", 
+      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)", 
       "format": "date-time"
-    },
+    }, 
     "publication_date": {
-      "title": "Publication date",
-      "type": "string",
-      "description": "When the record is published",
+      "title": "Publication date", 
+      "type": "string", 
+      "description": "When the record is published", 
       "format": "date-time"
-    },
+    }, 
     "internal_note": {
-      "type": "string",
-      "description": "Internal note.",
+      "type": "string", 
+      "description": "Internal note.", 
       "title": "Internal note"
-    },
-    "internal_categories": {
-      "description": "FIXME: temporary location for potential future communities",
-      "type": "object"
-    },
-    "Press": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
+    }, 
     "doi": {
-      "type": "string",
+      "type": "string", 
       "description": "Record DOI identifier (string)."
-    },
-    "license": {
-      "uniqueItems": true,
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "properties": {
-          "url": {
-            "title": "URL of the license",
-            "type": "string",
-            "format": "url"
-          },
-          "credit": {
-            "type": "string",
-            "title": "Credit"
-          },
-          "material": {
-            "type": "string",
-            "title": "Material"
-          },
-          "license": {
-            "type": "string",
-            "title": "License name"
-          }
-        },
-        "title": "License"
-      },
-      "type": "array",
-      "title": "License information"
-    },
+    }, 
+    "internal_categories": {
+      "type": "object", 
+      "description": "FIXME: temporary location for potential future communities"
+    }, 
     "language": {
-      "description": "A language of the resource.",
-      "default": "en",
+      "default": "en", 
       "enum": [
         "ar",
         "ast",
@@ -582,49 +751,132 @@
       "type": "string"
     },
     "accelerator_experiment": {
-      "additionalProperties": false,
-      "description": "Accelerator and experiment information.",
-      "type": "object",
+      "additionalProperties": false, 
+      "description": "Accelerator and experiment information.", 
+      "type": "object", 
       "properties": {
         "project": {
           "type": "string"
-        },
+        }, 
         "study": {
           "type": "string"
-        },
+        }, 
         "experiment": {
           "type": "string"
-        },
+        }, 
         "accelerator": {
           "type": "string"
-        },
+        }, 
         "facility": {
           "type": "string"
         }
-      },
+      }, 
       "title": "Accelerator/Experiment"
-    },
+    }, 
     "audio_characteristics": {
-      "type": "object",
+      "type": "object", 
       "properties": {
         "playback_channels": {
           "type": "string"
         }
       }
-    },
-    "vr": {
-      "type": "boolean"
-    },
+    }, 
+    "_cds": {
+      "type": "object", 
+      "properties": {
+        "state": {
+          "type": "object", 
+          "properties": {
+            "file_download": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_upload": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_metadata_extraction": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_extract_frames": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_transcode": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }
+          }
+        }, 
+        "modified_by": {
+          "type": "integer"
+        }, 
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
+    }, 
     "recid": {
-      "type": "number",
+      "type": "integer", 
       "description": "Invenio record identifier (integer)."
-    },
+    }, 
     "original_source": {
       "type": "string"
-    },
+    }, 
     "_project_id": {
       "type": "string"
     }
-  },
+  }, 
   "title": "CDS Base Record Schema v1.0.0"
 }

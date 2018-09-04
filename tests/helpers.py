@@ -21,36 +21,11 @@
 import os
 
 import pkg_resources
-from jsonresolver import JSONResolver
-from jsonresolver.contrib.jsonschema import ref_resolver_factory
-from jsonschema import validate as _validate
-
-
-def mock_path_to_url(self, path):
-    """Mock the ``paht_to_utl method from InvenioJSONSchemasState."""
-    return path
-
-
-def json_resolver(schema):
-    """Test ``json_resolver``."""
-    json_resolver = JSONResolver(plugins=[
-        'demo.json_resolver',
-    ])
-    resolver_cls = ref_resolver_factory(json_resolver)
-    return resolver_cls.from_schema(schema)
-
-
-def validate(json):
-    """Wrap jsonchema.validate for convenience."""
-    return _validate(
-        json,
-        json['$schema'],
-        resolver=json_resolver(json['$schema']),
-        types={'array': (list, tuple)})
 
 
 def load_fixture_file(file_name):
     """Read the content of a file and return it."""
-    return pkg_resources.resource_string(__name__,
-                                         os.path.join('fixtures',
-                                                      file_name))
+    return pkg_resources.resource_string(
+        __name__,
+        os.path.join('fixtures', file_name),
+    )

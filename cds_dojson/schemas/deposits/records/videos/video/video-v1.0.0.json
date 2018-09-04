@@ -139,12 +139,103 @@
       "description": "Physical medium, typically used for archive resources.", 
       "title": "Physical medium"
     }, 
-    "vr": {
-      "type": "boolean"
+    "_cds": {
+      "type": "object", 
+      "properties": {
+        "state": {
+          "type": "object", 
+          "properties": {
+            "file_download": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_upload": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_metadata_extraction": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_extract_frames": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_transcode": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }
+          }
+        }, 
+        "modified_by": {
+          "type": "integer"
+        }, 
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
     }, 
     "keywords": {
       "items": {
-        "type": "object"
+        "type": "object", 
+        "properties": {
+          "source": {
+            "type": "string"
+          }, 
+          "name": {
+            "type": "string"
+          }
+        }
       }, 
       "type": "array"
     }, 
@@ -275,18 +366,122 @@
         "type": "object", 
         "description": "A file object described using some basic subfields. (Usually to be extended).", 
         "properties": {
-          "category": {
+          "playlist": {
+            "items": {
+              "type": "object", 
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }, 
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }
+              }
+            }, 
+            "type": "array"
+          }, 
+          "frames-preview": {
+            "items": {
+              "type": "object", 
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }, 
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }
+              }
+            }, 
+            "type": "array"
+          }, 
+          "content_type": {
+            "type": "string"
+          }, 
+          "context_type": {
             "enum": [
-              "Master", 
-              "Slave", 
-              "Subtitle", 
-              "Other"
+              "frame", 
+              "frames-preview", 
+              "subtitle", 
+              "master", 
+              "subformat", 
+              "playlist", 
+              "poster"
             ], 
-            "type": "string", 
-            "description": "Former BibDocFile.doctype."
+            "type": "string"
           }, 
           "checksum": {
             "type": "string"
+          }, 
+          "completed": {
+            "type": "boolean"
           }, 
           "bucket": {
             "type": "string"
@@ -294,27 +489,113 @@
           "version_id": {
             "type": "string"
           }, 
-          "height": {
+          "subformat": {
+            "items": {
+              "type": "object", 
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }, 
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }
+              }
+            }, 
+            "type": "array"
+          }, 
+          "bucket_id": {
             "type": "string"
           }, 
-          "width": {
-            "type": "string"
-          }, 
-          "bitrate": {
+          "file_id": {
             "type": "string"
           }, 
           "key": {
             "type": "string"
           }, 
-          "type": {
-            "type": "string", 
-            "description": "File type extension."
-          }, 
-          "quality": {
+          "media_type": {
             "type": "string"
           }, 
-          "thumbnail": {
-            "type": "string"
+          "frame": {
+            "items": {
+              "type": "object", 
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }, 
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }
+              }
+            }, 
+            "type": "array"
           }, 
           "size": {
             "type": "integer"
@@ -344,14 +625,14 @@
       "type": "object", 
       "properties": {
         "status": {
-          "title": "Status", 
           "enum": [
-            "draft", 
-            "published"
+            "published", 
+            "draft"
           ], 
           "type": "string", 
           "description": "Status of the deposit, either 'draft' or 'published'.", 
-          "name": "status"
+          "name": "status", 
+          "title": "Status"
         }, 
         "owners": {
           "items": {
@@ -363,7 +644,7 @@
           "name": "owners"
         }, 
         "pid": {
-          "title": "Persistent identifier of the published record", 
+          "description": "Identifier of the published record - usually the type and value of a 'recid'-type PID of the corresponding published record.", 
           "type": "object", 
           "properties": {
             "revision_id": {
@@ -383,7 +664,7 @@
             }
           }, 
           "name": "pid", 
-          "description": "Identifier of the published record - usually the type and value of a 'recid'-type PID of the corresponding published record."
+          "title": "Persistent identifier of the published record"
         }, 
         "id": {
           "type": "string", 
@@ -399,6 +680,12 @@
         }
       }, 
       "name": "_deposit"
+    }, 
+    "Press": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array"
     }, 
     "type": {
       "type": "string", 
@@ -439,43 +726,42 @@
             "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
           }, 
           "language": {
-            "default": "en",
+            "default": "en", 
             "enum": [
-              "ar",
-              "bg",
-              "ca",
-              "ch",
-              "cs",
-              "da",
-              "de",
-              "el",
-              "en",
-              "en-fr",
-              "es",
-              "fi",
-              "fr",
-              "hr",
-              "hu",
-              "it",
-              "ja",
-              "ka",
-              "ko",
-              "nl",
-              "no",
-              "pl",
-              "pt",
-              "ru",
-              "silent",
-              "sk",
-              "sr",
-              "sr",
-              "sv",
-              "tr",
-              "uk",
-              "zh",
-              "zh_CN",
-              "zh_TW"
-            ],
+              "ar", 
+              "bg", 
+              "ca", 
+              "ch", 
+              "cs", 
+              "da", 
+              "de", 
+              "el", 
+              "en-fr", 
+              "en", 
+              "es", 
+              "fi", 
+              "fr", 
+              "hr", 
+              "hu", 
+              "it", 
+              "ja", 
+              "ka", 
+              "ko", 
+              "nl", 
+              "no", 
+              "pl", 
+              "pt", 
+              "ru", 
+              "silent", 
+              "sk", 
+              "sr", 
+              "sv", 
+              "tr", 
+              "uk", 
+              "zh_CN", 
+              "zh_TW", 
+              "zh"
+            ], 
             "type": "string", 
             "description": "A language of the resource."
           }, 
@@ -499,6 +785,46 @@
       }, 
       "type": "array"
     }, 
+    "language": {
+      "default": "en", 
+      "enum": [
+        "ar", 
+        "bg", 
+        "ca", 
+        "ch", 
+        "cs", 
+        "da", 
+        "de", 
+        "el", 
+        "en-fr", 
+        "en", 
+        "es", 
+        "fi", 
+        "fr", 
+        "hr", 
+        "hu", 
+        "it", 
+        "ja", 
+        "ka", 
+        "ko", 
+        "nl", 
+        "no", 
+        "pl", 
+        "pt", 
+        "ru", 
+        "silent", 
+        "sk", 
+        "sr", 
+        "sv", 
+        "tr", 
+        "uk", 
+        "zh_CN", 
+        "zh_TW", 
+        "zh"
+      ], 
+      "type": "string", 
+      "description": "A language of the resource."
+    }, 
     "date": {
       "type": "string", 
       "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)", 
@@ -514,17 +840,7 @@
       "type": "string", 
       "description": "Internal note.", 
       "title": "Internal note"
-    },
-    "internal_categories": {
-      "description": "FIXME: temporary location for potential future communities",
-      "type": "object"
-    },
-    "Press": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
+    }, 
     "doi": {
       "type": "string", 
       "description": "Record DOI identifier (string)."
@@ -542,47 +858,10 @@
         }
       }
     }, 
-    "language": {
-      "description": "A language of the resource.",
-      "default": "en",
-      "enum": [
-        "ar",
-        "bg",
-        "ca",
-        "ch",
-        "cs",
-        "da",
-        "de",
-        "el",
-        "en",
-        "en-fr",
-        "es",
-        "fi",
-        "fr",
-        "hr",
-        "hu",
-        "it",
-        "ja",
-        "ka",
-        "ko",
-        "nl",
-        "no",
-        "pl",
-        "pt",
-        "ru",
-        "silent",
-        "sk",
-        "sr",
-        "sr",
-        "sv",
-        "tr",
-        "uk",
-        "zh",
-        "zh_CN",
-        "zh_TW"
-      ],
-      "type": "string"
-    },
+    "internal_categories": {
+      "type": "object", 
+      "description": "FIXME: temporary location for potential future communities"
+    }, 
     "license": {
       "uniqueItems": true, 
       "items": {
@@ -643,22 +922,11 @@
         }
       }
     }, 
-    "_cds": {
-      "type": "object", 
-      "properties": {
-        "state": {
-          "type": "object"
-        }, 
-        "modified_by": {
-          "type": "integer"
-        }, 
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
+    "vr": {
+      "type": "boolean"
     }, 
     "recid": {
-      "type": "number", 
+      "type": "integer", 
       "description": "Invenio record identifier (integer)."
     }, 
     "original_source": {

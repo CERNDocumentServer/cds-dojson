@@ -28,6 +28,47 @@
             ]
           }
         },
+        "_deposit": {
+          "type": "object",
+          "properties": {
+            "pid": {
+              "type": "object",
+              "properties": {
+                "revision_id": {
+                  "type": "integer"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "owners": {
+              "items": {
+                "type": "integer"
+              },
+              "title": "Owners",
+              "type": "array",
+              "description": "Owners of the record (a list of user's IDs).",
+              "name": "owners"
+            },
+            "status": {
+              "enum": [
+                "published",
+                "draft"
+              ],
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": "integer"
+            }
+          }
+        },
         "contributors": {
           "type": "array",
           "minItems": 1,
@@ -84,48 +125,155 @@
           "type": "boolean"
         },
         "_files": {
-          "type": "array",
-          "items":{
-            "allOf": [
-              { "$ref": "../../definitions-v1.0.0.json#/definitions/file" },
-              {
-                "properties": {
-                  "category": {
-                  "enum": [
-                      "Master",
-                      "Slave",
-                      "Subtitle",
-                      "Other"
-                  ]
-                  },
-                  "bitrate": {"type": "string"},
-                  "quality": {"type": "string"},
-                  "height": {"type": "string"},
-                  "width": {"type": "string"},
-                  "thumbnail": {"type": "string"}
+          "items": {
+            "type": "object",
+            "description": "A file object described using some basic subfields. (Usually to be extended).",
+            "properties": {
+              "bucket_id": {
+                "type": "string"
+              },
+              "checksum": {
+                "type": "string"
+              },
+              "completed": {
+                "type": "boolean"
+              },
+              "content_type": {
+                "type": "string"
+              },
+              "context_type": {
+                "enum": [
+                  "frame",
+                  "frames-preview",
+                  "subtitle",
+                  "master",
+                  "subformat",
+                  "playlist",
+                  "poster"
+                ],
+                "type": "string"
+              },
+              "file_id": {
+                "type": "string"
+              },
+              "frame": {
+                "$ref": "../../definitions-v1.0.0.json#/definitions/_file"
+              },
+              "frames-preview": {
+                "$ref": "../../definitions-v1.0.0.json#/definitions/_file"
+              },
+              "key": {
+                "type": "string"
+              },
+              "media_type": {
+                "type": "string"
+              },
+              "playlist": {
+                "$ref": "../../definitions-v1.0.0.json#/definitions/_file"
+              },
+              "size": {
+                "type": "integer"
+              },
+              "subformat": {
+                "$ref": "../../definitions-v1.0.0.json#/definitions/_file"
+              },
+              "version_id": {
+                "type": "string"
               }
-              }
-            ]
-          }
+            }
+          },
+          "type": "array"
         },
         "_project_id": {
           "type": "string"
         },
-        "_cds": {
+    "_cds": {
+      "type": "object",
+      "properties": {
+        "state": {
           "type": "object",
           "properties": {
-            "state": {
-              "type": "object"
+            "file_upload": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
             },
-            "extracted_metadata": {
-              "type": "object"
+            "file_download": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
             },
-            "modified_by": {
-              "type": "integer"
+            "file_transcode": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
+            },
+            "file_video_extract_frames": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
+            },
+            "file_video_metadata_extraction": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
             }
           }
         },
-        "category": {
+        "modified_by": {
+          "type": "integer"
+        },
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
+    },
+    "category": {
           "description": "Category of the project.",
           "type": "string"
         },

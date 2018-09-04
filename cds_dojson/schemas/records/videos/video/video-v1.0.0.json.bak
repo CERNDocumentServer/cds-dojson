@@ -1,20 +1,20 @@
 {
-  "description": "Describe information needed for deposit module.",
-  "title": "CDS Video Deposit Schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "required": [
-    "_deposit",
     "category",
     "contributors",
     "copyright",
     "date",
     "description",
+    "duration",
     "language",
     "license",
+    "publication_date",
+    "recid",
+    "report_number",
     "title",
     "type"
   ],
-  "additionalProperties": false,
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
     "contributors": {
@@ -139,12 +139,100 @@
       "description": "Physical medium, typically used for archive resources.",
       "title": "Physical medium"
     },
-    "vr": {
-      "type": "boolean"
+    "_cds": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "object",
+          "properties": {
+            "file_upload": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
+            },
+            "file_download": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
+            },
+            "file_transcode": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
+            },
+            "file_video_extract_frames": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
+            },
+            "file_video_metadata_extraction": {
+              "enum": [
+                "PENDING",
+                "RECEIVED",
+                "STARTED",
+                "SUCCESS",
+                "FAILURE",
+                "REVOKED",
+                "RETRY",
+                "IGNORED",
+                "REJECTED"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "modified_by": {
+          "type": "integer"
+        },
+        "extracted_metadata": {
+          "type": "object"
+        }
+      }
     },
     "keywords": {
       "items": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "type": "array"
     },
@@ -189,14 +277,10 @@
       "description": "List of identifiers on external systems.",
       "title": "External identifiers"
     },
-    "$schema": {
-      "type": "string"
-    },
     "subject": {
       "additionalProperties": false,
-      "title": "Subject",
-      "type": "object",
       "description": "Subject.",
+      "type": "object",
       "properties": {
         "source": {
           "type": "string"
@@ -204,7 +288,8 @@
         "term": {
           "type": "string"
         }
-      }
+      },
+      "title": "Subject"
     },
     "category": {
       "type": "string",
@@ -217,9 +302,9 @@
         "type": "object",
         "properties": {
           "url": {
-            "format": "url",
+            "title": "Related URL",
             "type": "string",
-            "title": "Related URL"
+            "format": "url"
           },
           "name": {
             "type": "string",
@@ -270,60 +355,63 @@
     },
     "_files": {
       "items": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "title": "File schema.",
         "type": "object",
         "description": "A file object described using some basic subfields. (Usually to be extended).",
         "properties": {
-          "category": {
-            "enum": [
-              "Master",
-              "Slave",
-              "Subtitle",
-              "Other"
-            ],
-            "type": "string",
-            "description": "Former BibDocFile.doctype."
+          "bucket_id": {
+            "type": "string"
           },
           "checksum": {
             "type": "string"
           },
-          "bucket": {
+          "completed": {
+            "type": "boolean"
+          },
+          "content_type": {
             "type": "string"
           },
-          "version_id": {
+          "context_type": {
+            "enum": [
+              "frame",
+              "frames-preview",
+              "subtitle",
+              "master",
+              "subformat",
+              "playlist",
+              "poster"
+            ],
             "type": "string"
           },
-          "height": {
+          "file_id": {
             "type": "string"
           },
-          "width": {
-            "type": "string"
+          "frame": {
+            "type": "array"
           },
-          "bitrate": {
-            "type": "string"
+          "frames-preview": {
+            "type": "array"
           },
           "key": {
             "type": "string"
           },
-          "type": {
-            "type": "string",
-            "description": "File type extension."
-          },
-          "quality": {
+          "media_type": {
             "type": "string"
           },
-          "thumbnail": {
-            "type": "string"
+          "playlist": {
+            "type": "array"
           },
           "size": {
             "type": "integer"
+          },
+          "subformat": {
+            "type": "array"
+          },
+          "version_id": {
+            "type": "string"
           }
         }
       },
-      "type": "array",
-      "description": "Internal listing of files attached to deposit.",
-      "name": "_files"
+      "type": "array"
     },
     "note": {
       "type": "string",
@@ -336,22 +424,21 @@
       "title": "Place or location"
     },
     "_deposit": {
-      "description": "Internal deposit metadata.",
-      "title": "Deposit",
-      "required": [
-        "id"
-      ],
       "type": "object",
       "properties": {
-        "status": {
-          "title": "Status",
-          "enum": [
-            "draft",
-            "published"
-          ],
-          "type": "string",
-          "description": "Status of the deposit, either 'draft' or 'published'.",
-          "name": "status"
+        "pid": {
+          "type": "object",
+          "properties": {
+            "revision_id": {
+              "type": "integer"
+            },
+            "type": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          }
         },
         "owners": {
           "items": {
@@ -359,46 +446,23 @@
           },
           "title": "Owners",
           "type": "array",
-          "description": "Owners of the deposit (a list of user's IDs).",
+          "description": "Owners of the record (a list of user's IDs).",
           "name": "owners"
         },
-        "pid": {
-          "title": "Persistent identifier of the published record",
-          "type": "object",
-          "properties": {
-            "revision_id": {
-              "type": "integer",
-              "description": "ID of the RecordMetadata revision. Used for record merging.",
-              "title": "Record Revision ID"
-            },
-            "type": {
-              "type": "string",
-              "description": "Type of the PID, in correspondece with PID's 'pid_type' property.",
-              "title": "PID Type"
-            },
-            "value": {
-              "type": "string",
-              "description": "Value of the PID, in correspondece with PID's 'pid_value' property.",
-              "title": "PID Value"
-            }
-          },
-          "name": "pid",
-          "description": "Identifier of the published record - usually the type and value of a 'recid'-type PID of the corresponding published record."
+        "status": {
+          "enum": [
+            "published",
+            "draft"
+          ],
+          "type": "string"
         },
         "id": {
-          "type": "string",
-          "description": "Identifier of the deposit - usually the value of corresponding 'depid'-type PID.",
-          "name": "id",
-          "title": "Persistent Identifier of the deposit"
+          "type": "string"
         },
         "created_by": {
-          "type": "integer",
-          "description": "ID of user that created the deposit.",
-          "name": "created_by",
-          "title": "Creator"
+          "type": "integer"
         }
-      },
-      "name": "_deposit"
+      }
     },
     "type": {
       "type": "string",
@@ -449,8 +513,8 @@
               "da",
               "de",
               "el",
-              "en",
               "en-fr",
+              "en",
               "es",
               "fi",
               "fr",
@@ -468,13 +532,12 @@
               "silent",
               "sk",
               "sr",
-              "sr",
               "sv",
               "tr",
               "uk",
-              "zh",
               "zh_CN",
-              "zh_TW"
+              "zh_TW",
+              "zh"
             ],
             "type": "string",
             "description": "A language of the resource."
@@ -505,10 +568,10 @@
       "format": "date-time"
     },
     "publication_date": {
-      "format": "date-time",
+      "title": "Publication date",
       "type": "string",
       "description": "When the record is published",
-      "title": "Publication date"
+      "format": "date-time"
     },
     "internal_note": {
       "type": "string",
@@ -517,7 +580,15 @@
     },
     "internal_categories": {
       "description": "FIXME: temporary location for potential future communities",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "Press": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "Press": {
       "items": {
@@ -529,60 +600,6 @@
       "type": "string",
       "description": "Record DOI identifier (string)."
     },
-    "_buckets": {
-      "type": "object",
-      "properties": {
-        "record": {
-          "type": "string",
-          "description": "Record bucket ID."
-        },
-        "deposit": {
-          "type": "string",
-          "description": "Deposit bucket ID."
-        }
-      }
-    },
-    "language": {
-      "description": "A language of the resource.",
-      "default": "en",
-      "enum": [
-        "ar",
-        "bg",
-        "ca",
-        "ch",
-        "cs",
-        "da",
-        "de",
-        "el",
-        "en",
-        "en-fr",
-        "es",
-        "fi",
-        "fr",
-        "hr",
-        "hu",
-        "it",
-        "ja",
-        "ka",
-        "ko",
-        "nl",
-        "no",
-        "pl",
-        "pt",
-        "ru",
-        "silent",
-        "sk",
-        "sr",
-        "sr",
-        "sv",
-        "tr",
-        "uk",
-        "zh",
-        "zh_CN",
-        "zh_TW"
-      ],
-      "type": "string"
-    },
     "license": {
       "uniqueItems": true,
       "items": {
@@ -590,9 +607,9 @@
         "type": "object",
         "properties": {
           "url": {
-            "format": "url",
+            "title": "URL of the license",
             "type": "string",
-            "title": "URL of the license"
+            "format": "url"
           },
           "credit": {
             "type": "string",
@@ -612,11 +629,50 @@
       "type": "array",
       "title": "License information"
     },
+    "language": {
+      "description": "A language of the resource.",
+      "default": "en",
+      "enum": [
+        "ar",
+        "bg",
+        "ca",
+        "ch",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "en-fr",
+        "en",
+        "es",
+        "fi",
+        "fr",
+        "hr",
+        "hu",
+        "it",
+        "ja",
+        "ka",
+        "ko",
+        "nl",
+        "no",
+        "pl",
+        "pt",
+        "ru",
+        "silent",
+        "sk",
+        "sr",
+        "sv",
+        "tr",
+        "uk",
+        "zh_CN",
+        "zh_TW",
+        "zh"
+      ],
+      "type": "string"
+    },
     "accelerator_experiment": {
       "additionalProperties": false,
-      "title": "Accelerator/Experiment",
-      "type": "object",
       "description": "Accelerator and experiment information.",
+      "type": "object",
       "properties": {
         "project": {
           "type": "string"
@@ -633,7 +689,8 @@
         "facility": {
           "type": "string"
         }
-      }
+      },
+      "title": "Accelerator/Experiment"
     },
     "audio_characteristics": {
       "type": "object",
@@ -643,19 +700,8 @@
         }
       }
     },
-    "_cds": {
-      "type": "object",
-      "properties": {
-        "state": {
-          "type": "object"
-        },
-        "modified_by": {
-          "type": "integer"
-        },
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
+    "vr": {
+      "type": "boolean"
     },
     "recid": {
       "type": "number",
@@ -667,5 +713,6 @@
     "_project_id": {
       "type": "string"
     }
-  }
+  },
+  "title": "CDS Base Record Schema v1.0.0"
 }

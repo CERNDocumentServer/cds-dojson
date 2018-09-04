@@ -110,10 +110,64 @@
     },
     "keywords": {
       "items": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "type": "array"
     },
+    "_file": {
+      "items": {
+        "type": "object",
+        "description": "A file object described using some basic subfields. (Usually to be extended).",
+        "properties": {
+          "bucket_id": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "content_type": {
+            "type": "string"
+          },
+          "context_type": {
+            "enum": [
+              "frame",
+              "frames-preview",
+              "subtitle",
+              "master",
+              "subformat",
+              "playlist",
+              "poster"
+            ],
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "version_id": {
+            "type": "string"
+          }
+        }
+      },
+      "type": "array"
+    },
+
     "title": {
       "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
       "type": "object",
@@ -156,8 +210,8 @@
         "da",
         "de",
         "el",
-        "en",
         "en-fr",
+        "en",
         "es",
         "fi",
         "fr",
@@ -175,13 +229,12 @@
         "silent",
         "sk",
         "sr",
-        "sr",
         "sv",
         "tr",
         "uk",
-        "zh",
         "zh_CN",
-        "zh_TW"
+        "zh_TW",
+        "zh"
       ],
       "type": "string"
     },

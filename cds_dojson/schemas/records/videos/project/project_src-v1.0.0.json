@@ -92,9 +92,6 @@
             "state": {
               "type": "object"
             },
-            "extracted_metadata": {
-              "type": "object"
-            },
             "modified_by": {
               "type": "integer"
             }

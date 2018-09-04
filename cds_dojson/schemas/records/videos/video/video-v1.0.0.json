@@ -1,607 +1,890 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "required": [
-    "category",
-    "contributors",
-    "copyright",
-    "date",
-    "description",
-    "duration",
-    "language",
-    "license",
-    "publication_date",
-    "recid",
-    "report_number",
-    "title",
-    "type"
-  ],
-  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema#", 
   "properties": {
-    "contributors": {
-      "minItems": 1,
-      "items": {
-        "additionalProperties": false,
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Full name of person. Personal name format: family, given."
-          },
-          "ids": {
-            "uniqueItems": true,
-            "items": {
-              "additionalProperties": false,
-              "type": "object",
-              "properties": {
-                "source": {
-                  "type": "string"
-                },
-                "value": {
-                  "type": "string"
-                }
-              }
-            },
-            "type": "array",
-            "description": "List of IDs related with the person."
-          },
-          "affiliations": {
-            "uniqueItems": true,
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "description": "Affiliation(s) for the purpose of this specific record."
-          },
-          "role": {
-            "enum": [
-              "Animations by",
-              "Camera Operator",
-              "Comments by",
-              "Co-Producer",
-              "Creator",
-              "Credits",
-              "Director",
-              "Editor",
-              "Music by",
-              "Narrator",
-              "Photography",
-              "Producer",
-              "Reporter",
-              "Screenwriter",
-              "Speaker",
-              "Translator"
-            ],
-            "type": "string"
-          },
-          "contribution": {
-            "type": "string",
-            "description": "Specific contribution of the person to this specific record."
-          },
-          "email": {
-            "type": "string",
-            "description": "Contact email for the purpose of this specific record.",
-            "format": "email"
-          }
-        }
-      },
-      "type": "array"
-    },
-    "report_number": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "physical_medium": {
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "shelf": {
-            "type": "string"
-          },
-          "copy_number": {
-            "type": "string"
-          },
-          "arrangement": {
-            "type": "string"
-          },
-          "note": {
-            "type": "string"
-          },
-          "camera": {
-            "type": "string"
-          },
-          "location": {
-            "type": "string"
-          },
-          "bar_code": {
-            "type": "string"
-          },
-          "medium_standard": {
-            "type": "string"
-          },
-          "sequence_number": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "internal_note": {
-            "type": "string"
-          }
-        }
-      },
-      "type": "array",
-      "description": "Physical medium, typically used for archive resources.",
-      "title": "Physical medium"
-    },
-    "_cds": {
-      "type": "object",
-      "properties": {
-        "state": {
-          "type": "object"
-        },
-        "modified_by": {
-          "type": "integer"
-        },
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
-    },
-    "keywords": {
-      "items": {
-        "type": "object"
-      },
-      "type": "array"
-    },
-    "featured": {
-      "type": "boolean"
-    },
-    "_access": {
-      "type": "object",
-      "properties": {
-        "read": {
-          "items": {
-            "type": "string",
-            "title": "Read"
-          },
-          "type": "array"
-        },
-        "update": {
-          "items": {
-            "type": "string",
-            "title": "Update"
-          },
-          "type": "array"
-        }
-      }
-    },
-    "duration": {
-      "type": "string"
-    },
-    "external_system_identifiers": {
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "value": {
-            "type": "string"
-          },
-          "schema": {
-            "type": "string"
-          }
-        }
-      },
-      "type": "array",
-      "description": "List of identifiers on external systems.",
-      "title": "External identifiers"
-    },
-    "subject": {
-      "additionalProperties": false,
-      "description": "Subject.",
-      "type": "object",
-      "properties": {
-        "source": {
-          "type": "string"
-        },
-        "term": {
-          "type": "string"
-        }
-      },
-      "title": "Subject"
-    },
-    "category": {
-      "type": "string",
-      "description": "Category of the project."
-    },
-    "related_links": {
-      "uniqueItems": true,
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "properties": {
-          "url": {
-            "title": "Related URL",
-            "type": "string",
-            "format": "url"
-          },
-          "name": {
-            "type": "string",
-            "title": "Related link name"
-          }
-        },
-        "title": "Related links"
-      },
-      "type": "array",
-      "title": "Related links information"
-    },
-    "agency_code": {
-      "type": "string"
-    },
-    "copyright": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "type": "string",
-          "format": "url"
-        },
-        "holder": {
-          "type": "string",
-          "description": "The party holding the legal copyright to the record."
-        },
-        "year": {
-          "type": "string",
-          "description": "The year during which the claimed copyright for the CreativeWork was first asserted.",
-          "format": "date-time"
-        }
-      }
-    },
-    "title": {
-      "additionalProperties": false,
-      "required": [
-        "title"
-      ],
-      "type": "object",
-      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-      "properties": {
-        "subtitle": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        }
-      }
-    },
-    "_files": {
-      "items": {
-        "type": "object",
-        "description": "A file object described using some basic subfields. (Usually to be extended).",
-        "properties": {
-          "category": {
-            "enum": [
-              "Master",
-              "Slave",
-              "Subtitle",
-              "Other"
-            ],
-            "type": "string",
-            "description": "Former BibDocFile.doctype."
-          },
-          "quality": {
-            "type": "string"
-          },
-          "checksum": {
-            "type": "string"
-          },
-          "bucket": {
-            "type": "string"
-          },
-          "version_id": {
-            "type": "string"
-          },
-          "height": {
-            "type": "string"
-          },
-          "width": {
-            "type": "string"
-          },
-          "bitrate": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "description": "File type extension."
-          },
-          "thumbnail": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer"
-          }
-        }
-      },
-      "type": "array"
-    },
-    "note": {
-      "type": "string",
-      "description": "Note.",
-      "title": "Note"
-    },
-    "location": {
-      "type": "string",
-      "description": "Place or location.",
-      "title": "Place or location"
-    },
-    "_deposit": {
-      "type": "object",
-      "properties": {
-        "owners": {
-          "items": {
-            "type": "integer"
-          },
-          "title": "Owners",
-          "type": "array",
-          "description": "Owners of the record (a list of user's IDs).",
-          "name": "owners"
-        },
-        "id": {
-          "type": "string"
-        },
-        "created_by": {
-          "type": "integer"
-        }
-      }
-    },
-    "type": {
-      "type": "string",
-      "description": "Type of the project."
-    },
-    "description": {
-      "type": "string",
-      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
-    },
-    "_oai": {
-      "additionalProperties": false,
-      "type": "object",
-      "description": "OAI-PMH specific information.",
-      "properties": {
-        "updated": {
-          "type": "string",
-          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)"
-        },
-        "id": {
-          "type": "string",
-          "description": "OAI-PMH record identifier."
-        },
-        "sets": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "description": "OAI-PMH sets for record."
-        }
-      }
-    },
-    "translations": {
-      "items": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string",
-            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
-          },
-          "language": {
-            "default": "en",
-            "enum": [
-              "ar",
-              "bg",
-              "ca",
-              "ch",
-              "cs",
-              "da",
-              "de",
-              "el",
-              "en",
-              "en-fr",
-              "es",
-              "fi",
-              "fr",
-              "hr",
-              "hu",
-              "it",
-              "ja",
-              "ka",
-              "ko",
-              "nl",
-              "no",
-              "pl",
-              "pt",
-              "ru",
-              "silent",
-              "sk",
-              "sr",
-              "sr",
-              "sv",
-              "tr",
-              "uk",
-              "zh",
-              "zh_CN",
-              "zh_TW"
-            ],
-            "type": "string",
-            "description": "A language of the resource."
-          },
-          "title": {
-            "additionalProperties": false,
-            "required": [
-              "title"
-            ],
-            "type": "object",
-            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
-            "properties": {
-              "subtitle": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "type": "array"
-    },
-    "date": {
-      "type": "string",
-      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)",
-      "format": "date-time"
-    },
-    "publication_date": {
-      "title": "Publication date",
-      "type": "string",
-      "description": "When the record is published",
-      "format": "date-time"
-    },
-    "internal_note": {
-      "type": "string",
-      "description": "Internal note.",
-      "title": "Internal note"
-    },
-    "internal_categories": {
-      "description": "FIXME: temporary location for potential future communities",
-      "type": "object"
-    },
     "Press": {
       "items": {
         "type": "string"
-      },
+      }, 
       "type": "array"
-    },
-    "doi": {
-      "type": "string",
-      "description": "Record DOI identifier (string)."
-    },
-    "license": {
-      "uniqueItems": true,
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "properties": {
-          "url": {
-            "title": "URL of the license",
-            "type": "string",
-            "format": "url"
-          },
-          "credit": {
-            "type": "string",
-            "title": "Credit"
-          },
-          "material": {
-            "type": "string",
-            "title": "Material"
-          },
-          "license": {
-            "type": "string",
-            "title": "License name"
-          }
-        },
-        "title": "License"
-      },
-      "type": "array",
-      "title": "License information"
-    },
-    "language": {
-      "description": "A language of the resource.",
-      "default": "en",
-      "enum": [
-        "ar",
-        "bg",
-        "ca",
-        "ch",
-        "cs",
-        "da",
-        "de",
-        "el",
-        "en",
-        "en-fr",
-        "es",
-        "fi",
-        "fr",
-        "hr",
-        "hu",
-        "it",
-        "ja",
-        "ka",
-        "ko",
-        "nl",
-        "no",
-        "pl",
-        "pt",
-        "ru",
-        "silent",
-        "sk",
-        "sr",
-        "sr",
-        "sv",
-        "tr",
-        "uk",
-        "zh",
-        "zh_CN",
-        "zh_TW"
-      ],
-      "type": "string"
-    },
-    "accelerator_experiment": {
-      "additionalProperties": false,
-      "description": "Accelerator and experiment information.",
-      "type": "object",
+    }, 
+    "_access": {
       "properties": {
-        "project": {
+        "read": {
+          "items": {
+            "title": "Read", 
+            "type": "string"
+          }, 
+          "type": "array"
+        }, 
+        "update": {
+          "items": {
+            "title": "Update", 
+            "type": "string"
+          }, 
+          "type": "array"
+        }
+      }, 
+      "type": "object"
+    }, 
+    "_cds": {
+      "properties": {
+        "extracted_metadata": {
+          "type": "object"
+        }, 
+        "modified_by": {
+          "type": "integer"
+        }, 
+        "state": {
+          "properties": {
+            "file_download": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_transcode": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_upload": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_extract_frames": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_metadata_extraction": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }
+          }, 
+          "type": "object"
+        }
+      }, 
+      "type": "object"
+    }, 
+    "_deposit": {
+      "properties": {
+        "created_by": {
+          "type": "integer"
+        }, 
+        "id": {
           "type": "string"
-        },
-        "study": {
-          "type": "string"
-        },
-        "experiment": {
-          "type": "string"
-        },
-        "accelerator": {
-          "type": "string"
-        },
-        "facility": {
+        }, 
+        "owners": {
+          "description": "Owners of the record (a list of user's IDs).", 
+          "items": {
+            "type": "integer"
+          }, 
+          "name": "owners", 
+          "title": "Owners", 
+          "type": "array"
+        }, 
+        "pid": {
+          "properties": {
+            "revision_id": {
+              "type": "integer"
+            }, 
+            "type": {
+              "type": "string"
+            }, 
+            "value": {
+              "type": "string"
+            }
+          }, 
+          "type": "object"
+        }, 
+        "status": {
+          "enum": [
+            "published", 
+            "draft"
+          ], 
           "type": "string"
         }
-      },
-      "title": "Accelerator/Experiment"
-    },
+      }, 
+      "type": "object"
+    }, 
+    "_files": {
+      "items": {
+        "description": "A file object described using some basic subfields. (Usually to be extended).", 
+        "properties": {
+          "bucket_id": {
+            "type": "string"
+          }, 
+          "checksum": {
+            "type": "string"
+          }, 
+          "completed": {
+            "type": "boolean"
+          }, 
+          "content_type": {
+            "type": "string"
+          }, 
+          "context_type": {
+            "enum": [
+              "frame", 
+              "frames-preview", 
+              "subtitle", 
+              "master", 
+              "subformat", 
+              "playlist", 
+              "poster"
+            ], 
+            "type": "string"
+          }, 
+          "file_id": {
+            "type": "string"
+          }, 
+          "frame": {
+            "items": {
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }
+              }, 
+              "type": "object"
+            }, 
+            "type": "array"
+          }, 
+          "frames-preview": {
+            "items": {
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }
+              }, 
+              "type": "object"
+            }, 
+            "type": "array"
+          }, 
+          "key": {
+            "type": "string"
+          }, 
+          "media_type": {
+            "type": "string"
+          }, 
+          "playlist": {
+            "items": {
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }
+              }, 
+              "type": "object"
+            }, 
+            "type": "array"
+          }, 
+          "size": {
+            "type": "integer"
+          }, 
+          "subformat": {
+            "items": {
+              "description": "A file object described using some basic subfields. (Usually to be extended).", 
+              "properties": {
+                "bucket_id": {
+                  "type": "string"
+                }, 
+                "checksum": {
+                  "type": "string"
+                }, 
+                "completed": {
+                  "type": "boolean"
+                }, 
+                "content_type": {
+                  "type": "string"
+                }, 
+                "context_type": {
+                  "enum": [
+                    "frame", 
+                    "frames-preview", 
+                    "subtitle", 
+                    "master", 
+                    "subformat", 
+                    "playlist", 
+                    "poster"
+                  ], 
+                  "type": "string"
+                }, 
+                "file_id": {
+                  "type": "string"
+                }, 
+                "key": {
+                  "type": "string"
+                }, 
+                "media_type": {
+                  "type": "string"
+                }, 
+                "size": {
+                  "type": "integer"
+                }, 
+                "version_id": {
+                  "type": "string"
+                }
+              }, 
+              "type": "object"
+            }, 
+            "type": "array"
+          }, 
+          "version_id": {
+            "type": "string"
+          }
+        }, 
+        "type": "object"
+      }, 
+      "type": "array"
+    }, 
+    "_oai": {
+      "additionalProperties": false, 
+      "description": "OAI-PMH specific information.", 
+      "properties": {
+        "id": {
+          "description": "OAI-PMH record identifier.", 
+          "type": "string"
+        }, 
+        "sets": {
+          "description": "OAI-PMH sets for record.", 
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array"
+        }, 
+        "updated": {
+          "description": "Last OAI-PMH set update (ISO8601 formatted timestamp)", 
+          "type": "string"
+        }
+      }, 
+      "type": "object"
+    }, 
+    "_project_id": {
+      "type": "string"
+    }, 
+    "accelerator_experiment": {
+      "additionalProperties": false, 
+      "description": "Accelerator and experiment information.", 
+      "properties": {
+        "accelerator": {
+          "type": "string"
+        }, 
+        "experiment": {
+          "type": "string"
+        }, 
+        "facility": {
+          "type": "string"
+        }, 
+        "project": {
+          "type": "string"
+        }, 
+        "study": {
+          "type": "string"
+        }
+      }, 
+      "title": "Accelerator/Experiment", 
+      "type": "object"
+    }, 
+    "agency_code": {
+      "type": "string"
+    }, 
     "audio_characteristics": {
-      "type": "object",
       "properties": {
         "playback_channels": {
           "type": "string"
         }
-      }
-    },
-    "vr": {
+      }, 
+      "type": "object"
+    }, 
+    "category": {
+      "description": "Category of the project.", 
+      "type": "string"
+    }, 
+    "contributors": {
+      "items": {
+        "additionalProperties": false, 
+        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.", 
+        "properties": {
+          "affiliations": {
+            "description": "Affiliation(s) for the purpose of this specific record.", 
+            "items": {
+              "type": "string"
+            }, 
+            "type": "array", 
+            "uniqueItems": true
+          }, 
+          "contribution": {
+            "description": "Specific contribution of the person to this specific record.", 
+            "type": "string"
+          }, 
+          "email": {
+            "description": "Contact email for the purpose of this specific record.", 
+            "format": "email", 
+            "type": "string"
+          }, 
+          "ids": {
+            "description": "List of IDs related with the person.", 
+            "items": {
+              "additionalProperties": false, 
+              "properties": {
+                "source": {
+                  "type": "string"
+                }, 
+                "value": {
+                  "type": "string"
+                }
+              }, 
+              "type": "object"
+            }, 
+            "type": "array", 
+            "uniqueItems": true
+          }, 
+          "name": {
+            "description": "Full name of person. Personal name format: family, given.", 
+            "type": "string"
+          }, 
+          "role": {
+            "enum": [
+              "Animations by", 
+              "Camera Operator", 
+              "Comments by", 
+              "Co-Producer", 
+              "Creator", 
+              "Credits", 
+              "Director", 
+              "Editor", 
+              "Music by", 
+              "Narrator", 
+              "Photography", 
+              "Producer", 
+              "Reporter", 
+              "Screenwriter", 
+              "Speaker", 
+              "Translator"
+            ], 
+            "type": "string"
+          }
+        }, 
+        "required": [
+          "name"
+        ], 
+        "type": "object"
+      }, 
+      "minItems": 1, 
+      "type": "array"
+    }, 
+    "copyright": {
+      "properties": {
+        "holder": {
+          "description": "The party holding the legal copyright to the record.", 
+          "type": "string"
+        }, 
+        "url": {
+          "format": "url", 
+          "type": "string"
+        }, 
+        "year": {
+          "description": "The year during which the claimed copyright for the CreativeWork was first asserted.", 
+          "format": "date-time", 
+          "type": "string"
+        }
+      }, 
+      "type": "object"
+    }, 
+    "date": {
+      "description": "A point or period of time associated with an event in the lifecycle of the resource. (http://www.w3.org/TR/NOTE-datetime)", 
+      "format": "date-time", 
+      "type": "string"
+    }, 
+    "description": {
+      "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.", 
+      "type": "string"
+    }, 
+    "doi": {
+      "description": "Record DOI identifier (string).", 
+      "type": "string"
+    }, 
+    "duration": {
+      "type": "string"
+    }, 
+    "external_system_identifiers": {
+      "description": "List of identifiers on external systems.", 
+      "items": {
+        "additionalProperties": false, 
+        "properties": {
+          "schema": {
+            "type": "string"
+          }, 
+          "value": {
+            "type": "string"
+          }
+        }
+      }, 
+      "title": "External identifiers", 
+      "type": "array"
+    }, 
+    "featured": {
       "type": "boolean"
-    },
-    "recid": {
-      "type": "number",
-      "description": "Invenio record identifier (integer)."
-    },
+    }, 
+    "internal_categories": {
+      "description": "FIXME: temporary location for potential future communities", 
+      "type": "object"
+    }, 
+    "internal_note": {
+      "description": "Internal note.", 
+      "title": "Internal note", 
+      "type": "string"
+    }, 
+    "keywords": {
+      "items": {
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }, 
+        "type": "object"
+      }, 
+      "type": "array"
+    }, 
+    "language": {
+      "default": "en", 
+      "description": "A language of the resource.", 
+      "enum": [
+        "ar", 
+        "bg", 
+        "ca", 
+        "ch", 
+        "cs", 
+        "da", 
+        "de", 
+        "el", 
+        "en-fr", 
+        "en", 
+        "es", 
+        "fi", 
+        "fr", 
+        "hr", 
+        "hu", 
+        "it", 
+        "ja", 
+        "ka", 
+        "ko", 
+        "nl", 
+        "no", 
+        "pl", 
+        "pt", 
+        "ru", 
+        "silent", 
+        "sk", 
+        "sr", 
+        "sv", 
+        "tr", 
+        "uk", 
+        "zh_CN", 
+        "zh_TW", 
+        "zh"
+      ], 
+      "type": "string"
+    }, 
+    "license": {
+      "items": {
+        "additionalProperties": false, 
+        "properties": {
+          "credit": {
+            "title": "Credit", 
+            "type": "string"
+          }, 
+          "license": {
+            "title": "License name", 
+            "type": "string"
+          }, 
+          "material": {
+            "title": "Material", 
+            "type": "string"
+          }, 
+          "url": {
+            "format": "url", 
+            "title": "URL of the license", 
+            "type": "string"
+          }
+        }, 
+        "title": "License", 
+        "type": "object"
+      }, 
+      "title": "License information", 
+      "type": "array", 
+      "uniqueItems": true
+    }, 
+    "location": {
+      "description": "Place or location.", 
+      "title": "Place or location", 
+      "type": "string"
+    }, 
+    "note": {
+      "description": "Note.", 
+      "title": "Note", 
+      "type": "string"
+    }, 
     "original_source": {
       "type": "string"
-    },
-    "_project_id": {
+    }, 
+    "physical_medium": {
+      "description": "Physical medium, typically used for archive resources.", 
+      "items": {
+        "additionalProperties": false, 
+        "properties": {
+          "arrangement": {
+            "type": "string"
+          }, 
+          "bar_code": {
+            "type": "string"
+          }, 
+          "camera": {
+            "type": "string"
+          }, 
+          "copy_number": {
+            "type": "string"
+          }, 
+          "internal_note": {
+            "type": "string"
+          }, 
+          "location": {
+            "type": "string"
+          }, 
+          "medium_standard": {
+            "type": "string"
+          }, 
+          "note": {
+            "type": "string"
+          }, 
+          "sequence_number": {
+            "items": {
+              "type": "string"
+            }, 
+            "type": "array"
+          }, 
+          "shelf": {
+            "type": "string"
+          }
+        }
+      }, 
+      "title": "Physical medium", 
+      "type": "array"
+    }, 
+    "publication_date": {
+      "description": "When the record is published", 
+      "format": "date-time", 
+      "title": "Publication date", 
       "type": "string"
+    }, 
+    "recid": {
+      "description": "Invenio record identifier (integer).", 
+      "type": "number"
+    }, 
+    "related_links": {
+      "items": {
+        "additionalProperties": false, 
+        "properties": {
+          "name": {
+            "title": "Related link name", 
+            "type": "string"
+          }, 
+          "url": {
+            "format": "url", 
+            "title": "Related URL", 
+            "type": "string"
+          }
+        }, 
+        "title": "Related links", 
+        "type": "object"
+      }, 
+      "title": "Related links information", 
+      "type": "array", 
+      "uniqueItems": true
+    }, 
+    "report_number": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array"
+    }, 
+    "subject": {
+      "additionalProperties": false, 
+      "description": "Subject.", 
+      "properties": {
+        "source": {
+          "type": "string"
+        }, 
+        "term": {
+          "type": "string"
+        }
+      }, 
+      "title": "Subject", 
+      "type": "object"
+    }, 
+    "title": {
+      "additionalProperties": false, 
+      "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.", 
+      "properties": {
+        "subtitle": {
+          "type": "string"
+        }, 
+        "title": {
+          "type": "string"
+        }
+      }, 
+      "required": [
+        "title"
+      ], 
+      "type": "object"
+    }, 
+    "translations": {
+      "items": {
+        "properties": {
+          "description": {
+            "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource.", 
+            "type": "string"
+          }, 
+          "language": {
+            "default": "en", 
+            "description": "A language of the resource.", 
+            "enum": [
+              "ar", 
+              "bg", 
+              "ca", 
+              "ch", 
+              "cs", 
+              "da", 
+              "de", 
+              "el", 
+              "en-fr", 
+              "en", 
+              "es", 
+              "fi", 
+              "fr", 
+              "hr", 
+              "hu", 
+              "it", 
+              "ja", 
+              "ka", 
+              "ko", 
+              "nl", 
+              "no", 
+              "pl", 
+              "pt", 
+              "ru", 
+              "silent", 
+              "sk", 
+              "sr", 
+              "sv", 
+              "tr", 
+              "uk", 
+              "zh_CN", 
+              "zh_TW", 
+              "zh"
+            ], 
+            "type": "string"
+          }, 
+          "title": {
+            "additionalProperties": false, 
+            "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.", 
+            "properties": {
+              "subtitle": {
+                "type": "string"
+              }, 
+              "title": {
+                "type": "string"
+              }
+            }, 
+            "required": [
+              "title"
+            ], 
+            "type": "object"
+          }
+        }, 
+        "type": "object"
+      }, 
+      "type": "array"
+    }, 
+    "type": {
+      "description": "Type of the project.", 
+      "type": "string"
+    }, 
+    "vr": {
+      "type": "boolean"
     }
-  },
-  "title": "CDS Base Record Schema v1.0.0"
+  }, 
+  "required": [
+    "category", 
+    "contributors", 
+    "copyright", 
+    "date", 
+    "description", 
+    "duration", 
+    "language", 
+    "license", 
+    "publication_date", 
+    "recid", 
+    "report_number", 
+    "title", 
+    "type"
+  ], 
+  "title": "CDS Base Record Schema v1.0.0", 
+  "type": "object"
 }

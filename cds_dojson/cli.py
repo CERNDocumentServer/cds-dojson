@@ -49,6 +49,3 @@ def compile_schema(schema):
     base_uri = 'file://{0}/'.format(os.path.dirname(os.path.abspath(schema)))
 
     click.echo(json.dumps(_compile_schema(schema_json, base_uri), indent=2))
-
-# with open('~/.virtualenvs/videos-venv/src/cds-dojson/cds_dojson/schemas/records/videos/video/latest_video_src-v1.0.0.json', 'w+') as f:
-#     json.dump(compile_schema(schema_json, base_uri), f, indent=2)

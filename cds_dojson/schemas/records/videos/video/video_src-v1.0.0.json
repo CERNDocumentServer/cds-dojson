@@ -5,8 +5,12 @@
     {
       "properties": {
         "title": { "$ref": "../../definitions-v1.0.0.json#/definitions/title" },
-        "keywords": { "$ref": "../../definitions-v1.0.0.json#/definitions/keywords" },
-        "description": { "$ref": "../../definitions-v1.0.0.json#/definitions/description" },
+        "keywords": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/keywords"
+        },
+        "description": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/description"
+        },
         "translations": {
           "type": "array",
           "items": {
@@ -55,10 +59,7 @@
               "name": "owners"
             },
             "status": {
-              "enum": [
-                "published",
-                "draft"
-              ],
+              "enum": ["published", "draft"],
               "type": "string"
             },
             "id": {
@@ -74,7 +75,9 @@
           "minItems": 1,
           "items": {
             "allOf": [
-              {"$ref": "../../definitions-v1.0.0.json#/definitions/contributor"},
+              {
+                "$ref": "../../definitions-v1.0.0.json#/definitions/contributor"
+              },
               {
                 "properties": {
                   "role": {
@@ -104,17 +107,37 @@
           }
         },
         "date": { "$ref": "../../definitions-v1.0.0.json#/definitions/date" },
-        "copyright": { "$ref": "../../definitions-v1.0.0.json#/definitions/copyright" },
-        "license": { "$ref": "../../definitions-v1.0.0.json#/definitions/license" },
-        "related_links": { "$ref": "../../definitions-v1.0.0.json#/definitions/related_links" },
-        "location": { "$ref": "../../definitions-v1.0.0.json#/definitions/location" },
-        "physical_medium": { "$ref": "../../definitions-v1.0.0.json#/definitions/physical_medium" },
+        "copyright": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/copyright"
+        },
+        "license": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/license"
+        },
+        "related_links": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/related_links"
+        },
+        "location": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/location"
+        },
+        "physical_medium": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/physical_medium"
+        },
         "note": { "$ref": "../../definitions-v1.0.0.json#/definitions/note" },
-        "internal_note": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note" },
-        "internal_categories": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_categories" },
-        "subject": { "$ref": "../../definitions-v1.0.0.json#/definitions/subject" },
-        "accelerator_experiment": { "$ref": "../../definitions-v1.0.0.json#/definitions/accelerator_experiment" },
-        "external_system_identifiers": { "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers" },
+        "internal_note": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note"
+        },
+        "internal_categories": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/internal_categories"
+        },
+        "subject": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/subject"
+        },
+        "accelerator_experiment": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/accelerator_experiment"
+        },
+        "external_system_identifiers": {
+          "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers"
+        },
         "vr": {
           "type": "boolean"
         },
@@ -187,93 +210,21 @@
         "_project_id": {
           "type": "string"
         },
-    "_cds": {
-      "type": "object",
-      "properties": {
-        "state": {
+        "_cds": {
           "type": "object",
           "properties": {
-            "file_upload": {
-              "enum": [
-                "PENDING",
-                "RECEIVED",
-                "STARTED",
-                "SUCCESS",
-                "FAILURE",
-                "REVOKED",
-                "RETRY",
-                "IGNORED",
-                "REJECTED"
-              ],
-              "type": "string"
+            "state": {
+              "$ref": "../../definitions-v1.0.0.json#/definitions/state"
             },
-            "file_download": {
-              "enum": [
-                "PENDING",
-                "RECEIVED",
-                "STARTED",
-                "SUCCESS",
-                "FAILURE",
-                "REVOKED",
-                "RETRY",
-                "IGNORED",
-                "REJECTED"
-              ],
-              "type": "string"
+            "modified_by": {
+              "type": "integer"
             },
-            "file_transcode": {
-              "enum": [
-                "PENDING",
-                "RECEIVED",
-                "STARTED",
-                "SUCCESS",
-                "FAILURE",
-                "REVOKED",
-                "RETRY",
-                "IGNORED",
-                "REJECTED"
-              ],
-              "type": "string"
-            },
-            "file_video_extract_frames": {
-              "enum": [
-                "PENDING",
-                "RECEIVED",
-                "STARTED",
-                "SUCCESS",
-                "FAILURE",
-                "REVOKED",
-                "RETRY",
-                "IGNORED",
-                "REJECTED"
-              ],
-              "type": "string"
-            },
-            "file_video_metadata_extraction": {
-              "enum": [
-                "PENDING",
-                "RECEIVED",
-                "STARTED",
-                "SUCCESS",
-                "FAILURE",
-                "REVOKED",
-                "RETRY",
-                "IGNORED",
-                "REJECTED"
-              ],
-              "type": "string"
+            "extracted_metadata": {
+              "type": "object"
             }
           }
         },
-        "modified_by": {
-          "type": "integer"
-        },
-        "extracted_metadata": {
-          "type": "object"
-        }
-      }
-    },
-    "category": {
+        "category": {
           "description": "Category of the project.",
           "type": "string"
         },

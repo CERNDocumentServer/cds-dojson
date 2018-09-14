@@ -98,7 +98,7 @@
           "description": "Specific contribution of the person to this specific record.",
           "type": "string"
         },
-        "role" : {
+        "role": {
           "type": "string"
         }
       },
@@ -167,7 +167,6 @@
       },
       "type": "array"
     },
-
     "title": {
       "description": "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.",
       "type": "object",
@@ -248,7 +247,7 @@
         "year": {
           "description": "The year during which the claimed copyright for the CreativeWork was first asserted.",
           "type": "string",
-          "format" : "date-time"
+          "format": "date-time"
         },
         "url": {
           "type": "string",
@@ -323,7 +322,7 @@
       "title": "Publication date",
       "description": "When the record is published",
       "type": "string",
-      "format" : "date-time"
+      "format": "date-time"
     },
     "related_links": {
       "items": {
@@ -418,6 +417,81 @@
           "type": "string"
         },
         "term": {
+          "type": "string"
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "properties": {
+        "file_upload": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_download": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_transcode": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_video_extract_frames": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "file_video_metadata_extraction": {
+          "enum": [
+            "PENDING",
+            "RECEIVED",
+            "STARTED",
+            "SUCCESS",
+            "FAILURE",
+            "REVOKED",
+            "RETRY",
+            "IGNORED",
+            "REJECTED"
+          ],
           "type": "string"
         }
       }

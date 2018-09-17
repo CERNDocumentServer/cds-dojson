@@ -65,7 +65,12 @@
     }, 
     "keywords": {
       "items": {
-        "type": "object"
+        "type": "object", 
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
       }, 
       "type": "array"
     }, 
@@ -331,43 +336,42 @@
             "description": "An account of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
           }, 
           "language": {
-            "default": "en",
+            "default": "en", 
             "enum": [
-              "ar",
-              "bg",
-              "ca",
-              "ch",
-              "cs",
-              "da",
-              "de",
-              "el",
-              "en",
-              "en-fr",
-              "es",
-              "fi",
-              "fr",
-              "hr",
-              "hu",
-              "it",
-              "ja",
-              "ka",
-              "ko",
-              "nl",
-              "no",
-              "pl",
-              "pt",
-              "ru",
-              "silent",
-              "sk",
-              "sr",
-              "sr",
-              "sv",
-              "tr",
-              "uk",
-              "zh",
-              "zh_CN",
-              "zh_TW"
-            ],
+              "ar", 
+              "bg", 
+              "ca", 
+              "ch", 
+              "cs", 
+              "da", 
+              "de", 
+              "el", 
+              "en-fr", 
+              "en", 
+              "es", 
+              "fi", 
+              "fr", 
+              "hr", 
+              "hu", 
+              "it", 
+              "ja", 
+              "ka", 
+              "ko", 
+              "nl", 
+              "no", 
+              "pl", 
+              "pt", 
+              "ru", 
+              "silent", 
+              "sk", 
+              "sr", 
+              "sv", 
+              "tr", 
+              "uk", 
+              "zh_CN", 
+              "zh_TW", 
+              "zh"
+            ], 
             "type": "string", 
             "description": "A language of the resource."
           }, 
@@ -406,11 +410,7 @@
       "type": "string", 
       "description": "Internal note.", 
       "title": "Internal note"
-    },
-    "internal_categories": {
-      "description": "FIXME: temporary location for potential future communities",
-      "type": "object"
-    },
+    }, 
     "doi": {
       "type": "string", 
       "description": "Record DOI identifier (string)."
@@ -427,6 +427,10 @@
           "description": "Deposit bucket ID."
         }
       }
+    }, 
+    "internal_categories": {
+      "type": "object", 
+      "description": "FIXME: temporary location for potential future communities"
     }, 
     "license": {
       "uniqueItems": true, 
@@ -461,7 +465,79 @@
       "type": "object", 
       "properties": {
         "state": {
-          "type": "object"
+          "type": "object", 
+          "properties": {
+            "file_download": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_upload": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_extract_frames": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_video_metadata_extraction": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }, 
+            "file_transcode": {
+              "enum": [
+                "PENDING", 
+                "RECEIVED", 
+                "STARTED", 
+                "SUCCESS", 
+                "FAILURE", 
+                "REVOKED", 
+                "RETRY", 
+                "IGNORED", 
+                "REJECTED"
+              ], 
+              "type": "string"
+            }
+          }
         }, 
         "modified_by": {
           "type": "integer"

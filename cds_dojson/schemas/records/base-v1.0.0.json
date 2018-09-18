@@ -17,7 +17,7 @@
     },
     "recid": {
       "description": "Invenio record identifier (integer).",
-      "type": "number"
+      "type": "integer"
     },
     "doi": {
       "description": "Record DOI identifier (string).",

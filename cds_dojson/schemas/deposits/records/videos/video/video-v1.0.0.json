@@ -923,7 +923,7 @@
       "type": "boolean"
     }, 
     "recid": {
-      "type": "number", 
+      "type": "integer", 
       "description": "Invenio record identifier (integer)."
     }, 
     "original_source": {

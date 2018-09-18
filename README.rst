@@ -29,10 +29,12 @@ Installation
 
 Usage
 =====
-  Schemas are dynamically generated from their respected `*_src.json` file.
-  You can redirect the output in order to create the desired file.
+  > Attention! The deposit schemas, inherit from the record schemas.
+   First build `schemas/records/videos...` and then `schemas/deposits/records...`
 
-  `cds-dojson compile_schema project_src-v1.0.0.json > project-v1.0.0.json`
+  Schemas are generated from their `*_src.json` file, navigate to src path and execute
+
+  `$ cds-dojson compile_schema project_src-v1.0.0.json > project-v1.0.0.json`
 
 
 Documentation

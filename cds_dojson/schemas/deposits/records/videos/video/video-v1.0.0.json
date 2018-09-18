@@ -229,6 +229,9 @@
       "items": {
         "type": "object", 
         "properties": {
+          "source": {
+            "type": "string"
+          }, 
           "name": {
             "type": "string"
           }

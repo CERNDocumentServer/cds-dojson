@@ -114,6 +114,9 @@
         "properties": {
           "name": {
             "type": "string"
+          },
+          "source": {
+            "type": "string"
           }
         }
       },

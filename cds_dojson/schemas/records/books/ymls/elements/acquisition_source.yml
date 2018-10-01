@@ -59,7 +59,7 @@ properties:
         title: ORCID of the submitter
         type: string
     source:
-        $ref: source.yml
+        $ref: source.json
     submission_number:
         description: |-
             This only gets populated when `method` is `submitter`.

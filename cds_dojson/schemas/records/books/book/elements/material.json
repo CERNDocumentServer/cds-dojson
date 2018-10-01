@@ -1,0 +1,18 @@
+{
+  "minLength": 1, 
+  "enum": [
+    "addendum", 
+    "additional material", 
+    "data", 
+    "erratum", 
+    "editorial note", 
+    "preprint", 
+    "publication", 
+    "reprint", 
+    "software", 
+    "translation"
+  ], 
+  "type": "string", 
+  "description": "The possible values are:\n``addendum``\n    for a document extending the main publication.\n``additional material``\n    for additional material attached to the main publication, that is\n    neither the more specific ``data`` or ``software``.\n``data``\n    for data related to the main publication.\n``erratum``\n    for a document correcting errors in the content of the main\n    publication. When the errors are not in the content but in the\n    publication process, it is considered as an ``editorial note`` instead.\n``editorial note``\n    for a document correcting errors in the metadata of the publication but\n    not its content. Otherwise, it is an ``erratum``.\n``preprint``\n    for a document that is made public (typically on `arXiv\n    <http://arxiv.org>`_) but not yet published formally.\n``publication``\n    for the main publication. If it's not published, it's a ``preprint``.\n``reprint``\n    for a reprint of the main publication.\n``software``\n    for software related to the main publication.\n``translation``\n    for a translation of the main publication.", 
+  "title": "Material to which the field refers"
+}

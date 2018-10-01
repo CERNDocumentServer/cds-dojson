@@ -6,7 +6,7 @@ properties:
     curated_relation:
         type: boolean
     record:
-        $ref: json_reference.yml
+        $ref: json_reference.json
         description: |-
             :MARC: ``775__w``
         title: URL of related record

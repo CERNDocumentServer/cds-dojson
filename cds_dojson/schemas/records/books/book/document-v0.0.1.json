@@ -1,0 +1,2642 @@
+{
+  "title": "CDS Base Record Schema v1.0.0", 
+  "required": [
+    "document_type", 
+    "titles", 
+    "recid"
+  ], 
+  "decription": "A record in the books, proceedings, standards, theses and reports.", 
+  "$schema": "http://json-schema.org/draft-04/schema#", 
+  "type": "object", 
+  "properties": {
+    "corporate_authors": {
+      "minItems": 1, 
+      "items": {
+        "minLength": 1, 
+        "type": "string", 
+        "description": ":MARC: ``110__a``\nIn case the document has not been signed by a real author, but\nonly mentions the name of an organization.\n:example: ``CERN``", 
+        "title": "List of corporate authors"
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "funding_info": {
+      "description": ":MARC: ``536``\nInformation about the sources of funding for the research performed\nin this record.", 
+      "title": "Funding information", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "grant_number": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``536__c``", 
+            "title": "Grant number"
+          }, 
+          "agency": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``536__a``", 
+            "title": "Funding agency"
+          }, 
+          "open_access": {
+            "minLength": 1, 
+            "type": "boolean", 
+            "description": ":MARC: ``536__r``", 
+            "title": "Open Access"
+          }, 
+          "project_number": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``536__f``", 
+            "title": "Project number"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "thesis_info": {
+      "additionalProperties": false, 
+      "type": "object", 
+      "description": ":MARC: ``502``\nInformation on a thesis (degree, date, university)", 
+      "properties": {
+        "date": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``502__d``\nPublication date of the thesis", 
+          "format": "date"
+        }, 
+        "defense_date": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``500__a``\nDate of the thesis defense. On legacy, this was put in the\nnote field as 'presented on ...'.", 
+          "format": "date"
+        }, 
+        "degree_type": {
+          "minLength": 1, 
+          "enum": [
+            "other", 
+            "diploma", 
+            "bachelor", 
+            "laurea", 
+            "master", 
+            "phd", 
+            "habilitation"
+          ], 
+          "type": "string", 
+          "description": ":MARC: ``502__b``\nThe `other` value means that the degree type is not known or is not among\nthe more specific values.", 
+          "title": "Academic degree type"
+        }, 
+        "institutions": {
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "type": "object", 
+            "properties": {
+              "curated_relation": {
+                "type": "boolean"
+              }, 
+              "name": {
+                "minLength": 1, 
+                "type": "string"
+              }, 
+              "record": {
+                "additionalProperties": false, 
+                "required": [
+                  "$ref"
+                ], 
+                "type": "object", 
+                "properties": {
+                  "$ref": {
+                    "minLength": 1, 
+                    "type": "string", 
+                    "description": "URL to the referenced resource", 
+                    "format": "uri"
+                  }
+                }, 
+                "title": "Reference to another record"
+              }
+            }
+          }, 
+          "uniqueItems": true, 
+          "description": ":MARC: ``502__c``\nList of institutions issuing the degree.", 
+          "type": "array"
+        }
+      }
+    }, 
+    "_collections": {
+      "description": ":MARC: ``980__a`` ``690C_a`` ``697C_a``\nCollections to which this record belongs\n.. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.", 
+      "title": "Collections", 
+      "minItems": 1, 
+      "items": {
+        "minLength": 1, 
+        "enum": [
+          "BOOKSHOP", 
+          "DESIGN REPORT", 
+          "ENGLISH BOOK CLUB", 
+          "DIDACTICLIBRARY", 
+          "BOOKSUGGESTION", 
+          "CERN", 
+          "YELLOW REPORT", 
+          "LEGSERLIB", 
+          "LEGSERLIBINTLAW", 
+          "LEGSERLIBCIVLAW", 
+          "LEGSERLIBLEGRES"
+        ], 
+        "type": "string"
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "public_notes": {
+      "description": ":MARC: ``500``\nAny notes about the document that do not fit into another field.\nFor arXiv eprints, also contains the contents of the comment field\non arXiv.\n.. note::\n    These notes are publicly visible. For notes not shown to\n    regular users, see :ref:`_private_notes`.", 
+      "title": "List of public notes", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "dois": {
+      "description": ".. Note: This element can be found at the holding level or at the bibliographic record level.", 
+      "title": "List of DOIs", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+          }, 
+          "material": {
+            "minLength": 1, 
+            "enum": [
+              "addendum", 
+              "additional material", 
+              "data", 
+              "erratum", 
+              "editorial note", 
+              "preprint", 
+              "publication", 
+              "reprint", 
+              "software", 
+              "translation"
+            ], 
+            "type": "string", 
+            "description": "The possible values are:\n``addendum``\n    for a document extending the main publication.\n``additional material``\n    for additional material attached to the main publication, that is\n    neither the more specific ``data`` or ``software``.\n``data``\n    for data related to the main publication.\n``erratum``\n    for a document correcting errors in the content of the main\n    publication. When the errors are not in the content but in the\n    publication process, it is considered as an ``editorial note`` instead.\n``editorial note``\n    for a document correcting errors in the metadata of the publication but\n    not its content. Otherwise, it is an ``erratum``.\n``preprint``\n    for a document that is made public (typically on `arXiv\n    <http://arxiv.org>`_) but not yet published formally.\n``publication``\n    for the main publication. If it's not published, it's a ``preprint``.\n``reprint``\n    for a reprint of the main publication.\n``software``\n    for software related to the main publication.\n``translation``\n    for a translation of the main publication.", 
+            "title": "Material to which the field refers"
+          }, 
+          "value": {
+            "pattern": "^10\\.\\d+(\\.\\d+)?/\\S+$", 
+            "type": "string", 
+            "description": ":MARC: ``0247_a``\n:example: ``10.1023/A:1026654312961``", 
+            "minLength": 1, 
+            "title": "DOI"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "preprint_date": {
+      "minLength": 1, 
+      "format": "date", 
+      "type": "string", 
+      "description": ":MARC: ``269__c``\n.. note::\n    This is only for preprints. For the publication date of\n    published documents, see :ref:`imprints`.", 
+      "title": "Preprint release date"
+    }, 
+    "standard_numbers": {
+      "description": ":MARC: ``021``\n:example: ``BS-EN-485-1``\n.. Note:: Used for Standards numbers only.", 
+      "title": "List of standard numbers", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "hidden": {
+            "type": "boolean", 
+            "description": ":MARC: True when the standard number is in ``021__b``"
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``021__a`` and ``021__b``"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "titles": {
+      "description": ":MARC: ``245``\nThere can be several because the preprint title often differs from\nthe published version. The title should be kept as on the document\nand in the same language as the document (see :ref:`languages`).\nTranslations go into :ref:`title_translations`.", 
+      "title": "List of titles", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "title"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string"
+          }, 
+          "subtitle": {
+            "minLength": 1, 
+            "type": "string"
+          }, 
+          "title": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "publication_info": {
+      "description": ":MARC: ``773``", 
+      "title": "List of information on publication", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "page_end": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: last page in ``773__c`` (if present)", 
+            "title": "Last page of document"
+          }, 
+          "journal_title": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``773__p``\nJournal title abbreviated as in the corresponding entry\nin the Journals collection.\n:example: ``Phys.Rev.``"
+          }, 
+          "parent_isbn": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``773__z``\nISBN of the book of which this document is a part.", 
+            "pattern": "^\\d*[0-9X]$"
+          }, 
+          "cnum": {
+            "pattern": "^C\\d\\d-\\d\\d-\\d\\d(\\.\\d+)?$", 
+            "title": "CNUM identifier of the conference", 
+            "type": "string", 
+            "description": "The CNUM is based on the starting day of the conference, with an extra\nnumber appended to distinguish conferences starting on the first day.\n:example: The first conference (in order of creation on Inspire) starting\n    on December 25, 1987 has CNUM ``C87-12-25`` whereas, say, the third\n    one, has CNUM ``C87-12-25.2``", 
+            "minLength": 1
+          }, 
+          "material": {
+            "minLength": 1, 
+            "enum": [
+              "addendum", 
+              "additional material", 
+              "data", 
+              "erratum", 
+              "editorial note", 
+              "preprint", 
+              "publication", 
+              "reprint", 
+              "software", 
+              "translation"
+            ], 
+            "type": "string", 
+            "description": "The possible values are:\n``addendum``\n    for a document extending the main publication.\n``additional material``\n    for additional material attached to the main publication, that is\n    neither the more specific ``data`` or ``software``.\n``data``\n    for data related to the main publication.\n``erratum``\n    for a document correcting errors in the content of the main\n    publication. When the errors are not in the content but in the\n    publication process, it is considered as an ``editorial note`` instead.\n``editorial note``\n    for a document correcting errors in the metadata of the publication but\n    not its content. Otherwise, it is an ``erratum``.\n``preprint``\n    for a document that is made public (typically on `arXiv\n    <http://arxiv.org>`_) but not yet published formally.\n``publication``\n    for the main publication. If it's not published, it's a ``preprint``.\n``reprint``\n    for a reprint of the main publication.\n``software``\n    for software related to the main publication.\n``translation``\n    for a translation of the main publication.", 
+            "title": "Material to which the field refers"
+          }, 
+          "year": {
+            "minimum": 1000, 
+            "type": "integer", 
+            "description": ":MARC: ``773__y``", 
+            "maximum": 2050, 
+            "title": "Publication year"
+          }, 
+          "journal_record": {
+            "additionalProperties": false, 
+            "required": [
+              "$ref"
+            ], 
+            "type": "object", 
+            "properties": {
+              "$ref": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": "URL to the referenced resource", 
+                "format": "uri"
+              }
+            }, 
+            "title": "Reference to another record"
+          }, 
+          "journal_volume": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``773__v``"
+          }, 
+          "parent_record": {
+            "additionalProperties": false, 
+            "required": [
+              "$ref"
+            ], 
+            "type": "object", 
+            "properties": {
+              "$ref": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": "URL to the referenced resource", 
+                "format": "uri"
+              }
+            }, 
+            "title": "Reference to another record"
+          }, 
+          "parent_report_number": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``773__r``\nReport number of the document of which this record is a\npart. This applies e.g. for large reports containing\nseveral chapters that have been split into individual\nrecords."
+          }, 
+          "artid": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``773__c`` (when it contains an ID instead of\n    starting page or page range).\nFor journals which issue IDs for articles instead of\n(or in complement to) continuous numbers within a\nvolume.\n.. note::\n    On legacy, this was treated as a starting page.", 
+            "title": "Article ID"
+          }, 
+          "pubinfo_freetext": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``773__x``\nUnstructured text describing the publication\ninformation.\n.. note::\n    This field is used when provided with unstructured\n    publication information, e.g. from arXiv. If known,\n    the other fields should be used instead."
+          }, 
+          "conf_acronym": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``111__a``", 
+            "title": "Conference acronym"
+          }, 
+          "curated_relation": {
+            "type": "boolean"
+          }, 
+          "page_start": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: first page in ``773__c`` (if not an :ref:`artid`)", 
+            "title": "First page of document"
+          }, 
+          "journal_issue": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``773__n``"
+          }, 
+          "cern_conference_code": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``962__b``"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "keywords": {
+      "description": ":MARC: ```6531`` and ``695`` (corresponding to different\n    :ref:`keywords/items/properties/schema`)\nKeywords give information about the specific contents of the\nrecord, much more precisely than :ref:`inspire_categories`.", 
+      "title": "List of keywords", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``084/6531/695__a`` (depending on :ref:`schema`)\nIt belongs to the vocabulary specified by :ref:`schema`.\n:example: ``black hole: mass`` (for :ref:`schema` =\n    ``INSPIRE``)\n:example: ``29.27.Fh`` (for :ref:`schema` = ``PACS``)\n:example: ``G033M`` (for :ref:`schema` = ``PDG``)", 
+            "title": "A keyword"
+          }, 
+          "schema": {
+            "minLength": 1, 
+            "enum": [
+              "INIS", 
+              "INSPIRE", 
+              "JACOW", 
+              "PACS", 
+              "PDG"
+            ], 
+            "type": "string", 
+            "description": "Describes to which vocabulary the keyword in :ref:`value`\nbelongs.\n``INIS``\n    :MARC: ``695__2:INIS``\n    The keyword is part of the `International\n    Nuclear Information System (INIS)\n    <https://www.iaea.org/inis/>`_ vocabulary.\n``INSPIRE``\n    :MARC: ``695__2:INSPIRE``\n    The keyword has been assigned by Inspire, and\n    belongs to its vocabulary.\n``JACOW``\n    :MARC: ``6531_2:JACOW``\n    The keyword is part of the `Joint Accelerator\n    Conference Website (JACoW) vocabulary\n    <http://jacow.org/Tools/Keywords>`_.\n``PACS``\n    :MARC: ``084__2:PACS``\n    The keyword is a number from the `Physics and\n    Astronomy Classification Scheme (PACS)\n    <https://publishing.aip.org/publishing/pacs/pacs-2010-regular-edition>`_.\n``PDG``\n    :MARC: ``084__2:PDG``\n    The keyword is a `PDG Indentifier\n    <http://pdg.lbl.gov/2016/pdgid/PDGIdentifiers.html>`_.\n.. note::\n    If not present, the keyword is a free-form keyword,\n    not necessarily part of any vocabulary.", 
+            "title": "Keyword vocabulary"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "external_system_identifiers": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "schema", 
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "value": {
+            "pattern": "^\\S+$", 
+            "type": "string", 
+            "description": ":MARC: ``035__a``\nIdentifies the record in the external system specified\nby :ref:`schema`.\n:example: ``1999IJTP...38.1113M``", 
+            "minLength": 1, 
+            "title": "External identifier"
+          }, 
+          "schema": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``035__9``\nIdentifies the external system, and allows to interpret\nunambiguously the :ref:`value`.\n:example: ``ADS``", 
+            "pattern": "^\\w+$"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``035``\nList of identifiers of this document on external systems.", 
+      "type": "array"
+    }, 
+    "title_translations": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "language", 
+          "title"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+          }, 
+          "subtitle": {
+            "minLength": 1, 
+            "type": "string"
+          }, 
+          "language": {
+            "description": "Language code according to `ISO 639-1\n<https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.\n:example: ``el`` for Greek.", 
+            "title": "ISO 639-1 alpha 2 language code", 
+            "minLength": 2, 
+            "enum": [
+              "aa", 
+              "ab", 
+              "af", 
+              "ak", 
+              "am", 
+              "ar", 
+              "an", 
+              "as", 
+              "av", 
+              "ae", 
+              "ay", 
+              "az", 
+              "ba", 
+              "bm", 
+              "be", 
+              "bn", 
+              "bi", 
+              "bo", 
+              "bs", 
+              "br", 
+              "bg", 
+              "ca", 
+              "cs", 
+              "ch", 
+              "ce", 
+              "cu", 
+              "cv", 
+              "kw", 
+              "co", 
+              "cr", 
+              "cy", 
+              "da", 
+              "de", 
+              "dv", 
+              "dz", 
+              "el", 
+              "en", 
+              "eo", 
+              "et", 
+              "eu", 
+              "ee", 
+              "fo", 
+              "fa", 
+              "fj", 
+              "fi", 
+              "fr", 
+              "fy", 
+              "ff", 
+              "gd", 
+              "ga", 
+              "gl", 
+              "gv", 
+              "gn", 
+              "gu", 
+              "ht", 
+              "ha", 
+              "sh", 
+              "he", 
+              "hz", 
+              "hi", 
+              "ho", 
+              "hr", 
+              "hu", 
+              "hy", 
+              "ig", 
+              "io", 
+              "ii", 
+              "iu", 
+              "ie", 
+              "ia", 
+              "id", 
+              "ik", 
+              "is", 
+              "it", 
+              "jv", 
+              "ja", 
+              "kl", 
+              "kn", 
+              "ks", 
+              "ka", 
+              "kr", 
+              "kk", 
+              "km", 
+              "ki", 
+              "rw", 
+              "ky", 
+              "kv", 
+              "kg", 
+              "ko", 
+              "kj", 
+              "ku", 
+              "lo", 
+              "la", 
+              "lv", 
+              "li", 
+              "ln", 
+              "lt", 
+              "lb", 
+              "lu", 
+              "lg", 
+              "mh", 
+              "ml", 
+              "mr", 
+              "mk", 
+              "mg", 
+              "mt", 
+              "mn", 
+              "mi", 
+              "ms", 
+              "my", 
+              "na", 
+              "nv", 
+              "nr", 
+              "nd", 
+              "ng", 
+              "ne", 
+              "nl", 
+              "nn", 
+              "nb", 
+              "no", 
+              "ny", 
+              "oc", 
+              "oj", 
+              "or", 
+              "om", 
+              "os", 
+              "pa", 
+              "pi", 
+              "pl", 
+              "pt", 
+              "ps", 
+              "qu", 
+              "rm", 
+              "ro", 
+              "rn", 
+              "ru", 
+              "sg", 
+              "sa", 
+              "si", 
+              "sk", 
+              "sl", 
+              "se", 
+              "sm", 
+              "sn", 
+              "sd", 
+              "so", 
+              "st", 
+              "es", 
+              "sq", 
+              "sc", 
+              "sr", 
+              "ss", 
+              "su", 
+              "sw", 
+              "sv", 
+              "ty", 
+              "ta", 
+              "tt", 
+              "te", 
+              "tg", 
+              "tl", 
+              "th", 
+              "ti", 
+              "to", 
+              "tn", 
+              "ts", 
+              "tk", 
+              "tr", 
+              "tw", 
+              "ug", 
+              "uk", 
+              "ur", 
+              "uz", 
+              "ve", 
+              "vi", 
+              "vo", 
+              "wa", 
+              "wo", 
+              "xh", 
+              "yi", 
+              "yo", 
+              "za", 
+              "zh", 
+              "zu"
+            ], 
+            "maxLength": 2, 
+            "type": "string"
+          }, 
+          "title": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``242``\nTranslations of the titles in a language that is not the language\nof the document (see :ref:`languages`).\nUsually, this is contains an English translation of the title of a\nnon-English paper, but sometimes a native language if the paper is\nin English but the title has been translated.", 
+      "type": "array"
+    }, 
+    "copyright": {
+      "description": ":MARC: ``542``", 
+      "title": "List of copyrights to documents in this record", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "url": {
+            "minLength": 1, 
+            "format": "uri", 
+            "type": "string", 
+            "title": "Copyright notice URL"
+          }, 
+          "material": {
+            "minLength": 1, 
+            "enum": [
+              "addendum", 
+              "additional material", 
+              "data", 
+              "erratum", 
+              "editorial note", 
+              "preprint", 
+              "publication", 
+              "reprint", 
+              "software", 
+              "translation"
+            ], 
+            "type": "string", 
+            "description": "The possible values are:\n``addendum``\n    for a document extending the main publication.\n``additional material``\n    for additional material attached to the main publication, that is\n    neither the more specific ``data`` or ``software``.\n``data``\n    for data related to the main publication.\n``erratum``\n    for a document correcting errors in the content of the main\n    publication. When the errors are not in the content but in the\n    publication process, it is considered as an ``editorial note`` instead.\n``editorial note``\n    for a document correcting errors in the metadata of the publication but\n    not its content. Otherwise, it is an ``erratum``.\n``preprint``\n    for a document that is made public (typically on `arXiv\n    <http://arxiv.org>`_) but not yet published formally.\n``publication``\n    for the main publication. If it's not published, it's a ``preprint``.\n``reprint``\n    for a reprint of the main publication.\n``software``\n    for software related to the main publication.\n``translation``\n    for a translation of the main publication.", 
+            "title": "Material to which the field refers"
+          }, 
+          "holder": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``542__d``\n:example: ``American Physical Society``", 
+            "title": "Copyright holder"
+          }, 
+          "statement": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``542__f``\nSee `Wikipedia\n<https://en.wikipedia.org/wiki/Copyright_notice>`_ for\nexplanations.\nAlernatively to this string, a URL to the copyright\nnotice may be provided in :ref:`url`.\n:example: ``\u00a9 The Author(s) 2015. Published by Oxford\n    University Press on behalf of the Physical Society\n    of Japan.``", 
+            "title": "Copyright notice"
+          }, 
+          "year": {
+            "minimum": 1000, 
+            "type": "integer", 
+            "description": ":MARC: ``542__g``", 
+            "maximum": 2050
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "control_number": {
+      "type": "integer", 
+      "description": ":MARC: ``001``\nRead-only field.", 
+      "title": "ID of current record"
+    }, 
+    "languages": {
+      "description": ":MARC: ``041__a``", 
+      "title": "List of languages of the document", 
+      "minItems": 1, 
+      "items": {
+        "description": "Language code according to `ISO 639-1\n<https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.\n:example: ``el`` for Greek.", 
+        "title": "ISO 639-1 alpha 2 language code", 
+        "minLength": 2, 
+        "enum": [
+          "aa", 
+          "ab", 
+          "af", 
+          "ak", 
+          "am", 
+          "ar", 
+          "an", 
+          "as", 
+          "av", 
+          "ae", 
+          "ay", 
+          "az", 
+          "ba", 
+          "bm", 
+          "be", 
+          "bn", 
+          "bi", 
+          "bo", 
+          "bs", 
+          "br", 
+          "bg", 
+          "ca", 
+          "cs", 
+          "ch", 
+          "ce", 
+          "cu", 
+          "cv", 
+          "kw", 
+          "co", 
+          "cr", 
+          "cy", 
+          "da", 
+          "de", 
+          "dv", 
+          "dz", 
+          "el", 
+          "en", 
+          "eo", 
+          "et", 
+          "eu", 
+          "ee", 
+          "fo", 
+          "fa", 
+          "fj", 
+          "fi", 
+          "fr", 
+          "fy", 
+          "ff", 
+          "gd", 
+          "ga", 
+          "gl", 
+          "gv", 
+          "gn", 
+          "gu", 
+          "ht", 
+          "ha", 
+          "sh", 
+          "he", 
+          "hz", 
+          "hi", 
+          "ho", 
+          "hr", 
+          "hu", 
+          "hy", 
+          "ig", 
+          "io", 
+          "ii", 
+          "iu", 
+          "ie", 
+          "ia", 
+          "id", 
+          "ik", 
+          "is", 
+          "it", 
+          "jv", 
+          "ja", 
+          "kl", 
+          "kn", 
+          "ks", 
+          "ka", 
+          "kr", 
+          "kk", 
+          "km", 
+          "ki", 
+          "rw", 
+          "ky", 
+          "kv", 
+          "kg", 
+          "ko", 
+          "kj", 
+          "ku", 
+          "lo", 
+          "la", 
+          "lv", 
+          "li", 
+          "ln", 
+          "lt", 
+          "lb", 
+          "lu", 
+          "lg", 
+          "mh", 
+          "ml", 
+          "mr", 
+          "mk", 
+          "mg", 
+          "mt", 
+          "mn", 
+          "mi", 
+          "ms", 
+          "my", 
+          "na", 
+          "nv", 
+          "nr", 
+          "nd", 
+          "ng", 
+          "ne", 
+          "nl", 
+          "nn", 
+          "nb", 
+          "no", 
+          "ny", 
+          "oc", 
+          "oj", 
+          "or", 
+          "om", 
+          "os", 
+          "pa", 
+          "pi", 
+          "pl", 
+          "pt", 
+          "ps", 
+          "qu", 
+          "rm", 
+          "ro", 
+          "rn", 
+          "ru", 
+          "sg", 
+          "sa", 
+          "si", 
+          "sk", 
+          "sl", 
+          "se", 
+          "sm", 
+          "sn", 
+          "sd", 
+          "so", 
+          "st", 
+          "es", 
+          "sq", 
+          "sc", 
+          "sr", 
+          "ss", 
+          "su", 
+          "sw", 
+          "sv", 
+          "ty", 
+          "ta", 
+          "tt", 
+          "te", 
+          "tg", 
+          "tl", 
+          "th", 
+          "ti", 
+          "to", 
+          "tn", 
+          "ts", 
+          "tk", 
+          "tr", 
+          "tw", 
+          "ug", 
+          "uk", 
+          "ur", 
+          "uz", 
+          "ve", 
+          "vi", 
+          "vo", 
+          "wa", 
+          "wo", 
+          "xh", 
+          "yi", 
+          "yo", 
+          "za", 
+          "zh", 
+          "zu"
+        ], 
+        "maxLength": 2, 
+        "type": "string"
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "table_of_content": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "properties": {
+          "value": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``505`` whatever is the indicator\nList of chapters\n.. note::\n    Does not exist in Inspire", 
+      "type": "array"
+    }, 
+    "related_records": {
+      "description": ":MARC: ``775`` \n.. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language. But this could be extracted from the related record directly.  ", 
+      "title": "Decorated link to a related record", 
+      "required": [
+        "record", 
+        "relation"
+      ], 
+      "additionalProperties": false, 
+      "type": "object", 
+      "properties": {
+        "related_record_edition": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n"
+        }, 
+        "related_record_language": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n"
+        }, 
+        "curated_relation": {
+          "type": "boolean"
+        }, 
+        "relation": {
+          "minLength": 1, 
+          "enum": [
+            "other edition", 
+            "other language", 
+            "parent"
+          ], 
+          "type": "string", 
+          "description": ":MARC: depending on ``775__b`` and ``775__c``\nThe possible values are:\n``other edition``\n``other language``\n``parent``\nIf none of the relations apply, a free textual relation can be\nprovided in :ref:`relation_freetext`.\n.. note::\n   This should be used to link the different editions (date, language) of a same book, but also to link one volume to its parent record. In this case the display should be adapted. ", 
+          "title": "Relation of the linked record to this one"
+        }, 
+        "related_record_year": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC:  775__c\nDo we need? or can it be extracted from the corresponding record?\n"
+        }, 
+        "relation_freetext": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: \nIf none of the standard relations in :ref:`relation` fit, a textual\nrelation can alternatively be provided here."
+        }, 
+        "note_freetext": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: \nIf a note is necessary to describe better the link between the records"
+        }, 
+        "record": {
+          "additionalProperties": false, 
+          "required": [
+            "$ref"
+          ], 
+          "type": "object", 
+          "properties": {
+            "$ref": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": "URL to the referenced resource", 
+              "format": "uri"
+            }
+          }, 
+          "title": "Reference to another record"
+        }
+      }
+    }, 
+    "arxiv_eprints": {
+      "minItems": 1, 
+      "items": {
+        "description": "Contains metadata of an arXiv eprint contained in this record.\n.. note::\n    This metadata is copied over from arXiv and should not be\n    edited manually.", 
+        "title": "arXiv metadata", 
+        "required": [
+          "value"
+        ], 
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "categories": {
+            "description": ":MARC: first category in ``037__c`` with ``9:arXiv``,\n    all categories in ``65017a`` with ``2:arXiv``\nThe first category in the list has a special meaning:\nit is the primary category of the eprint on arXiv.", 
+            "title": "arXiv categories of the eprint", 
+            "minItems": 1, 
+            "items": {
+              "minLength": 1, 
+              "enum": [
+                "astro-ph", 
+                "astro-ph.CO", 
+                "astro-ph.EP", 
+                "astro-ph.GA", 
+                "astro-ph.HE", 
+                "astro-ph.IM", 
+                "astro-ph.SR", 
+                "cond-mat", 
+                "cond-mat.dis-nn", 
+                "cond-mat.mes-hall", 
+                "cond-mat.mtrl-sci", 
+                "cond-mat.other", 
+                "cond-mat.quant-gas", 
+                "cond-mat.soft", 
+                "cond-mat.stat-mech", 
+                "cond-mat.str-el", 
+                "cond-mat.supr-con", 
+                "cs", 
+                "cs.AI", 
+                "cs.AR", 
+                "cs.CC", 
+                "cs.CE", 
+                "cs.CG", 
+                "cs.CL", 
+                "cs.CR", 
+                "cs.CV", 
+                "cs.CY", 
+                "cs.DB", 
+                "cs.DC", 
+                "cs.DL", 
+                "cs.DM", 
+                "cs.DS", 
+                "cs.ET", 
+                "cs.FL", 
+                "cs.GL", 
+                "cs.GR", 
+                "cs.GT", 
+                "cs.HC", 
+                "cs.IR", 
+                "cs.IT", 
+                "cs.LG", 
+                "cs.LO", 
+                "cs.MA", 
+                "cs.MM", 
+                "cs.MS", 
+                "cs.NA", 
+                "cs.NE", 
+                "cs.NI", 
+                "cs.OH", 
+                "cs.OS", 
+                "cs.PF", 
+                "cs.PL", 
+                "cs.RO", 
+                "cs.SC", 
+                "cs.SD", 
+                "cs.SE", 
+                "cs.SI", 
+                "cs.SY", 
+                "econ", 
+                "econ.EM", 
+                "eess", 
+                "eess.AS", 
+                "eess.IV", 
+                "eess.SP", 
+                "gr-qc", 
+                "hep-ex", 
+                "hep-lat", 
+                "hep-ph", 
+                "hep-th", 
+                "math", 
+                "math-ph", 
+                "math.AC", 
+                "math.AG", 
+                "math.AP", 
+                "math.AT", 
+                "math.CA", 
+                "math.CO", 
+                "math.CT", 
+                "math.CV", 
+                "math.DG", 
+                "math.DS", 
+                "math.FA", 
+                "math.GM", 
+                "math.GN", 
+                "math.GR", 
+                "math.GT", 
+                "math.HO", 
+                "math.IT", 
+                "math.KT", 
+                "math.LO", 
+                "math.MG", 
+                "math.MP", 
+                "math.NA", 
+                "math.NT", 
+                "math.OA", 
+                "math.OC", 
+                "math.PR", 
+                "math.QA", 
+                "math.RA", 
+                "math.RT", 
+                "math.SG", 
+                "math.SP", 
+                "math.ST", 
+                "nlin", 
+                "nlin.AO", 
+                "nlin.CD", 
+                "nlin.CG", 
+                "nlin.PS", 
+                "nlin.SI", 
+                "nucl-ex", 
+                "nucl-th", 
+                "physics", 
+                "physics.acc-ph", 
+                "physics.ao-ph", 
+                "physics.app-ph", 
+                "physics.atm-clus", 
+                "physics.atom-ph", 
+                "physics.bio-ph", 
+                "physics.chem-ph", 
+                "physics.class-ph", 
+                "physics.comp-ph", 
+                "physics.data-an", 
+                "physics.ed-ph", 
+                "physics.flu-dyn", 
+                "physics.gen-ph", 
+                "physics.geo-ph", 
+                "physics.hist-ph", 
+                "physics.ins-det", 
+                "physics.med-ph", 
+                "physics.optics", 
+                "physics.plasm-ph", 
+                "physics.pop-ph", 
+                "physics.soc-ph", 
+                "physics.space-ph", 
+                "q-bio", 
+                "q-bio.BM", 
+                "q-bio.CB", 
+                "q-bio.GN", 
+                "q-bio.MN", 
+                "q-bio.NC", 
+                "q-bio.OT", 
+                "q-bio.PE", 
+                "q-bio.QM", 
+                "q-bio.SC", 
+                "q-bio.TO", 
+                "q-fin", 
+                "q-fin.CP", 
+                "q-fin.EC", 
+                "q-fin.GN", 
+                "q-fin.MF", 
+                "q-fin.PM", 
+                "q-fin.PR", 
+                "q-fin.RM", 
+                "q-fin.ST", 
+                "q-fin.TR", 
+                "quant-ph", 
+                "stat", 
+                "stat.AP", 
+                "stat.CO", 
+                "stat.ME", 
+                "stat.ML", 
+                "stat.OT", 
+                "stat.TH"
+              ], 
+              "type": "string", 
+              "description": "A category that currently exists on arXiv. Note that some categories have\nbeen renamed and are not in this list.  These are taken from the `arXiv API\ndocumentation\n<https://arxiv.org/help/api/user-manual#subject_classifications>`_.\n:example: ``math.FA`` instead of its previous name, ``funct-an``"
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }, 
+          "value": {
+            "pattern": "^\\d{4}.\\d{4,5}|[\\w.]+(-[\\w.]+)?/\\d+$", 
+            "type": "string", 
+            "description": ":MARC: ``037__a`` with ``9:arXiv``\n:example: ``math/0307245``\n:example: ``1701.01431``", 
+            "minLength": 1, 
+            "title": "arXiv eprint identifier"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "_private_notes": {
+      "description": ":MARC: ``595``\nThese notes are only visible to privileged users, not regular\nusers.", 
+      "title": "List of private notes", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "cds_subject_categories": {
+      "description": ".. note: does not exist in Inspire", 
+      "title": "List of CDS subject", 
+      "minItems": 1, 
+      "items": {
+        "description": ":MARC: ``65017`` with ``2:CERN``\nThe CDS category classifies the subject\nthis record is related to.  ", 
+        "title": "CDS category", 
+        "required": [
+          "term"
+        ], 
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "enum": [
+              "curator", 
+              "user", 
+              "Inspire", 
+              "arXiv"
+            ], 
+            "type": "string"
+          }, 
+          "term": {
+            "minLength": 1, 
+            "enum": [
+              "AB", 
+              "AC", 
+              "AD", 
+              "AE", 
+              "BE", 
+              "BT", 
+              "CA", 
+              "CC", 
+              "DD", 
+              "EE", 
+              "EG", 
+              "FF", 
+              "FU", 
+              "GG", 
+              "HH", 
+              "JA", 
+              "JB", 
+              "JC", 
+              "JJ", 
+              "JS", 
+              "KK", 
+              "LA", 
+              "LB", 
+              "LL", 
+              "MM", 
+              "PG", 
+              "PP", 
+              "QQ", 
+              "RR", 
+              "SG", 
+              "XX"
+            ], 
+            "type": "string"
+          }, 
+          "main": {
+            "type": "boolean", 
+            "description": ":MARC: If 65017->yes\nIn case there are several subject terms.  "
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "conference_info": {
+      "minItems": 1, 
+      "items": {
+        "conference_title": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__a``\n.. Note: There can be different values there."
+        }, 
+        "cern_conference_code": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__g``"
+        }, 
+        "inspire_cnum": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``035__a`` when 9:INSPIRE-CNUM"
+        }, 
+        "conference_contact": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``270__m`` Do we still need?"
+        }, 
+        "closing_date": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__z``\nclosing date of the conference", 
+          "format": "date"
+        }, 
+        "conference_year": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__f`` *Do we still need?*"
+        }, 
+        "conference_country": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__w`` Do we still need?"
+        }, 
+        "conference_series": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: Does not exist in CDS"
+        }, 
+        "conference_series_number": {
+          "minLength": 1, 
+          "type": "integer", 
+          "description": ":MARC: Does not exist in CDS"
+        }, 
+        "conference_dates": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__d``\ndates of the conference, many items do not have 111__9 and/or z", 
+          "format": "date"
+        }, 
+        "conference_place": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__c``"
+        }, 
+        "opening_date": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":MARC: ``111__9``\nstarting date of the conference", 
+          "format": "date"
+        }, 
+        "additionalProperties": false, 
+        "required": [
+          "conference_title", 
+          "conference_place", 
+          "conference_dates"
+        ], 
+        "type": "object", 
+        "properties": null, 
+        "conference_acronym": {
+          "description": ":MARC: ``711__a``\nminLength: 1\ntype: string"
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``111/711``\n.. Notes:: In Inspire there is a separate entity for conferences.", 
+      "type": "array"
+    }, 
+    "isbns": {
+      "description": ":MARC: ``020``", 
+      "title": "List of ISBNs", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "medium": {
+            "minLength": 1, 
+            "enum": [
+              "electronic version", 
+              "print version", 
+              "print version, hardback", 
+              "print version, paperback", 
+              "print version, spiral-bound", 
+              "CD-ROM", 
+              "audiobook", 
+              "DVD"
+            ], 
+            "type": "string", 
+            "description": ":MARC: ``020__u``", 
+            "title": "Physical medium to which this ISBN refers"
+          }, 
+          "description": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``020__u``\n:anything in ``020__u`` that does not fit in medium and is not a volume.\n.. note: Does not exist in Inspire", 
+            "title": "Free text, used to describe the document to ISBN refers to."
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``020__a``\n:example: ``0201021153``", 
+            "pattern": "^\\d*[0-9X]$"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "book_series": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "title"
+        ], 
+        "type": "object", 
+        "description": ".. note::\n    If the book series has a Journal record,\n    `hep.json#/properties/publication_info` should be used\n    instead.", 
+        "properties": {
+          "volume": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``490__v``", 
+            "title": "Volume of the book in the series"
+          }, 
+          "issn": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``490__x``\n.. note: Does not exist in Inspire", 
+            "title": "ISSN of the series"
+          }, 
+          "title": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``490__a``", 
+            "title": "Title of the book series"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``490``\nList of book series in which this record has been published.\n.. note::\n    This field should only be present if ``book``, ``thesis`` or\n    ``proceedings`` are among\n    :ref:`hep.json#/properties/document_type`.", 
+      "type": "array"
+    }, 
+    "subject_classification": {
+      "description": ":MARC: ``084``, ``080``, ``050`` and ``082``\n.. note: Subject classification of the document, following standards ; does not exist in Inspire", 
+      "title": "List of keywords", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``084/080/050/082``", 
+            "title": "A keyword"
+          }, 
+          "schema": {
+            "minLength": 1, 
+            "enum": [
+              "UDC", 
+              "ICS", 
+              "DEWEY", 
+              "LOC"
+            ], 
+            "type": "string", 
+            "description": "Describes to which schema the classification code belong\n``UDC``\n    :MARC: ``080``\n    Universal Decimal Classification\n``DEWEY``\n    :MARC: ``082``\n    Dewey\n``ICS``\n    :MARC: ``084``\n    .. Note: 084 is also used for YR alphabetical ordering. *To be checked*\n    Internation Classification of Standard\n``LOC``\n    :MARC: ``050``\n    Library of Congress Classification", 
+            "title": "Subject classification"
+          }
+        }
+      }, 
+      "related_records": {
+        "description": ":MARC: ``775``", 
+        "title": "List of related records", 
+        "minItems": 1, 
+        "items": {
+          "description": ":MARC: ``775`` \n.. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language. But this could be extracted from the related record directly.  ", 
+          "title": "Decorated link to a related record", 
+          "required": [
+            "record", 
+            "relation"
+          ], 
+          "additionalProperties": false, 
+          "type": "object", 
+          "properties": {
+            "related_record_edition": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n"
+            }, 
+            "related_record_language": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n"
+            }, 
+            "curated_relation": {
+              "type": "boolean"
+            }, 
+            "relation": {
+              "minLength": 1, 
+              "enum": [
+                "other edition", 
+                "other language", 
+                "parent"
+              ], 
+              "type": "string", 
+              "description": ":MARC: depending on ``775__b`` and ``775__c``\nThe possible values are:\n``other edition``\n``other language``\n``parent``\nIf none of the relations apply, a free textual relation can be\nprovided in :ref:`relation_freetext`.\n.. note::\n   This should be used to link the different editions (date, language) of a same book, but also to link one volume to its parent record. In this case the display should be adapted. ", 
+              "title": "Relation of the linked record to this one"
+            }, 
+            "related_record_year": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC:  775__c\nDo we need? or can it be extracted from the corresponding record?\n"
+            }, 
+            "relation_freetext": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: \nIf none of the standard relations in :ref:`relation` fit, a textual\nrelation can alternatively be provided here."
+            }, 
+            "note_freetext": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: \nIf a note is necessary to describe better the link between the records"
+            }, 
+            "record": {
+              "additionalProperties": false, 
+              "required": [
+                "$ref"
+              ], 
+              "type": "object", 
+              "properties": {
+                "$ref": {
+                  "minLength": 1, 
+                  "type": "string", 
+                  "description": "URL to the referenced resource", 
+                  "format": "uri"
+                }
+              }, 
+              "title": "Reference to another record"
+            }
+          }
+        }, 
+        "uniqueItems": true, 
+        "type": "array"
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "volume": {
+      "minItems": 1, 
+      "type": "string", 
+      "description": ":MARC: ``246__n``", 
+      "title": "Volume number"
+    }, 
+    "authors": {
+      "description": ":MARC: ``100``, ``700``\nBesides authors, also contains editors and supervisors (see\n:ref:`hep.json#/properties/authors/items/properties/inspire_roles`).", 
+      "title": "Authors", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "full_name"
+        ], 
+        "type": "object", 
+        "properties": {
+          "roles": {
+            "minItems": 1, 
+            "items": {
+              "default": "author", 
+              "minLength": 1, 
+              "enum": [
+                "author", 
+                "supervisor", 
+                "editor", 
+                "illustrator"
+              ], 
+              "type": "string", 
+              "description": "``supervisor``\n    :MARC: ``700`` is used for supervisor metadata.\n    This person is a thesis supervisor. Should be\n    used together with the ``thesis``\n    :ref:`hep.json#/properties/document_type`.\n``editor``\n    :MARC: ``100/700__e:ed.``\n    This person is an editor of the conference\n    proceedings. Should be used together with the\n    ``proceedings``\n    :ref:`hep.json#/properties/document_type`."
+            }, 
+            "uniqueItems": true, 
+            "description": ".. note: different from Inspire (Inspire_role)", 
+            "type": "array"
+          }, 
+          "affiliations": {
+            "minItems": 1, 
+            "items": {
+              "additionalProperties": false, 
+              "required": [
+                "value"
+              ], 
+              "type": "object", 
+              "properties": {
+                "curated_relation": {
+                  "type": "boolean"
+                }, 
+                "value": {
+                  "minLength": 1, 
+                  "type": "string", 
+                  "description": ":MARC: ``100/700__u``", 
+                  "title": "ICN of affiliation"
+                }
+              }
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }, 
+          "credit_roles": {
+            "minItems": 1, 
+            "items": {
+              "minLength": 1, 
+              "enum": [
+                "Conceptualization", 
+                "Data curation", 
+                "Formal analysis", 
+                "Funding acquisition", 
+                "Investigation", 
+                "Methodology", 
+                "Project administration", 
+                "Resources", 
+                "Software", 
+                "Supervision", 
+                "Validation", 
+                "Visualization", 
+                "Writing - original draft", 
+                "Writing - review & editing"
+              ], 
+              "type": "string", 
+              "description": ":MARC: not present.\nRole of the author according to the `Contributor\nRoles Taxonomy (CRediT)\n<http://dictionary.casrai.org/Contributor_Roles>`_", 
+              "title": "Credit role of author"
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }, 
+          "ids": {
+            "description": ":MARC: ``100/700/701__i/j``", 
+            "title": "Identifiers of the author", 
+            "minItems": 1, 
+            "items": {
+              "anyOf": [
+                {
+                  "description": "This identifier is assigned to any curated author record (HEPNAMES on\nlegacy).  It is mainly used by large collaborations (providing an\n`authors.xml` file) to uniquely identify the authors of their articles.", 
+                  "title": "Inspire ID", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``INSPIRE-12345678``", 
+                      "pattern": "^INSPIRE-\\d{8}$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "INSPIRE ID"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "description": "The BAI (BibAuthorID) is based on the name of the author and is used as\na human-friendly unique identifier. Its general form is a\n``firstnames.lastnames.number``, where ``firstnames`` is a list of\nfirst names (or initials) separated by dots, and similarly for\n``lastnames``. Only ASCII letters (without diacritics), numbers, dashes\nand apostrophes are allowed in the names. By default, only initials of\nfirst names are used, but this may be changed at a cataloguer's\ndiscretion in order to disambiguate otherwise homonymous authors.\n.. note::\n    This identifier is not persistent, as it can be renamed to become\n    more explicit (e.g. transforming an initial into a full name), or\n    disappear when merging two different authors.", 
+                  "title": "Inspire BAI", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``A.Einstein.1``", 
+                      "pattern": "^((\\w|\\-|\\')+\\.)+\\d+$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "INSPIRE BAI"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "description": "`ORCID <http://orcid.org>`_ provides an identifier for individuals to\nuse with their name as they engage in research, scholarship, and\ninnovation activities.\nThe ORCID identifier can be resolved by prepending ``http://orcid.org``\nto the `value`, in order to get the ORCID record of the person.", 
+                  "title": "ORCID", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$", 
+                      "type": "string", 
+                      "description": ":example: ``0000-0012-1234-5647``", 
+                      "minLength": 1, 
+                      "format": "orcid"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "ORCID"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "description": "Author identfier assigned by the Joint Accelerator Conferences Website\n(`JACoW <http://jacow.org>`_).", 
+                  "title": "JACoW ID", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``JACOW-12345678``", 
+                      "pattern": "^JACoW-\\d{8}$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "JACOW"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "description": "Author identifier assigned by the Japanese `KAKEN\n<http://kaken.nii.ac.jp>`_ grants database.", 
+                  "title": "KAKEN ID", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``KAKEN-12345678``", 
+                      "pattern": "^KAKEN-\\d{8}$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "KAKEN"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "description": "More info at `arXiv <https://arxiv.org/help/author_identifiers>`_.", 
+                  "title": "arXiv author identifier", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``warner_s_1``", 
+                      "pattern": "^\\w+_(\\w_)?\\d+$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "ARXIV"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "description": "Also called CCID (e.g. on legacy).", 
+                  "title": "CERN institutional ID", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``CERN-12345``", 
+                      "pattern": "^CERN-\\d+$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "CERN"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``DESY-15456``", 
+                      "pattern": "^DESY-\\d+$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "DESY"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "DESY identifier"
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``AZUAeayXuibs``", 
+                      "pattern": "^(\\w|-){12}$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "GOOGLESCHOLAR"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "Google Scholar profile identifier"
+                }, 
+                {
+                  "description": "Record ID in the Virtual International Authority File (`VIAF\n<http://viaf.org>`_).", 
+                  "title": "VIAF record ID", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``75121530``", 
+                      "pattern": "^\\d{7,9}$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "VIAF"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``A-1009-2008``", 
+                      "pattern": "^[A-z]-\\d{4}-\\d{4}$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "RESEARCHERID"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "ResearcherID"
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``13245678901``", 
+                      "pattern": "^\\d{10,11}$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "SCOPUS"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "SCOPUS author identifier"
+                }, 
+                {
+                  "description": "HEPNAMES entry in the old SPIRES system.", 
+                  "title": "SPIRES HEPNAMES ID", 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "additionalProperties": false, 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: HEPNAMES-123456", 
+                      "pattern": "^HEPNAMES-\\d+$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "SPIRES"
+                      ], 
+                      "type": "string"
+                    }
+                  }
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": "A page name on the English Wikipedia, i.e. the ``Page_name``\npart in http://en.wikipedia.org/wiki/Page_name.\n:example: ``Albert_Einstein``\nNon-English Wikipedia pages can be referenced by prepending the language.\n:example: ``it:Fabiola_Gianotti``"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "WIKIPEDIA"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "Wikipedia Page_name of the person"
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": ":example: ``SLAC-123456``", 
+                      "pattern": "^SLAC-\\d+$"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "SLAC"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "SLAC identifier"
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": "A twitter handle, often preceded by ``@``.\n:example: ``Prof_S_Hawking``"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "TWITTER"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "Twitter handle"
+                }, 
+                {
+                  "additionalProperties": false, 
+                  "required": [
+                    "schema", 
+                    "value"
+                  ], 
+                  "type": "object", 
+                  "properties": {
+                    "value": {
+                      "minLength": 1, 
+                      "type": "string", 
+                      "description": "Identifier of Linkedin profile, i.e. the part after\n``linkedin.com/in/`` in the URL.\n:example: ``kylecranmer``"
+                    }, 
+                    "schema": {
+                      "minLength": 1, 
+                      "enum": [
+                        "LINKEDIN"
+                      ], 
+                      "type": "string"
+                    }
+                  }, 
+                  "title": "LinkedIn profile"
+                }
+              ]
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }, 
+          "emails": {
+            "minItems": 1, 
+            "items": {
+              "minLength": 1, 
+              "type": "string", 
+              "format": "email"
+            }, 
+            "uniqueItems": true, 
+            "description": ":MARC: ``100/700/__m``", 
+            "type": "array"
+          }, 
+          "raw_affiliations": {
+            "minItems": 1, 
+            "items": {
+              "additionalProperties": false, 
+              "required": [
+                "value"
+              ], 
+              "type": "object", 
+              "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.", 
+              "properties": {
+                "source": {
+                  "minLength": 1, 
+                  "type": "string", 
+                  "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+                }, 
+                "value": {
+                  "minLength": 1, 
+                  "type": "string"
+                }
+              }
+            }, 
+            "uniqueItems": true, 
+            "description": ":MARC: ``100/700__v``\nList of full affiliations, as written on the paper.", 
+            "type": "array"
+          }, 
+          "curated_relation": {
+            "default": false, 
+            "type": "boolean"
+          }, 
+          "full_name": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``100/700/__a``\nAuthor name in Latin alphabet (may contain diacritics).\nShould be of the form 'family names, first names', and,\nexcept for a possible reordering, be exactly as on the\npaper.\n:example: ``Smith Davis, John F.K.``", 
+            "title": "Author name"
+          }, 
+          "alternative_names": {
+            "minItems": 1, 
+            "items": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``100/700/701__q``\n:example: ``\u697c \u7acb\u6d0b``\n:example: ``Smith, Joe John``"
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }
+        }
+      }, 
+      "uniqueItems": false, 
+      "type": "array"
+    }, 
+    "curated": {
+      "type": "boolean", 
+      "description": ":MARC: `500__a` containing `*Temporary entry*`, `*Temporary\n    record*` or `*Brief entry*` correspond to `false`, otherwise it\n    is `true`.\nWhether this record has been curated by a human, to ensure the\nquality standards of Inspire. Records having the :ref:`core` flag\nare all curated eventually, whereas non-core records are\nnot systematically curated."
+    }, 
+    "report_numbers": {
+      "description": ":MARC: ``037`` ``088``\n:example: ``DESY-17-036``", 
+      "title": "List of report numbers assigned to the record", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+          }, 
+          "hidden": {
+            "type": "boolean", 
+            "description": ":MARC: if ``true``, the :ref:`value` is in ``037__z``,``088__9``\n    instead of ``037__a````088__9``\nWhether this report number should be hidden from the\ndisplay. This is appropriate for\n* a report number that appears on the document but is\n  not the one officially assigned;\n* a report number that has been assigned by one of the\n  authors institutions, but is not displayed on the\n  document (typically for large collaborations)."
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "acquisition_source": {
+      "additionalProperties": false, 
+      "properties": {
+        "datetime": {
+          "minLength": 1, 
+          "format": "date-time", 
+          "type": "string", 
+          "description": ":MARC: `916__w``,`595__a (with certain conditions)``\nThis does not necessarily coincide with the creation date of the\nrecord, as there might be some delay between the moment the\noriginal information is obtained and a record is finally created in\nthe system.", 
+          "title": "Date on which the metadata was obtained"
+        }, 
+        "source": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+        }, 
+        "email": {
+          "minLength": 1, 
+          "format": "email", 
+          "type": "string", 
+          "description": ":MARC: ``859``\nThis only gets populated when `method` is `submitter`.", 
+          "title": "Email address associated to the submitter's account"
+        }, 
+        "internal_uid": {
+          "type": "integer", 
+          "description": "This only gets populated when `method` is `submitter`.", 
+          "title": "Inspire user ID of the submitter"
+        }, 
+        "submission_number": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": "This only gets populated when `method` is `submitter`.", 
+          "title": "Holding pen record ID of the submission"
+        }, 
+        "orcid": {
+          "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$", 
+          "type": "string", 
+          "description": "This only gets populated when `method` is `submitter`.", 
+          "minLength": 1, 
+          "title": "ORCID of the submitter"
+        }, 
+        "method": {
+          "minLength": 1, 
+          "enum": [
+            "submitter", 
+            "oai", 
+            "batchuploader", 
+            "hepcrawl"
+          ], 
+          "type": "string", 
+          "description": "Possible values are:\n`submitter`\n    when obtained from a user submission. In this case, `orcid`,\n    `internal_uid` and `email` store identifiers of the submitter,\n    and `submission_number` an ID of the submission. The submitter can be the cataloger.\n`oai`\n    when obtained by OAI-PMH harvesting.\n`batchuploader`\n    when obtained through the batch uploader.\n`hepcrawl`\n    when obtained from a hepcrawl crawler. In this case, `source`\n    stores the publisher or the repository that was crawled.", 
+          "title": "Data obtraining method"
+        }
+      }, 
+      "type": "object", 
+      "description": ":MARC: ``595``,``859``,``916``\nOnly the first source is stored: if the record later gets enriched with\nmetadata coming from a second source, the `acquisition_source` is not\nupdated.", 
+      "title": "Origin of the metadata in the record"
+    }, 
+    "license": {
+      "description": ":MARC: ``540``", 
+      "title": "List of licenses", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "admin_info": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__g`` (Not Inspire)\nAdministrative information\n:example: `DAI number``", 
+            "title": "Administrative information"
+          }, 
+          "license": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__a``\nEither the short name of the license or the full\nlicense statement.\n:example: ``CC-BY-4.0``", 
+            "title": "License statement"
+          }, 
+          "url": {
+            "minLength": 1, 
+            "format": "uri", 
+            "type": "string", 
+            "description": ":MARC: ``540__u``\nURL where the full license statement may be found, if\nonly a short name is provided in ``license``.", 
+            "title": "URL of the license"
+          }, 
+          "material": {
+            "minLength": 1, 
+            "enum": [
+              "addendum", 
+              "additional material", 
+              "data", 
+              "erratum", 
+              "editorial note", 
+              "preprint", 
+              "publication", 
+              "reprint", 
+              "software", 
+              "translation"
+            ], 
+            "type": "string", 
+            "description": "The possible values are:\n``addendum``\n    for a document extending the main publication.\n``additional material``\n    for additional material attached to the main publication, that is\n    neither the more specific ``data`` or ``software``.\n``data``\n    for data related to the main publication.\n``erratum``\n    for a document correcting errors in the content of the main\n    publication. When the errors are not in the content but in the\n    publication process, it is considered as an ``editorial note`` instead.\n``editorial note``\n    for a document correcting errors in the metadata of the publication but\n    not its content. Otherwise, it is an ``erratum``.\n``preprint``\n    for a document that is made public (typically on `arXiv\n    <http://arxiv.org>`_) but not yet published formally.\n``publication``\n    for the main publication. If it's not published, it's a ``preprint``.\n``reprint``\n    for a reprint of the main publication.\n``software``\n    for software related to the main publication.\n``translation``\n    for a translation of the main publication.", 
+            "title": "Material to which the field refers"
+          }, 
+          "imposing": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__b``\n:example: ``arXiv``", 
+            "title": "Organization/person imposing the license"
+          }, 
+          "funder": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__f`` (Not Inspire)\nThe institution who has funded the Open Access\n:example: ``CERN Library``", 
+            "title": "Open Access funder"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "record_affiliations": {
+      "description": ":MARC: ``901``\nBecause of technical limitations, for some older records the\naffiliations were associated globally to the record instead of its\nindividual authors (using the\n:ref:`authors/items/properties/affiliations` field).\n.. note::\n    This field is present for legacy records and should not be used\n    for new records.", 
+      "title": "Affiliations not associated to authors", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "curated_relation": {
+            "type": "boolean"
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``901__a``\nCurrently, the old\n:ref:`institutions.json#/properties/legacy_ICN`\nis used here. In the future, this will\nchange and become the new\n:ref:`institutions.json#/properties/ICN`.", 
+            "title": "ICN of affiliation"
+          }, 
+          "record": {
+            "additionalProperties": false, 
+            "required": [
+              "$ref"
+            ], 
+            "type": "object", 
+            "properties": {
+              "$ref": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": "URL to the referenced resource", 
+                "format": "uri"
+              }
+            }, 
+            "title": "Reference to another record"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "additional_subject_categories": {
+      "description": ".. note: does not exist in Inspire", 
+      "title": "List of other subject (Project specific... ex. EUCARD)", 
+      "minItems": 1, 
+      "items": {
+        "description": ":MARC: ``65017`` or ``65027`` not CERN subjects (ex. EUCARD)", 
+        "title": "Additional category", 
+        "required": [
+          "term"
+        ], 
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "minLength": 1, 
+            "type": "string"
+          }, 
+          "term": {
+            "minLength": 1, 
+            "type": "string"
+          }, 
+          "main": {
+            "type": "boolean", 
+            "description": ":MARC: If 65017->yes\nIn case there are several subject terms.  "
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "editions": {
+      "description": ":MARC: ``250__a``", 
+      "title": "List of book editions", 
+      "minItems": 1, 
+      "items": {
+        "minLength": 1, 
+        "type": "string"
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "collaborations": {
+      "title": "List of collaborations", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "record": {
+            "additionalProperties": false, 
+            "required": [
+              "$ref"
+            ], 
+            "type": "object", 
+            "properties": {
+              "$ref": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": "URL to the referenced resource", 
+                "format": "uri"
+              }
+            }, 
+            "title": "Reference to another record"
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``710__g``\nCollaboration name as it appears on the paper (with the\n``Collaboration`` suffix dropped).\n:example: ``ATLAS`` instead of ``ATLAS Collaboration``\n:example: ``Particle Data Group``", 
+            "title": "Collaboration name"
+          }
+        }
+      }, 
+      "required": [
+        "value"
+      ], 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "recid": {
+      "type": "number", 
+      "description": "Invenio record identifier (integer)."
+    }, 
+    "urls": {
+      "minItems": 1, 
+      "items": {
+        "description": ":MARC: ``8564``", 
+        "title": "URL of related document", 
+        "required": [
+          "value"
+        ], 
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "description": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``8654__y``"
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``8564_u``", 
+            "format": "uri"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.", 
+      "type": "array"
+    }, 
+    "accelerator_experiments": {
+      "description": ":MARC: 693\n.. note:: Modified from Inspire: add 693__s, 693__p and not link to experiment record\n", 
+      "title": "List of related accelerators/experiments/study/project", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "accelerator": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``693__a``\nIf present, :ref:`institution` should contain the\ninstitution where this accelerator is located.\n.. note::\n    Currently not used, see :ref:`legacy_name`."
+          }, 
+          "study": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: 693__s", 
+            "title": "Study"
+          }, 
+          "project": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: 693__p", 
+            "title": "Project"
+          }, 
+          "curated_relation": {
+            "default": false, 
+            "type": "boolean"
+          }, 
+          "legacy_name": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``693__e``\nThis field is used when migrating from legacy instead\nof separate :ref:`institution`, :ref:`accelerator` and\n:ref:`experiment`. In the future, it will be deprecated and\nthe other fields will be used instead.\n:example: ``CERN-LHC-CMS``", 
+            "title": "Identifier of the experiment on legacy"
+          }, 
+          "experiment": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": "If present, :ref:`institution` should contain the\ninstitution where this experiment is located and\n:ref:`accelerator` may contain the accelerator that this\nexperiment is using (if appropriate).\n.. note::\n    Currently not used, see :ref:`legacy_name`."
+          }, 
+          "institution": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: not present.\n.. note::\n    Currently not used, see :ref:`legacy_name`.", 
+            "title": "Institution hosting the experiment"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "abstracts": {
+      "description": ":MARC: ``520``\nThe first abstract is the preferred one, to be displayed in\npriority.", 
+      "title": "List of abstracts", 
+      "minItems": 1, 
+      "items": [
+        {
+          "additionalProperties": false, 
+          "required": [
+            "value"
+          ], 
+          "type": "object", 
+          "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.", 
+          "properties": {
+            "source": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::  "
+            }, 
+            "value": {
+              "minLength": 1, 
+              "type": "string"
+            }
+          }
+        }
+      ], 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "imprints": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "description": ":MARC: ``260``\nWhen/where/by whom this record was published.\n+ reprint information (does not exist in Inspire)", 
+        "properties": {
+          "date": {
+            "minLength": 1, 
+            "format": "date", 
+            "type": "string", 
+            "description": ":MARC: ``260__c``", 
+            "title": "Date of publication"
+          }, 
+          "publisher": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``260__b``\n:example: ``Springer``"
+          }, 
+          "reprint": {
+            "minLength": 1, 
+            "format": "date", 
+            "type": "string", 
+            "description": ":MARC: ``260__g``\n.. note: does not exist in Inspire", 
+            "title": "Date of reprint"
+          }, 
+          "place": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``260__a``\n:example: ``Paris``", 
+            "title": "Place of publication"
+          }
+        }
+      }, 
+      "type": "array", 
+      "uniqueItems": true, 
+      "title": "List of imprints"
+    }, 
+    "document_types": {
+      "description": ":MARC: ``980__a`` ``690C_a`` ``960__a``\nTypes of document this record represents.\n.. note::\n  As a record aggregates information from multiple sources, it\n  can have multiple document types simultaneously. (?)", 
+      "title": "Document types", 
+      "minItems": 1, 
+      "items": {
+        "default": "book", 
+        "minLength": 1, 
+        "enum": [
+          "book", 
+          "proceedings", 
+          "report", 
+          "thesis", 
+          "standard"
+        ], 
+        "type": "string", 
+        "description": "Types of document this record represents.\n.. note::\n    As a record aggregates information from multiple sources, it\n    can have multiple document types simultaneously. (?)\n``book``\n    Published Monograph (usually has an ISBN and a publisher)\n``proceedings``\n    Proceedings of a conference.\n    The :ref:`conference_info` field contains the information of the conference.\n    If published in a journal, :ref:`publication_info` also contains the journal information.\n``report``\n    A report. It can be unpublished, but can also be a book or a proceedings. In this case, it keeps the document type Book and Report or Proceedings and Report\n``thesis``\n    A thesis. The :ref:`thesis_info` field contains additional\n    information about the thesis. If published as a book, the\n    :ref:`editions`, :ref:`imprints`, :ref:`isbns` and\n    :ref:`book_series` fields may contain specific metadata about\n    this book and the document type can also be Book.\n``standard``\n    A standard."
+      }, 
+      "uniqueItems": true, 
+      "type": "array"
+    }
+  }
+}

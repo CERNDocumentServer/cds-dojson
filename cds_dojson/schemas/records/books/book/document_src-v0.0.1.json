@@ -1,0 +1,593 @@
+{
+  "$schema": "http://json-schema.org/schema#", 
+  "allOf": [
+    {
+      "$ref": "base-v0.0.1.json"
+    }, 
+    {
+      "properties": {
+        "corporate_authors": {
+          "minItems": 1, 
+          "items": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``110__a``\nIn case the document has not been signed by a real author, but\nonly mentions the name of an organization.\n:example: ``CERN``", 
+            "title": "List of corporate authors"
+          }, 
+          "uniqueItems": true, 
+          "type": "array"
+        }, 
+        "funding_info": {
+          "uniqueItems": true, 
+          "description": ":MARC: ``536``\nInformation about the sources of funding for the research performed\nin this record.", 
+          "title": "Funding information", 
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "type": "object", 
+            "properties": {
+              "grant_number": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``536__c``", 
+                "title": "Grant number"
+              }, 
+              "agency": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``536__a``", 
+                "title": "Funding agency"
+              }, 
+              "open_access": {
+                "minLength": 1, 
+                "type": "boolean", 
+                "description": ":MARC: ``536__r``", 
+                "title": "Open Access"
+              }, 
+              "project_number": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``536__f``", 
+                "title": "Project number"
+              }
+            }
+          }, 
+          "type": "array"
+        }, 
+        "thesis_info": {
+          "additionalProperties": false, 
+          "type": "object", 
+          "description": ":MARC: ``502``\nInformation on a thesis (degree, date, university)", 
+          "properties": {
+            "date": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``502__d``\nPublication date of the thesis", 
+              "format": "date"
+            }, 
+            "defense_date": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``500__a``\nDate of the thesis defense. On legacy, this was put in the\nnote field as 'presented on ...'.", 
+              "format": "date"
+            }, 
+            "degree_type": {
+              "$ref": "elements/degree_type.json"
+            }, 
+            "institutions": {
+              "minItems": 1, 
+              "items": {
+                "additionalProperties": false, 
+                "type": "object", 
+                "properties": {
+                  "curated_relation": {
+                    "type": "boolean"
+                  }, 
+                  "name": {
+                    "minLength": 1, 
+                    "type": "string"
+                  }, 
+                  "record": {
+                    "$ref": "elements/json_reference.json"
+                  }
+                }
+              }, 
+              "uniqueItems": true, 
+              "description": ":MARC: ``502__c``\nList of institutions issuing the degree.", 
+              "type": "array"
+            }
+          }
+        }, 
+        "book_series": {
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "required": [
+              "title"
+            ], 
+            "type": "object", 
+            "description": ".. note::\n    If the book series has a Journal record,\n    `hep.json#/properties/publication_info` should be used\n    instead.", 
+            "properties": {
+              "volume": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``490__v``", 
+                "title": "Volume of the book in the series"
+              }, 
+              "issn": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``490__x``\n.. note: Does not exist in Inspire", 
+                "title": "ISSN of the series"
+              }, 
+              "title": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``490__a``", 
+                "title": "Title of the book series"
+              }
+            }
+          }, 
+          "uniqueItems": true, 
+          "description": ":MARC: ``490``\nList of book series in which this record has been published.\n.. note::\n    This field should only be present if ``book``, ``thesis`` or\n    ``proceedings`` are among\n    :ref:`hep.json#/properties/document_type`.", 
+          "type": "array"
+        }, 
+        "arxiv_eprints": {
+          "minItems": 1, 
+          "items": {
+            "description": "Contains metadata of an arXiv eprint contained in this record.\n.. note::\n    This metadata is copied over from arXiv and should not be\n    edited manually.", 
+            "title": "arXiv metadata", 
+            "additionalProperties": false, 
+            "required": [
+              "value"
+            ], 
+            "type": "object", 
+            "properties": {
+              "categories": {
+                "uniqueItems": true, 
+                "description": ":MARC: first category in ``037__c`` with ``9:arXiv``,\n    all categories in ``65017a`` with ``2:arXiv``\nThe first category in the list has a special meaning:\nit is the primary category of the eprint on arXiv.", 
+                "title": "arXiv categories of the eprint", 
+                "minItems": 1, 
+                "items": {
+                  "$ref": "elements/arxiv_categories.json"
+                }, 
+                "type": "array"
+              }, 
+              "value": {
+                "pattern": "^\\d{4}.\\d{4,5}|[\\w.]+(-[\\w.]+)?/\\d+$", 
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``037__a`` with ``9:arXiv``\n:example: ``math/0307245``\n:example: ``1701.01431``", 
+                "title": "arXiv eprint identifier"
+              }
+            }
+          }, 
+          "uniqueItems": true, 
+          "type": "array"
+        }, 
+        "preprint_date": {
+          "minLength": 1, 
+          "format": "date", 
+          "type": "string", 
+          "description": ":MARC: ``269__c``\n.. note::\n    This is only for preprints. For the publication date of\n    published documents, see :ref:`imprints`.", 
+          "title": "Preprint release date"
+        }, 
+        "subject_classification": {
+          "uniqueItems": true, 
+          "description": ":MARC: ``084``, ``080``, ``050`` and ``082``\n.. note: Subject classification of the document, following standards ; does not exist in Inspire", 
+          "title": "List of keywords", 
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "required": [
+              "value"
+            ], 
+            "type": "object", 
+            "properties": {
+              "source": {
+                "$ref": "elements/source.json"
+              }, 
+              "value": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``084/080/050/082``", 
+                "title": "A keyword"
+              }, 
+              "schema": {
+                "minLength": 1, 
+                "enum": [
+                  "UDC", 
+                  "ICS", 
+                  "DEWEY", 
+                  "LOC"
+                ], 
+                "type": "string", 
+                "description": "Describes to which schema the classification code belong\n``UDC``\n    :MARC: ``080``\n    Universal Decimal Classification\n``DEWEY``\n    :MARC: ``082``\n    Dewey\n``ICS``\n    :MARC: ``084``\n    .. Note: 084 is also used for YR alphabetical ordering. *To be checked*\n    Internation Classification of Standard\n``LOC``\n    :MARC: ``050``\n    Library of Congress Classification", 
+                "title": "Subject classification"
+              }
+            }
+          }, 
+          "type": "array", 
+          "related_records": {
+            "uniqueItems": true, 
+            "description": ":MARC: ``775``", 
+            "title": "List of related records", 
+            "minItems": 1, 
+            "items": {
+              "$ref": "elements/related_record.json"
+            }, 
+            "type": "array"
+          }
+        }, 
+        "volume": {
+          "minItems": 1, 
+          "type": "string", 
+          "description": ":MARC: ``246__n``", 
+          "title": "Volume number"
+        }, 
+        "standard_numbers": {
+          "uniqueItems": true, 
+          "description": ":MARC: ``021``\n:example: ``BS-EN-485-1``\n.. Note:: Used for Standards numbers only.", 
+          "title": "List of standard numbers", 
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "required": [
+              "value"
+            ], 
+            "type": "object", 
+            "properties": {
+              "hidden": {
+                "type": "boolean", 
+                "description": ":MARC: True when the standard number is in ``021__b``"
+              }, 
+              "value": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``021__a`` and ``021__b``"
+              }
+            }
+          }, 
+          "type": "array"
+        }, 
+        "publication_info": {
+          "uniqueItems": true, 
+          "description": ":MARC: ``773``", 
+          "title": "List of information on publication", 
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "type": "object", 
+            "properties": {
+              "pubinfo_freetext": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``773__x``\nUnstructured text describing the publication\ninformation.\n.. note::\n    This field is used when provided with unstructured\n    publication information, e.g. from arXiv. If known,\n    the other fields should be used instead."
+              }, 
+              "journal_title": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``773__p``\nJournal title abbreviated as in the corresponding entry\nin the Journals collection.\n:example: ``Phys.Rev.``"
+              }, 
+              "cnum": {
+                "description": ".. note: In CDS, for Proceedings. C-Num should also be in Conference_info.\n:MARC: ``773__w``\nWhen ``conference` paper` or ``proceedings`` is among\n:ref:`/properties/document_type`, contains the\nCNUM of the corresponding conference.", 
+                "$ref": "elements/cnum.json"
+              }, 
+              "material": {
+                "description": ":MARC: ``773__m``", 
+                "$ref": "elements/material.json"
+              }, 
+              "year": {
+                "minimum": 1000, 
+                "type": "integer", 
+                "description": ":MARC: ``773__y``", 
+                "maximum": 2050, 
+                "title": "Publication year"
+              }, 
+              "journal_volume": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``773__v``"
+              }, 
+              "journal_record": {
+                "description": "Record of the corresponding Journal", 
+                "$ref": "elements/json_reference.json"
+              }, 
+              "parent_report_number": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``773__r``\nReport number of the document of which this record is a\npart. This applies e.g. for large reports containing\nseveral chapters that have been split into individual\nrecords."
+              }, 
+              "artid": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``773__c`` (when it contains an ID instead of\n    starting page or page range).\nFor journals which issue IDs for articles instead of\n(or in complement to) continuous numbers within a\nvolume.\n.. note::\n    On legacy, this was treated as a starting page.", 
+                "title": "Article ID"
+              }, 
+              "conf_acronym": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``111__a``", 
+                "title": "Conference acronym"
+              }, 
+              "page_end": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: last page in ``773__c`` (if present)", 
+                "title": "Last page of document"
+              }, 
+              "curated_relation": {
+                "type": "boolean"
+              }, 
+              "parent_isbn": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``773__z``\nISBN of the book of which this document is a part.", 
+                "pattern": "^\\d*[0-9X]$"
+              }, 
+              "cern_conference_code": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``962__b``"
+              }, 
+              "parent_record": {
+                "$ref": "elements/json_reference.json"
+              }, 
+              "page_start": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: first page in ``773__c`` (if not an :ref:`artid`)", 
+                "title": "First page of document"
+              }, 
+              "journal_issue": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``773__n``"
+              }
+            }
+          }, 
+          "type": "array"
+        }, 
+        "conference_info": {
+          "minItems": 1, 
+          "items": {
+            "conference_title": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__a``\n.. Note: There can be different values there."
+            }, 
+            "cern_conference_code": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__g``"
+            }, 
+            "inspire_cnum": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``035__a`` when 9:INSPIRE-CNUM"
+            }, 
+            "conference_series": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: Does not exist in CDS"
+            }, 
+            "conference_series_number": {
+              "minLength": 1, 
+              "type": "integer", 
+              "description": ":MARC: Does not exist in CDS"
+            }, 
+            "opening_date": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__9``\nstarting date of the conference", 
+              "format": "date"
+            }, 
+            "conference_year": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__f`` *Do we still need?*"
+            }, 
+            "conference_place": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__c``"
+            }, 
+            "conference_contact": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``270__m`` Do we still need?"
+            }, 
+            "closing_date": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__z``\nclosing date of the conference", 
+              "format": "date"
+            }, 
+            "conference_country": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__w`` Do we still need?"
+            }, 
+            "properties": null, 
+            "conference_dates": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``111__d``\ndates of the conference, many items do not have 111__9 and/or z", 
+              "format": "date"
+            }, 
+            "additionalProperties": false, 
+            "required": [
+              "conference_title", 
+              "conference_place", 
+              "conference_dates"
+            ], 
+            "type": "object", 
+            "conference_acronym": {
+              "description": ":MARC: ``711__a``\nminLength: 1\ntype: string"
+            }
+          }, 
+          "uniqueItems": true, 
+          "description": ":MARC: ``111/711``\n.. Notes:: In Inspire there is a separate entity for conferences.", 
+          "type": "array"
+        }, 
+        "curated": {
+          "type": "boolean", 
+          "description": ":MARC: `500__a` containing `*Temporary entry*`, `*Temporary\n    record*` or `*Brief entry*` correspond to `false`, otherwise it\n    is `true`.\nWhether this record has been curated by a human, to ensure the\nquality standards of Inspire. Records having the :ref:`core` flag\nare all curated eventually, whereas non-core records are\nnot systematically curated."
+        }, 
+        "collaborations": {
+          "uniqueItems": true, 
+          "title": "List of collaborations", 
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "required": [
+              "value"
+            ], 
+            "type": "object", 
+            "properties": {
+              "record": {
+                "$ref": "elements/json_reference.json"
+              }, 
+              "value": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``710__g``\nCollaboration name as it appears on the paper (with the\n``Collaboration`` suffix dropped).\n:example: ``ATLAS`` instead of ``ATLAS Collaboration``\n:example: ``Particle Data Group``", 
+                "title": "Collaboration name"
+              }
+            }
+          }, 
+          "required": [
+            "value"
+          ], 
+          "type": "array"
+        }, 
+        "additional_subject_categories": {
+          "uniqueItems": true, 
+          "description": ".. note: does not exist in Inspire", 
+          "title": "List of other subject (Project specific... ex. EUCARD)", 
+          "minItems": 1, 
+          "items": {
+            "$ref": "elements/additional_subject_categories.json"
+          }, 
+          "type": "array"
+        }, 
+        "isbns": {
+          "uniqueItems": true, 
+          "description": ":MARC: ``020``", 
+          "title": "List of ISBNs", 
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "required": [
+              "value"
+            ], 
+            "type": "object", 
+            "properties": {
+              "medium": {
+                "minLength": 1, 
+                "enum": [
+                  "electronic version", 
+                  "print version", 
+                  "print version, hardback", 
+                  "print version, paperback", 
+                  "print version, spiral-bound", 
+                  "CD-ROM", 
+                  "audiobook", 
+                  "DVD"
+                ], 
+                "type": "string", 
+                "description": ":MARC: ``020__u``", 
+                "title": "Physical medium to which this ISBN refers"
+              }, 
+              "description": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``020__u``\n:anything in ``020__u`` that does not fit in medium and is not a volume.\n.. note: Does not exist in Inspire", 
+                "title": "Free text, used to describe the document to ISBN refers to."
+              }, 
+              "value": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``020__a``\n:example: ``0201021153``", 
+                "pattern": "^\\d*[0-9X]$"
+              }
+            }
+          }, 
+          "type": "array"
+        }, 
+        "accelerator_experiments": {
+          "uniqueItems": true, 
+          "description": ":MARC: 693\n.. note:: Modified from Inspire: add 693__s, 693__p and not link to experiment record\n", 
+          "title": "List of related accelerators/experiments/study/project", 
+          "minItems": 1, 
+          "items": {
+            "additionalProperties": false, 
+            "type": "object", 
+            "properties": {
+              "project": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: 693__p", 
+                "title": "Project"
+              }, 
+              "curated_relation": {
+                "default": false, 
+                "type": "boolean"
+              }, 
+              "experiment": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": "If present, :ref:`institution` should contain the\ninstitution where this experiment is located and\n:ref:`accelerator` may contain the accelerator that this\nexperiment is using (if appropriate).\n.. note::\n    Currently not used, see :ref:`legacy_name`."
+              }, 
+              "accelerator": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``693__a``\nIf present, :ref:`institution` should contain the\ninstitution where this accelerator is located.\n.. note::\n    Currently not used, see :ref:`legacy_name`."
+              }, 
+              "study": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: 693__s", 
+                "title": "Study"
+              }, 
+              "legacy_name": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: ``693__e``\nThis field is used when migrating from legacy instead\nof separate :ref:`institution`, :ref:`accelerator` and\n:ref:`experiment`. In the future, it will be deprecated and\nthe other fields will be used instead.\n:example: ``CERN-LHC-CMS``", 
+                "title": "Identifier of the experiment on legacy"
+              }, 
+              "institution": {
+                "minLength": 1, 
+                "type": "string", 
+                "description": ":MARC: not present.\n.. note::\n    Currently not used, see :ref:`legacy_name`.", 
+                "title": "Institution hosting the experiment"
+              }
+            }
+          }, 
+          "type": "array"
+        }, 
+        "editions": {
+          "uniqueItems": true, 
+          "description": ":MARC: ``250__a``", 
+          "title": "List of book editions", 
+          "minItems": 1, 
+          "items": {
+            "minLength": 1, 
+            "type": "string"
+          }, 
+          "type": "array"
+        }, 
+        "cds_subject_categories": {
+          "uniqueItems": true, 
+          "description": ".. note: does not exist in Inspire", 
+          "title": "List of CDS subject", 
+          "minItems": 1, 
+          "items": {
+            "$ref": "elements/cds_subject_categories.json"
+          }, 
+          "type": "array"
+        }
+      }
+    }
+  ]
+}

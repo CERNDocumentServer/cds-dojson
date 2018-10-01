@@ -1,0 +1,587 @@
+{
+  "decription": "A record in the books, proceedings, standards, theses and reports.", 
+  "title": "CDS Books Record Schema v1.0.0",
+  "$schema": "http://json-schema.org/draft-04/schema#", 
+  "required": [
+    "document_type", 
+    "titles", 
+    "recid"
+  ], 
+  "type": "object", 
+  "properties": {
+    "_collections": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``980__a`` ``690C_a`` ``697C_a``\nCollections to which this record belongs\n.. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.", 
+      "title": "Collections", 
+      "minItems": 1, 
+      "items": {
+        "minLength": 1, 
+        "enum": [
+          "BOOKSHOP", 
+          "DESIGN REPORT", 
+          "ENGLISH BOOK CLUB", 
+          "DIDACTICLIBRARY", 
+          "BOOKSUGGESTION", 
+          "CERN", 
+          "YELLOW REPORT", 
+          "LEGSERLIB", 
+          "LEGSERLIBINTLAW", 
+          "LEGSERLIBCIVLAW", 
+          "LEGSERLIBLEGRES"
+        ], 
+        "type": "string"
+      }, 
+      "type": "array"
+    }, 
+    "public_notes": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``500``\nAny notes about the document that do not fit into another field.\nFor arXiv eprints, also contains the contents of the comment field\non arXiv.\n.. note::\n    These notes are publicly visible. For notes not shown to\n    regular users, see :ref:`_private_notes`.", 
+      "title": "List of public notes", 
+      "minItems": 1, 
+      "items": {
+        "$ref": "elements/sourced_value.json"
+      }, 
+      "type": "array"
+    }, 
+    "authors": {
+      "uniqueItems": false, 
+      "description": ":MARC: ``100``, ``700``\nBesides authors, also contains editors and supervisors (see\n:ref:`hep.json#/properties/authors/items/properties/inspire_roles`).", 
+      "title": "Authors", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "full_name"
+        ], 
+        "type": "object", 
+        "properties": {
+          "roles": {
+            "minItems": 1, 
+            "items": {
+              "default": "author", 
+              "minLength": 1, 
+              "enum": [
+                "author", 
+                "supervisor", 
+                "editor", 
+                "illustrator"
+              ], 
+              "type": "string", 
+              "description": "``supervisor``\n    :MARC: ``700`` is used for supervisor metadata.\n    This person is a thesis supervisor. Should be\n    used together with the ``thesis``\n    :ref:`hep.json#/properties/document_type`.\n``editor``\n    :MARC: ``100/700__e:ed.``\n    This person is an editor of the conference\n    proceedings. Should be used together with the\n    ``proceedings``\n    :ref:`hep.json#/properties/document_type`."
+            }, 
+            "uniqueItems": true, 
+            "description": ".. note: different from Inspire (Inspire_role)", 
+            "type": "array"
+          }, 
+          "affiliations": {
+            "minItems": 1, 
+            "items": {
+              "additionalProperties": false, 
+              "required": [
+                "value"
+              ], 
+              "type": "object", 
+              "properties": {
+                "curated_relation": {
+                  "type": "boolean"
+                }, 
+                "value": {
+                  "minLength": 1, 
+                  "type": "string", 
+                  "description": ":MARC: ``100/700__u``", 
+                  "title": "ICN of affiliation"
+                }
+              }
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }, 
+          "credit_roles": {
+            "minItems": 1, 
+            "items": {
+              "minLength": 1, 
+              "enum": [
+                "Conceptualization", 
+                "Data curation", 
+                "Formal analysis", 
+                "Funding acquisition", 
+                "Investigation", 
+                "Methodology", 
+                "Project administration", 
+                "Resources", 
+                "Software", 
+                "Supervision", 
+                "Validation", 
+                "Visualization", 
+                "Writing - original draft", 
+                "Writing - review & editing"
+              ], 
+              "type": "string", 
+              "description": ":MARC: not present.\nRole of the author according to the `Contributor\nRoles Taxonomy (CRediT)\n<http://dictionary.casrai.org/Contributor_Roles>`_", 
+              "title": "Credit role of author"
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }, 
+          "ids": {
+            "uniqueItems": true, 
+            "description": ":MARC: ``100/700/701__i/j``", 
+            "title": "Identifiers of the author", 
+            "minItems": 1, 
+            "items": {
+              "$ref": "elements/id.json"
+            }, 
+            "type": "array"
+          }, 
+          "emails": {
+            "minItems": 1, 
+            "items": {
+              "minLength": 1, 
+              "type": "string", 
+              "format": "email"
+            }, 
+            "uniqueItems": true, 
+            "description": ":MARC: ``100/700/__m``", 
+            "type": "array"
+          }, 
+          "raw_affiliations": {
+            "minItems": 1, 
+            "items": {
+              "$ref": "elements/sourced_value.json"
+            }, 
+            "uniqueItems": true, 
+            "description": ":MARC: ``100/700__v``\nList of full affiliations, as written on the paper.", 
+            "type": "array"
+          }, 
+          "curated_relation": {
+            "default": false, 
+            "type": "boolean"
+          }, 
+          "full_name": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``100/700/__a``\nAuthor name in Latin alphabet (may contain diacritics).\nShould be of the form 'family names, first names', and,\nexcept for a possible reordering, be exactly as on the\npaper.\n:example: ``Smith Davis, John F.K.``", 
+            "title": "Author name"
+          }, 
+          "alternative_names": {
+            "minItems": 1, 
+            "items": {
+              "minLength": 1, 
+              "type": "string", 
+              "description": ":MARC: ``100/700/701__q``\n:example: ``\u697c \u7acb\u6d0b``\n:example: ``Smith, Joe John``"
+            }, 
+            "uniqueItems": true, 
+            "type": "array"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "titles": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``245``\nThere can be several because the preprint title often differs from\nthe published version. The title should be kept as on the document\nand in the same language as the document (see :ref:`languages`).\nTranslations go into :ref:`title_translations`.", 
+      "title": "List of titles", 
+      "minItems": 1, 
+      "items": {
+        "$ref": "elements/title.json"
+      }, 
+      "type": "array"
+    }, 
+    "dois": {
+      "uniqueItems": true, 
+      "description": ".. Note: This element can be found at the holding level or at the bibliographic record level.", 
+      "title": "List of DOIs", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "description": ":MARC: ``0247_9``", 
+            "$ref": "elements/source.json"
+          }, 
+          "material": {
+            "description": ":MARC: ``0247_q``", 
+            "$ref": "elements/material.json"
+          }, 
+          "value": {
+            "pattern": "^10\\.\\d+(\\.\\d+)?/\\S+$", 
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``0247_a``\n:example: ``10.1023/A:1026654312961``", 
+            "title": "DOI"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "keywords": {
+      "uniqueItems": true, 
+      "description": ":MARC: ```6531`` and ``695`` (corresponding to different\n    :ref:`keywords/items/properties/schema`)\nKeywords give information about the specific contents of the\nrecord, much more precisely than :ref:`inspire_categories`.", 
+      "title": "List of keywords", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "$ref": "elements/source.json"
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``084/6531/695__a`` (depending on :ref:`schema`)\nIt belongs to the vocabulary specified by :ref:`schema`.\n:example: ``black hole: mass`` (for :ref:`schema` =\n    ``INSPIRE``)\n:example: ``29.27.Fh`` (for :ref:`schema` = ``PACS``)\n:example: ``G033M`` (for :ref:`schema` = ``PDG``)", 
+            "title": "A keyword"
+          }, 
+          "schema": {
+            "minLength": 1, 
+            "enum": [
+              "INIS", 
+              "INSPIRE", 
+              "JACOW", 
+              "PACS", 
+              "PDG"
+            ], 
+            "type": "string", 
+            "description": "Describes to which vocabulary the keyword in :ref:`value`\nbelongs.\n``INIS``\n    :MARC: ``695__2:INIS``\n    The keyword is part of the `International\n    Nuclear Information System (INIS)\n    <https://www.iaea.org/inis/>`_ vocabulary.\n``INSPIRE``\n    :MARC: ``695__2:INSPIRE``\n    The keyword has been assigned by Inspire, and\n    belongs to its vocabulary.\n``JACOW``\n    :MARC: ``6531_2:JACOW``\n    The keyword is part of the `Joint Accelerator\n    Conference Website (JACoW) vocabulary\n    <http://jacow.org/Tools/Keywords>`_.\n``PACS``\n    :MARC: ``084__2:PACS``\n    The keyword is a number from the `Physics and\n    Astronomy Classification Scheme (PACS)\n    <https://publishing.aip.org/publishing/pacs/pacs-2010-regular-edition>`_.\n``PDG``\n    :MARC: ``084__2:PDG``\n    The keyword is a `PDG Indentifier\n    <http://pdg.lbl.gov/2016/pdgid/PDGIdentifiers.html>`_.\n.. note::\n    If not present, the keyword is a free-form keyword,\n    not necessarily part of any vocabulary.", 
+            "title": "Keyword vocabulary"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "external_system_identifiers": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "schema", 
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "value": {
+            "pattern": "^\\S+$", 
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``035__a``\nIdentifies the record in the external system specified\nby :ref:`schema`.\n:example: ``1999IJTP...38.1113M``", 
+            "title": "External identifier"
+          }, 
+          "schema": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``035__9``\nIdentifies the external system, and allows to interpret\nunambiguously the :ref:`value`.\n:example: ``ADS``", 
+            "pattern": "^\\w+$"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``035``\nList of identifiers of this document on external systems.", 
+      "type": "array"
+    }, 
+    "title_translations": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "language", 
+          "title"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "$ref": "elements/source.json"
+          }, 
+          "subtitle": {
+            "minLength": 1, 
+            "type": "string"
+          }, 
+          "language": {
+            "$ref": "elements/language_code.json"
+          }, 
+          "title": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``242``\nTranslations of the titles in a language that is not the language\nof the document (see :ref:`languages`).\nUsually, this is contains an English translation of the title of a\nnon-English paper, but sometimes a native language if the paper is\nin English but the title has been translated.", 
+      "type": "array"
+    }, 
+    "license": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``540``", 
+      "title": "List of licenses", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "url": {
+            "minLength": 1, 
+            "format": "uri", 
+            "type": "string", 
+            "description": ":MARC: ``540__u``\nURL where the full license statement may be found, if\nonly a short name is provided in ``license``.", 
+            "title": "URL of the license"
+          }, 
+          "admin_info": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__g`` (Not Inspire)\nAdministrative information\n:example: `DAI number``", 
+            "title": "Administrative information"
+          }, 
+          "license": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__a``\nEither the short name of the license or the full\nlicense statement.\n:example: ``CC-BY-4.0``", 
+            "title": "License statement"
+          }, 
+          "imposing": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__b``\n:example: ``arXiv``", 
+            "title": "Organization/person imposing the license"
+          }, 
+          "funder": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``540__f`` (Not Inspire)\nThe institution who has funded the Open Access\n:example: ``CERN Library``", 
+            "title": "Open Access funder"
+          }, 
+          "material": {
+            "description": ":MARC: ``540__3``", 
+            "$ref": "elements/material.json"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "report_numbers": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``037`` ``088``\n:example: ``DESY-17-036``", 
+      "title": "List of report numbers assigned to the record", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "source": {
+            "$ref": "elements/source.json"
+          }, 
+          "hidden": {
+            "type": "boolean", 
+            "description": ":MARC: if ``true``, the :ref:`value` is in ``037__z``,``088__9``\n    instead of ``037__a````088__9``\nWhether this report number should be hidden from the\ndisplay. This is appropriate for\n* a report number that appears on the document but is\n  not the one officially assigned;\n* a report number that has been assigned by one of the\n  authors institutions, but is not displayed on the\n  document (typically for large collaborations)."
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "acquisition_source": {
+      "$ref": "elements/acquisition_source.json"
+    }, 
+    "copyright": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``542``", 
+      "title": "List of copyrights to documents in this record", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "properties": {
+          "url": {
+            "minLength": 1, 
+            "format": "uri", 
+            "type": "string", 
+            "title": "Copyright notice URL"
+          }, 
+          "material": {
+            "description": ":MARC: ``542__3``", 
+            "$ref": "elements/material.json"
+          }, 
+          "holder": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``542__d``\n:example: ``American Physical Society``", 
+            "title": "Copyright holder"
+          }, 
+          "statement": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``542__f``\nSee `Wikipedia\n<https://en.wikipedia.org/wiki/Copyright_notice>`_ for\nexplanations.\nAlernatively to this string, a URL to the copyright\nnotice may be provided in :ref:`url`.\n:example: ``\u00a9 The Author(s) 2015. Published by Oxford\n    University Press on behalf of the Physical Society\n    of Japan.``", 
+            "title": "Copyright notice"
+          }, 
+          "year": {
+            "minimum": 1000, 
+            "type": "integer", 
+            "description": ":MARC: ``542__g``", 
+            "maximum": 2050
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "control_number": {
+      "type": "integer", 
+      "description": ":MARC: ``001``\nRead-only field.", 
+      "title": "ID of current record"
+    }, 
+    "record_affiliations": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``901``\nBecause of technical limitations, for some older records the\naffiliations were associated globally to the record instead of its\nindividual authors (using the\n:ref:`authors/items/properties/affiliations` field).\n.. note::\n    This field is present for legacy records and should not be used\n    for new records.", 
+      "title": "Affiliations not associated to authors", 
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "required": [
+          "value"
+        ], 
+        "type": "object", 
+        "properties": {
+          "curated_relation": {
+            "type": "boolean"
+          }, 
+          "value": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``901__a``\nCurrently, the old\n:ref:`institutions.json#/properties/legacy_ICN`\nis used here. In the future, this will\nchange and become the new\n:ref:`institutions.json#/properties/ICN`.", 
+            "title": "ICN of affiliation"
+          }, 
+          "record": {
+            "$ref": "elements/json_reference.json"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "languages": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``041__a``", 
+      "title": "List of languages of the document", 
+      "minItems": 1, 
+      "items": {
+        "$ref": "elements/language_code.json"
+      }, 
+      "type": "array"
+    }, 
+    "table_of_content": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "properties": {
+          "value": {
+            "minLength": 1, 
+            "type": "string"
+          }
+        }
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``505`` whatever is the indicator\nList of chapters\n.. note::\n    Does not exist in Inspire", 
+      "type": "array"
+    }, 
+    "_private_notes": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``595``\nThese notes are only visible to privileged users, not regular\nusers.", 
+      "title": "List of private notes", 
+      "minItems": 1, 
+      "items": {
+        "$ref": "elements/sourced_value.json"
+      }, 
+      "type": "array"
+    }, 
+    "related_records": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``787`` ``775``", 
+      "title": "List of related records", 
+      "minItems": 1, 
+      "type": "array", 
+      "$ref": "elements/related_record.json"
+    }, 
+    "urls": {
+      "minItems": 1, 
+      "items": {
+        "$ref": "elements/url.json"
+      }, 
+      "uniqueItems": true, 
+      "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.", 
+      "type": "array"
+    }, 
+    "recid": {
+      "type": "number", 
+      "description": "Invenio record identifier (integer)."
+    }, 
+    "abstracts": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``520``\nThe first abstract is the preferred one, to be displayed in\npriority.", 
+      "title": "List of abstracts", 
+      "minItems": 1, 
+      "items": [
+        {
+          "$ref": "elements/sourced_value.json"
+        }
+      ], 
+      "type": "array"
+    }, 
+    "imprints": {
+      "minItems": 1, 
+      "items": {
+        "additionalProperties": false, 
+        "type": "object", 
+        "description": ":MARC: ``260``\nWhen/where/by whom this record was published.\n+ reprint information (does not exist in Inspire)", 
+        "properties": {
+          "date": {
+            "minLength": 1, 
+            "format": "date", 
+            "type": "string", 
+            "description": ":MARC: ``260__c``", 
+            "title": "Date of publication"
+          }, 
+          "publisher": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``260__b``\n:example: ``Springer``"
+          }, 
+          "reprint": {
+            "minLength": 1, 
+            "format": "date", 
+            "type": "string", 
+            "description": ":MARC: ``260__g``\n.. note: does not exist in Inspire", 
+            "title": "Date of reprint"
+          }, 
+          "place": {
+            "minLength": 1, 
+            "type": "string", 
+            "description": ":MARC: ``260__a``\n:example: ``Paris``", 
+            "title": "Place of publication"
+          }
+        }
+      }, 
+      "title": "List of imprints", 
+      "uniqueItems": true, 
+      "type": "array"
+    }, 
+    "document_types": {
+      "uniqueItems": true, 
+      "description": ":MARC: ``980__a`` ``690C_a`` ``960__a``\nTypes of document this record represents.\n.. note::\n  As a record aggregates information from multiple sources, it\n  can have multiple document types simultaneously. (?)", 
+      "title": "Document types", 
+      "minItems": 1, 
+      "items": {
+        "$ref": "elements/document_type.json"
+      }, 
+      "type": "array"
+    }
+  }
+}

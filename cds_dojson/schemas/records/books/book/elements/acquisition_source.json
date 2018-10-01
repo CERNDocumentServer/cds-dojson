@@ -6,20 +6,20 @@
     }, 
     "internal_uid": {
       "type": "integer", 
-      "description": ":MARC: ?\nThis only gets populated when `method` is `submitter`.", 
+      "description": "This only gets populated when `method` is `submitter`.", 
       "title": "Inspire user ID of the submitter"
     }, 
     "submission_number": {
       "minLength": 1, 
       "type": "string", 
-      "description": ":MARC: ?\nThis only gets populated when `method` is `submitter`.", 
+      "description": "This only gets populated when `method` is `submitter`.", 
       "title": "Holding pen record ID of the submission"
     }, 
     "orcid": {
       "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$", 
       "minLength": 1, 
       "type": "string", 
-      "description": ":MARC: ?\nThis only gets populated when `method` is `submitter`.", 
+      "description": "This only gets populated when `method` is `submitter`.", 
       "title": "ORCID of the submitter"
     }, 
     "method": {
@@ -32,7 +32,7 @@
       ], 
       "type": "string", 
       "description": "Possible values are:\n`submitter`\n    when obtained from a user submission. In this case, `orcid`,\n    `internal_uid` and `email` store identifiers of the submitter,\n    and `submission_number` an ID of the submission. The submitter can be the cataloger.\n`oai`\n    when obtained by OAI-PMH harvesting.\n`batchuploader`\n    when obtained through the batch uploader.\n`hepcrawl`\n    when obtained from a hepcrawl crawler. In this case, `source`\n    stores the publisher or the repository that was crawled.", 
-      "title": "How the medata was obtained"
+      "title": "Data obtraining method"
     }, 
     "email": {
       "minLength": 1, 

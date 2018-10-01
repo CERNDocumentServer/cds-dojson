@@ -1,0 +1,16 @@
+{
+  "additionalProperties": false, 
+  "required": [
+    "$ref"
+  ], 
+  "type": "object", 
+  "properties": {
+    "$ref": {
+      "minLength": 1, 
+      "type": "string", 
+      "description": "URL to the referenced resource", 
+      "format": "uri"
+    }
+  }, 
+  "title": "Reference to another record"
+}

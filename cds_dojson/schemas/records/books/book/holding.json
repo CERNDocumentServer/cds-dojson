@@ -18,7 +18,7 @@
     "description": {
       "minLength": 1, 
       "type": "string", 
-      "description": ":MARC: No Marc - BibCirculation field ``description``", 
+      "description": ":MARC: In BibCirculation field ``description`` or for electronic holding: 0247__q or ``8564_y``", 
       "title": "Holding description"
     }, 
     "persistent_identifiers": {
@@ -115,7 +115,7 @@
     "urls": {
       "minItems": 1, 
       "items": {
-        "$ref": "elements/url.yml"
+        "$ref": "elements/url.json"
       }, 
       "uniqueItems": true, 
       "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element. ", 

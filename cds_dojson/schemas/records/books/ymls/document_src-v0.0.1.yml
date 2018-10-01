@@ -1,0 +1,664 @@
+$schema: http://json-schema.org/schema#
+allOf:
+    - $ref: base-v0.0.1.json
+    - properties:
+        accelerator_experiments:
+            description: |
+                :MARC: 693
+                .. note:: Modified from Inspire: add 693__s, 693__p and not link to experiment record
+            items:
+                additionalProperties: false
+                properties:
+                    accelerator:
+                        description: |-
+                            :MARC: ``693__a``
+                            If present, :ref:`institution` should contain the
+                            institution where this accelerator is located.
+                            .. note::
+                                Currently not used, see :ref:`legacy_name`.
+                        minLength: 1
+                        type: string
+                    curated_relation:
+                        default: false
+                        type: boolean
+                    experiment:
+                        description: |-
+                            If present, :ref:`institution` should contain the
+                            institution where this experiment is located and
+                            :ref:`accelerator` may contain the accelerator that this
+                            experiment is using (if appropriate).
+                            .. note::
+                                Currently not used, see :ref:`legacy_name`.
+                        minLength: 1
+                        type: string
+                    institution:
+                        description: |-
+                            :MARC: not present.
+                            .. note::
+                                Currently not used, see :ref:`legacy_name`.
+                        minLength: 1
+                        title: Institution hosting the experiment
+                        type: string
+                    study:
+                        description: |-
+                            :MARC: 693__s
+                        minLength: 1
+                        title: Study
+                        type: string
+                    project:
+                        description: |-
+                            :MARC: 693__p
+                        minLength: 1
+                        title: Project
+                        type: string
+                    legacy_name:
+                        description: |-
+                            :MARC: ``693__e``
+                            This field is used when migrating from legacy instead
+                            of separate :ref:`institution`, :ref:`accelerator` and
+                            :ref:`experiment`. In the future, it will be deprecated and
+                            the other fields will be used instead.
+                            :example: ``CERN-LHC-CMS``
+                        minLength: 1
+                        title: Identifier of the experiment on legacy
+                        type: string
+                type: object
+            minItems: 1
+            title: List of related accelerators/experiments/study/project
+            type: array
+            uniqueItems: true
+
+        arxiv_eprints:
+            items:
+                additionalProperties: false
+                description: |-
+                    Contains metadata of an arXiv eprint contained in this record.
+                    .. note::
+                        This metadata is copied over from arXiv and should not be
+                        edited manually.
+                properties:
+                    categories:
+                        description: |-
+                            :MARC: first category in ``037__c`` with ``9:arXiv``,
+                                all categories in ``65017a`` with ``2:arXiv``
+                            The first category in the list has a special meaning:
+                            it is the primary category of the eprint on arXiv.
+                        items:
+                            $ref: elements/arxiv_categories.json
+                        minItems: 1
+                        title: arXiv categories of the eprint
+                        type: array
+                        uniqueItems: true
+                    value:
+                        description: |-
+                            :MARC: ``037__a`` with ``9:arXiv``
+                            :example: ``math/0307245``
+                            :example: ``1701.01431``
+                        minLength: 1
+                        pattern: ^\d{4}.\d{4,5}|[\w.]+(-[\w.]+)?/\d+$
+                        title: arXiv eprint identifier
+                        type: string
+                required:
+                    - value
+                title: arXiv metadata
+                type: object
+            minItems: 1
+            type: array
+            uniqueItems: true
+
+        book_series:
+            description: |-
+                :MARC: ``490``
+                List of book series in which this record has been published.
+                .. note::
+                    This field should only be present if ``book``, ``thesis`` or
+                    ``proceedings`` are among
+                    :ref:`hep.json#/properties/document_type`.
+            items:
+                additionalProperties: false
+                description: |-
+                    .. note::
+                        If the book series has a Journal record,
+                        `hep.json#/properties/publication_info` should be used
+                        instead.
+                properties:
+                    title:
+                        description: |-
+                            :MARC: ``490__a``
+                        minLength: 1
+                        title: Title of the book series
+                        type: string
+                    volume:
+                        description: |-
+                            :MARC: ``490__v``
+                        minLength: 1
+                        title: Volume of the book in the series
+                        type: string
+                    issn:
+                        description: |-
+                            :MARC: ``490__x``
+                            .. note: Does not exist in Inspire
+                        minLength: 1
+                        title: ISSN of the series
+                        type: string
+                required:
+                    - title
+                type: object
+            minItems: 1
+            type: array
+            uniqueItems: true
+
+        collaborations:
+            items:
+                additionalProperties: false
+                properties:
+                    record:
+                        $ref: elements/json_reference.json
+                    value:
+                        description: |-
+                            :MARC: ``710__g``
+                            Collaboration name as it appears on the paper (with the
+                            ``Collaboration`` suffix dropped).
+                            :example: ``ATLAS`` instead of ``ATLAS Collaboration``
+                            :example: ``Particle Data Group``
+                        minLength: 1
+                        title: Collaboration name
+                        type: string
+                required:
+                    - value
+                type: object
+            minItems: 1
+            required:
+                - value
+            title: List of collaborations
+            type: array
+            uniqueItems: true
+
+        corporate_authors:
+            items:
+                description: |-
+                    :MARC: ``110__a``
+                    In case the document has not been signed by a real author, but
+                    only mentions the name of an organization.
+                    :example: ``CERN``
+                minLength: 1
+                title: List of corporate authors
+                type: string
+            minItems: 1
+            type: array
+            uniqueItems: true
+
+        curated:
+            description: |-
+                :MARC: `500__a` containing `*Temporary entry*`, `*Temporary
+                    record*` or `*Brief entry*` correspond to `false`, otherwise it
+                    is `true`.
+                Whether this record has been curated by a human, to ensure the
+                quality standards of Inspire. Records having the :ref:`core` flag
+                are all curated eventually, whereas non-core records are
+                not systematically curated.
+            type: boolean
+
+        editions:
+            description: |-
+                :MARC: ``250__a``
+            items:
+                minLength: 1
+                type: string
+            minItems: 1
+            title: List of book editions
+            type: array
+            uniqueItems: true
+
+        volume:
+            description: |-
+                :MARC: ``246__n``
+            minItems: 1
+            title: Volume number
+            type: string
+
+        funding_info:
+            description: |-
+                :MARC: ``536``
+                Information about the sources of funding for the research performed
+                in this record.
+            items:
+                additionalProperties: false
+                properties:
+                    agency:
+                        description: |-
+                            :MARC: ``536__a``
+                        minLength: 1
+                        title: Funding agency
+                        type: string
+                    grant_number:
+                        description: |-
+                            :MARC: ``536__c``
+                        minLength: 1
+                        title: Grant number
+                        type: string
+                    project_number:
+                        description: |-
+                            :MARC: ``536__f``
+                        minLength: 1
+                        title: Project number
+                        type: string
+                    open_access:
+                        description: |-
+                            :MARC: ``536__r``
+                        minLength: 1
+                        title: Open Access
+                        type: boolean
+                type: object
+            minItems: 1
+            title: Funding information
+            type: array
+            uniqueItems: true
+
+        isbns:
+            description: |-
+                :MARC: ``020``
+            items:
+                additionalProperties: false
+                properties:
+                    medium:
+                        description: |-
+                            :MARC: ``020__u``
+                        enum:
+                            - electronic version
+                            - print version
+                            - print version, hardback
+                            - print version, paperback
+                            - print version, spiral-bound
+                            - CD-ROM
+                            - audiobook
+                            - DVD
+                        minLength: 1
+                        title: Physical medium to which this ISBN refers
+                        type: string
+                    description:
+                        description: |-
+                            :MARC: ``020__u``
+                            :anything in ``020__u`` that does not fit in medium and is not a volume.
+                            .. note: Does not exist in Inspire
+                        minLength: 1
+                        title: Free text, used to describe the document to ISBN refers to.
+                        type: string
+                    value:
+                        description: |-
+                            :MARC: ``020__a``
+                            :example: ``0201021153``
+                        minLength: 1
+                        pattern: ^\d*[0-9X]$
+                        type: string
+                required:
+                    - value
+                type: object
+            minItems: 1
+            title: List of ISBNs
+            type: array
+            uniqueItems: true
+
+        preprint_date:
+            description: |-
+                :MARC: ``269__c``
+                .. note::
+                    This is only for preprints. For the publication date of
+                    published documents, see :ref:`imprints`.
+            format: date
+            minLength: 1
+            title: Preprint release date
+            type: string
+
+        publication_info:
+            description: |-
+                :MARC: ``773``
+            items:
+                additionalProperties: false
+                properties:
+                    artid:
+                        description: |-
+                            :MARC: ``773__c`` (when it contains an ID instead of
+                                starting page or page range).
+                            For journals which issue IDs for articles instead of
+                            (or in complement to) continuous numbers within a
+                            volume.
+                            .. note::
+                                On legacy, this was treated as a starting page.
+                        minLength: 1
+                        title: Article ID
+                        type: string
+                    cnum:
+                        $ref: elements/cnum.json
+                        description: |-
+                            .. note: In CDS, for Proceedings. C-Num should also be in Conference_info.
+                            :MARC: ``773__w``
+                            When ``conference` paper` or ``proceedings`` is among
+                            :ref:`/properties/document_type`, contains the
+                            CNUM of the corresponding conference.
+                    conf_acronym:
+                        description: |-
+                            :MARC: ``111__a``
+                        minLength: 1
+                        title: Conference acronym
+                        type: string
+                    cern_conference_code:
+                        description: |-
+                            :MARC: ``962__b``
+                        minLength: 1
+                        type: string
+                    curated_relation:
+                        type: boolean
+                    journal_issue:
+                        description: |-
+                            :MARC: ``773__n``
+                        minLength: 1
+                        type: string
+                    journal_record:
+                        $ref: elements/json_reference.json
+                        description: |-
+                            Record of the corresponding Journal
+                    journal_title:
+                        description: |-
+                            :MARC: ``773__p``
+                            Journal title abbreviated as in the corresponding entry
+                            in the Journals collection.
+                            :example: ``Phys.Rev.``
+                        minLength: 1
+                        type: string
+                    journal_volume:
+                        description: |-
+                            :MARC: ``773__v``
+                        minLength: 1
+                        type: string
+                    material:
+                        $ref: elements/material.json
+                        description: |-
+                            :MARC: ``773__m``
+                    page_end:
+                        description: |-
+                            :MARC: last page in ``773__c`` (if present)
+                        minLength: 1
+                        title: Last page of document
+                        type: string
+                    page_start:
+                        description: |-
+                            :MARC: first page in ``773__c`` (if not an :ref:`artid`)
+                        minLength: 1
+                        title: First page of document
+                        type: string
+                    parent_isbn:
+                        description: |-
+                            :MARC: ``773__z``
+                            ISBN of the book of which this document is a part.
+                        minLength: 1
+                        pattern: ^\d*[0-9X]$
+                        type: string
+                    parent_record:
+                        $ref: elements/json_reference.json
+                    parent_report_number:
+                        description: |-
+                            :MARC: ``773__r``
+                            Report number of the document of which this record is a
+                            part. This applies e.g. for large reports containing
+                            several chapters that have been split into individual
+                            records.
+                        minLength: 1
+                        type: string
+                    pubinfo_freetext:
+                        description: |-
+                            :MARC: ``773__x``
+                            Unstructured text describing the publication
+                            information.
+                            .. note::
+                                This field is used when provided with unstructured
+                                publication information, e.g. from arXiv. If known,
+                                the other fields should be used instead.
+                        minLength: 1
+                        type: string
+                    year:
+                        description: |-
+                            :MARC: ``773__y``
+                        maximum: 2050
+                        minimum: 1000
+                        title: Publication year
+                        type: integer
+                type: object
+            minItems: 1
+            title: List of information on publication
+            type: array
+            uniqueItems: true
+
+        standard_numbers:
+            description: |-
+                :MARC: ``021``
+                :example: ``BS-EN-485-1``
+                .. Note:: Used for Standards numbers only.
+            items:
+                additionalProperties: false
+                properties:
+                    hidden:
+                        description: |-
+                            :MARC: True when the standard number is in ``021__b``
+                        type: boolean
+                    value:
+                        description: |-
+                            :MARC: ``021__a`` and ``021__b``
+                        minLength: 1
+                        type: string
+                required:
+                    - value
+                type: object
+            minItems: 1
+            title: List of standard numbers
+            type: array
+            uniqueItems: true
+
+        thesis_info:
+            additionalProperties: false
+            description: |-
+                :MARC: ``502``
+                Information on a thesis (degree, date, university)
+            properties:
+                date:
+                    description: |-
+                        :MARC: ``502__d``
+                        Publication date of the thesis
+                    format: date
+                    minLength: 1
+                    type: string
+                defense_date:
+                    description: |-
+                        :MARC: ``500__a``
+                        Date of the thesis defense. On legacy, this was put in the
+                        note field as 'presented on ...'.
+                    format: date
+                    minLength: 1
+                    type: string
+                degree_type:
+                    $ref: elements/degree_type.json
+                institutions:
+                    description: |-
+                        :MARC: ``502__c``
+                        List of institutions issuing the degree.
+                    items:
+                        additionalProperties: false
+                        properties:
+                            curated_relation:
+                                type: boolean
+                            name:
+                                minLength: 1
+                                type: string
+                            record:
+                                $ref: elements/json_reference.json
+                        type: object
+                    minItems: 1
+                    type: array
+                    uniqueItems: true
+            type: object
+
+        conference_info:
+            description: |-
+                :MARC: ``111/711``
+                .. Notes:: In Inspire there is a separate entity for conferences.
+            items:
+                additionalProperties: false
+                properties:
+                opening_date:
+                    description: |-
+                        :MARC: ``111__9``
+                        starting date of the conference
+                    format: date
+                    minLength: 1
+                    type: string
+                closing_date:
+                    description: |-
+                        :MARC: ``111__z``
+                        closing date of the conference
+                    format: date
+                    minLength: 1
+                    type: string
+                conference_title:
+                    description: |-
+                        :MARC: ``111__a``
+                        .. Note: There can be different values there.
+                    minLength: 1
+                    type: string
+                conference_acronym:
+                     description: |-
+                        :MARC: ``711__a``
+                        minLength: 1
+                        type: string
+                conference_dates:
+                    description: |-
+                        :MARC: ``111__d``
+                        dates of the conference, many items do not have 111__9 and/or z
+                    format: date
+                    minLength: 1
+                    type: string
+                cern_conference_code:
+                    description: |-
+                        :MARC: ``111__g``
+                    minLength: 1
+                    type: string
+                inspire_cnum:
+                    description: |-
+                        :MARC: ``035__a`` when 9:INSPIRE-CNUM
+                    minLength: 1
+                    type: string
+                conference_place:
+                    description: |-
+                      :MARC: ``111__c``
+                    minLength: 1
+                    type: string
+                conference_series:
+                    description: |-
+                      :MARC: Does not exist in CDS
+                    minLength: 1
+                    type: string
+                conference_series_number:
+                    description: |-
+                        :MARC: Does not exist in CDS
+                    minLength: 1
+                    type: integer
+                conference_year:
+                    description: |-
+                        :MARC: ``111__f`` *Do we still need?*
+                    minLength: 1
+                    type: string
+                conference_country:
+                    description: |-
+                        :MARC: ``111__w`` Do we still need?
+                    minLength: 1
+                    type: string
+                conference_contact:
+                    description: |-
+                        :MARC: ``270__m`` Do we still need?
+                    minLength: 1
+                    type: string
+                required:
+                    - conference_title
+                    - conference_place
+                    - conference_dates
+                type: object
+            minItems: 1
+            type: array
+            uniqueItems: true
+
+        cds_subject_categories:
+            description: |-
+              .. note: does not exist in Inspire
+            items:
+                $ref: elements/cds_subject_categories.json
+            minItems: 1
+            title: List of CDS subject
+            type: array
+            uniqueItems: true
+
+        additional_subject_categories:
+            description: |-
+                .. note: does not exist in Inspire
+            items:
+                $ref: elements/additional_subject_categories.json
+            minItems: 1
+            title: List of other subject (Project specific... ex. EUCARD)
+            type: array
+            uniqueItems: true
+
+        subject_classification:
+            description: |-
+                :MARC: ``084``, ``080``, ``050`` and ``082``
+                .. note: Subject classification of the document, following standards ; does not exist in Inspire
+            items:
+                additionalProperties: false
+                properties:
+                    schema:
+                        description: |-
+                            Describes to which schema the classification code belong
+                            ``UDC``
+                                :MARC: ``080``
+                                Universal Decimal Classification
+                            ``DEWEY``
+                                :MARC: ``082``
+                                Dewey
+                            ``ICS``
+                                :MARC: ``084``
+                                .. Note: 084 is also used for YR alphabetical ordering. *To be checked*
+                                Internation Classification of Standard
+                            ``LOC``
+                                :MARC: ``050``
+                                Library of Congress Classification
+                        enum:
+                            - UDC
+                            - ICS
+                            - DEWEY
+                            - LOC
+                        minLength: 1
+                        title: Subject classification
+                        type: string
+                    source:
+                        $ref: elements/source.json
+                    value:
+                        description: |-
+                            :MARC: ``084/080/050/082``
+                        minLength: 1
+                        title: A keyword
+                        type: string
+                required:
+                    - value
+                type: object
+            minItems: 1
+            title: List of keywords
+            type: array
+            uniqueItems: true
+
+            related_records:
+                description: |-
+                    :MARC: ``775``
+                items:
+                    $ref: elements/related_record.json
+                minItems: 1
+                title: List of related records
+                type: array
+                uniqueItems: true
+

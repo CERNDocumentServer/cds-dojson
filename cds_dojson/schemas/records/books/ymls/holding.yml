@@ -45,7 +45,7 @@ properties:
             .. note::
                 Links to internal CDS resources are found in another element. 
         items:
-            $ref: elements/url.yml
+            $ref: elements/url.json
         minItems: 1
         type: array
         uniqueItems: true

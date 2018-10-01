@@ -1,4 +1,5 @@
 description: |-
+    :MARC: ``502__b``
     The `other` value means that the degree type is not known or is not among
     the more specific values.
 enum:

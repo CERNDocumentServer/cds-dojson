@@ -1,0 +1,419 @@
+{
+  "anyOf": [
+    {
+      "description": "This identifier is assigned to any curated author record (HEPNAMES on\nlegacy).  It is mainly used by large collaborations (providing an\n`authors.xml` file) to uniquely identify the authors of their articles.", 
+      "title": "Inspire ID", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``INSPIRE-12345678``", 
+          "pattern": "^INSPIRE-\\d{8}$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "INSPIRE ID"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "description": "The BAI (BibAuthorID) is based on the name of the author and is used as\na human-friendly unique identifier. Its general form is a\n``firstnames.lastnames.number``, where ``firstnames`` is a list of\nfirst names (or initials) separated by dots, and similarly for\n``lastnames``. Only ASCII letters (without diacritics), numbers, dashes\nand apostrophes are allowed in the names. By default, only initials of\nfirst names are used, but this may be changed at a cataloguer's\ndiscretion in order to disambiguate otherwise homonymous authors.\n.. note::\n    This identifier is not persistent, as it can be renamed to become\n    more explicit (e.g. transforming an initial into a full name), or\n    disappear when merging two different authors.", 
+      "title": "Inspire BAI", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``A.Einstein.1``", 
+          "pattern": "^((\\w|\\-|\\')+\\.)+\\d+$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "INSPIRE BAI"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "description": "`ORCID <http://orcid.org>`_ provides an identifier for individuals to\nuse with their name as they engage in research, scholarship, and\ninnovation activities.\nThe ORCID identifier can be resolved by prepending ``http://orcid.org``\nto the `value`, in order to get the ORCID record of the person.", 
+      "title": "ORCID", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "format": "orcid", 
+          "type": "string", 
+          "description": ":example: ``0000-0012-1234-5647``", 
+          "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "ORCID"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "description": "Author identfier assigned by the Joint Accelerator Conferences Website\n(`JACoW <http://jacow.org>`_).", 
+      "title": "JACoW ID", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``JACOW-12345678``", 
+          "pattern": "^JACoW-\\d{8}$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "JACOW"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "description": "Author identifier assigned by the Japanese `KAKEN\n<http://kaken.nii.ac.jp>`_ grants database.", 
+      "title": "KAKEN ID", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``KAKEN-12345678``", 
+          "pattern": "^KAKEN-\\d{8}$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "KAKEN"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "description": "More info at `arXiv <https://arxiv.org/help/author_identifiers>`_.", 
+      "title": "arXiv author identifier", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``warner_s_1``", 
+          "pattern": "^\\w+_(\\w_)?\\d+$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "ARXIV"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "description": "Also called CCID (e.g. on legacy).", 
+      "title": "CERN institutional ID", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``CERN-12345``", 
+          "pattern": "^CERN-\\d+$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "CERN"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``DESY-15456``", 
+          "pattern": "^DESY-\\d+$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "DESY"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "DESY identifier"
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``AZUAeayXuibs``", 
+          "pattern": "^(\\w|-){12}$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "GOOGLESCHOLAR"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "Google Scholar profile identifier"
+    }, 
+    {
+      "description": "Record ID in the Virtual International Authority File (`VIAF\n<http://viaf.org>`_).", 
+      "title": "VIAF record ID", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``75121530``", 
+          "pattern": "^\\d{7,9}$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "VIAF"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``A-1009-2008``", 
+          "pattern": "^[A-z]-\\d{4}-\\d{4}$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "RESEARCHERID"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "ResearcherID"
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``13245678901``", 
+          "pattern": "^\\d{10,11}$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "SCOPUS"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "SCOPUS author identifier"
+    }, 
+    {
+      "description": "HEPNAMES entry in the old SPIRES system.", 
+      "title": "SPIRES HEPNAMES ID", 
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: HEPNAMES-123456", 
+          "pattern": "^HEPNAMES-\\d+$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "SPIRES"
+          ], 
+          "type": "string"
+        }
+      }
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": "A page name on the English Wikipedia, i.e. the ``Page_name``\npart in http://en.wikipedia.org/wiki/Page_name.\n:example: ``Albert_Einstein``\nNon-English Wikipedia pages can be referenced by prepending the language.\n:example: ``it:Fabiola_Gianotti``"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "WIKIPEDIA"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "Wikipedia Page_name of the person"
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": ":example: ``SLAC-123456``", 
+          "pattern": "^SLAC-\\d+$"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "SLAC"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "SLAC identifier"
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": "A twitter handle, often preceded by ``@``.\n:example: ``Prof_S_Hawking``"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "TWITTER"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "Twitter handle"
+    }, 
+    {
+      "additionalProperties": false, 
+      "required": [
+        "schema", 
+        "value"
+      ], 
+      "type": "object", 
+      "properties": {
+        "value": {
+          "minLength": 1, 
+          "type": "string", 
+          "description": "Identifier of Linkedin profile, i.e. the part after\n``linkedin.com/in/`` in the URL.\n:example: ``kylecranmer``"
+        }, 
+        "schema": {
+          "minLength": 1, 
+          "enum": [
+            "LINKEDIN"
+          ], 
+          "type": "string"
+        }
+      }, 
+      "title": "LinkedIn profile"
+    }
+  ]
+}

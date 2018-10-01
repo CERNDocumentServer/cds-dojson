@@ -26,16 +26,16 @@ description: |-
     ``translation``
         for a translation of the main publication.
 enum:
-- addendum
-- additional material
-- data
-- erratum
-- editorial note
-- preprint
-- publication
-- reprint
-- software
-- translation
+    - addendum
+    - additional material
+    - data
+    - erratum
+    - editorial note
+    - preprint
+    - publication
+    - reprint
+    - software
+    - translation
 minLength: 1
 title: Material to which the field refers
 type: string

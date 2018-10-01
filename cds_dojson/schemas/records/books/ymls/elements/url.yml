@@ -14,6 +14,6 @@ properties:
         minLength: 1
         type: string
 required:
-- value
+    - value
 title: URL of related document
 type: object

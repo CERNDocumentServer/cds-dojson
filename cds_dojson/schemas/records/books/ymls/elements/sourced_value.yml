@@ -4,10 +4,10 @@ description: |-
     came from.
 properties:
     source:
-        $ref: source.json
+        $ref: source.yml
     value:
         minLength: 1
         type: string
 required:
-- value
+    - value
 type: object

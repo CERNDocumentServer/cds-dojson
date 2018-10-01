@@ -1,8 +1,6 @@
 $schema: http://json-schema.org/schema#
 additionalProperties: false
 description: JSON data model for the books, proceedings, standards, theses and reports in CDS.
-.. note::
-    This model uses as much as possible the data model of Inspire with some adaptation, indicated in the notes.
 
 properties:
     $schema:
@@ -13,59 +11,44 @@ properties:
     _collections:
         description: |-
             :MARC: ``980__a`` ``690C_a`` ``697C_a``
-        .. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.
+            Collections to which this record belongs
+            .. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.
         items:
             enum:
-            - BOOKSHOP
-            - DESIGN REPORT
-            - ENGLISH BOOK CLUB
-            - DIDACTICLIBRARY
-            - BOOKSUGGESTION
-            - CERN (?)
-            - YELLOW REPORT
-            - LEGSERLIB
-            - LEGSERLIBINTLAW
-            - LEGSERLIBCIVLAW
-            - LEGSERLIBLEGRES
+                - BOOKSHOP
+                - DESIGN REPORT
+                - ENGLISH BOOK CLUB
+                - DIDACTICLIBRARY
+                - BOOKSUGGESTION
+                - CERN (?)
+                - YELLOW REPORT
+                - LEGSERLIB
+                - LEGSERLIBINTLAW
+                - LEGSERLIBCIVLAW
+                - LEGSERLIBLEGRES
             minLength: 1
             type: string
         minItems: 1
-        title: Collections to which this record belongs
+        title: Collections
         type: array
         uniqueItems: true
 
-    document_type:
+    document_types:
         description: |-
             :MARC: ``980__a`` ``690C_a`` ``960__a``
-            Types of document this record represents.
-            .. note::
-                As a record aggregates information from multiple sources, it
-                can have multiple document types simultaneously. (?)
-            ``book``
-                Published Monograph (usually has an ISBN and a publisher)
-            ``proceedings``
-                Proceedings of a conference.
-                The :ref:`conference_info` field contains the information of the conference.
-                If published in a journal, :ref:`publication_info` also contains the journal information.
-            ``report``
-                A report. It can be unpublished, but can also be a book or a proceedings. In this case, it keeps the document type Book and Report or Proceedings and Report
-            ``thesis``
-                A thesis. The :ref:`thesis_info` field contains additional
-                information about the thesis. If published as a book, the
-                :ref:`editions`, :ref:`imprints`, :ref:`isbns` and
-                :ref:`book_series` fields may contain specific metadata about
-                this book and the document type can also be Book.
-            ``standard``
-                A standard.
+          Types of document this record represents.
+          .. note::
+              As a record aggregates information from multiple sources, it
+              can have multiple document types simultaneously. (?)
         items:
             $ref: elements/document_type.yml
         minItems: 1
         type: array
         uniqueItems: true
+        title: Document types
 
     acquisition_source:
         $ref: elements/acquisition_source.yml
-        .. note:: To be checked with CDS team
 
     _private_notes:
         description: |-
@@ -73,7 +56,7 @@ properties:
             These notes are only visible to privileged users, not regular
             users.
         items:
-            $ref: elements/sourced_value.json
+            $ref: elements/sourced_value.yml
         minItems: 1
         title: List of private notes
         type: array
@@ -92,8 +75,9 @@ properties:
         uniqueItems: true
 
     accelerator_experiments:
-        description:  ``693``
-        .. note:: Modified from Inspire: add 693__s, 693__p and not link to experiment record
+        description: |
+            :MARC: 693
+            .. note:: Modified from Inspire: add 693__s, 693__p and not link to experiment record
         items:
             additionalProperties: false
             properties:
@@ -111,7 +95,6 @@ properties:
                     type: boolean
                 experiment:
                     description: |-
-                        :MARC: not present.
                         If present, :ref:`institution` should contain the
                         institution where this experiment is located and
                         :ref:`accelerator` may contain the accelerator that this
@@ -138,7 +121,7 @@ properties:
                     description: |-
                         :MARC: 693__p
                     minLength: 1
-                    title: Study
+                    title: Project
                     type: string
                 legacy_name:
                     description: |-
@@ -173,7 +156,7 @@ properties:
                         The first category in the list has a special meaning:
                         it is the primary category of the eprint on arXiv.
                     items:
-                        $ref: elements/arxiv_categories.json
+                        $ref: elements/arxiv_categories.yml
                     minItems: 1
                     title: arXiv categories of the eprint
                     type: array
@@ -188,7 +171,7 @@ properties:
                     title: arXiv eprint identifier
                     type: string
             required:
-            - value
+                - value
             title: arXiv metadata
             type: object
         minItems: 1
@@ -216,7 +199,7 @@ properties:
                                 title: ICN of affiliation
                                 type: string
                         required:
-                        - value
+                            - value
                         type: object
                     minItems: 1
                     type: array
@@ -240,20 +223,20 @@ properties:
                             Roles Taxonomy (CRediT)
                             <http://dictionary.casrai.org/Contributor_Roles>`_
                         enum:
-                        - Conceptualization
-                        - Data curation
-                        - Formal analysis
-                        - Funding acquisition
-                        - Investigation
-                        - Methodology
-                        - Project administration
-                        - Resources
-                        - Software
-                        - Supervision
-                        - Validation
-                        - Visualization
-                        - Writing - original draft
-                        - Writing - review & editing
+                            - Conceptualization
+                            - Data curation
+                            - Formal analysis
+                            - Funding acquisition
+                            - Investigation
+                            - Methodology
+                            - Project administration
+                            - Resources
+                            - Software
+                            - Supervision
+                            - Validation
+                            - Visualization
+                            - Writing - original draft
+                            - Writing - review & editing
                         minLength: 1
                         title: Credit role of author
                         type: string
@@ -288,14 +271,14 @@ properties:
                     description: |-
                         :MARC: ``100/700/701__i/j``
                     items:
-                        $ref: elements/id.json
+                        $ref: elements/id.yml
                     minItems: 1
                     title: Identifiers of the author
                     type: array
                     uniqueItems: true
                 roles:
-                    description:
-                    .. note: different from Inspire (Inspire_role)
+                    description: |-
+                        .. note: different from Inspire (Inspire_role)
                     items:
                         default: author
                         description: |-
@@ -311,10 +294,10 @@ properties:
                                 ``proceedings``
                                 :ref:`hep.json#/properties/document_type`.
                         enum:
-                        - author
-                        - supervisor
-                        - editor
-                        - illustrator
+                            - author
+                            - supervisor
+                            - editor
+                            - illustrator
                         minLength: 1
                         type: string
                     minItems: 1
@@ -325,12 +308,12 @@ properties:
                         :MARC: ``100/700__v``
                         List of full affiliations, as written on the paper.
                     items:
-                        $ref: elements/sourced_value.json
+                        $ref: elements/sourced_value.yml
                     minItems: 1
                     type: array
                     uniqueItems: true
             required:
-            - full_name
+                - full_name
             type: object
         minItems: 1
         title: Authors
@@ -368,12 +351,12 @@ properties:
                 issn:
                     description: |-
                         :MARC: ``490__x``
-                    .. note: Does not exist in Inspire
+                        .. note: Does not exist in Inspire
                     minLength: 1
                     title: ISSN of the series
                     type: string
             required:
-            - title
+                - title
             type: object
         minItems: 1
         type: array
@@ -396,11 +379,11 @@ properties:
                     title: Collaboration name
                     type: string
             required:
-            - value
+                - value
             type: object
         minItems: 1
         required:
-        - value
+            - value
         title: List of collaborations
         type: array
         uniqueItems: true
@@ -426,7 +409,7 @@ properties:
                     title: Copyright holder
                     type: string
                 material:
-                    $ref: elements/material.json
+                    $ref: elements/material.yml
                     description: |-
                         :MARC: ``542__3``
                 statement:
@@ -486,17 +469,17 @@ properties:
         type: boolean
 
     dois:
-        description:
-        .. Note: This element can be found at the holding level or at the bibliographic record level.
+        description: |-
+            .. Note: This element can be found at the holding level or at the bibliographic record level.
         items:
             additionalProperties: false
             properties:
                 material:
-                    $ref: elements/material.json
+                    $ref: elements/material.yml
                     description: |-
                         :MARC: ``0247_q``
                 source:
-                    $ref: elements/source.json
+                    $ref: elements/source.yml
                     description: |-
                         :MARC: ``0247_9``
                 value:
@@ -508,7 +491,7 @@ properties:
                     title: DOI
                     type: string
             required:
-            - value
+                - value
             type: object
         minItems: 1
         title: List of DOIs
@@ -560,8 +543,8 @@ properties:
                     title: External identifier
                     type: string
             required:
-            - schema
-            - value
+                - schema
+                - value
             type: object
         minItems: 1
         type: array
@@ -636,7 +619,7 @@ properties:
                 reprint:
                     description: |-
                         :MARC: ``260__g``
-                    .. note: does not exist in Inspire
+                        .. note: does not exist in Inspire
                     format: date
                     minLength: 1
                     title: Date of reprint
@@ -657,14 +640,14 @@ properties:
                     description: |-
                         :MARC: ``020__u``
                     enum:
-                    - electronic version
-                    - print version
-                    - print version, hardback
-                    - print version, paperback
-                    - print version, spiral-bound
-                    - CD-ROM
-                    - audiobook
-                    - DVD
+                        - electronic version
+                        - print version
+                        - print version, hardback
+                        - print version, paperback
+                        - print version, spiral-bound
+                        - CD-ROM
+                        - audiobook
+                        - DVD
                     minLength: 1
                     title: Physical medium to which this ISBN refers
                     type: string
@@ -672,7 +655,7 @@ properties:
                     description: |-
                         :MARC: ``020__u``
                         :anything in ``020__u`` that does not fit in medium and is not a volume.
-                    .. note: .. Does not exist in Inspire
+                        .. note: Does not exist in Inspire
                     minLength: 1
                     title: Free text, used to describe the document to ISBN refers to.
                     type: string
@@ -684,7 +667,7 @@ properties:
                     pattern: ^\d*[0-9X]$
                     type: string
             required:
-            - value
+                - value
             type: object
         minItems: 1
         title: List of ISBNs
@@ -731,16 +714,16 @@ properties:
                             If not present, the keyword is a free-form keyword,
                             not necessarily part of any vocabulary.
                     enum:
-                    - INIS
-                    - INSPIRE
-                    - JACOW
-                    - PACS
-                    - PDG
+                        - INIS
+                        - INSPIRE
+                        - JACOW
+                        - PACS
+                        - PDG
                     minLength: 1
                     title: Keyword vocabulary
                     type: string
                 source:
-                    $ref: elements/source.json
+                    $ref: elements/source.yml
                 value:
                     description: |-
                         :MARC: ``084/6531/695__a`` (depending on :ref:`schema`)
@@ -753,7 +736,7 @@ properties:
                     title: A keyword
                     type: string
             required:
-            - value
+                - value
             type: object
         minItems: 1
         title: List of keywords
@@ -764,7 +747,7 @@ properties:
         description: |-
             :MARC: ``041__a``
         items:
-            $ref: elements/language_code.json
+            $ref: elements/language_code.yml
         minItems: 1
         title: List of languages of the document
         type: array
@@ -793,7 +776,7 @@ properties:
                     title: License statement
                     type: string
                 material:
-                    $ref: elements/material.json
+                    $ref: elements/material.yml
                     description: |-
                         :MARC: ``540__3``
                 url:
@@ -848,7 +831,7 @@ properties:
                 These notes are publicly visible. For notes not shown to
                 regular users, see :ref:`_private_notes`.
         items:
-            $ref: elements/sourced_value.json
+            $ref: elements/sourced_value.yml
         minItems: 1
         title: List of public notes
         type: array
@@ -889,8 +872,8 @@ properties:
                 cern_conference_code:
                     description: |-
                         :MARC: ``962__b``
-	            minLength: 1
-	            type: string
+                    minLength: 1
+                    type: string
                 curated_relation:
                     type: boolean
                 journal_issue:
@@ -899,7 +882,7 @@ properties:
                     minLength: 1
                     type: string
                 journal_record:
-                    $ref: elements/json_reference.json
+                    $ref: elements/json_reference.yml
                     description: |-
                         Record of the corresponding Journal
                 journal_title:
@@ -916,7 +899,7 @@ properties:
                     minLength: 1
                     type: string
                 material:
-                    $ref: elements/material.json
+                    $ref: elements/material.yml
                     description: |-
                         :MARC: ``773__m``
                 page_end:
@@ -939,7 +922,7 @@ properties:
                     pattern: ^\d*[0-9X]$
                     type: string
                 parent_record:
-                    $ref: elements/json_reference.json
+                    $ref: elements/json_reference.yml
                 parent_report_number:
                     description: |-
                         :MARC: ``773__r``
@@ -989,7 +972,7 @@ properties:
                 curated_relation:
                     type: boolean
                 record:
-                    $ref: elements/json_reference.json
+                    $ref: elements/json_reference.yml
                 value:
                     description: |-
                         :MARC: ``901__a``
@@ -1002,7 +985,7 @@ properties:
                     title: ICN of affiliation
                     type: string
             required:
-            - value
+                - value
             type: object
         minItems: 1
         title: Affiliations not associated to authors
@@ -1038,12 +1021,12 @@ properties:
                           document (typically for large collaborations).
                     type: boolean
                 source:
-                    $ref: elements/source.json
+                    $ref: elements/source.yml
                 value:
                     minLength: 1
                     type: string
             required:
-            - value
+                - value
             type: object
         minItems: 1
         title: List of report numbers assigned to the record
@@ -1051,7 +1034,7 @@ properties:
         uniqueItems: true
 
     self:
-        $ref: elements/json_reference.json
+        $ref: elements/json_reference.yml
 
     standard_numbers:
         description: |-
@@ -1066,11 +1049,12 @@ properties:
                         :MARC: True when the standard number is in ``021__b``
                     type: boolean
                 value:
-                    :MARC: ``021__a`` and ``021__b``
+                    description: |-
+                        :MARC: ``021__a`` and ``021__b``
                     minLength: 1
                     type: string
             required:
-            - value
+                - value
             type: object
         minItems: 1
         title: List of standard numbers
@@ -1099,7 +1083,7 @@ properties:
                 minLength: 1
                 type: string
             degree_type:
-                $ref: elements/degree_type.json
+                $ref: elements/degree_type.yml
                 description: |-
                     :MARC: ``502__b``
             institutions:
@@ -1115,7 +1099,7 @@ properties:
                             minLength: 1
                             type: string
                         record:
-                            $ref: elements/json_reference.json
+                            $ref: elements/json_reference.yml
                     type: object
                 minItems: 1
                 type: array
@@ -1134,9 +1118,9 @@ properties:
             additionalProperties: false
             properties:
                 language:
-                    $ref: elements/language_code.json
+                    $ref: elements/language_code.yml
                 source:
-                    $ref: elements/source.json
+                    $ref: elements/source.yml
                 subtitle:
                     minLength: 1
                     type: string
@@ -1144,8 +1128,8 @@ properties:
                     minLength: 1
                     type: string
             required:
-            - language
-            - title
+                - language
+                - title
             type: object
         minItems: 1
         type: array
@@ -1215,10 +1199,11 @@ properties:
                 minLength: 1
                 type: string
             conference_title:
+                description: |-
                     :MARC: ``111__a``
                     .. Note: There can be different values there.
-                    minLength: 1
-                    type: string
+                minLength: 1
+                type: string
             conference_acronym:
                     :MARC: ``711__a``
                     minLength: 1
@@ -1231,59 +1216,69 @@ properties:
                 minLength: 1
                 type: string
             cern_conference_code:
+                description: |-
                     :MARC: ``111__g``
-                    minLength: 1
-                    type: string
+                minLength: 1
+                type: string
             inspire_cnum:
+                description: |-
                     :MARC: ``035__a`` when 9:INSPIRE-CNUM
-                    minLength: 1
-                    type: string
+                minLength: 1
+                type: string
             conference_place:
-                    :MARC: ``111__c``
-                    minLength: 1
-                    type: string
+                description: |-
+                  :MARC: ``111__c``
+                minLength: 1
+                type: string
             conference_series:
-                    :MARC: Does not exist in CDS
-                    minLength: 1
-                    type: string
+                description: |-
+                  :MARC: Does not exist in CDS
+                minLength: 1
+                type: string
             conference_series_number:
+                description: |-
                     :MARC: Does not exist in CDS
-                    minLength: 1
-                    type: integer
+                minLength: 1
+                type: integer
             conference_year:
+                description: |-
                     :MARC: ``111__f`` *Do we still need?*
-                    minLength: 1
-                    type: string
+                minLength: 1
+                type: string
             conference_country:
+                description: |-
                     :MARC: ``111__w`` Do we still need?
-                    minLength: 1
-                    type: string
+                minLength: 1
+                type: string
             conference_contact:
+                description: |-
                     :MARC: ``270__m`` Do we still need?
-                    minLength: 1
-                    type: string
+                minLength: 1
+                type: string
             required:
-            - conference_title
-            - conference_place
-            - conference_dates
+                - conference_title
+                - conference_place
+                - conference_dates
             type: object
         minItems: 1
         type: array
         uniqueItems: true
 
         cds_subject_categories:
-            .. note: does not exist in Inspire
+            description: |-
+              .. note: does not exist in Inspire
             items:
-                $ref: elements/cds_subject_categories.json
+                $ref: elements/cds_subject_categories.yml
             minItems: 1
             title: List of CDS subject
             type: array
             uniqueItems: true
 
         additional_subject_categories:
-            .. note: does not exist in Inspire
+            description: |-
+                .. note: does not exist in Inspire
             items:
-                $ref: elements/additional_subject_categories.json
+                $ref: elements/additional_subject_categories.yml
             minItems: 1
             title: List of other subject (Project specific... ex. EUCARD)
             type: array
@@ -1291,64 +1286,63 @@ properties:
 
         subject_classification:
             description: |-
-            :MARC: ``084``, ``080``, ``050`` and ``082``
+                :MARC: ``084``, ``080``, ``050`` and ``082``
+                .. note: Subject classification of the document, following standards ; does not exist in Inspire
+            items:
+                additionalProperties: false
+                properties:
+                    schema:
+                        description: |-
+                            Describes to which schema the classification code belong
+                            ``UDC``
+                                :MARC: ``080``
+                                Universal Decimal Classification
+                            ``DEWEY``
+                                :MARC: ``082``
+                                Dewey
+                            ``ICS``
+                                :MARC: ``084``
+                                .. Note: 084 is also used for YR alphabetical ordering. *To be checked*
+                                Internation Classification of Standard
+                            ``LOC``
+                                :MARC: ``050``
+                                Library of Congress Classification
+                        enum:
+                            - UDC
+                            - ICS
+                            - DEWEY
+                            - LOC
+                        minLength: 1
+                        title: Subject classification
+                        type: string
+                    source:
+                        $ref: elements/source.yml
+                    value:
+                        description: |-
+                            :MARC: ``084/080/050/082``
+                        minLength: 1
+                        title: A keyword
+                        type: string
+                required:
+                    - value
+                type: object
+            minItems: 1
+            title: List of keywords
+            type: array
+            uniqueItems: true
 
-            .. note: Subject classification of the document, following standards ; does not exist in Inspire
-        items:
-            additionalProperties: false
-            properties:
-                schema:
-                    description: |-
-                        Describes to which schema the classification code belong
-                        ``UDC``
-                            :MARC: ``080``
-                            Universal Decimal Classification
-                        ``DEWEY``
-                            :MARC: ``082``
-                            Dewey
-                        ``ICS``
-                            :MARC: ``084``
-                            .. Note: 084 is also used for YR alphabetical ordering. *To be checked*
-                            Internation Classification of Standard
-                        ``LOC``
-                            :MARC: ``050``
-                            Library of Congress Classification
-                    enum:
-                    - UDC
-                    - ICS
-                    - DEWEY
-                    - LOC
-                    minLength: 1
-                    title: Subject classification
-                    type: string
-                source:
-                    $ref: elements/source.json
-                value:
-                    description: |-
-                        :MARC: ``084/080/050/082``
-                    minLength: 1
-                    title: A keyword
-                    type: string
-            required:
-            - value
-            type: object
-        minItems: 1
-        title: List of keywords
-        type: array
-        uniqueItems: true
-
-        related_records:
-        description: |-
-            :MARC: ``775``
-        items:
-            $ref: elements/related_record.yml
-        minItems: 1
-        title: List of related records
-        type: array
-        uniqueItems: true
+            related_records:
+                description: |-
+                    :MARC: ``775``
+                items:
+                    $ref: elements/related_record.yml
+                minItems: 1
+                title: List of related records
+                type: array
+                uniqueItems: true
 
 required:
-- document_type
-- titles
+    - document_type
+    - titles
 title: A record in the books, proceedings, standards, theses and reports.
 type: object

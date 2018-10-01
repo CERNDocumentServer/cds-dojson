@@ -26,7 +26,6 @@ properties:
         type: string
     internal_uid:
         description: |-
-            :MARC: ?
             This only gets populated when `method` is `submitter`.
         title: Inspire user ID of the submitter
         type: integer
@@ -50,21 +49,19 @@ properties:
         - batchuploader
         - hepcrawl
         minLength: 1
-        title: How the medata was obtained
+        title: Data obtraining method
         type: string
     orcid:
         description: |-
-            :MARC: ?
             This only gets populated when `method` is `submitter`.
         minLength: 1
         pattern: ^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$
         title: ORCID of the submitter
         type: string
     source:
-        $ref: source.json
+        $ref: source.yml
     submission_number:
         description: |-
-            :MARC: ?
             This only gets populated when `method` is `submitter`.
         minLength: 1
         title: Holding pen record ID of the submission

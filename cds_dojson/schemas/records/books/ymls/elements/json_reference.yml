@@ -7,6 +7,6 @@ properties:
         minLength: 1
         type: string
 required:
-- $ref
+    - $ref
 title: Reference to another record
 type: object

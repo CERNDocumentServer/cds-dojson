@@ -10,5 +10,5 @@ properties:
         minLength: 1
         type: string
 required:
-- title
+    - title
 type: object

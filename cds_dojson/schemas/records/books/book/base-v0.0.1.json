@@ -1,6 +1,6 @@
 {
   "decription": "A record in the books, proceedings, standards, theses and reports.", 
-  "title": "CDS Books Record Schema v1.0.0",
+  "title": "CDS Base Record Schema v1.0.0", 
   "$schema": "http://json-schema.org/draft-04/schema#", 
   "required": [
     "document_type", 

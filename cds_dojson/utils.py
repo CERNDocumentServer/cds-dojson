@@ -172,13 +172,15 @@ def yaml2json(source, destination):
             source: './ymls'
             return: 'elements'
         """
-        return root[len(source) + 1:]
+        return root.replace(os.path.commonprefix([root, source]), '')
 
     for root, directories, filenames in os.walk(source):
         for directory in directories:
-            directory_path = os.path.join(destination, directory)
-            if not os.path.exists(directory_path):
-                os.makedirs(directory_path)
+            destination_directory = os.path.join(
+                destination, _get_current_directory_name(root, source),
+                directory)
+            if not os.path.exists(destination_directory):
+                os.makedirs(destination_directory)
 
         for filename in filenames:
             filename_ext = os.path.splitext(filename)[1]
@@ -190,11 +192,10 @@ def yaml2json(source, destination):
                 read_file_path = os.path.join(root, filename)
                 write_file_path = os.path.join(destination, directory,
                                                new_filename)
-
                 with open(read_file_path) as stream:
                     # read the yml file
                     yaml_data = yaml.safe_load(stream)
 
-                    with open(write_file_path, 'w') as file:
-                        # write the json file
-                        file.write(json.dumps(yaml_data, indent=2))
+                with open(write_file_path, 'w') as file:
+                    # write the json file
+                    file.write(json.dumps(yaml_data, indent=2))

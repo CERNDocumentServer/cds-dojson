@@ -133,15 +133,18 @@ def test_memento_dict():
 
 def test_yaml2json():
     """Test yaml to json file conversion"""
-    directory = './tests/fixtures'
 
-    yaml2json(directory, directory)
+    root_dir = './tests/fixtures/books/'
+    source = os.path.join(root_dir, 'ymls/')
+    destination = os.path.join(root_dir, 'results')
 
-    with open(os.path.join(directory, 'books/books_title_mock.json')) as s:
+    yaml2json(source, destination)
+
+    with open(os.path.join(root_dir, 'books_title_mock.json')) as s:
         # read the mock JSON file
         json_mock = json.load(s)
 
-    with open(os.path.join(directory, 'books/books_title.json')) as s:
+    with open(os.path.join(destination, 'books_title.json')) as s:
         # read the newly created JSON file
         json_converted = json.load(s)
 

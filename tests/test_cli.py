@@ -42,7 +42,9 @@ from click.testing import CliRunner
     ('deposits/records/videos/video/video_src-v1.0.0.json',
      'deposits/records/videos/video/video-v1.0.0.json'),
     ('deposits/records/videos/project/project_src-v1.0.0.json',
-     'deposits/records/videos/project/project-v1.0.0.json')
+     'deposits/records/videos/project/project-v1.0.0.json'),
+    ('records/books/book/document_src-v0.0.1.json',
+     'records/books/book/document-v0.0.1.json'),
 ])
 def test_cli(src, compiled):
     """Test cds-dojson CLI."""
@@ -61,22 +63,21 @@ def test_cli(src, compiled):
 
 
 @pytest.mark.parametrize('source, destination', [
-    ('./tests/fixtures', './tests/fixtures')
+    ('./tests/fixtures/books/ymls/', './tests/fixtures/books/results/')
 ])
 def test_cli_convert_yaml2json(source, destination):
     """Test cds-dojson CLI 'convert_yaml2json' command"""
-    directory = './tests/fixtures'
     runner = CliRunner()
 
-    result = runner.invoke(convert_yaml2json, [directory, directory])
+    result = runner.invoke(convert_yaml2json, [source, destination])
 
     assert 0 == result.exit_code
 
-    with open(os.path.join(directory, 'books/books_title_mock.json')) as s:
+    with open('./tests/fixtures/books/books_title_mock.json') as s:
         # read the mock JSON file
         json_mock = json.load(s)
 
-    with open(os.path.join(directory, 'books/books_title.json')) as s:
+    with open(os.path.join(destination, 'books_title.json')) as s:
         # read the newly created JSON file
         json_converted = json.load(s)
 

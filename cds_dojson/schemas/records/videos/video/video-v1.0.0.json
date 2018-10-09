@@ -197,6 +197,9 @@
       "description": "List of identifiers on external systems.", 
       "title": "External identifiers"
     }, 
+    "$schema": {
+      "type": "string"
+    }, 
     "subject": {
       "additionalProperties": false, 
       "description": "Subject.", 

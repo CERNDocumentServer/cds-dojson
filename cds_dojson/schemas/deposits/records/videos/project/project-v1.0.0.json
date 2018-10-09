@@ -11,12 +11,74 @@
   "$schema": "http://json-schema.org/draft-04/schema#", 
   "type": "object", 
   "properties": {
-    "videos": {
+    "contributors": {
+      "minItems": 1, 
       "items": {
+        "additionalProperties": false, 
+        "required": [
+          "name"
+        ], 
         "type": "object", 
+        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.", 
         "properties": {
-          "$reference": {
+          "name": {
+            "type": "string", 
+            "description": "Full name of person. Personal name format: family, given."
+          }, 
+          "ids": {
+            "uniqueItems": true, 
+            "items": {
+              "additionalProperties": false, 
+              "type": "object", 
+              "properties": {
+                "source": {
+                  "type": "string"
+                }, 
+                "value": {
+                  "type": "string"
+                }
+              }
+            }, 
+            "type": "array", 
+            "description": "List of IDs related with the person."
+          }, 
+          "affiliations": {
+            "uniqueItems": true, 
+            "items": {
+              "type": "string"
+            }, 
+            "type": "array", 
+            "description": "Affiliation(s) for the purpose of this specific record."
+          }, 
+          "role": {
+            "enum": [
+              "Animations by", 
+              "Camera Operator", 
+              "Comments by", 
+              "Co-Producer", 
+              "Creator", 
+              "Credits", 
+              "Director", 
+              "Editor", 
+              "Music by", 
+              "Narrator", 
+              "Photography", 
+              "Producer", 
+              "Reporter", 
+              "Screenwriter", 
+              "Speaker", 
+              "Translator"
+            ], 
             "type": "string"
+          }, 
+          "contribution": {
+            "type": "string", 
+            "description": "Specific contribution of the person to this specific record."
+          }, 
+          "email": {
+            "type": "string", 
+            "description": "Contact email for the purpose of this specific record.", 
+            "format": "email"
           }
         }
       }, 
@@ -105,74 +167,12 @@
     "agency_code": {
       "type": "string"
     }, 
-    "contributors": {
-      "minItems": 1, 
+    "videos": {
       "items": {
-        "additionalProperties": false, 
-        "required": [
-          "name"
-        ], 
         "type": "object", 
-        "description": "An entity responsible for making contributions to the resource. Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity.", 
         "properties": {
-          "name": {
-            "type": "string", 
-            "description": "Full name of person. Personal name format: family, given."
-          }, 
-          "ids": {
-            "uniqueItems": true, 
-            "items": {
-              "additionalProperties": false, 
-              "type": "object", 
-              "properties": {
-                "source": {
-                  "type": "string"
-                }, 
-                "value": {
-                  "type": "string"
-                }
-              }
-            }, 
-            "type": "array", 
-            "description": "List of IDs related with the person."
-          }, 
-          "affiliations": {
-            "uniqueItems": true, 
-            "items": {
-              "type": "string"
-            }, 
-            "type": "array", 
-            "description": "Affiliation(s) for the purpose of this specific record."
-          }, 
-          "role": {
-            "enum": [
-              "Animations by", 
-              "Camera Operator", 
-              "Comments by", 
-              "Co-Producer", 
-              "Creator", 
-              "Credits", 
-              "Director", 
-              "Editor", 
-              "Music by", 
-              "Narrator", 
-              "Photography", 
-              "Producer", 
-              "Reporter", 
-              "Screenwriter", 
-              "Speaker", 
-              "Translator"
-            ], 
+          "$reference": {
             "type": "string"
-          }, 
-          "contribution": {
-            "type": "string", 
-            "description": "Specific contribution of the person to this specific record."
-          }, 
-          "email": {
-            "type": "string", 
-            "description": "Contact email for the purpose of this specific record.", 
-            "format": "email"
           }
         }
       }, 

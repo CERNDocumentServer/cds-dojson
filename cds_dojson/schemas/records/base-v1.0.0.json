@@ -3,6 +3,9 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "agency_code": {
       "type": "string"
     },
@@ -11,9 +14,9 @@
     },
     "report_number": {
       "type": "array",
-        "items": {
-          "type": "string"
-        }
+      "items": {
+        "type": "string"
+      }
     },
     "recid": {
       "description": "Invenio record identifier (integer).",
@@ -30,14 +33,14 @@
           "type": "array",
           "items": {
             "type": "string",
-             "title": "Update"
+            "title": "Update"
           }
         },
         "read": {
           "type": "array",
           "items": {
             "type": "string",
-             "title": "Read"
+            "title": "Read"
           }
         }
       }
@@ -96,7 +99,7 @@
       "title": "Publication date",
       "description": "When the record is published",
       "type": "string",
-      "format" : "date-time"
+      "format": "date-time"
     }
   },
   "required": ["recid"]

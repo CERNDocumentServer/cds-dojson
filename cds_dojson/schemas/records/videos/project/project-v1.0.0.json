@@ -11,97 +11,6 @@
   ], 
   "type": "object", 
   "properties": {
-    "videos": {
-      "items": {
-        "type": "object", 
-        "properties": {
-          "$reference": {
-            "type": "string"
-          }
-        }
-      }, 
-      "type": "array"
-    }, 
-    "report_number": {
-      "items": {
-        "type": "string"
-      }, 
-      "type": "array"
-    }, 
-    "_access": {
-      "type": "object", 
-      "properties": {
-        "read": {
-          "items": {
-            "type": "string", 
-            "title": "Read"
-          }, 
-          "type": "array"
-        }, 
-        "update": {
-          "items": {
-            "type": "string", 
-            "title": "Update"
-          }, 
-          "type": "array"
-        }
-      }
-    }, 
-    "external_system_identifiers": {
-      "items": {
-        "additionalProperties": false, 
-        "properties": {
-          "value": {
-            "type": "string"
-          }, 
-          "schema": {
-            "type": "string"
-          }
-        }
-      }, 
-      "type": "array", 
-      "description": "List of identifiers on external systems.", 
-      "title": "External identifiers"
-    }, 
-    "keywords": {
-      "items": {
-        "type": "object", 
-        "properties": {
-          "source": {
-            "type": "string"
-          }, 
-          "name": {
-            "type": "string"
-          }
-        }
-      }, 
-      "type": "array"
-    }, 
-    "_eos_library_path": {
-      "type": "string", 
-      "description": "EOS path of the video production library."
-    }, 
-    "subject": {
-      "additionalProperties": false, 
-      "description": "Subject.", 
-      "type": "object", 
-      "properties": {
-        "source": {
-          "type": "string"
-        }, 
-        "term": {
-          "type": "string"
-        }
-      }, 
-      "title": "Subject"
-    }, 
-    "category": {
-      "type": "string", 
-      "description": "Category of the project."
-    }, 
-    "agency_code": {
-      "type": "string"
-    }, 
     "contributors": {
       "minItems": 1, 
       "items": {
@@ -170,6 +79,100 @@
             "type": "string", 
             "description": "Contact email for the purpose of this specific record.", 
             "format": "email"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "report_number": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array"
+    }, 
+    "_access": {
+      "type": "object", 
+      "properties": {
+        "read": {
+          "items": {
+            "type": "string", 
+            "title": "Read"
+          }, 
+          "type": "array"
+        }, 
+        "update": {
+          "items": {
+            "type": "string", 
+            "title": "Update"
+          }, 
+          "type": "array"
+        }
+      }
+    }, 
+    "external_system_identifiers": {
+      "items": {
+        "additionalProperties": false, 
+        "properties": {
+          "value": {
+            "type": "string"
+          }, 
+          "schema": {
+            "type": "string"
+          }
+        }
+      }, 
+      "type": "array", 
+      "description": "List of identifiers on external systems.", 
+      "title": "External identifiers"
+    }, 
+    "keywords": {
+      "items": {
+        "type": "object", 
+        "properties": {
+          "source": {
+            "type": "string"
+          }, 
+          "name": {
+            "type": "string"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "_eos_library_path": {
+      "type": "string", 
+      "description": "EOS path of the video production library."
+    }, 
+    "$schema": {
+      "type": "string"
+    }, 
+    "subject": {
+      "additionalProperties": false, 
+      "description": "Subject.", 
+      "type": "object", 
+      "properties": {
+        "source": {
+          "type": "string"
+        }, 
+        "term": {
+          "type": "string"
+        }
+      }, 
+      "title": "Subject"
+    }, 
+    "category": {
+      "type": "string", 
+      "description": "Category of the project."
+    }, 
+    "agency_code": {
+      "type": "string"
+    }, 
+    "videos": {
+      "items": {
+        "type": "object", 
+        "properties": {
+          "$reference": {
+            "type": "string"
           }
         }
       }, 

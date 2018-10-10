@@ -32,7 +32,7 @@ from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     MissingRequiredField
 from cds_dojson.marc21.fields.books.values_mapping import mapping, \
     DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION, ACQUISITION_METHOD, MEDIUM_TYPES, \
-    ARXIV_CATEGORIES, MATERIALS
+    ARXIV_CATEGORIES, MATERIALS, SUBJECT_CLASSIFICATION_EXCEPTIONS
 from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
     out_strip, clean_val, \
     ManualMigrationRequired, replace_in_result, related_url, clean_pages_range
@@ -458,11 +458,51 @@ def languages(self, key, value):
     """Translates languages fields."""
     lang = clean_val('a', value, str).lower()
     try:
-        iso_lang = pycountry.languages.get(alpha_3=lang).alpha_2
-    except (KeyError, AttributeError):
+        iso_lang = pycountry.languages.lookup(lang).alpha_2
+    except (KeyError, AttributeError, LookupError):
         raise UnexpectedValue
-
     return iso_lang
+
+
+@model.over('subject_classification',
+            '(^050_4)|(^080__)|(^08204)|(^084__)|(^082__)')
+@for_each_value
+@out_strip
+def subject_classification(self, key, value):
+    """Translates subject classification field."""
+    _subject_classification = {'value': clean_val('a', value, str, req=True)}
+    if key == '080__':
+        _subject_classification.update({'schema': 'UDC'})
+    elif key == '08204' or key == '082__':
+        _subject_classification.update({'schema': 'Dewey'})
+    elif key == '084__':
+        sub_2 = clean_val('2', value, str)
+        if sub_2 and sub_2.upper() in SUBJECT_CLASSIFICATION_EXCEPTIONS:
+            self['keywords'] = keywords(self, key, value)
+            raise IgnoreKey('subject_classification')
+        else:
+            _subject_classification.update({'schema': 'ICS'})
+    elif key == '050_4':
+        _subject_classification.update({'schema': 'LoC'})
+
+    return _subject_classification
+
+
+@model.over('keywords', '^084__')
+@filter_list_values
+def keywords(self, key, value):
+    """PACS Keywords."""
+    _keywords = self.get('keywords', [])
+    for v in force_list(value):
+        sub_2 = clean_val('2', value, str)
+        if sub_2 and sub_2 == 'PACS':
+            _keywords.append({
+                'name': clean_val('a', v, str, req=True),
+                'source': 'PACS',
+            })
+        else:
+            raise IgnoreKey('keywords')
+    return _keywords
 
 
 @model.over('conference_info', '(^111__)|(^270__)')
@@ -580,12 +620,27 @@ def number_of_pages(self, key, value):
     raise UnexpectedValue
 
 
+@model.over('book_series', '^490__')
+@for_each_value
+@filter_values
+def book_series(self, key, value):
+    """Translates book series field."""
+    return {
+        'title': clean_val('a', value, str),
+        'volume': clean_val('v', value, str),
+        'issn': clean_val('x', value, str),
+    }
+
+
 @model.over('public_notes', '^500__')
 @for_each_value
-@out_strip
+@filter_values
 def public_notes(self, key, value):
     """Translates public notes."""
-    return clean_val('a', value, str)
+    return {
+        'value': clean_val('a', value, str, req=True),
+        'source': clean_val('9', value, str)
+    }
 
 
 @model.over('abstracts', '^520__')

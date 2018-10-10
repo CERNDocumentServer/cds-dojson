@@ -112,6 +112,10 @@ MATERIALS = [
 ]
 
 
+SUBJECT_CLASSIFICATION_EXCEPTIONS = \
+    ['PACS', 'CERN LIBRARY', 'CERN YELLOW REPORT']
+
+
 def mapping(field_map, val, raise_exception=False):
     """
     Maps the old value to a new one according to the map.

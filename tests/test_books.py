@@ -17,13 +17,17 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 """Book fields tests."""
+
+from __future__ import absolute_import, print_function, unicode_literals
 import pytest
+from dojson.errors import IgnoreKey
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     ManualMigrationRequired, MissingRequiredField
 from cds_dojson.marc21.fields.books.values_mapping import mapping, MATERIALS
 from cds_dojson.marc21.models.books.book import model
 from cds_dojson.marc21.utils import create_record
+
 
 marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
            """<record>{0}</record></collection>""")
@@ -44,6 +48,108 @@ def check_transformation(marcxml_body, json_body):
     }
     expected.update(**json_body)
     assert record == expected
+
+
+def test_subject_classification(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="082" ind1="0" ind2="4">
+                <subfield code="a">515.353</subfield>
+                <subfield code="2">23</subfield>
+            </datafield>
+            """, {
+                'subject_classification': [
+                    {'value': '515.353',
+                     'schema': 'Dewey'}
+                ]
+            })
+        check_transformation(
+            """
+            <datafield tag="050" ind1=" " ind2="4">
+                <subfield code="a">QA76.642</subfield>
+            </datafield>
+            """, {
+                'subject_classification': [
+                    {'value': 'QA76.642',
+                     'schema': 'LoC'}
+                ]
+            })
+        check_transformation(
+            """
+            <datafield tag="050" ind1=" " ind2="4">
+                <subfield code="a">QA76.642</subfield>
+            </datafield>
+            <datafield tag="082" ind1=" " ind2=" ">
+                <subfield code="a">005.275</subfield>
+            </datafield>
+            """, {
+                'subject_classification': [
+                    {'value': 'QA76.642',
+                     'schema': 'LoC'},
+                    {'value': '005.275',
+                     'schema': 'Dewey'},
+                ]
+            })
+        check_transformation(
+            """
+            <datafield tag="080" ind1=" " ind2=" ">
+                <subfield code="a">528</subfield>
+            </datafield>
+            """, {
+                'subject_classification': [
+                    {'value': '528',
+                     'schema': 'UDC'}
+                ]
+            })
+        check_transformation(
+            """
+            <datafield tag="084" ind1=" " ind2=" ">
+                <subfield code="a">25040.40</subfield>
+            </datafield>
+            """, {
+
+                'subject_classification': [
+                    {'value': '25040.40',
+                     'schema': 'ICS'}
+                ]
+            })
+        check_transformation(
+            """
+            <datafield tag="084" ind1=" " ind2=" ">
+                <subfield code="2">PACS</subfield>
+                <subfield code="a">13.75.Jz</subfield>
+            </datafield>
+            <datafield tag="084" ind1=" " ind2=" ">
+                <subfield code="2">PACS</subfield>
+                <subfield code="a">13.60.Rj</subfield>
+            </datafield>
+            <datafield tag="084" ind1=" " ind2=" ">
+                <subfield code="2">PACS</subfield>
+                <subfield code="a">14.20.Jn</subfield>
+            </datafield>
+            <datafield tag="084" ind1=" " ind2=" ">
+                <subfield code="2">PACS</subfield>
+                <subfield code="a">25.80.Nv</subfield>
+            </datafield>
+            """, {
+                'keywords': [
+                    {'name': '13.75.Jz', 'source': 'PACS'},
+                    {'name': '13.60.Rj', 'source': 'PACS'},
+                    {'name': '14.20.Jn', 'source': 'PACS'},
+                    {'name': '25.80.Nv', 'source': 'PACS'},
+                ]
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="084" ind1=" " ind2=" ">
+                <subfield code="2">CERN Yellow Report</subfield>
+                <subfield code="a">CERN-2018-003-CP</subfield>
+            </datafield>
+            """,
+            {}
+        )
 
 
 def test_acquisition(app):
@@ -1046,14 +1152,47 @@ def test_languages(app):
             """, {
                 'languages': ['en'],
             })
+        # with pytest.raises(UnexpectedValue):
+        check_transformation(
+            """
+            <datafield tag="041" ind1=" " ind2=" ">
+                <subfield code="a">english</subfield>
+            </datafield>
+            """, {
+                'languages': ['en'],
+            })
+        check_transformation(
+            """
+            <datafield tag="041" ind1=" " ind2=" ">
+                <subfield code="a">fre</subfield>
+            </datafield>
+            """, {
+                'languages': ['fr'],
+            })
+        check_transformation(
+            """
+            <datafield tag="041" ind1=" " ind2=" ">
+                <subfield code="a">pl</subfield>
+            </datafield>
+            """, {
+                'languages': ['pl'],
+            })
+        check_transformation(
+            """
+            <datafield tag="041" ind1=" " ind2=" ">
+                <subfield code="a">ger</subfield>
+            </datafield>
+            """, {
+                'languages': ['de'],
+            })
         with pytest.raises(UnexpectedValue):
             check_transformation(
                 """
                 <datafield tag="041" ind1=" " ind2=" ">
-                    <subfield code="a">english</subfield>
+                    <subfield code="a">xxxxxxxx</subfield>
                 </datafield>
                 """, {
-                    'languages': ['en'],
+                    'languages': ['de'],
                 })
 
 
@@ -1516,11 +1655,27 @@ def test_public_notes(app):
             <subfield code="a">No CD-ROM</subfield>
             </datafield>
             """,
-            {'public_notes': [
-                """Translated from the 2nd American edition : Fluid mechanics :
-            fundamentals and applications, 2nd ed., 2010""",
-                'No CD-ROM',
+            {'public_notes': [{
+                'value': """Translated from the 2nd American edition : Fluid mechanics :
+            fundamentals and applications, 2nd ed., 2010"""},
+                {'value': 'No CD-ROM'},
             ]}
+        )
+        check_transformation(
+            """
+            <datafield tag="500" ind1=" " ind2=" ">
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">
+                    Comments: Book, 380 p., 88 figs., 7 tables; 1st volume of three-volume book "Dark energy and dark matter in the Universe", ed. V. Shulga, Kyiv, Academperiodyka, 2013; ISBN 978-966-360-239-4, ISBN 978-966-360-240-0 (vol. 1). arXiv admin note: text overlap with arXiv:0706.0033, arXiv:1104.3029 by other authors
+                </subfield>
+            </datafield>
+            """, {
+                'public_notes': [
+                    {'value': """Comments: Book, 380 p., 88 figs., 7 tables; 1st volume of three-volume book "Dark energy and dark matter in the Universe", ed. V. Shulga, Kyiv, Academperiodyka, 2013; ISBN 978-966-360-239-4, ISBN 978-966-360-240-0 (vol. 1). arXiv admin note: text overlap with arXiv:0706.0033, arXiv:1104.3029 by other authors""",
+                     'source': 'arXiv',
+                     },
+                ]
+            }
         )
 
 
@@ -1557,6 +1712,7 @@ def test_table_of_contents(app):
 
 
 def test_standard_numbers(app):
+    """Tests standard number field translation."""
     with app.app_context():
         check_transformation(
             """
@@ -1589,3 +1745,52 @@ def test_standard_numbers(app):
                     {'value': 'BS-EN-ISO-6507-2', 'hidden': True},
                 ]}
             )
+
+
+def test_book_series(app):
+    """Tests book seris field translation."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="490" ind1=" " ind2=" ">
+                <subfield code="a">Minutes</subfield>
+            </datafield>
+            """, {
+                'book_series':
+                [
+                    {'title': 'Minutes'},
+                ]
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="490" ind1=" " ind2=" ">
+                <subfield code="a">De Gruyter studies in mathematical physics</subfield>
+                <subfield code="v">16</subfield>
+            </datafield>
+            """, {
+                'book_series':
+                [
+                    {'title': 'De Gruyter studies in mathematical physics',
+                     'volume': '16',
+                     },
+                ]
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="490" ind1=" " ind2=" ">
+                <subfield code="a">Springer tracts in modern physics</subfield>
+                <subfield code="v">267</subfield>
+                <subfield code="x">0081-3869</subfield>
+            </datafield>
+            """, {
+                'book_series':
+                [
+                    {'title': 'Springer tracts in modern physics',
+                     'volume': '267',
+                     'issn': '0081-3869',
+                     },
+                ]
+            }
+        )

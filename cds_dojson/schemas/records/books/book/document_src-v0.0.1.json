@@ -196,10 +196,10 @@
               "schema": {
                 "minLength": 1, 
                 "enum": [
-                  "UDC", 
-                  "ICS", 
                   "DEWEY", 
-                  "LOC"
+                  "ICS", 
+                  "LOC", 
+                  "UDC"
                 ], 
                 "type": "string", 
                 "description": "Describes to which schema the classification code belong\n``UDC``\n    :MARC: ``080``\n    Universal Decimal Classification\n``DEWEY``\n    :MARC: ``082``\n    Dewey\n``ICS``\n    :MARC: ``084``\n    .. Note: 084 is also used for YR alphabetical ordering. *To be checked*\n    Internation Classification of Standard\n``LOC``\n    :MARC: ``050``\n    Library of Congress Classification", 
@@ -207,17 +207,7 @@
               }
             }
           }, 
-          "type": "array", 
-          "related_records": {
-            "uniqueItems": true, 
-            "description": ":MARC: ``775``", 
-            "title": "List of related records", 
-            "minItems": 1, 
-            "items": {
-              "$ref": "elements/related_record.json"
-            }, 
-            "type": "array"
-          }
+          "type": "array"
         }, 
         "volume": {
           "minItems": 1, 
@@ -486,14 +476,14 @@
               "medium": {
                 "minLength": 1, 
                 "enum": [
+                  "audiobook", 
+                  "CD-ROM", 
+                  "DVD", 
                   "electronic version", 
                   "print version", 
                   "print version, hardback", 
                   "print version, paperback", 
-                  "print version, spiral-bound", 
-                  "CD-ROM", 
-                  "audiobook", 
-                  "DVD"
+                  "print version, spiral-bound"
                 ], 
                 "type": "string", 
                 "description": ":MARC: ``020__u``", 

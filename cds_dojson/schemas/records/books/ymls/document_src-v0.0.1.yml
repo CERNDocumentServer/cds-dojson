@@ -265,14 +265,14 @@ allOf:
                         description: |-
                             :MARC: ``020__u``
                         enum:
+                            - audiobook
+                            - CD-ROM
+                            - DVD
                             - electronic version
                             - print version
                             - print version, hardback
                             - print version, paperback
                             - print version, spiral-bound
-                            - CD-ROM
-                            - audiobook
-                            - DVD
                         minLength: 1
                         title: Physical medium to which this ISBN refers
                         type: string
@@ -629,10 +629,10 @@ allOf:
                                 :MARC: ``050``
                                 Library of Congress Classification
                         enum:
-                            - UDC
-                            - ICS
                             - DEWEY
+                            - ICS
                             - LOC
+                            - UDC
                         minLength: 1
                         title: Subject classification
                         type: string
@@ -651,14 +651,3 @@ allOf:
             title: List of keywords
             type: array
             uniqueItems: true
-
-            related_records:
-                description: |-
-                    :MARC: ``775``
-                items:
-                    $ref: elements/related_record.json
-                minItems: 1
-                title: List of related records
-                type: array
-                uniqueItems: true
-

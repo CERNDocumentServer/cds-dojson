@@ -5,9 +5,9 @@
     "book", 
     "proceedings", 
     "report", 
-    "thesis", 
-    "standard"
+    "standard", 
+    "thesis"
   ], 
   "type": "string", 
-  "description": "Types of document this record represents.\n.. note::\n    As a record aggregates information from multiple sources, it\n    can have multiple document types simultaneously. (?)\n``book``\n    Published Monograph (usually has an ISBN and a publisher)\n``proceedings``\n    Proceedings of a conference.\n    The :ref:`conference_info` field contains the information of the conference.\n    If published in a journal, :ref:`publication_info` also contains the journal information.\n``report``\n    A report. It can be unpublished, but can also be a book or a proceedings. In this case, it keeps the document type Book and Report or Proceedings and Report\n``thesis``\n    A thesis. The :ref:`thesis_info` field contains additional\n    information about the thesis. If published as a book, the\n    :ref:`editions`, :ref:`imprints`, :ref:`isbns` and\n    :ref:`book_series` fields may contain specific metadata about\n    this book and the document type can also be Book.\n``standard``\n    A standard."
+  "description": "Types of document this record represents.\n.. note::\n    As a record aggregates information from multiple sources, it\n    can have multiple document types simultaneously. (?)\n``book``\n    Published Monograph (usually has an ISBN and a publisher)\n``proceedings``\n    Proceedings of a conference.\n    The :ref:`conference_info` field contains the information of the conference.\n    If published in a journal, :ref:`publication_info` also contains the journal information.\n``report``\n    A report. It can be unpublished, but can also be a book or a proceedings. In this case, it keeps the document type Book and Report or Proceedings and Report\n``thesis``\n    A thesis. The :ref:`thesis_info` field contains additional\n    information about the thesis. If published as a book, the\n    :ref:`editions`, :ref:`imprints`, :ref:`isbns` and\n    :ref:`book_series` fields may contain specific metadata about\n    this book and the document type can also be Book.\n``standard``\n    A standard.\n"
 }

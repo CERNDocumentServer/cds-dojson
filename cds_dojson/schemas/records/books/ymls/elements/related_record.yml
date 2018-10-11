@@ -28,19 +28,19 @@ properties:
         minLength: 1
         title: Relation of the linked record to this one
         type: string
-    related_record_year:
+    year:
         description: |
             :MARC:  775__c
             Do we need? or can it be extracted from the corresponding record?
         minLength: 1
         type: string
-    related_record_edition:
+    edition:
         description: |
             :MARC: 775__b
             Do we need? or can it be extracted from the corresponding record?
         minLength: 1
         type: string
-    related_record_language:
+    language:
         description: |
             :MARC: 775__b
             Do we need? or can it be extracted from the corresponding record?

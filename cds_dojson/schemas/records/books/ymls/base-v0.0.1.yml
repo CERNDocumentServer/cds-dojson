@@ -46,16 +46,16 @@ properties:
         items:
             enum:
             - BOOKSHOP
-            - DESIGN REPORT
-            - ENGLISH BOOK CLUB
-            - DIDACTICLIBRARY
             - BOOKSUGGESTION
             - CERN
-            - YELLOW REPORT
+            - DESIGN REPORT
+            - DIDACTICLIBRARY
+            - ENGLISH BOOK CLUB
             - LEGSERLIB
-            - LEGSERLIBINTLAW
             - LEGSERLIBCIVLAW
+            - LEGSERLIBINTLAW
             - LEGSERLIBLEGRES
+            - YELLOW REPORT
             minLength: 1
             type: string
         minItems: 1
@@ -269,9 +269,9 @@ properties:
                                 :ref:`hep.json#/properties/document_type`.
                         enum:
                         - author
-                        - supervisor
                         - editor
                         - illustrator
+                        - supervisor
                         minLength: 1
                         type: string
                     minItems: 1
@@ -679,5 +679,5 @@ properties:
 
 required:
     - document_type
-    - titles
     - recid
+    - titles

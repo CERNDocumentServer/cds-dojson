@@ -49,7 +49,7 @@ properties:
         - batchuploader
         - hepcrawl
         minLength: 1
-        title: Data obtraining method
+        title: Data obtaining method
         type: string
     orcid:
         description: |-

@@ -29,8 +29,8 @@ enum:
     - addendum
     - additional material
     - data
-    - erratum
     - editorial note
+    - erratum
     - preprint
     - publication
     - reprint

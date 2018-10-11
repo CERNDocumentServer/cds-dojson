@@ -3,8 +3,8 @@ enum:
     - book
     - proceedings
     - report
-    - thesis
     - standard
+    - thesis
 minLength: 1
 type: string
 description: |

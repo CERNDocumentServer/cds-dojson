@@ -196,6 +196,7 @@ def yaml2json(source, destination):
                     # read the yml file
                     yaml_data = yaml.safe_load(stream)
 
-                with open(write_file_path, 'w') as file:
+                with open(write_file_path, 'w') as f:
                     # write the json file
-                    file.write(json.dumps(yaml_data, indent=2))
+                    json.dump(yaml_data, f, indent=2)
+                    f.write("\n")

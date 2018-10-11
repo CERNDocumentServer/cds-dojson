@@ -4,8 +4,8 @@
   "$schema": "http://json-schema.org/draft-04/schema#", 
   "required": [
     "document_type", 
-    "titles", 
-    "recid"
+    "recid", 
+    "titles"
   ], 
   "type": "object", 
   "properties": {
@@ -18,16 +18,16 @@
         "minLength": 1, 
         "enum": [
           "BOOKSHOP", 
-          "DESIGN REPORT", 
-          "ENGLISH BOOK CLUB", 
-          "DIDACTICLIBRARY", 
           "BOOKSUGGESTION", 
           "CERN", 
-          "YELLOW REPORT", 
+          "DESIGN REPORT", 
+          "DIDACTICLIBRARY", 
+          "ENGLISH BOOK CLUB", 
           "LEGSERLIB", 
-          "LEGSERLIBINTLAW", 
           "LEGSERLIBCIVLAW", 
-          "LEGSERLIBLEGRES"
+          "LEGSERLIBINTLAW", 
+          "LEGSERLIBLEGRES", 
+          "YELLOW REPORT"
         ], 
         "type": "string"
       }, 
@@ -62,9 +62,9 @@
               "minLength": 1, 
               "enum": [
                 "author", 
-                "supervisor", 
                 "editor", 
-                "illustrator"
+                "illustrator", 
+                "supervisor"
               ], 
               "type": "string", 
               "description": "``supervisor``\n    :MARC: ``700`` is used for supervisor metadata.\n    This person is a thesis supervisor. Should be\n    used together with the ``thesis``\n    :ref:`hep.json#/properties/document_type`.\n``editor``\n    :MARC: ``100/700__e:ed.``\n    This person is an editor of the conference\n    proceedings. Should be used together with the\n    ``proceedings``\n    :ref:`hep.json#/properties/document_type`."

@@ -21,7 +21,8 @@
 from cds_dojson.marc21.fields.videos.utils import language_to_isocode
 from cds_dojson.marc21.models.videos.project import model
 from cds_dojson.marc21.utils import create_record
-from helpers import load_fixture_file, validate
+from helpers import load_fixture_file
+from jsonschema import validate
 
 
 def test_required_fields(app):
@@ -33,10 +34,8 @@ def test_required_fields(app):
         record = model.do(blob)
 
         assert record == {
-            '$schema': {
-                '$ref': ('https://cds.cern.ch/schemas/'
-                         'records/videos/project/project-v1.0.0.json')
-            },
+            '$schema': 'https://cds.cern.ch/schemas/'
+                       'records/videos/project/project-v1.0.0.json',
             '_access': {'update': ['Jacques.Fichet@cern.ch']},
             'category': 'CERN',
             'contributors': [
@@ -60,7 +59,11 @@ def test_required_fields(app):
         # Add required fields calculated by post-process tasks.
         record['publication_date'] = '2017-07-04'
         record['date'] = '2017-07-04'
-        validate(record)
+        validate(
+            record,
+            schema={'schema': record['$schema']},
+            types={'array': (list, tuple)}
+        )
 
 
 def test_fields(app):
@@ -72,10 +75,8 @@ def test_fields(app):
         blob = create_record(marcxml.format(marcxml_body))
         record = model.do(blob)
         expected = {
-            '$schema': {
-                '$ref': ('https://cds.cern.ch/schemas/'
-                         'records/videos/project/project-v1.0.0.json')
-            }
+            '$schema': 'https://cds.cern.ch/schemas/'
+                       'records/videos/project/project-v1.0.0.json'
         }
         expected.update(**json_body)
         assert record == expected

@@ -35,7 +35,8 @@ from cds_dojson.marc21.fields.books.values_mapping import mapping, \
     ARXIV_CATEGORIES, MATERIALS, SUBJECT_CLASSIFICATION_EXCEPTIONS
 from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
     out_strip, clean_val, \
-    ManualMigrationRequired, replace_in_result, related_url, clean_pages_range
+    ManualMigrationRequired, replace_in_result, related_url, clean_pages_range, \
+    clean_str
 
 from cds_dojson.marc21.fields.utils import get_week_start
 from ...models.books.book import model
@@ -137,8 +138,17 @@ def authors(self, key, value):
     for v in force_list(value):
         temp_author = {'full_name': clean_val('a', v, str, req=True),
                        'role': mapping(AUTHOR_ROLE, clean_val('e', v, str)),
-                       'affiliation': clean_val('u', v, str),
                        }
+        value_u = v.get('u')
+        if value_u:
+            if isinstance(value_u, tuple):
+                temp_author.update(
+                    {'affiliations': [clean_str(affiliation,
+                                                regex_format=None, req=False)
+                                      for affiliation in value_u]})
+            else:
+                temp_author.update(
+                    {'affiliations': [clean_val('u', v, str)]})
         _authors.append(temp_author)
     return _authors
 
@@ -361,8 +371,7 @@ def external_system_identifiers(self, key, value):
             system_id.update({'value': sub_a,
                               'schema': sub_9})
         else:
-            # TODO check with CDS
-            raise ManualMigrationRequired
+            raise IgnoreKey('external_system_identifiers')
     if key == '036__':
         system_id.update({'value': sub_a,
                           'schema': clean_val('9', value, str, req=True),

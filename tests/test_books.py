@@ -20,7 +20,6 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 import pytest
-from dojson.errors import IgnoreKey
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     ManualMigrationRequired, MissingRequiredField
@@ -427,6 +426,16 @@ def test_authors(app):
             <datafield tag="720" ind1=" " ind2=" ">
                 <subfield code="a">Neubert, Matthias</subfield>
             </datafield>
+            <datafield tag="100" ind1=" " ind2=" ">
+                <subfield code="a">John Doe</subfield>
+                <subfield code="u">CERN</subfield>
+                <subfield code="u">Univ. Gent</subfield>
+            </datafield>
+            <datafield tag="100" ind1=" " ind2=" ">
+                <subfield code="a">Jane Doe</subfield>
+                <subfield code="u">CERN</subfield>
+                <subfield code="u">Univ. Gent</subfield>
+            </datafield>
             """, {
                 'authors': [
                     {
@@ -444,7 +453,15 @@ def test_authors(app):
                     },
                     {
                         'full_name': 'Seyfert, Paul',
-                        'affiliation': 'CERN',
+                        'affiliations': ['CERN'],
+                    },
+                    {
+                        'full_name': 'John Doe',
+                        'affiliations': ['CERN', 'Univ. Gent'],
+                    },
+                    {
+                        'full_name': 'Jane Doe',
+                        'affiliations': ['CERN', 'Univ. Gent'],
                     }
                 ],
             })
@@ -1012,19 +1029,14 @@ def test_external_system_identifiers(app):
                     'value': '2365039',
                 }],
             })
-        with pytest.raises(ManualMigrationRequired):
-            check_transformation(
-                """
-                <datafield tag="035" ind1=" " ind2=" ">
-                    <subfield code="9">CERCER</subfield>
-                    <subfield code="a">2365039</subfield>
-                </datafield>
-                """, {
-                    'external_system_identifiers': [{
-                        'schema': 'CERCER',
-                        'value': '2365039',
-                    }],
-                })
+        check_transformation(
+            """
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">CERCER</subfield>
+                <subfield code="a">2365039</subfield>
+            </datafield>
+            """, {
+            })
 
         check_transformation(
             """

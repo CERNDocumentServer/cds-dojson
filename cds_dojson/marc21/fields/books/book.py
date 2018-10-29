@@ -31,15 +31,17 @@ from dojson.utils import force_list, for_each_value, filter_values, flatten
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     MissingRequiredField
 from cds_dojson.marc21.fields.books.values_mapping import mapping, \
-    DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION, ACQUISITION_METHOD, MEDIUM_TYPES, \
-    ARXIV_CATEGORIES, MATERIALS, SUBJECT_CLASSIFICATION_EXCEPTIONS
+    DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION, ACQUISITION_METHOD, \
+    EXTERNAL_SYSTEM_IDENTIFIERS, EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE, \
+    MEDIUM_TYPES, ARXIV_CATEGORIES, MATERIALS, \
+    SUBJECT_CLASSIFICATION_EXCEPTIONS
 from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
     out_strip, clean_val, \
     ManualMigrationRequired, replace_in_result, related_url, clean_pages_range, \
     clean_str
 
 from cds_dojson.marc21.fields.utils import get_week_start
-from ...models.books.book import model
+from cds_dojson.marc21.models.books.book import model
 
 
 @model.over('acquisition_source', '(^916__)|(^859__)|(^595__)')
@@ -363,15 +365,18 @@ def external_system_identifiers(self, key, value):
             raise UnexpectedValue
     if key == '035__':
         sub_9 = clean_val('9', value, str, req=True)
-        if 'inspire-cnum' == sub_9.lower() or 'inspirecnum' == sub_9.lower():
-            # TODO check this
-            self['inspire_cnum'] = sub_a
+        if sub_9.upper() == 'INSPIRE-CNUM':
+            _conference_info = self.get('conference_info', [{}])
+            _conference_info[0].update({'inspire_cnum': sub_a})
+            self['conference_info'] = _conference_info
             raise IgnoreKey('external_system_identifiers')
-        elif 'CERCER' not in sub_9:
+        elif sub_9.upper() in EXTERNAL_SYSTEM_IDENTIFIERS:
             system_id.update({'value': sub_a,
                               'schema': sub_9})
-        else:
+        elif sub_9.upper() in EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE:
             raise IgnoreKey('external_system_identifiers')
+        else:
+            raise UnexpectedValue
     if key == '036__':
         system_id.update({'value': sub_a,
                           'schema': clean_val('9', value, str, req=True),

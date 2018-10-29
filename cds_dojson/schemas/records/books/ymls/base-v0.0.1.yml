@@ -355,6 +355,25 @@ properties:
                         Identifies the external system, and allows to interpret
                         unambiguously the :ref:`value`.
                         :example: ``ADS``
+                    enum:
+                    - ARXIV
+                    - DCL
+                    - DESY
+                    - DOE
+                    - EBL
+                    - FIZ
+                    - HAL
+                    - IEECONF
+                    - INDICO.CERN.CH
+                    - INIS
+                    - INSPIRE
+                    - INSPIRE-CNUM
+                    - KEK
+                    - LHCLHC
+                    - SAFARI
+                    - SCEM
+                    - UDCCERN
+                    - WAI01
                     minLength: 1
                     pattern: ^\w+$
                     type: string

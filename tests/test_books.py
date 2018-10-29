@@ -1006,34 +1006,44 @@ def test_external_system_identifiers(app):
                 <subfield code="a">2365039</subfield>
             </datafield>
             <datafield tag="035" ind1=" " ind2=" ">
-                <subfield code="9">Random</subfield>
+                <subfield code="9">Inspire</subfield>
                 <subfield code="a">2365039</subfield>
             </datafield>
             """, {
-                'inspire_cnum': '2365039',
+                'conference_info': [{
+                    'inspire_cnum': '2365039',
+                }],
                 'external_system_identifiers': [{
-                    'schema': 'Random',
+                    'schema': 'Inspire',
                     'value': '2365039',
                 }],
             })
 
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="035" ind1=" " ind2=" ">
+                    <subfield code="9">Random</subfield>
+                    <subfield code="a">2365039</subfield>
+                </datafield>
+                """, {
+                })
+
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="035" ind1=" " ind2=" ">
+                    <subfield code="9">CERCER</subfield>
+                    <subfield code="a">2365039</subfield>
+                </datafield>
+                """, {
+                })
+
         check_transformation(
             """
             <datafield tag="035" ind1=" " ind2=" ">
-                <subfield code="9">Random</subfield>
-                <subfield code="a">2365039</subfield>
-            </datafield>
-            """, {
-                'external_system_identifiers': [{
-                    'schema': 'Random',
-                    'value': '2365039',
-                }],
-            })
-        check_transformation(
-            """
-            <datafield tag="035" ind1=" " ind2=" ">
-                <subfield code="9">CERCER</subfield>
-                <subfield code="a">2365039</subfield>
+                <subfield code="9">SLAC</subfield>
+                <subfield code="a">5231528</subfield>
             </datafield>
             """, {
             })

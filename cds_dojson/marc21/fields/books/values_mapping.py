@@ -117,6 +117,34 @@ MATERIALS = [
 SUBJECT_CLASSIFICATION_EXCEPTIONS = \
     ['PACS', 'CERN LIBRARY', 'CERN YELLOW REPORT']
 
+EXTERNAL_SYSTEM_IDENTIFIERS = [
+    'ARXIV',
+    'DCL',
+    'DESY',
+    'DOE',
+    'EBL',
+    'FIZ',
+    'HAL',
+    'IEECONF',
+    'INDICO.CERN.CH',
+    'INIS',
+    'INSPIRE',
+    'KEK',
+    'LHCLHC',
+    'SAFARI',
+    'SCEM',
+    'UDCCERN',
+    'WAI01',
+]
+
+EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE = [
+    'CERN ANNUAL REPORT',
+    'HTTP://INSPIREHEP.NET/OAI2D',
+    'SLAC',
+    'SLACCONF',
+    'SPIRES',
+]
+
 
 def mapping(field_map, val, raise_exception=False):
     """

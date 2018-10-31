@@ -183,84 +183,77 @@ allOf:
         type: array
         uniqueItems: true
       conference_info:
+        cern_conference_code:
+          description: ':MARC: ``111__g``'
+          minLength: 1
+          type: string
+        closing_date:
+          description: |-
+            :MARC: ``111__z``
+            closing date of the conference
+          format: date
+          minLength: 1
+          type: string
+        conference_acronym:
+          description: ':MARC: ``711__a``'
+          minLength: 1
+          type: string
+        conference_contact:
+          description: ':MARC: ``270__m`` Do we still need?'
+          minLength: 1
+          type: string
+        conference_country:
+          description: ':MARC: ``111__w`` Do we still need?'
+          minLength: 1
+          type: string
+        conference_dates:
+          description: |-
+            :MARC: ``111__d``
+            dates of the conference, many items do not have 111__9 and/or z
+          format: date
+          minLength: 1
+          type: string
+        conference_place:
+          description: ':MARC: ``111__c``'
+          minLength: 1
+          type: string
+        conference_series:
+          description: ':MARC: Does not exist in CDS'
+          minLength: 1
+          type: string
+        conference_series_number:
+          description: ':MARC: Does not exist in CDS'
+          minLength: 1
+          type: integer
+        conference_title:
+          description: |-
+            :MARC: ``111__a``
+            .. Note: There can be different values there.
+          minLength: 1
+          type: string
+        conference_year:
+          description: ':MARC: ``111__f`` *Do we still need?*'
+          minLength: 1
+          type: string
         description: |-
           :MARC: ``111/711``
           .. Notes:: In Inspire there is a separate entity for conferences.
-        items:
-          additionalProperties: false
-          cern_conference_code:
-            description: ':MARC: ``111__g``'
-            minLength: 1
-            type: string
-          closing_date:
-            description: |-
-              :MARC: ``111__z``
-              closing date of the conference
-            format: date
-            minLength: 1
-            type: string
-          conference_acronym:
-            description: |-
-              :MARC: ``711__a``
-              minLength: 1
-              type: string
-          conference_contact:
-            description: ':MARC: ``270__m`` Do we still need?'
-            minLength: 1
-            type: string
-          conference_country:
-            description: ':MARC: ``111__w`` Do we still need?'
-            minLength: 1
-            type: string
-          conference_dates:
-            description: |-
-              :MARC: ``111__d``
-              dates of the conference, many items do not have 111__9 and/or z
-            format: date
-            minLength: 1
-            type: string
-          conference_place:
-            description: ':MARC: ``111__c``'
-            minLength: 1
-            type: string
-          conference_series:
-            description: ':MARC: Does not exist in CDS'
-            minLength: 1
-            type: string
-          conference_series_number:
-            description: ':MARC: Does not exist in CDS'
-            minLength: 1
-            type: integer
-          conference_title:
-            description: |-
-              :MARC: ``111__a``
-              .. Note: There can be different values there.
-            minLength: 1
-            type: string
-          conference_year:
-            description: ':MARC: ``111__f`` *Do we still need?*'
-            minLength: 1
-            type: string
-          inspire_cnum:
-            description: ':MARC: ``035__a`` when 9:INSPIRE-CNUM'
-            minLength: 1
-            type: string
-          opening_date:
-            description: |-
-              :MARC: ``111__9``
-              starting date of the conference
-            format: date
-            minLength: 1
-            type: string
-          properties: null
-          required:
-            - conference_title
-            - conference_place
-            - conference_dates
-          type: object
-        minItems: 1
-        type: array
-        uniqueItems: true
+        inspire_cnum:
+          description: ':MARC: ``035__a`` when 9:INSPIRE-CNUM'
+          minLength: 1
+          type: string
+        opening_date:
+          description: |-
+            :MARC: ``111__9``
+            starting date of the conference
+          format: date
+          minLength: 1
+          type: string
+        required:
+          - conference_dates
+          - conference_place
+          - conference_title
+        type: object
       corporate_authors:
         items:
           description: |-
@@ -347,9 +340,9 @@ allOf:
                 - DVD
                 - electronic version
                 - print version
-                - print version, hardback
-                - print version, paperback
-                - print version, spiral-bound
+                - 'print version, hardback'
+                - 'print version, paperback'
+                - 'print version, spiral-bound'
               minLength: 1
               title: Physical medium to which this ISBN refers
               type: string

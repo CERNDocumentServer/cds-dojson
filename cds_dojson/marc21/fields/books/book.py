@@ -362,8 +362,8 @@ def external_system_identifiers(self, key, value):
     if key == '035__':
         sub_9 = clean_val('9', value, str, req=True)
         if sub_9.upper() == 'INSPIRE-CNUM':
-            _conference_info = self.get('conference_info', [{}])
-            _conference_info[0].update({'inspire_cnum': sub_a})
+            _conference_info = self.get('conference_info', {})
+            _conference_info.update({'inspire_cnum': sub_a})
             self['conference_info'] = _conference_info
             raise IgnoreKey('external_system_identifiers')
         elif sub_9.upper() in EXTERNAL_SYSTEM_IDENTIFIERS:
@@ -515,11 +515,11 @@ def keywords(self, key, value):
     return _keywords
 
 
-@model.over('conference_info', '(^111__)|(^270__)')
-@filter_list_values
+@model.over('conference_info', '(^111__)|(^270__)|(^711__)')
+@filter_values
 def conference_info(self, key, value):
     """Translates conference info."""
-    _conference_info = self.get('conference_info', [])
+    _conference_info = self.get('conference_info', {})
     for v in force_list(value):
         if key == '111__':
             try:
@@ -535,7 +535,7 @@ def conference_info(self, key, value):
                 except (KeyError, AttributeError):
                     raise UnexpectedValue
 
-            _conference_info.append({
+            _conference_info.update({
                 'title': clean_val('a', v, str, req=True),
                 'place': clean_val('c', v, str, req=True),
                 'opening_date': opening_date.date().isoformat(),
@@ -544,12 +544,15 @@ def conference_info(self, key, value):
                 'series_number': clean_val('n', v, int),
                 'country_code': country_code,
             })
-        else:
+        elif key == '270__':
             contact = clean_email(clean_val('m', v, str))
             if contact and _conference_info:
-                _conference_info[-1].update({'contact': contact})
+                _conference_info.update({'contact': contact})
             else:
                 raise MissingRequiredField
+        else:
+            _conference_info.update({
+                'conference_acronym': clean_val('a', v, str)})
     return _conference_info
 
 

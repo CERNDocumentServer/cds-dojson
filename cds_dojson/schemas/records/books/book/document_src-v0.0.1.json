@@ -172,86 +172,81 @@
           "uniqueItems": true
         },
         "conference_info": {
-          "description": ":MARC: ``111/711``\n.. Notes:: In Inspire there is a separate entity for conferences.",
-          "items": {
-            "additionalProperties": false,
-            "cern_conference_code": {
-              "description": ":MARC: ``111__g``",
-              "minLength": 1,
-              "type": "string"
-            },
-            "closing_date": {
-              "description": ":MARC: ``111__z``\nclosing date of the conference",
-              "format": "date",
-              "minLength": 1,
-              "type": "string"
-            },
-            "conference_acronym": {
-              "description": ":MARC: ``711__a``\nminLength: 1\ntype: string"
-            },
-            "conference_contact": {
-              "description": ":MARC: ``270__m`` Do we still need?",
-              "minLength": 1,
-              "type": "string"
-            },
-            "conference_country": {
-              "description": ":MARC: ``111__w`` Do we still need?",
-              "minLength": 1,
-              "type": "string"
-            },
-            "conference_dates": {
-              "description": ":MARC: ``111__d``\ndates of the conference, many items do not have 111__9 and/or z",
-              "format": "date",
-              "minLength": 1,
-              "type": "string"
-            },
-            "conference_place": {
-              "description": ":MARC: ``111__c``",
-              "minLength": 1,
-              "type": "string"
-            },
-            "conference_series": {
-              "description": ":MARC: Does not exist in CDS",
-              "minLength": 1,
-              "type": "string"
-            },
-            "conference_series_number": {
-              "description": ":MARC: Does not exist in CDS",
-              "minLength": 1,
-              "type": "integer"
-            },
-            "conference_title": {
-              "description": ":MARC: ``111__a``\n.. Note: There can be different values there.",
-              "minLength": 1,
-              "type": "string"
-            },
-            "conference_year": {
-              "description": ":MARC: ``111__f`` *Do we still need?*",
-              "minLength": 1,
-              "type": "string"
-            },
-            "inspire_cnum": {
-              "description": ":MARC: ``035__a`` when 9:INSPIRE-CNUM",
-              "minLength": 1,
-              "type": "string"
-            },
-            "opening_date": {
-              "description": ":MARC: ``111__9``\nstarting date of the conference",
-              "format": "date",
-              "minLength": 1,
-              "type": "string"
-            },
-            "properties": null,
-            "required": [
-              "conference_title",
-              "conference_place",
-              "conference_dates"
-            ],
-            "type": "object"
+          "cern_conference_code": {
+            "description": ":MARC: ``111__g``",
+            "minLength": 1,
+            "type": "string"
           },
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+          "closing_date": {
+            "description": ":MARC: ``111__z``\nclosing date of the conference",
+            "format": "date",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_acronym": {
+            "description": ":MARC: ``711__a``",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_contact": {
+            "description": ":MARC: ``270__m`` Do we still need?",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_country": {
+            "description": ":MARC: ``111__w`` Do we still need?",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_dates": {
+            "description": ":MARC: ``111__d``\ndates of the conference, many items do not have 111__9 and/or z",
+            "format": "date",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_place": {
+            "description": ":MARC: ``111__c``",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_series": {
+            "description": ":MARC: Does not exist in CDS",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_series_number": {
+            "description": ":MARC: Does not exist in CDS",
+            "minLength": 1,
+            "type": "integer"
+          },
+          "conference_title": {
+            "description": ":MARC: ``111__a``\n.. Note: There can be different values there.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "conference_year": {
+            "description": ":MARC: ``111__f`` *Do we still need?*",
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": ":MARC: ``111/711``\n.. Notes:: In Inspire there is a separate entity for conferences.",
+          "inspire_cnum": {
+            "description": ":MARC: ``035__a`` when 9:INSPIRE-CNUM",
+            "minLength": 1,
+            "type": "string"
+          },
+          "opening_date": {
+            "description": ":MARC: ``111__9``\nstarting date of the conference",
+            "format": "date",
+            "minLength": 1,
+            "type": "string"
+          },
+          "required": [
+            "conference_dates",
+            "conference_place",
+            "conference_title"
+          ],
+          "type": "object"
         },
         "corporate_authors": {
           "items": {

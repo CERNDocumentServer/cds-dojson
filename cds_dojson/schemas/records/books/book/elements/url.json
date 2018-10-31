@@ -1,22 +1,22 @@
 {
-  "description": ":MARC: ``8564``", 
-  "title": "URL of related document", 
-  "additionalProperties": false, 
-  "required": [
-    "value"
-  ], 
-  "type": "object", 
+  "additionalProperties": false,
+  "description": ":MARC: ``8564``",
   "properties": {
     "description": {
-      "minLength": 1, 
-      "type": "string", 
-      "description": ":MARC: ``8654__y``"
-    }, 
+      "description": ":MARC: ``8654__y``",
+      "minLength": 1,
+      "type": "string"
+    },
     "value": {
-      "minLength": 1, 
-      "type": "string", 
-      "description": ":MARC: ``8564_u``", 
-      "format": "uri"
+      "description": ":MARC: ``8564_u``",
+      "format": "uri",
+      "minLength": 1,
+      "type": "string"
     }
-  }
+  },
+  "required": [
+    "value"
+  ],
+  "title": "URL of related document",
+  "type": "object"
 }

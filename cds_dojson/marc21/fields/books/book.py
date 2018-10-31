@@ -20,27 +20,23 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 
+import datetime
+import re
+
 import pycountry
 from dateutil import parser
-import datetime
 from dojson.errors import IgnoreKey
+from dojson.utils import filter_values, flatten, for_each_value, force_list
 
-import re
-from dojson.utils import force_list, for_each_value, filter_values, flatten
-
-from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
-    MissingRequiredField
-from cds_dojson.marc21.fields.books.values_mapping import mapping, \
-    DOCUMENT_TYPE, AUTHOR_ROLE, COLLECTION, ACQUISITION_METHOD, \
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
+    UnexpectedValue
+from cds_dojson.marc21.fields.books.values_mapping import ACQUISITION_METHOD, \
+    ARXIV_CATEGORIES, AUTHOR_ROLE, COLLECTION, DOCUMENT_TYPE, \
     EXTERNAL_SYSTEM_IDENTIFIERS, EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE, \
-    MEDIUM_TYPES, ARXIV_CATEGORIES, MATERIALS, \
-    SUBJECT_CLASSIFICATION_EXCEPTIONS
-from cds_dojson.marc21.fields.utils import clean_email, filter_list_values, \
-    out_strip, clean_val, \
-    ManualMigrationRequired, replace_in_result, related_url, clean_pages_range, \
-    clean_str
-
-from cds_dojson.marc21.fields.utils import get_week_start
+    MATERIALS, MEDIUM_TYPES, SUBJECT_CLASSIFICATION_EXCEPTIONS, mapping
+from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
+    clean_email, clean_pages_range, clean_str, clean_val, filter_list_values, \
+    get_week_start, out_strip, related_url, replace_in_result
 from cds_dojson.marc21.models.books.book import model
 
 
@@ -217,7 +213,7 @@ def publication_info(self, key, value):
             'journal_title': clean_val('p', v, str),
             'journal_volume': clean_val('v', v, str),
             'cnum': clean_val('w', v, str,
-                              regex_format='^C\d\d-\d\d-\d\d(\.\d+)?$'),
+                              regex_format=r'^C\d\d-\d\d-\d\d(\.\d+)?$'),
             'year': clean_val('y', v, int),
         })
 
@@ -627,7 +623,7 @@ def number_of_pages(self, key, value):
     pages = clean_val('a', value, str)
     if not pages:
         raise IgnoreKey('number_of_pages')
-    pages = re.search('(^[0-9]+) *p', pages)
+    pages = re.search(r'(^[0-9]+) *p', pages)
     if pages:
         pages = int(pages.group(1))
         return pages

@@ -1010,9 +1010,9 @@ def test_external_system_identifiers(app):
                 <subfield code="a">2365039</subfield>
             </datafield>
             """, {
-                'conference_info': [{
+                'conference_info': {
                     'inspire_cnum': '2365039',
-                }],
+                },
                 'external_system_identifiers': [{
                     'schema': 'Inspire',
                     'value': '2365039',
@@ -1496,6 +1496,10 @@ def test_conference_info(app):
     with app.app_context():
         check_transformation(
             """
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">INSPIRE-CNUM</subfield>
+                <subfield code="a">1234</subfield>
+            </datafield>
             <datafield tag="111" ind1=" " ind2=" ">
                 <subfield code="9">20040621</subfield>
                 <subfield code="a">2nd Workshop on Science with
@@ -1514,21 +1518,23 @@ def test_conference_info(app):
                 <subfield code="m">arantza.de.oyanguren.campos@cern.ch
                 </subfield>
             </datafield>
+            <datafield tag="711" ind1=" " ind2=" ">
+                <subfield code="a">SNGHEGE2004</subfield>
+            </datafield>
             """,
-            {'conference_info': [
-                {'title': """2nd Workshop on Science with
+            {'conference_info': {
+                'inspire_cnum': '1234',
+                'title': """2nd Workshop on Science with
                  the New Generation of High Energy Gamma-ray Experiments:
                  between Astrophysics and Astroparticle Physics""",
-                 'place': 'Bari, Italy',
-                 'cern_conference_code': 'bari20040621',
-                 'opening_date': '2004-06-21',
-                 'series_number': 2,
-                 'country_code': 'IT',
-                 'closing_date': '2004-06-21',
-                 'contact':
-                    'arantza.de.oyanguren.campos@cern.ch'
-                 }
-            ]}
+                'place': 'Bari, Italy',
+                'cern_conference_code': 'bari20040621',
+                'opening_date': '2004-06-21',
+                'series_number': 2,
+                'country_code': 'IT',
+                'closing_date': '2004-06-21',
+                'contact': 'arantza.de.oyanguren.campos@cern.ch',
+                'conference_acronym': 'SNGHEGE2004'}}
         )
         with pytest.raises(UnexpectedValue):
             check_transformation(
@@ -1552,20 +1558,17 @@ def test_conference_info(app):
                     </subfield>
                 </datafield>
                 """,
-                {'conference_info': [
-                    {'title': """2nd Workshop on Science with
-                             the New Generation of High Energy Gamma-ray Experiments:
+                {'conference_info': {
+                    'title': """2nd Workshop on Science with the New
+                             Generation of High Energy Gamma-ray Experiments:
                              between Astrophysics and Astroparticle Physics""",
-                     'place': 'Bari, Italy',
-                     'cern_conference_code': 'bari20040621',
-                     'opening_date': '2004-06-21',
-                     'series_number': 2,
-                     'country_code': 'IT',
-                     'closing_date': '2004-06-21',
-                     'contact':
-                         'arantza.de.oyanguren.campos@cern.ch'
-                     }
-                ]}
+                    'place': 'Bari, Italy',
+                    'cern_conference_code': 'bari20040621',
+                    'opening_date': '2004-06-21',
+                    'series_number': 2,
+                    'country_code': 'IT',
+                    'closing_date': '2004-06-21',
+                    'contact': 'arantza.de.oyanguren.campos@cern.ch'}}
             )
         with pytest.raises(UnexpectedValue):
             check_transformation(
@@ -1588,21 +1591,22 @@ def test_conference_info(app):
                     <subfield code="m">arantza.de.oyanguren.campos@cern.ch
                     </subfield>
                 </datafield>
+                <datafield tag="711" ind1=" " ind2=" ">
+                    <subfield code="a">SNGHEGE2004</subfield>
+                </datafield>
                 """,
-                {'conference_info': [
-                    {'title': """2nd Workshop on Science with
-                             the New Generation of High Energy Gamma-ray Experiments:
+                {'conference_info': {
+                    'title': """2nd Workshop on Science with the New
+                             Generation of High Energy Gamma-ray Experiments:
                              between Astrophysics and Astroparticle Physics""",
-                     'place': 'Bari, Italy',
-                     'cern_conference_code': 'bari20040621',
-                     'opening_date': '2004-06-21',
-                     'series_number': 2,
-                     'country_code': 'IT',
-                     'closing_date': '2004-06-21',
-                     'contact':
-                         'arantza.de.oyanguren.campos@cern.ch'
-                     }
-                ]}
+                    'place': 'Bari, Italy',
+                    'cern_conference_code': 'bari20040621',
+                    'opening_date': '2004-06-21',
+                    'series_number': 2,
+                    'country_code': 'IT',
+                    'closing_date': '2004-06-21',
+                    'contact': 'arantza.de.oyanguren.campos@cern.ch',
+                    'conference_acronym': 'SNGHEGE2004'}}
             )
         with pytest.raises(MissingRequiredField):
             check_transformation(
@@ -1613,8 +1617,7 @@ def test_conference_info(app):
                 </datafield>
                 """, {
                     'conference_info':
-                        {'contact':
-                            'arantza.de.oyanguren.campos@cern.ch'}}
+                        {'contact': 'arantza.de.oyanguren.campos@cern.ch'}}
             )
 
 

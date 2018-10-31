@@ -31,9 +31,9 @@ from dojson.errors import IgnoreKey
 from dojson.utils import force_list
 from six import PY2, iteritems
 
-from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
-    MissingRequiredField, ManualMigrationRequired
-from ..utils import MementoDict
+from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
+    MissingRequiredField, UnexpectedValue
+from cds_dojson.utils import MementoDict
 
 
 # TODO to be decided where is the config value for domain
@@ -44,10 +44,10 @@ def related_url(value):
 
 def clean_pages_range(pages_subfield, value):
     """Builds pages dictionary."""
-    page_regex = '\d+(?:[\-‐‑‒–—―⁻₋−﹘﹣－]*\d*)$'
+    page_regex = r'\d+(?:[\-‐‑‒–—―⁻₋−﹘﹣－]*\d*)$'
     pages_val = clean_val(pages_subfield, value, str, regex_format=page_regex)
     if pages_val:
-        pages = re.split('[\-‐‑‒–—―⁻₋−﹘﹣－]+', pages_val)
+        pages = re.split(r'[\-‐‑‒–—―⁻₋−﹘﹣－]+', pages_val)
         if len(pages) == 1:
             result = {'page_start': int(pages[0])}
             return result

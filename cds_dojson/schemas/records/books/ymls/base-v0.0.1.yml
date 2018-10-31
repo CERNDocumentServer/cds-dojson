@@ -1,702 +1,663 @@
-title: CDS Base Record Schema v1.0.0
-$schema: http://json-schema.org/draft-04/schema#
-type: object
-decription: A record in the books, proceedings, standards, theses and reports.
-
+$schema: 'http://json-schema.org/draft-04/schema#'
+decription: 'A record in the books, proceedings, standards, theses and reports.'
 properties:
-    recid:
-        description: Invenio record identifier (integer).
-        type: number
-
-    dois:
-        description: |-
-            .. Note: This element can be found at the holding level or at the bibliographic record level.
-        items:
+  _collections:
+    description: |-
+      :MARC: ``980__a`` ``690C_a`` ``697C_a``
+      Collections to which this record belongs
+      .. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.
+    items:
+      enum:
+        - BOOKSHOP
+        - BOOKSUGGESTION
+        - CERN
+        - DESIGN REPORT
+        - DIDACTICLIBRARY
+        - ENGLISH BOOK CLUB
+        - LEGSERLIB
+        - LEGSERLIBCIVLAW
+        - LEGSERLIBINTLAW
+        - LEGSERLIBLEGRES
+        - YELLOW REPORT
+      minLength: 1
+      type: string
+    minItems: 1
+    title: Collections
+    type: array
+    uniqueItems: true
+  _private_notes:
+    description: |-
+      :MARC: ``595``
+      These notes are only visible to privileged users, not regular
+      users.
+    items:
+      $ref: elements/sourced_value.json
+    minItems: 1
+    title: List of private notes
+    type: array
+    uniqueItems: true
+  abstracts:
+    description: |-
+      :MARC: ``520``
+      The first abstract is the preferred one, to be displayed in
+      priority.
+    items:
+      - $ref: elements/sourced_value.json
+    minItems: 1
+    title: List of abstracts
+    type: array
+    uniqueItems: true
+  acquisition_source:
+    $ref: elements/acquisition_source.json
+  authors:
+    description: |-
+      :MARC: ``100``, ``700``
+      Besides authors, also contains editors and supervisors (see
+      :ref:`hep.json#/properties/authors/items/properties/inspire_roles`).
+    items:
+      additionalProperties: false
+      properties:
+        affiliations:
+          items:
             additionalProperties: false
             properties:
-                material:
-                    $ref: elements/material.json
-                    description: |-
-                        :MARC: ``0247_q``
-                source:
-                    $ref: elements/source.json
-                    description: |-
-                        :MARC: ``0247_9``
-                value:
-                    description: |-
-                        :MARC: ``0247_a``
-                        :example: ``10.1023/A:1026654312961``
-                    minLength: 1
-                    pattern: ^10\.\d+(\.\d+)?/\S+$
-                    title: DOI
-                    type: string
+              curated_relation:
+                type: boolean
+              value:
+                description: ':MARC: ``100/700__u``'
+                minLength: 1
+                title: ICN of affiliation
+                type: string
             required:
-            - value
+              - value
             type: object
-        minItems: 1
-        title: List of DOIs
-        type: array
-        uniqueItems: true
-
-    _collections:
-        description: |-
-            :MARC: ``980__a`` ``690C_a`` ``697C_a``
-            Collections to which this record belongs
-            .. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.
-        items:
-            enum:
-            - BOOKSHOP
-            - BOOKSUGGESTION
-            - CERN
-            - DESIGN REPORT
-            - DIDACTICLIBRARY
-            - ENGLISH BOOK CLUB
-            - LEGSERLIB
-            - LEGSERLIBCIVLAW
-            - LEGSERLIBINTLAW
-            - LEGSERLIBLEGRES
-            - YELLOW REPORT
+          minItems: 1
+          type: array
+          uniqueItems: true
+        alternative_names:
+          items:
+            description: |-
+              :MARC: ``100/700/701__q``
+              :example: ``楼 立洋``
+              :example: ``Smith, Joe John``
             minLength: 1
             type: string
-        minItems: 1
-        title: Collections
-        type: array
-        uniqueItems: true
-
-    document_types:
-        description: |-
-            :MARC: ``980__a`` ``690C_a`` ``960__a``
-            Types of document this record represents.
-            .. note::
-              As a record aggregates information from multiple sources, it
-              can have multiple document types simultaneously. (?)
-        items:
-            $ref: elements/document_type.json
-        minItems: 1
-        type: array
-        uniqueItems: true
-        title: Document types
-
-    report_numbers:
-        description: |-
-            :MARC: ``037`` ``088``
-            :example: ``DESY-17-036``
-        items:
-            additionalProperties: false
-            properties:
-                hidden:
-                    description: |-
-                        :MARC: if ``true``, the :ref:`value` is in ``037__z``,``088__9``
-                            instead of ``037__a````088__9``
-                        Whether this report number should be hidden from the
-                        display. This is appropriate for
-                        * a report number that appears on the document but is
-                          not the one officially assigned;
-                        * a report number that has been assigned by one of the
-                          authors institutions, but is not displayed on the
-                          document (typically for large collaborations).
-                    type: boolean
-                source:
-                    $ref: elements/source.json
-                value:
-                    minLength: 1
-                    type: string
-            required:
-            - value
-            type: object
-        minItems: 1
-        title: List of report numbers assigned to the record
-        type: array
-        uniqueItems: true
-
-    related_records:
-        description: |-
-            :MARC: ``787`` ``775``
-        $ref: elements/related_record.json
-        minItems: 1
-        title: List of related records
-        type: array
-        uniqueItems: true
-
-    control_number:
-        description: |-
-            :MARC: ``001``
-            Read-only field.
-        title: ID of current record
-        type: integer
-
-    _private_notes:
-        description: |-
-            :MARC: ``595``
-            These notes are only visible to privileged users, not regular
-            users.
-        items:
-            $ref: elements/sourced_value.json
-        minItems: 1
-        title: List of private notes
-        type: array
-        uniqueItems: true
-
-    acquisition_source:
-        $ref: elements/acquisition_source.json
-
-    abstracts:
-        description: |-
-            :MARC: ``520``
-            The first abstract is the preferred one, to be displayed in
-            priority.
-        items:
-        -   $ref: elements/sourced_value.json
-        minItems: 1
-        title: List of abstracts
-        type: array
-        uniqueItems: true
-
-    authors:
-        description: |-
-            :MARC: ``100``, ``700``
-            Besides authors, also contains editors and supervisors (see
-            :ref:`hep.json#/properties/authors/items/properties/inspire_roles`).
-        items:
-            additionalProperties: false
-            properties:
-                affiliations:
-                    items:
-                        additionalProperties: false
-                        properties:
-                            curated_relation:
-                                type: boolean
-                            value:
-                                description: |-
-                                    :MARC: ``100/700__u``
-                                minLength: 1
-                                title: ICN of affiliation
-                                type: string
-                        required:
-                        - value
-                        type: object
-                    minItems: 1
-                    type: array
-                    uniqueItems: true
-                alternative_names:
-                    items:
-                        description: |-
-                            :MARC: ``100/700/701__q``
-                            :example: ``楼 立洋``
-                            :example: ``Smith, Joe John``
-                        minLength: 1
-                        type: string
-                    minItems: 1
-                    type: array
-                    uniqueItems: true
-                credit_roles:
-                    items:
-                        description: |-
-                            :MARC: not present.
-                            Role of the author according to the `Contributor
-                            Roles Taxonomy (CRediT)
-                            <http://dictionary.casrai.org/Contributor_Roles>`_
-                        enum:
-                        - Conceptualization
-                        - Data curation
-                        - Formal analysis
-                        - Funding acquisition
-                        - Investigation
-                        - Methodology
-                        - Project administration
-                        - Resources
-                        - Software
-                        - Supervision
-                        - Validation
-                        - Visualization
-                        - Writing - original draft
-                        - Writing - review & editing
-                        minLength: 1
-                        title: Credit role of author
-                        type: string
-                    minItems: 1
-                    type: array
-                    uniqueItems: true
-                curated_relation:
-                    default: false
-                    type: boolean
-                emails:
-                    description: |-
-                        :MARC: ``100/700/__m``
-                    items:
-                        format: email
-                        minLength: 1
-                        type: string
-                    minItems: 1
-                    type: array
-                    uniqueItems: true
-                full_name:
-                    description: |-
-                        :MARC: ``100/700/__a``
-                        Author name in Latin alphabet (may contain diacritics).
-                        Should be of the form 'family names, first names', and,
-                        except for a possible reordering, be exactly as on the
-                        paper.
-                        :example: ``Smith Davis, John F.K.``
-                    minLength: 1
-                    title: Author name
-                    type: string
-                ids:
-                    description: |-
-                        :MARC: ``100/700/701__i/j``
-                    items:
-                        $ref: elements/id.json
-                    minItems: 1
-                    title: Identifiers of the author
-                    type: array
-                    uniqueItems: true
-                roles:
-                    description: |-
-                        .. note: different from Inspire (Inspire_role)
-                    items:
-                        default: author
-                        description: |-
-                            ``supervisor``
-                                :MARC: ``700`` is used for supervisor metadata.
-                                This person is a thesis supervisor. Should be
-                                used together with the ``thesis``
-                                :ref:`hep.json#/properties/document_type`.
-                            ``editor``
-                                :MARC: ``100/700__e:ed.``
-                                This person is an editor of the conference
-                                proceedings. Should be used together with the
-                                ``proceedings``
-                                :ref:`hep.json#/properties/document_type`.
-                        enum:
-                        - author
-                        - editor
-                        - illustrator
-                        - supervisor
-                        minLength: 1
-                        type: string
-                    minItems: 1
-                    type: array
-                    uniqueItems: true
-                raw_affiliations:
-                    description: |-
-                        :MARC: ``100/700__v``
-                        List of full affiliations, as written on the paper.
-                    items:
-                        $ref: elements/sourced_value.json
-                    minItems: 1
-                    type: array
-                    uniqueItems: true
-            required:
-            - full_name
-            type: object
-        minItems: 1
-        title: Authors
-        type: array
-        uniqueItems: false
-
-    copyright:
-        description: |-
-            :MARC: ``542``
-        items:
-            additionalProperties: false
-            properties:
-                holder:
-                    description: |-
-                        :MARC: ``542__d``
-                        :example: ``American Physical Society``
-                    minLength: 1
-                    title: Copyright holder
-                    type: string
-                material:
-                    $ref: elements/material.json
-                    description: |-
-                        :MARC: ``542__3``
-                statement:
-                    description: |-
-                        :MARC: ``542__f``
-                        See `Wikipedia
-                        <https://en.wikipedia.org/wiki/Copyright_notice>`_ for
-                        explanations.
-                        Alernatively to this string, a URL to the copyright
-                        notice may be provided in :ref:`url`.
-                        :example: ``© The Author(s) 2015. Published by Oxford
-                            University Press on behalf of the Physical Society
-                            of Japan.``
-                    minLength: 1
-                    title: Copyright notice
-                    type: string
-                url:
-                    format: uri
-                    minLength: 1
-                    title: Copyright notice URL
-                    type: string
-                year:
-                    description: |-
-                        :MARC: ``542__g``
-                    maximum: 2050
-                    minimum: 1000
-                    type: integer
-            type: object
-        minItems: 1
-        title: List of copyrights to documents in this record
-        type: array
-        uniqueItems: true
-
-    external_system_identifiers:
-        description: |-
-            :MARC: ``035``
-            List of identifiers of this document on external systems.
-        items:
-            additionalProperties: false
-            properties:
-                schema:
-                    description: |-
-                        :MARC: ``035__9``
-                        Identifies the external system, and allows to interpret
-                        unambiguously the :ref:`value`.
-                        :example: ``ADS``
-                    enum:
-                    - ARXIV
-                    - DCL
-                    - DESY
-                    - DOE
-                    - EBL
-                    - FIZ
-                    - HAL
-                    - IEECONF
-                    - INDICO.CERN.CH
-                    - INIS
-                    - INSPIRE
-                    - INSPIRE-CNUM
-                    - KEK
-                    - LHCLHC
-                    - SAFARI
-                    - SCEM
-                    - UDCCERN
-                    - WAI01
-                    minLength: 1
-                    pattern: ^\w+$
-                    type: string
-                value:
-                    description: |-
-                        :MARC: ``035__a``
-                        Identifies the record in the external system specified
-                        by :ref:`schema`.
-                        :example: ``1999IJTP...38.1113M``
-                    minLength: 1
-                    pattern: ^\S+$
-                    title: External identifier
-                    type: string
-            required:
-            - schema
-            - value
-            type: object
-        minItems: 1
-        type: array
-        uniqueItems: true
-
-    keywords:
-        description: |-
-            :MARC: ```6531`` and ``695`` (corresponding to different
-                :ref:`keywords/items/properties/schema`)
-            Keywords give information about the specific contents of the
-            record, much more precisely than :ref:`inspire_categories`.
-        items:
-            additionalProperties: false
-            properties:
-                schema:
-                    description: |-
-                        Describes to which vocabulary the keyword in :ref:`value`
-                        belongs.
-                        ``INIS``
-                            :MARC: ``695__2:INIS``
-                            The keyword is part of the `International
-                            Nuclear Information System (INIS)
-                            <https://www.iaea.org/inis/>`_ vocabulary.
-                        ``INSPIRE``
-                            :MARC: ``695__2:INSPIRE``
-                            The keyword has been assigned by Inspire, and
-                            belongs to its vocabulary.
-                        ``JACOW``
-                            :MARC: ``6531_2:JACOW``
-                            The keyword is part of the `Joint Accelerator
-                            Conference Website (JACoW) vocabulary
-                            <http://jacow.org/Tools/Keywords>`_.
-                        ``PACS``
-                            :MARC: ``084__2:PACS``
-                            The keyword is a number from the `Physics and
-                            Astronomy Classification Scheme (PACS)
-                            <https://publishing.aip.org/publishing/pacs/pacs-2010-regular-edition>`_.
-                        ``PDG``
-                            :MARC: ``084__2:PDG``
-                            The keyword is a `PDG Indentifier
-                            <http://pdg.lbl.gov/2016/pdgid/PDGIdentifiers.html>`_.
-                        .. note::
-                            If not present, the keyword is a free-form keyword,
-                            not necessarily part of any vocabulary.
-                    enum:
-                    - INIS
-                    - INSPIRE
-                    - JACOW
-                    - PACS
-                    - PDG
-                    minLength: 1
-                    title: Keyword vocabulary
-                    type: string
-                source:
-                    $ref: elements/source.json
-                value:
-                    description: |-
-                        :MARC: ``084/6531/695__a`` (depending on :ref:`schema`)
-                        It belongs to the vocabulary specified by :ref:`schema`.
-                        :example: ``black hole: mass`` (for :ref:`schema` =
-                            ``INSPIRE``)
-                        :example: ``29.27.Fh`` (for :ref:`schema` = ``PACS``)
-                        :example: ``G033M`` (for :ref:`schema` = ``PDG``)
-                    minLength: 1
-                    title: A keyword
-                    type: string
-            required:
-            - value
-            type: object
-        minItems: 1
-        title: List of keywords
-        type: array
-        uniqueItems: true
-
-    languages:
-        description: |-
-            :MARC: ``041__a``
-        items:
-            $ref: elements/language_code.json
-        minItems: 1
-        title: List of languages of the document
-        type: array
-        uniqueItems: true
-
-    license:
-        description: |-
-            :MARC: ``540``
-        items:
-            additionalProperties: false
-            properties:
-                imposing:
-                    description: |-
-                        :MARC: ``540__b``
-                        :example: ``arXiv``
-                    minLength: 1
-                    title: Organization/person imposing the license
-                    type: string
-                license:
-                    description: |-
-                        :MARC: ``540__a``
-                        Either the short name of the license or the full
-                        license statement.
-                        :example: ``CC-BY-4.0``
-                    minLength: 1
-                    title: License statement
-                    type: string
-                material:
-                    $ref: elements/material.json
-                    description: |-
-                        :MARC: ``540__3``
-                url:
-                    description: |-
-                        :MARC: ``540__u``
-                        URL where the full license statement may be found, if
-                        only a short name is provided in ``license``.
-                    format: uri
-                    minLength: 1
-                    title: URL of the license
-                    type: string
-                funder:
-                    description: |-
-                        :MARC: ``540__f`` (Not Inspire)
-                        The institution who has funded the Open Access
-                        :example: ``CERN Library``
-                    minLength: 1
-                    title: Open Access funder
-                    type: string
-                admin_info:
-                    description: |-
-                        :MARC: ``540__g`` (Not Inspire)
-                        Administrative information
-                        :example: `DAI number``
-                    minLength: 1
-                    title: Administrative information
-                    type: string
-            type: object
-        minItems: 1
-        title: List of licenses
-        type: array
-        uniqueItems: true
-
-    public_notes:
-        description: |-
-            :MARC: ``500``
-            Any notes about the document that do not fit into another field.
-            For arXiv eprints, also contains the contents of the comment field
-            on arXiv.
-            .. note::
-                These notes are publicly visible. For notes not shown to
-                regular users, see :ref:`_private_notes`.
-        items:
-            $ref: elements/sourced_value.json
-        minItems: 1
-        title: List of public notes
-        type: array
-        uniqueItems: true
-
-    title_translations:
-        description: |-
-            :MARC: ``242``
-            Translations of the titles in a language that is not the language
-            of the document (see :ref:`languages`).
-            Usually, this is contains an English translation of the title of a
-            non-English paper, but sometimes a native language if the paper is
-            in English but the title has been translated.
-        items:
-            additionalProperties: false
-            properties:
-                language:
-                    $ref: elements/language_code.json
-                source:
-                    $ref: elements/source.json
-                subtitle:
-                    minLength: 1
-                    type: string
-                title:
-                    minLength: 1
-                    type: string
-            required:
-            - language
-            - title
-            type: object
-        minItems: 1
-        type: array
-        uniqueItems: true
-
-    titles:
-        description: |-
-            :MARC: ``245``
-            There can be several because the preprint title often differs from
-            the published version. The title should be kept as on the document
-            and in the same language as the document (see :ref:`languages`).
-            Translations go into :ref:`title_translations`.
-        items:
-            $ref: elements/title.json
-        minItems: 1
-        title: List of titles
-        type: array
-        uniqueItems: true
-
-    urls:
-        description: |-
-            :MARC: ``8564``
-            URLs to external resources related to this record.
-            .. note::
-                Links to internal CDS resources are found in another element.
-        items:
-            $ref: elements/url.json
-        minItems: 1
-        type: array
-        uniqueItems: true
-
-    table_of_content:
-        description: |-
-            :MARC: ``505`` whatever is the indicator
-            List of chapters
-            .. note::
-                Does not exist in Inspire
-        items:
-            additionalProperties: false
-            properties:
-                value:
-                    minLength: 1
-                    type: string
-        minItems: 1
-        type: array
-        uniqueItems: true
-
-    record_affiliations:
-        description: |-
-            :MARC: ``901``
-            Because of technical limitations, for some older records the
-            affiliations were associated globally to the record instead of its
-            individual authors (using the
-            :ref:`authors/items/properties/affiliations` field).
-            .. note::
-                This field is present for legacy records and should not be used
-                for new records.
-        items:
-            additionalProperties: false
-            properties:
-                curated_relation:
-                    type: boolean
-                record:
-                    $ref: elements/json_reference.json
-                value:
-                    description: |-
-                        :MARC: ``901__a``
-                        Currently, the old
-                        :ref:`institutions.json#/properties/legacy_ICN`
-                        is used here. In the future, this will
-                        change and become the new
-                        :ref:`institutions.json#/properties/ICN`.
-                    minLength: 1
-                    title: ICN of affiliation
-                    type: string
-            required:
-            - value
-            type: object
-        minItems: 1
-        title: Affiliations not associated to authors
-        type: array
-        uniqueItems: true
-
-    imprints:
-        items:
-            additionalProperties: false
+          minItems: 1
+          type: array
+          uniqueItems: true
+        credit_roles:
+          items:
             description: |-
-                :MARC: ``260``
-                When/where/by whom this record was published.
-                + reprint information (does not exist in Inspire)
-            properties:
-                date:
-                    description: |-
-                        :MARC: ``260__c``
-                    format: date
-                    minLength: 1
-                    title: Date of publication
-                    type: string
-                place:
-                    description: |-
-                        :MARC: ``260__a``
-                        :example: ``Paris``
-                    minLength: 1
-                    title: Place of publication
-                    type: string
-                publisher:
-                    description: |-
-                        :MARC: ``260__b``
-                        :example: ``Springer``
-                    minLength: 1
-                    type: string
-                reprint:
-                    description: |-
-                        :MARC: ``260__g``
-                        .. note: does not exist in Inspire
-                    format: date
-                    minLength: 1
-                    title: Date of reprint
-                    type: string
-            type: object
-        minItems: 1
-        title: List of imprints
-        type: array
-        uniqueItems: true
-
+              :MARC: not present.
+              Role of the author according to the `Contributor
+              Roles Taxonomy (CRediT)
+              <http://dictionary.casrai.org/Contributor_Roles>`_
+            enum:
+              - Conceptualization
+              - Data curation
+              - Formal analysis
+              - Funding acquisition
+              - Investigation
+              - Methodology
+              - Project administration
+              - Resources
+              - Software
+              - Supervision
+              - Validation
+              - Visualization
+              - Writing - original draft
+              - Writing - review & editing
+            minLength: 1
+            title: Credit role of author
+            type: string
+          minItems: 1
+          type: array
+          uniqueItems: true
+        curated_relation:
+          default: false
+          type: boolean
+        emails:
+          description: ':MARC: ``100/700/__m``'
+          items:
+            format: email
+            minLength: 1
+            type: string
+          minItems: 1
+          type: array
+          uniqueItems: true
+        full_name:
+          description: |-
+            :MARC: ``100/700/__a``
+            Author name in Latin alphabet (may contain diacritics).
+            Should be of the form 'family names, first names', and,
+            except for a possible reordering, be exactly as on the
+            paper.
+            :example: ``Smith Davis, John F.K.``
+          minLength: 1
+          title: Author name
+          type: string
+        ids:
+          description: ':MARC: ``100/700/701__i/j``'
+          items:
+            $ref: elements/id.json
+          minItems: 1
+          title: Identifiers of the author
+          type: array
+          uniqueItems: true
+        raw_affiliations:
+          description: |-
+            :MARC: ``100/700__v``
+            List of full affiliations, as written on the paper.
+          items:
+            $ref: elements/sourced_value.json
+          minItems: 1
+          type: array
+          uniqueItems: true
+        roles:
+          description: '.. note: different from Inspire (Inspire_role)'
+          items:
+            default: author
+            description: |-
+              ``supervisor``
+                  :MARC: ``700`` is used for supervisor metadata.
+                  This person is a thesis supervisor. Should be
+                  used together with the ``thesis``
+                  :ref:`hep.json#/properties/document_type`.
+              ``editor``
+                  :MARC: ``100/700__e:ed.``
+                  This person is an editor of the conference
+                  proceedings. Should be used together with the
+                  ``proceedings``
+                  :ref:`hep.json#/properties/document_type`.
+            enum:
+              - author
+              - editor
+              - illustrator
+              - supervisor
+            minLength: 1
+            type: string
+          minItems: 1
+          type: array
+          uniqueItems: true
+      required:
+        - full_name
+      type: object
+    minItems: 1
+    title: Authors
+    type: array
+    uniqueItems: false
+  control_number:
+    description: |-
+      :MARC: ``001``
+      Read-only field.
+    title: ID of current record
+    type: integer
+  copyright:
+    description: ':MARC: ``542``'
+    items:
+      additionalProperties: false
+      properties:
+        holder:
+          description: |-
+            :MARC: ``542__d``
+            :example: ``American Physical Society``
+          minLength: 1
+          title: Copyright holder
+          type: string
+        material:
+          $ref: elements/material.json
+          description: ':MARC: ``542__3``'
+        statement:
+          description: |-
+            :MARC: ``542__f``
+            See `Wikipedia
+            <https://en.wikipedia.org/wiki/Copyright_notice>`_ for
+            explanations.
+            Alernatively to this string, a URL to the copyright
+            notice may be provided in :ref:`url`.
+            :example: ``© The Author(s) 2015. Published by Oxford
+                University Press on behalf of the Physical Society
+                of Japan.``
+          minLength: 1
+          title: Copyright notice
+          type: string
+        url:
+          format: uri
+          minLength: 1
+          title: Copyright notice URL
+          type: string
+        year:
+          description: ':MARC: ``542__g``'
+          maximum: 2050
+          minimum: 1000
+          type: integer
+      type: object
+    minItems: 1
+    title: List of copyrights to documents in this record
+    type: array
+    uniqueItems: true
+  document_types:
+    description: |-
+      :MARC: ``980__a`` ``690C_a`` ``960__a``
+      Types of document this record represents.
+      .. note::
+        As a record aggregates information from multiple sources, it
+        can have multiple document types simultaneously. (?)
+    items:
+      $ref: elements/document_type.json
+    minItems: 1
+    title: Document types
+    type: array
+    uniqueItems: true
+  dois:
+    description: '.. Note: This element can be found at the holding level or at the bibliographic record level.'
+    items:
+      additionalProperties: false
+      properties:
+        material:
+          $ref: elements/material.json
+          description: ':MARC: ``0247_q``'
+        source:
+          $ref: elements/source.json
+          description: ':MARC: ``0247_9``'
+        value:
+          description: |-
+            :MARC: ``0247_a``
+            :example: ``10.1023/A:1026654312961``
+          minLength: 1
+          pattern: ^10\.\d+(\.\d+)?/\S+$
+          title: DOI
+          type: string
+      required:
+        - value
+      type: object
+    minItems: 1
+    title: List of DOIs
+    type: array
+    uniqueItems: true
+  external_system_identifiers:
+    description: |-
+      :MARC: ``035``
+      List of identifiers of this document on external systems.
+    items:
+      additionalProperties: false
+      properties:
+        schema:
+          description: |-
+            :MARC: ``035__9``
+            Identifies the external system, and allows to interpret
+            unambiguously the :ref:`value`.
+            :example: ``ADS``
+          enum:
+            - ARXIV
+            - DCL
+            - DESY
+            - DOE
+            - EBL
+            - FIZ
+            - HAL
+            - IEECONF
+            - INDICO.CERN.CH
+            - INIS
+            - INSPIRE
+            - INSPIRE-CNUM
+            - KEK
+            - LHCLHC
+            - SAFARI
+            - SCEM
+            - UDCCERN
+            - WAI01
+          minLength: 1
+          pattern: ^\w+$
+          type: string
+        value:
+          description: |-
+            :MARC: ``035__a``
+            Identifies the record in the external system specified
+            by :ref:`schema`.
+            :example: ``1999IJTP...38.1113M``
+          minLength: 1
+          pattern: ^\S+$
+          title: External identifier
+          type: string
+      required:
+        - schema
+        - value
+      type: object
+    minItems: 1
+    type: array
+    uniqueItems: true
+  imprints:
+    items:
+      additionalProperties: false
+      description: |-
+        :MARC: ``260``
+        When/where/by whom this record was published.
+        + reprint information (does not exist in Inspire)
+      properties:
+        date:
+          description: ':MARC: ``260__c``'
+          format: date
+          minLength: 1
+          title: Date of publication
+          type: string
+        place:
+          description: |-
+            :MARC: ``260__a``
+            :example: ``Paris``
+          minLength: 1
+          title: Place of publication
+          type: string
+        publisher:
+          description: |-
+            :MARC: ``260__b``
+            :example: ``Springer``
+          minLength: 1
+          type: string
+        reprint:
+          description: |-
+            :MARC: ``260__g``
+            .. note: does not exist in Inspire
+          format: date
+          minLength: 1
+          title: Date of reprint
+          type: string
+      type: object
+    minItems: 1
+    title: List of imprints
+    type: array
+    uniqueItems: true
+  keywords:
+    description: |-
+      :MARC: ```6531`` and ``695`` (corresponding to different
+          :ref:`keywords/items/properties/schema`)
+      Keywords give information about the specific contents of the
+      record, much more precisely than :ref:`inspire_categories`.
+    items:
+      additionalProperties: false
+      properties:
+        schema:
+          description: |-
+            Describes to which vocabulary the keyword in :ref:`value`
+            belongs.
+            ``INIS``
+                :MARC: ``695__2:INIS``
+                The keyword is part of the `International
+                Nuclear Information System (INIS)
+                <https://www.iaea.org/inis/>`_ vocabulary.
+            ``INSPIRE``
+                :MARC: ``695__2:INSPIRE``
+                The keyword has been assigned by Inspire, and
+                belongs to its vocabulary.
+            ``JACOW``
+                :MARC: ``6531_2:JACOW``
+                The keyword is part of the `Joint Accelerator
+                Conference Website (JACoW) vocabulary
+                <http://jacow.org/Tools/Keywords>`_.
+            ``PACS``
+                :MARC: ``084__2:PACS``
+                The keyword is a number from the `Physics and
+                Astronomy Classification Scheme (PACS)
+                <https://publishing.aip.org/publishing/pacs/pacs-2010-regular-edition>`_.
+            ``PDG``
+                :MARC: ``084__2:PDG``
+                The keyword is a `PDG Indentifier
+                <http://pdg.lbl.gov/2016/pdgid/PDGIdentifiers.html>`_.
+            .. note::
+                If not present, the keyword is a free-form keyword,
+                not necessarily part of any vocabulary.
+          enum:
+            - INIS
+            - INSPIRE
+            - JACOW
+            - PACS
+            - PDG
+          minLength: 1
+          title: Keyword vocabulary
+          type: string
+        source:
+          $ref: elements/source.json
+        value:
+          description: |-
+            :MARC: ``084/6531/695__a`` (depending on :ref:`schema`)
+            It belongs to the vocabulary specified by :ref:`schema`.
+            :example: ``black hole: mass`` (for :ref:`schema` =
+                ``INSPIRE``)
+            :example: ``29.27.Fh`` (for :ref:`schema` = ``PACS``)
+            :example: ``G033M`` (for :ref:`schema` = ``PDG``)
+          minLength: 1
+          title: A keyword
+          type: string
+      required:
+        - value
+      type: object
+    minItems: 1
+    title: List of keywords
+    type: array
+    uniqueItems: true
+  languages:
+    description: ':MARC: ``041__a``'
+    items:
+      $ref: elements/language_code.json
+    minItems: 1
+    title: List of languages of the document
+    type: array
+    uniqueItems: true
+  license:
+    description: ':MARC: ``540``'
+    items:
+      additionalProperties: false
+      properties:
+        admin_info:
+          description: |-
+            :MARC: ``540__g`` (Not Inspire)
+            Administrative information
+            :example: `DAI number``
+          minLength: 1
+          title: Administrative information
+          type: string
+        funder:
+          description: |-
+            :MARC: ``540__f`` (Not Inspire)
+            The institution who has funded the Open Access
+            :example: ``CERN Library``
+          minLength: 1
+          title: Open Access funder
+          type: string
+        imposing:
+          description: |-
+            :MARC: ``540__b``
+            :example: ``arXiv``
+          minLength: 1
+          title: Organization/person imposing the license
+          type: string
+        license:
+          description: |-
+            :MARC: ``540__a``
+            Either the short name of the license or the full
+            license statement.
+            :example: ``CC-BY-4.0``
+          minLength: 1
+          title: License statement
+          type: string
+        material:
+          $ref: elements/material.json
+          description: ':MARC: ``540__3``'
+        url:
+          description: |-
+            :MARC: ``540__u``
+            URL where the full license statement may be found, if
+            only a short name is provided in ``license``.
+          format: uri
+          minLength: 1
+          title: URL of the license
+          type: string
+      type: object
+    minItems: 1
+    title: List of licenses
+    type: array
+    uniqueItems: true
+  public_notes:
+    description: |-
+      :MARC: ``500``
+      Any notes about the document that do not fit into another field.
+      For arXiv eprints, also contains the contents of the comment field
+      on arXiv.
+      .. note::
+          These notes are publicly visible. For notes not shown to
+          regular users, see :ref:`_private_notes`.
+    items:
+      $ref: elements/sourced_value.json
+    minItems: 1
+    title: List of public notes
+    type: array
+    uniqueItems: true
+  recid:
+    description: Invenio record identifier (integer).
+    type: number
+  record_affiliations:
+    description: |-
+      :MARC: ``901``
+      Because of technical limitations, for some older records the
+      affiliations were associated globally to the record instead of its
+      individual authors (using the
+      :ref:`authors/items/properties/affiliations` field).
+      .. note::
+          This field is present for legacy records and should not be used
+          for new records.
+    items:
+      additionalProperties: false
+      properties:
+        curated_relation:
+          type: boolean
+        record:
+          $ref: elements/json_reference.json
+        value:
+          description: |-
+            :MARC: ``901__a``
+            Currently, the old
+            :ref:`institutions.json#/properties/legacy_ICN`
+            is used here. In the future, this will
+            change and become the new
+            :ref:`institutions.json#/properties/ICN`.
+          minLength: 1
+          title: ICN of affiliation
+          type: string
+      required:
+        - value
+      type: object
+    minItems: 1
+    title: Affiliations not associated to authors
+    type: array
+    uniqueItems: true
+  related_records:
+    $ref: elements/related_record.json
+    description: ':MARC: ``787`` ``775``'
+    minItems: 1
+    title: List of related records
+    type: array
+    uniqueItems: true
+  report_numbers:
+    description: |-
+      :MARC: ``037`` ``088``
+      :example: ``DESY-17-036``
+    items:
+      additionalProperties: false
+      properties:
+        hidden:
+          description: |-
+            :MARC: if ``true``, the :ref:`value` is in ``037__z``,``088__9``
+                instead of ``037__a````088__9``
+            Whether this report number should be hidden from the
+            display. This is appropriate for
+            * a report number that appears on the document but is
+              not the one officially assigned;
+            * a report number that has been assigned by one of the
+              authors institutions, but is not displayed on the
+              document (typically for large collaborations).
+          type: boolean
+        source:
+          $ref: elements/source.json
+        value:
+          minLength: 1
+          type: string
+      required:
+        - value
+      type: object
+    minItems: 1
+    title: List of report numbers assigned to the record
+    type: array
+    uniqueItems: true
+  table_of_content:
+    description: |-
+      :MARC: ``505`` whatever is the indicator
+      List of chapters
+      .. note::
+          Does not exist in Inspire
+    items:
+      additionalProperties: false
+      properties:
+        value:
+          minLength: 1
+          type: string
+    minItems: 1
+    type: array
+    uniqueItems: true
+  title_translations:
+    description: |-
+      :MARC: ``242``
+      Translations of the titles in a language that is not the language
+      of the document (see :ref:`languages`).
+      Usually, this is contains an English translation of the title of a
+      non-English paper, but sometimes a native language if the paper is
+      in English but the title has been translated.
+    items:
+      additionalProperties: false
+      properties:
+        language:
+          $ref: elements/language_code.json
+        source:
+          $ref: elements/source.json
+        subtitle:
+          minLength: 1
+          type: string
+        title:
+          minLength: 1
+          type: string
+      required:
+        - language
+        - title
+      type: object
+    minItems: 1
+    type: array
+    uniqueItems: true
+  titles:
+    description: |-
+      :MARC: ``245``
+      There can be several because the preprint title often differs from
+      the published version. The title should be kept as on the document
+      and in the same language as the document (see :ref:`languages`).
+      Translations go into :ref:`title_translations`.
+    items:
+      $ref: elements/title.json
+    minItems: 1
+    title: List of titles
+    type: array
+    uniqueItems: true
+  urls:
+    description: |-
+      :MARC: ``8564``
+      URLs to external resources related to this record.
+      .. note::
+          Links to internal CDS resources are found in another element.
+    items:
+      $ref: elements/url.json
+    minItems: 1
+    type: array
+    uniqueItems: true
 required:
-    - document_type
-    - recid
-    - titles
+  - document_type
+  - recid
+  - titles
+title: CDS Base Record Schema v1.0.0
+type: object

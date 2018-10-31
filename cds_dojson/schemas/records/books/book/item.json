@@ -1,166 +1,172 @@
 {
-  ".. note:": "This model does not exist in Inspire, since it is used to manage the holdings (paper and electronic) held by the Library", 
-  "description": "JSON data model for the holdings of the books, proceedings, standards, theses and reports in CDS.", 
-  "title": "A record in the Literature collection", 
-  "required": [
-    "medium"
-  ], 
-  "additionalProperties": false, 
-  "$schema": "http://json-schema.org/schema#", 
-  "type": "object", 
+  "$schema": "http://json-schema.org/schema#",
+  ".. note:": "This model does not exist in Inspire, since it is used to manage the holdings (paper and electronic) held by the Library",
+  "additionalProperties": false,
+  "description": "JSON data model for the holdings of the books, proceedings, standards, theses and reports in CDS.",
   "properties": {
-    "number_of_pages": {
-      "minimum": 1, 
-      "type": "integer", 
-      "description": ":MARC: ``300``", 
-      "title": "Number of pages of the document"
-    }, 
+    "$schema": {
+      "format": "uri",
+      "minLength": 1,
+      "type": "string"
+    },
+    "_private_notes": {
+      "description": ":MARC: No Marc",
+      "minLength": 1,
+      "title": "Private Note",
+      "type": "string"
+    },
+    "barcode": {
+      "description": ":MARC: No Marc - BibCirculation field ``barcode``",
+      "minLength": 1,
+      "title": "Holding description",
+      "type": "string"
+    },
     "description": {
-      "minLength": 1, 
-      "type": "string", 
-      "description": ":MARC: In BibCirculation field ``description`` or for electronic holding: 0247__q or ``8564_y``", 
-      "title": "Holding description"
-    }, 
-    "persistent_identifiers": {
-      "uniqueItems": true, 
-      "description": ":MARC: ``0247``", 
-      "title": "List of persistent identifiers", 
-      "minItems": 1, 
+      "description": ":MARC: In BibCirculation field ``description`` or for electronic holding: 0247__q or ``8564_y``",
+      "minLength": 1,
+      "title": "Holding description",
+      "type": "string"
+    },
+    "dois": {
       "items": {
-        "additionalProperties": false, 
-        "required": [
-          "schema", 
-          "value"
-        ], 
-        "type": "object", 
+        "additionalProperties": false,
         "properties": {
+          "material": {
+            "$ref": "elements/material.json",
+            "description": ":MARC: ``0247_q``"
+          },
           "source": {
-            "$ref": "elements/source.json"
-          }, 
+            "$ref": "elements/source.json",
+            "description": ":MARC: ``0247_9``"
+          },
+          "value": {
+            "description": ":MARC: ``0247_a``\n:example: ``10.1023/A:1026654312961``",
+            "minLength": 1,
+            "pattern": "^10\\.\\d+(\\.\\d+)?/\\S+$",
+            "title": "DOI",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "title": "List of DOIs",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "library": {
+      "description": ":MARC: No Marc - BibCirculation field ``library``\n.. Note:: list should come from the list of Libraries registered in the system.",
+      "items": {
+        "enum": [
+          "C",
+          "DE1",
+          "DE2",
+          "DE3",
+          "DE4",
+          "LSL"
+        ],
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Holding library",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "location": {
+      "description": ":MARC: No Marc - BibCirculation field ``location``",
+      "minLength": 1,
+      "title": "Holding shelf number",
+      "type": "string"
+    },
+    "medium": {
+      "description": ":MARC: ``340``",
+      "items": {
+        "enum": [
+          "print",
+          "online",
+          "CD-ROM"
+        ],
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Holding medium",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "number_of_pages": {
+      "description": ":MARC: ``300``",
+      "minimum": 1,
+      "title": "Number of pages of the document",
+      "type": "integer"
+    },
+    "persistent_identifiers": {
+      "description": ":MARC: ``0247``",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
           "material": {
             "$ref": "elements/material.json"
-          }, 
-          "value": {
-            "pattern": "^\\S+$", 
-            "minLength": 1, 
-            "type": "string", 
-            "description": ":MARC: ``0247_a``\nThis value gets interpreted as an identfier of the type\nspecified by :ref:`schema`.\n:example: ``10138/168995`` (when :ref:`schema` = ``HDL``)\n:example: ``urn:nbn:de:hebis:77-diss-1000009520`` (when\n    :ref:`schema` = ``URN``)", 
-            "title": "Persistent identifier"
-          }, 
+          },
           "schema": {
-            "minLength": 1, 
+            "description": ":MARC: ``0247_2``\nCurrently, the following identifiers are recognized:\n* `HDL <http://handle.net>`_\n* `URN\n  <https://en.wikipedia.org/wiki/Uniform_Resource_Name>`_\n.. note::\n    DOIs should be put into :ref:`hep.json#/properties/dois`, not here.\n    Although ISBNs can also be mapped to a URN (by\n    prepending ``urn:isbn:`` to the ISBN), they should\n    be put in the :ref:`hep.json#/properties/isbns` field instead.",
             "enum": [
-              "HDL", 
+              "HDL",
               "URN"
-            ], 
-            "type": "string", 
-            "description": ":MARC: ``0247_2``\nCurrently, the following identifiers are recognized:\n* `HDL <http://handle.net>`_\n* `URN\n  <https://en.wikipedia.org/wiki/Uniform_Resource_Name>`_\n.. note::\n    DOIs should be put into :ref:`hep.json#/properties/dois`, not here.\n    Although ISBNs can also be mapped to a URN (by\n    prepending ``urn:isbn:`` to the ISBN), they should\n    be put in the :ref:`hep.json#/properties/isbns` field instead.", 
-            "title": "Type of identifier"
+            ],
+            "minLength": 1,
+            "title": "Type of identifier",
+            "type": "string"
+          },
+          "source": {
+            "$ref": "elements/source.json"
+          },
+          "value": {
+            "description": ":MARC: ``0247_a``\nThis value gets interpreted as an identfier of the type\nspecified by :ref:`schema`.\n:example: ``10138/168995`` (when :ref:`schema` = ``HDL``)\n:example: ``urn:nbn:de:hebis:77-diss-1000009520`` (when\n    :ref:`schema` = ``URN``)",
+            "minLength": 1,
+            "pattern": "^\\S+$",
+            "title": "Persistent identifier",
+            "type": "string"
           }
-        }
-      }, 
-      "type": "array"
-    }, 
-    "barcode": {
-      "minLength": 1, 
-      "type": "string", 
-      "description": ":MARC: No Marc - BibCirculation field ``location``", 
-      "title": "Holding shelf number"
-    }, 
-    "library": {
-      "uniqueItems": true, 
-      "description": ":MARC: No Marc - BibCirculation field ``library``\n.. Note:: list should come from the list of Libraries registered in the system.     ", 
-      "title": "Holding library", 
-      "minItems": 1, 
-      "items": {
-        "minLength": 1, 
-        "enum": [
-          "C", 
-          "DE1", 
-          "DE2", 
-          "DE3", 
-          "DE4", 
-          "LSL"
-        ], 
-        "type": "string"
-      }, 
-      "type": "array"
-    }, 
-    "visible": {
-      "type": "boolean", 
-      "description": ":MARC: Does not exist in MARC\nUsed to hide records that should not be made visible in the collection. "
-    }, 
-    "medium": {
-      "uniqueItems": true, 
-      "description": ":MARC: ``340``", 
-      "title": "Holding medium", 
-      "minItems": 1, 
-      "items": {
-        "minLength": 1, 
-        "enum": [
-          "print", 
-          "online", 
-          "CD-ROM"
-        ], 
-        "type": "string"
-      }, 
-      "type": "array"
-    }, 
-    "_private_notes": {
-      "minLength": 1, 
-      "type": "string", 
-      "description": ":MARC: No Marc ", 
-      "title": "Private Note"
-    }, 
+        },
+        "required": [
+          "schema",
+          "value"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "title": "List of persistent identifiers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "public_note": {
+      "description": ":MARC: No Marc",
+      "minLength": 1,
+      "title": "Public Note",
+      "type": "string"
+    },
     "urls": {
-      "minItems": 1, 
+      "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.",
       "items": {
         "$ref": "elements/url.json"
-      }, 
-      "uniqueItems": true, 
-      "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element. ", 
-      "type": "array"
-    }, 
-    "dois": {
-      "minItems": 1, 
-      "items": {
-        "additionalProperties": false, 
-        "required": [
-          "value"
-        ], 
-        "type": "object", 
-        "properties": {
-          "source": {
-            "description": ":MARC: ``0247_9``", 
-            "$ref": "elements/source.json"
-          }, 
-          "material": {
-            "description": ":MARC: ``0247_q``", 
-            "$ref": "elements/material.json"
-          }, 
-          "value": {
-            "pattern": "^10\\.\\d+(\\.\\d+)?/\\S+$", 
-            "minLength": 1, 
-            "type": "string", 
-            "description": ":MARC: ``0247_a``\n:example: ``10.1023/A:1026654312961``", 
-            "title": "DOI"
-          }
-        }
-      }, 
-      "title": "List of DOIs", 
-      "uniqueItems": true, 
-      "type": "array"
-    }, 
-    "public_note": {
-      "minLength": 1, 
-      "type": "string", 
-      "description": ":MARC: No Marc ", 
-      "title": "Public Note"
-    }, 
-    "$schema": {
-      "minLength": 1, 
-      "type": "string", 
-      "format": "uri"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "visible": {
+      "description": ":MARC: Does not exist in MARC\nUsed to hide records that should not be made visible in the collection.",
+      "type": "boolean"
     }
-  }
+  },
+  "required": [
+    "medium"
+  ],
+  "title": "A record in the Literature collection",
+  "type": "object"
 }

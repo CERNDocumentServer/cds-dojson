@@ -17,33 +17,36 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
+root = true
 
-# Generate this manifest file by running the following commands:
-#
-#  git init
-#  git add -A
-#  pip install -e .[all]
-#  check-manifest -u
+[*]
+indent_style = space
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
 
-include *.rst
-include *.sh
-include *.txt
-include *.yml
-include .coveragerc
-include .dockerignore
-include .editorconfig
-include .travis.yml
-include Dockerfile
-include LICENSE
-include pytest.ini
-include tox.ini
-recursive-include cds_dojson *.json
-recursive-include cds_dojson *.py
-recursive-include cds_dojson *.yml
-recursive-include docs *.py
-recursive-include docs *.rst
-recursive-include docs Makefile
-recursive-include tests *.py
-recursive-include tests *.xml
-recursive-include tests *.json
-recursive-include tests *.yml
+# Python files
+[*.py]
+indent_size = 4
+# isort plugin configuration
+known_first_party = cds_dojson
+multi_line_output = 2
+default_section = THIRDPARTY
+skip = .eggs
+
+# RST files (used by sphinx)
+[*.rst]
+indent_size = 4
+
+# CSS, HTML, JS, JSON, YML
+[*.{css,html,js,json,yml}]
+indent_size = 2
+
+# Matches the exact files either package.json or .travis.yml
+[{package.json,.travis.yml}]
+indent_size = 2
+
+# Dockerfile
+[Dockerfile]
+indent_size = 4

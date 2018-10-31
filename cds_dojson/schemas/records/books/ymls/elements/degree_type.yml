@@ -1,15 +1,15 @@
 description: |-
-    :MARC: ``502__b``
-    The `other` value means that the degree type is not known or is not among
-    the more specific values.
+  :MARC: ``502__b``
+  The `other` value means that the degree type is not known or is not among
+  the more specific values.
 enum:
-    - other
-    - diploma
-    - bachelor
-    - laurea
-    - master
-    - phd
-    - habilitation
+  - bachelor
+  - diploma
+  - habilitation
+  - laurea
+  - master
+  - other
+  - phd
 minLength: 1
 title: Academic degree type
 type: string

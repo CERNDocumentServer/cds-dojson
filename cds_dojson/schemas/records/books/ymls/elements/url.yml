@@ -1,19 +1,16 @@
 additionalProperties: false
-description: |-
-    :MARC: ``8564``
+description: ':MARC: ``8564``'
 properties:
-    description:
-        description: |-
-            :MARC: ``8654__y``
-        minLength: 1
-        type: string
-    value:
-        description: |-
-            :MARC: ``8564_u``
-        format: uri
-        minLength: 1
-        type: string
+  description:
+    description: ':MARC: ``8654__y``'
+    minLength: 1
+    type: string
+  value:
+    description: ':MARC: ``8564_u``'
+    format: uri
+    minLength: 1
+    type: string
 required:
-    - value
+  - value
 title: URL of related document
 type: object

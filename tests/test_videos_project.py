@@ -214,7 +214,7 @@ def test_fields(app):
                     },
                     {'name': 'test2', 'role': 'Credits'},
                     {
-                        'affiliations': (u'CERN',),
+                        #  'affiliations': (u'CERN',),
                         'email': u'christoph.martin.madsen@cern.ch',
                         'ids': [{'source': 'CERN', 'value': u'755568'},
                                 {'source': 'CDS', 'value': u'2090563'}],

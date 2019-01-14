@@ -202,24 +202,30 @@ def test_required_fields(app):
             'contributors': [
                 {'name': 'CERN Video Productions', 'role': 'Producer'},
                 {'name': 'CERN Video Productions', 'role': 'Director'},
-                {'affiliations': (u'CERN',),
-                 'email': u'christoph.martin.madsen@cern.ch',
-                 'ids': [{'source': 'CERN', 'value': u'755568'},
-                         {'source': 'CDS', 'value': u'2090563'}],
-                 'name': 'Madsen, Christoph Martin',
-                 'role': 'Director'},
-                {'affiliations': (u'CERN',),
-                 'email': u'Paola.Catapano@cern.ch',
-                 'ids': [{'source': 'CERN', 'value': u'380837'},
-                         {'source': 'CDS', 'value': u'2050975'}],
-                 'name': 'Catapano, Paola',
-                 'role': 'Director'},
-                {'affiliations': (u'CERN',),
-                 'email': u'christoph.martin.madsen@cern.ch',
-                 'ids': [{'source': 'CERN', 'value': u'755568'},
-                         {'source': 'CDS', 'value': u'2090563'}],
-                 'name': 'Madsen, Christoph Martin',
-                 'role': 'Editor'}],
+                {
+                    #  'affiliations': (u'CERN',),#01.01.2019 no longer at CERN
+                    'email': u'christoph.martin.madsen@cern.ch',
+                    'ids': [{'source': 'CERN', 'value': u'755568'},
+                            {'source': 'CDS', 'value': u'2090563'}],
+                    'name': 'Madsen, Christoph Martin',
+                    'role': 'Director'
+                },
+                {
+                    'affiliations': (u'CERN',),
+                    'email': u'Paola.Catapano@cern.ch',
+                    'ids': [{'source': 'CERN', 'value': u'380837'},
+                            {'source': 'CDS', 'value': u'2050975'}],
+                    'name': 'Catapano, Paola',
+                    'role': 'Director'
+                },
+                {
+                    #  'affiliations': (u'CERN',),
+                    'email': u'christoph.martin.madsen@cern.ch',
+                    'ids': [{'source': 'CERN', 'value': u'755568'},
+                            {'source': 'CDS', 'value': u'2090563'}],
+                    'name': 'Madsen, Christoph Martin',
+                    'role': 'Editor'
+                }],
             'copyright': {'holder': 'CERN', 'year': '2017'},
             'date': '2017-07-04',
             'description': ('Where were you on 4 July 2012, the day in which '
@@ -584,7 +590,7 @@ def test_fields(app):
                     },
                     {'name': 'test2', 'role': 'Credits'},
                     {
-                        'affiliations': (u'CERN',),
+                        #  'affiliations': (u'CERN',),
                         'email': u'christoph.martin.madsen@cern.ch',
                         'ids': [{'source': 'CERN', 'value': u'755568'},
                                 {'source': 'CDS', 'value': u'2090563'}],

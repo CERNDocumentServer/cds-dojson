@@ -440,27 +440,38 @@ def test_authors(app):
                 'authors': [
                     {
                         'full_name': 'Frampton, Paul H',
-                        'role': 'editor',
+                        'role': 'Editor',
                         'alternative_names': 'Neubert, Matthias'
                     },
                     {
                         'full_name': 'Glashow, Sheldon Lee',
-                        'role': 'editor'
+                        'role': 'Editor'
                     },
                     {
                         'full_name': 'Van Dam, Hendrik',
-                        'role': 'editor'
+                        'role': 'Editor'
                     },
                     {
                         'full_name': 'Seyfert, Paul',
+                        'role': 'Author',
                         'affiliations': ['CERN'],
+                        'ids': [
+                            {'schema': 'INSPIRE ID',
+                             'value': 'INSPIRE-00341737'},
+                            {'schema': 'CERN',
+                             'value': '692828'},
+                            {'schema': 'CDS',
+                             'value': '2079441'}
+                        ]
                     },
                     {
                         'full_name': 'John Doe',
+                        'role': 'Author',
                         'affiliations': ['CERN', 'Univ. Gent'],
                     },
                     {
                         'full_name': 'Jane Doe',
+                        'role': 'Author',
                         'affiliations': ['CERN', 'Univ. Gent'],
                     }
                 ],
@@ -1055,12 +1066,23 @@ def test_external_system_identifiers(app):
                 <subfield code="a">9402409580</subfield>
                 <subfield code="9">DLC</subfield>
             </datafield>
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">EBL</subfield>
+                <subfield code="a">5231528</subfield>
+            </datafield>
             """, {
-                'external_system_identifiers': [{
-                    'value': '9402409580',
-                    'schema': 'DLC'
-                }],
+                'external_system_identifiers': [
+                    {
+                        'value': '9402409580',
+                        'schema': 'ASIN',
+                    },
+                    {
+                        'value': '5231528',
+                        'schema': 'EBL',
+                    }
+                ]
             })
+
         check_transformation(
             """
             <datafield tag="024" ind1="7" ind2=" ">
@@ -1083,24 +1105,21 @@ def test_external_system_identifiers(app):
                     {'value': '10.1103/PhysRevLett.121.052004'},
                     {'value': '10.1103/PhysRevLett.121.052004',
                      'material': 'publication',
-                     'source': 'arXiv',
-                     }
+                     'source': 'arXiv'}
                 ],
             })
-        with pytest.raises(UnexpectedValue):
-            check_transformation(
-                """
-                <datafield tag="024" ind1="7" ind2=" ">
-                    <subfield code="2">ASINss</subfield>
-                    <subfield code="a">9402409580</subfield>
-                    <subfield code="9">DLC</subfield>
-                </datafield>
-                """, {
-                    'external_system_identifiers': [{
-                        'value': '9402409580',
-                        'schema': 'DLC'
-                    }],
-                })
+        check_transformation(
+            """
+            <datafield tag="024" ind1="7" ind2=" ">
+                <subfield code="2">ASIN</subfield>
+                <subfield code="a">9402409580</subfield>
+            </datafield>
+            """, {
+                'external_system_identifiers': [{
+                    'value': '9402409580',
+                    'schema': 'ASIN'
+                }],
+            })
         check_transformation(
             """
             <datafield tag="036" ind1=" " ind2=" ">
@@ -1347,14 +1366,30 @@ def test_abstracts(app):
             """
             <datafield tag="520" ind1=" " ind2=" ">
                 <subfield code="a">The publication...</subfield>
+                <subfield code="9">arXiv</subfield>
             </datafield>
             <datafield tag="520" ind1=" " ind2=" ">
                 <subfield code="a">Does application...</subfield>
             </datafield>
             """, {
                 'abstracts': [
-                    'The publication...',
-                    'Does application...',
+                    {'value': 'The publication...', 'source': 'arXiv'},
+                    {'value': 'Does application...'}
+                ],
+            })
+    with pytest.raises(MissingRequiredField):
+        check_transformation(
+            """
+            <datafield tag="520" ind1=" " ind2=" ">
+                <subfield code="9">arXiv</subfield>
+            </datafield>
+            <datafield tag="520" ind1=" " ind2=" ">
+                <subfield code="a">Does application...</subfield>
+            </datafield>
+            """, {
+                'abstracts': [
+                    {'source': 'arXiv'},
+                    {'value': 'Does application...'}
                 ],
             })
 

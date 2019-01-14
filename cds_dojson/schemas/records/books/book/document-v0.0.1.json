@@ -390,9 +390,9 @@
                       "type": "string"
                     },
                     "value": {
-                      "description": ":example: ``CERN-12345``",
+                      "description": ":example: ``12345``",
                       "minLength": 1,
-                      "pattern": "^CERN-\\d+$",
+                      "pattern": "^\\d+$",
                       "type": "string"
                     }
                   },
@@ -641,6 +641,30 @@
                   ],
                   "title": "LinkedIn profile",
                   "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "schema": {
+                      "enum": [
+                        "CDS"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": ":example: ``123456``",
+                      "minLength": 1,
+                      "pattern": "^\\d+$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "schema",
+                    "value"
+                  ],
+                  "title": "CDS identifier, the record ID of the author record in CDS",
+                  "type": "object"
                 }
               ]
             },
@@ -677,13 +701,13 @@
           "roles": {
             "description": ".. note: different from Inspire (Inspire_role)",
             "items": {
-              "default": "author",
+              "default": "Author",
               "description": "``supervisor``\n    :MARC: ``700`` is used for supervisor metadata.\n    This person is a thesis supervisor. Should be\n    used together with the ``thesis``\n    :ref:`hep.json#/properties/document_type`.\n``editor``\n    :MARC: ``100/700__e:ed.``\n    This person is an editor of the conference\n    proceedings. Should be used together with the\n    ``proceedings``\n    :ref:`hep.json#/properties/document_type`.",
               "enum": [
-                "author",
-                "editor",
-                "illustrator",
-                "supervisor"
+                "Author",
+                "Editor",
+                "Illustrator",
+                "Supervisor"
               ],
               "minLength": 1,
               "type": "string"
@@ -842,6 +866,7 @@
             "description": ":MARC: ``035__9``\nIdentifies the external system, and allows to interpret\nunambiguously the :ref:`value`.\n:example: ``ADS``",
             "enum": [
               "ARXIV",
+              "ASIN",
               "DCL",
               "DESY",
               "DOE",

@@ -31,12 +31,13 @@ from dojson.utils import filter_values, flatten, for_each_value, force_list
 from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
     UnexpectedValue
 from cds_dojson.marc21.fields.books.values_mapping import ACQUISITION_METHOD, \
-    ARXIV_CATEGORIES, AUTHOR_ROLE, COLLECTION, DOCUMENT_TYPE, \
+    ARXIV_CATEGORIES, COLLECTION, DOCUMENT_TYPE, \
     EXTERNAL_SYSTEM_IDENTIFIERS, EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE, \
     MATERIALS, MEDIUM_TYPES, SUBJECT_CLASSIFICATION_EXCEPTIONS, mapping
 from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
-    clean_email, clean_pages_range, clean_str, clean_val, filter_list_values, \
-    get_week_start, out_strip, related_url, replace_in_result
+    clean_email, clean_pages_range, clean_val, filter_list_values, \
+    get_week_start, out_strip, related_url, replace_in_result, \
+    build_contributor_books
 from cds_dojson.marc21.models.books.book import model
 
 
@@ -133,21 +134,10 @@ def document_type(self, key, value):
 def authors(self, key, value):
     """Translates the authors field."""
     _authors = self.get('authors', [])
-    for v in force_list(value):
-        temp_author = {'full_name': clean_val('a', v, str, req=True),
-                       'role': mapping(AUTHOR_ROLE, clean_val('e', v, str)),
-                       }
-        value_u = v.get('u')
-        if value_u:
-            if isinstance(value_u, tuple):
-                temp_author.update(
-                    {'affiliations': [clean_str(affiliation,
-                                                regex_format=None, req=False)
-                                      for affiliation in value_u]})
-            else:
-                temp_author.update(
-                    {'affiliations': [clean_val('u', v, str)]})
-        _authors.append(temp_author)
+    item = build_contributor_books(value)
+    if item and item not in _authors:
+        _authors.append(item)
+
     return _authors
 
 
@@ -355,8 +345,7 @@ def external_system_identifiers(self, key, value):
             raise IgnoreKey('external_system_identifiers')
         elif field_type and field_type.lower() == 'asin':
             system_id.update({'value': sub_a,
-                              'schema': clean_val('9', value, str, req=True),
-                              })
+                              'schema': 'ASIN'})
         else:
             raise UnexpectedValue
     if key == '035__':
@@ -375,8 +364,7 @@ def external_system_identifiers(self, key, value):
             raise UnexpectedValue
     if key == '036__':
         system_id.update({'value': sub_a,
-                          'schema': clean_val('9', value, str, req=True),
-                          })
+                          'schema': clean_val('9', value, str, req=True)})
     return system_id
 
 
@@ -658,10 +646,13 @@ def public_notes(self, key, value):
 
 @model.over('abstracts', '^520__')
 @for_each_value
-@out_strip
+@filter_values
 def abstracts(self, key, value):
     """Translates abstracts fields."""
-    return clean_val('a', value, str)
+    return {
+        'value': clean_val('a', value, str, req=True),
+        'source': clean_val('9', value, str)
+    }
 
 
 @model.over('funding_info', '^536__')

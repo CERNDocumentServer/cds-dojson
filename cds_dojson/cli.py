@@ -28,6 +28,7 @@ from __future__ import absolute_import, print_function
 
 import json
 import os
+import sys
 
 import click
 
@@ -57,4 +58,6 @@ def compile_schema(schema):
 @click.argument('destination', type=click.Path())
 def convert_yaml2json(source, destination):
     """Convert files from yaml to json."""
+    if sys.version_info[0] <= 3 and sys.version_info[1] < 6:
+        click.echo('Use Python 3.6+ to deterministically generate the json.')
     yaml2json(source, destination)

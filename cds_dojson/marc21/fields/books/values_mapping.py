@@ -25,12 +25,6 @@ DOCUMENT_TYPE = {
     'REPORT': ['REPORT']
 }
 
-AUTHOR_ROLE = {
-    'editor': ['ED.', 'ED'],
-    'supervisor': ['DIR.', 'DIR'],
-    'ilustrator': ['ILL.', 'ILL'],
-}
-
 COLLECTION = {
     'BOOK SUGGESTION': ['BOOKSUGGESTION'],
     'LEGSERLIB': ['LEGSERLIB'],

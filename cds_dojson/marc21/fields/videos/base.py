@@ -21,7 +21,7 @@ from __future__ import absolute_import, print_function
 
 from dojson.utils import force_list, for_each_value, filter_values
 
-from ...fields.utils import build_contributor, build_contributor_from_508
+from ...fields.utils import build_contributor_videos, build_contributor_from_508
 from ...models.videos.base import model
 
 
@@ -45,7 +45,7 @@ def contributors(self, key, value):
     """Contributors."""
     authors = self.get('contributors', [])
     if key in ['100__', '700__']:
-        items = build_contributor(value)
+        items = build_contributor_videos(value)
     else:
         items = build_contributor_from_508(value)
     # add only contributors that are not part of the authors

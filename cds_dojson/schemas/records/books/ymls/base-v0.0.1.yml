@@ -156,7 +156,7 @@ properties:
         roles:
           description: '.. note: different from Inspire (Inspire_role)'
           items:
-            default: author
+            default: Author
             description: |-
               ``supervisor``
                   :MARC: ``700`` is used for supervisor metadata.
@@ -170,10 +170,10 @@ properties:
                   ``proceedings``
                   :ref:`hep.json#/properties/document_type`.
             enum:
-              - author
-              - editor
-              - illustrator
-              - supervisor
+              - Author
+              - Editor
+              - Illustrator
+              - Supervisor
             minLength: 1
             type: string
           minItems: 1
@@ -290,6 +290,7 @@ properties:
             :example: ``ADS``
           enum:
             - ARXIV
+            - ASIN
             - DCL
             - DESY
             - DOE

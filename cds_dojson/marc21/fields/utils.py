@@ -221,8 +221,8 @@ def get_author_info_from_people_collection(info):
 
 
 def _get_correct_video_contributor_role(role):
-    """Clean up roles."""
-    tranlations = {
+    """Clean up roles for Videos."""
+    translations = {
         '3d animation': 'Animatons by',
         '3d animations': 'Animations by',
         'animation': 'Animations by',
@@ -306,42 +306,82 @@ def _get_correct_video_contributor_role(role):
         'written and director': ('Screenwriter', 'Director'),
         'written and produced by': ('Screenwriter', 'Producer'),
     }
-    return tranlations[role.lower()]
+    return translations[role.lower()]
 
 
-def _extract_json_ids(info):
+def _get_correct_books_contributor_role(role):
+    """Clean up roles."""
+    translations = {
+        'author': 'Author',
+        'dir.': 'Supervisor',
+        'dir': 'Supervisor',
+        'ed.': 'Editor',
+        'ed': 'Editor',
+        'ill.': 'Ilustrator',
+        'ill': 'Ilustrator',
+    }
+    return translations[role.lower()]
+
+
+def _extract_json_ids(info, provenence='source'):
     """Extract author IDs from MARC tags."""
     SOURCES = {
-        'AUTHOR|(INSPIRE)': 'INSPIRE',
+        'AUTHOR|(INSPIRE)': 'INSPIRE ID',
         'AUTHOR|(CDS)': 'CDS',
-        '(SzGeCERN)': 'CERN'
+        'AUTHOR|(SzGeCERN)': 'CERN'
     }
-    regex = re.compile(r'((AUTHOR\|\((CDS|INSPIRE)\))|(\(SzGeCERN\)))(.*)')
+    regex = re.compile(r'(AUTHOR\|\((CDS|INSPIRE|SzGeCERN)\))(.*)')
     ids = []
-    match = regex.match(info.get('0', ''))
-    if match:
-        ids.append({
-            'value': match.group(5),
-            'source': SOURCES[match.group(1)]
-        })
+    author_ids = force_list(info.get('0', ''))
+    for author_id in author_ids:
+        match = regex.match(author_id)
+        if match:
+            ids.append(
+                {
+                    'value': match.group(3),
+                    provenence: SOURCES[match.group(1)]
+                })
     # Try and get the IDs from the auto-completion
     try:
-        ids.append({'value': info['cernccid'], 'source': 'CERN'})
+        ids.append({'value': info['cernccid'], provenence: 'CERN'})
     except KeyError:
         pass
     try:
-        ids.append({'value': info['recid'], 'source': 'CDS'})
+        ids.append({'value': info['recid'], provenence: 'CDS'})
     except KeyError:
         pass
     try:
-        ids.append({'value': info['inspireid'], 'source': 'INSPIRE'})
+        ids.append({'value': info['inspireid'], provenence: 'INSPIRE ID'})
     except KeyError:
         pass
 
     return ids
 
 
-def build_contributor(value):
+def build_contributor_books(value):
+    """Create the contributors for books."""
+    if not value.get('a'):
+        return []
+
+    contributor = {
+        'ids': _extract_json_ids(value, 'schema') or None,
+        'full_name': value.get('name') or clean_val('a', value, str),
+        'email': clean_email(value.get('email')),
+        'role': _get_correct_books_contributor_role(value.get('e', 'author'))
+    }
+
+    value_u = value.get('u')
+    if value_u:
+        contributor['affiliations'] = list(force_list(value_u))
+
+    contributor = dict(
+        (k, v) for k, v in iteritems(contributor) if v is not None
+    )
+
+    return contributor
+
+
+def build_contributor_videos(value):
     """Create a.
 
     :returns: Contributors
@@ -416,10 +456,10 @@ def build_contributor_from_508(value):
             camera_operators.pop(0)
             contributors = []
             for name in camera_operators:
-                contributor = build_contributor(
+                contributor = build_contributor_videos(
                     {'a': name.strip(), 'e': 'camera'})
                 if contributor:
                     contributors.append(contributor[0])
             return contributors
     else:
-        return build_contributor({'a': item.strip(), 'e': 'credits'})
+        return build_contributor_videos({'a': item.strip(), 'e': 'credits'})

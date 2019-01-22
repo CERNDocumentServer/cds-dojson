@@ -25,14 +25,29 @@ class UnexpectedValue(DoJSONException):
 
     message = '[UNEXPECTED INPUT VALUE]'
 
+    def __init__(self, *args, **kwargs):
+        """Constructor."""
+        self.subfield = kwargs.get('subfield', None)
+        super(UnexpectedValue, self).__init__(*args)
+
 
 class MissingRequiredField(DoJSONException):
     """The corresponding value is required."""
 
     message = '[MISSING REQUIRED FIELD]'
 
+    def __init__(self, *args, **kwargs):
+        """Constructor."""
+        self.subfield = kwargs.get('subfield', None)
+        super(MissingRequiredField, self).__init__(*args)
+
 
 class ManualMigrationRequired(DoJSONException):
     """The corresponding field should be manually migrated."""
 
     message = '[MANUAL MIGRATION REQUIRED]'
+
+    def __init__(self, *args, **kwargs):
+        """Constructor."""
+        self.subfield = kwargs.get('subfield', None)
+        super(ManualMigrationRequired, self).__init__(*args)

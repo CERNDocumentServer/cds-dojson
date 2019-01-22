@@ -114,6 +114,7 @@ properties:
           type: array
           uniqueItems: true
         curated_relation:
+          description: This field is true when the author ID was processed by \#BEARD\# script
           default: false
           type: boolean
         emails:

@@ -18,7 +18,7 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Books fields."""
 
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 
 import datetime
 import re
@@ -66,11 +66,12 @@ def acquisition_source(self, key, value):
                 source = sub_a[:3]
                 year, month = int(sub_a[3:7]), int(sub_a[7:])
                 if 'datetime' in _acquisition_source:
-                    raise ManualMigrationRequired
+                    raise ManualMigrationRequired(subfield='a')
                 _acquisition_source.update(
                     {'datetime': datetime.date(year, month, 1).isoformat(),
                      'source': source})
         except UnexpectedValue as e:
+            e.subfield = 'a'
             self['_private_notes'] = private_notes(self, key, value)
             raise IgnoreKey('acquisition_source')
 
@@ -256,7 +257,10 @@ def related_records(self, key, value):
         if key == '787__':
             clean_val('i', value, str, manual=True)
     except ManualMigrationRequired as e:
-        # TODO logs
+        if key == '775__':
+            e.subfield = 'b or c'
+        else:
+            e.subfield = 'i'
         raise e
     return {'record': {
         '$ref': related_url(clean_val('w', value, str, req=True))}}
@@ -282,6 +286,7 @@ def urls(self, key, value):
     try:
         clean_val('y', value, str, manual=True)
     except ManualMigrationRequired as e:
+        e.subfield = 'y'
         raise e
     return {'value': clean_val('u', value, str, req=True)}
 
@@ -295,7 +300,7 @@ def isbns(self, key, value):
         subfield_u = clean_val('u', v, str)
         isbn = {'value': clean_val('a', v, str) or clean_val('z', v, str)}
         if not isbn['value']:
-            raise ManualMigrationRequired
+            raise ManualMigrationRequired(subfield='a or z')
         if subfield_u:
             volume = re.search(r'(\(*v[.| ]*\d+.*\)*)', subfield_u)
 
@@ -304,7 +309,7 @@ def isbns(self, key, value):
                 subfield_u = subfield_u.replace(volume, '').strip()
                 existing_volume = self.get('volume')
                 if existing_volume:
-                    raise ManualMigrationRequired
+                    raise ManualMigrationRequired(subfield='u')
                 self['volume'] = volume
             if subfield_u.upper() in MEDIUM_TYPES:
                 isbn.update({'medium': subfield_u})
@@ -327,7 +332,7 @@ def standard_numbers(self, key, value):
     if sn:
         return {'value': sn,
                 'hidden': True if b else False}
-    raise MissingRequiredField
+    raise MissingRequiredField(subfield='a or b')
 
 
 @model.over('external_system_identifiers', '(^0247_)|(^035__)|(^036__)')
@@ -347,7 +352,7 @@ def external_system_identifiers(self, key, value):
             system_id.update({'value': sub_a,
                               'schema': 'ASIN'})
         else:
-            raise UnexpectedValue
+            raise UnexpectedValue(subfield='2')
     if key == '035__':
         sub_9 = clean_val('9', value, str, req=True)
         if sub_9.upper() == 'INSPIRE-CNUM':
@@ -361,7 +366,7 @@ def external_system_identifiers(self, key, value):
         elif sub_9.upper() in EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE:
             raise IgnoreKey('external_system_identifiers')
         else:
-            raise UnexpectedValue
+            raise UnexpectedValue(subfield='9')
     if key == '036__':
         system_id.update({'value': sub_a,
                           'schema': clean_val('9', value, str, req=True)})
@@ -404,7 +409,7 @@ def report_numbers(self, key, value):
     sub_z = clean_val('z', value, str)
 
     if not (sub_z or sub_a or sub_9):
-        raise MissingRequiredField
+        raise MissingRequiredField(subfield='9 or a or z')
 
     if key == '037__':
         if sub_9 == 'arXiv':
@@ -429,7 +434,7 @@ def arxiv_eprints(self, key, value):
             if sub_c in ARXIV_CATEGORIES:
                 return sub_c
             else:
-                raise UnexpectedValue
+                raise UnexpectedValue(subfield='c')
 
     _arxiv_eprints = self.get('arxiv_eprints', [])
     for v in force_list(value):
@@ -458,7 +463,7 @@ def languages(self, key, value):
     try:
         iso_lang = pycountry.languages.lookup(lang).alpha_2
     except (KeyError, AttributeError, LookupError):
-        raise UnexpectedValue
+        raise UnexpectedValue(subfield='a')
     return iso_lang
 
 
@@ -514,14 +519,14 @@ def conference_info(self, key, value):
                 opening_date = parser.parse(clean_val('9', v, str, req=True))
                 closing_date = parser.parse(clean_val('z', v, str, req=True))
             except ValueError:
-                raise UnexpectedValue
+                raise UnexpectedValue(subfield='9 or z')
             country_code = clean_val('w', v, str)
             if country_code:
                 try:
                     country_code = str(pycountry.countries.get(
                         alpha_2=country_code).alpha_2)
                 except (KeyError, AttributeError):
-                    raise UnexpectedValue
+                    raise UnexpectedValue(subfield='w')
 
             _conference_info.update({
                 'title': clean_val('a', v, str, req=True),
@@ -537,7 +542,7 @@ def conference_info(self, key, value):
             if contact and _conference_info:
                 _conference_info.update({'contact': contact})
             else:
-                raise MissingRequiredField
+                raise MissingRequiredField(subfield='m')
         else:
             _conference_info.update({
                 'conference_acronym': clean_val('a', v, str)})
@@ -603,7 +608,7 @@ def preprint_date(self, key, value):
             date = parser.parse(date)
             return date.date().isoformat()
         except (ValueError, AttributeError):
-            raise ManualMigrationRequired
+            raise ManualMigrationRequired(subfield='c')
     else:
         raise IgnoreKey('preprint_date')
 
@@ -618,7 +623,7 @@ def number_of_pages(self, key, value):
     if pages:
         pages = int(pages.group(1))
         return pages
-    raise UnexpectedValue
+    raise UnexpectedValue(subfield='a')
 
 
 @model.over('book_series', '^490__')
@@ -664,7 +669,7 @@ def funding_info(self, key, value):
     if openaccess and openaccess.lower() == 'openaccess':
         openaccess = True
     elif openaccess and openaccess.lower() != 'openaccess':
-        raise UnexpectedValue
+        raise UnexpectedValue(subfield='r')
     else:
         openaccess = None
 
@@ -725,4 +730,4 @@ def table_of_content(self, key, value):
         chapters = re.split(r'; | -- |--', text)
         return chapters
     else:
-        raise UnexpectedValue
+        raise UnexpectedValue(subfield='a or t')

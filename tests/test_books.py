@@ -18,7 +18,7 @@
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 """Book fields tests."""
 
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 import pytest
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
@@ -422,6 +422,7 @@ def test_authors(app):
                 <subfield code="0">AUTHOR|(CDS)2079441</subfield>
                 <subfield code="u">CERN</subfield>
                 <subfield code="m">paul.seyfert@cern.ch</subfield>
+                <subfield code="9">#BEARD#</subfield>
             </datafield>
             <datafield tag="720" ind1=" " ind2=" ">
                 <subfield code="a">Neubert, Matthias</subfield>
@@ -462,7 +463,9 @@ def test_authors(app):
                              'value': '692828'},
                             {'schema': 'CDS',
                              'value': '2079441'}
-                        ]
+                        ],
+                        'curated_relation': True
+
                     },
                     {
                         'full_name': 'John Doe',

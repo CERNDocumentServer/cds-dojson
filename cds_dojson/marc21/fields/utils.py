@@ -363,11 +363,14 @@ def build_contributor_books(value):
     if not value.get('a'):
         return []
 
+    value_9 = clean_val('9', value, str)
+
     contributor = {
         'ids': _extract_json_ids(value, 'schema') or None,
         'full_name': value.get('name') or clean_val('a', value, str),
         'email': clean_email(value.get('email')),
-        'role': _get_correct_books_contributor_role(value.get('e', 'author'))
+        'role': _get_correct_books_contributor_role(value.get('e', 'author')),
+        'curated_relation': True if value_9 == '#BEARD#' else None
     }
 
     value_u = value.get('u')

@@ -343,6 +343,7 @@ anyOf:
         minLength: 1
         pattern: ^\d+$
         type: string
+
     required:
       - schema
       - value

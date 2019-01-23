@@ -1659,6 +1659,9 @@
       "items": {
         "additionalProperties": false,
         "properties": {
+          "is_alternative": {
+            "type": "boolean"
+          },
           "source": {
             "minLength": 1,
             "type": "string"

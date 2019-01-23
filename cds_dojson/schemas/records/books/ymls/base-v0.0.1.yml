@@ -140,7 +140,7 @@ properties:
         ids:
           description: ':MARC: ``100/700/701__i/j``'
           items:
-            $ref: elements/id.json
+            $ref: elements/author_id.json
           minItems: 1
           title: Identifiers of the author
           type: array

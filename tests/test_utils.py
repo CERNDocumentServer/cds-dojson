@@ -25,8 +25,8 @@ import os
 
 from dojson.utils import filter_values
 
-from cds_dojson.utils import (MementoDict, convert_date_to_iso_8601,
-                              for_each_squash, not_accessed_keys, yaml2json)
+from cds_dojson.utils import MementoDict, convert_date_to_iso_8601, \
+    for_each_squash, not_accessed_keys, yaml2json
 
 
 def test_for_each_squash():

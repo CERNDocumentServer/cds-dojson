@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2017, 2018 CERN.
+# Copyright (C) 2017, 2018, 2019  CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,27 +16,22 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Books fields."""
-
-from __future__ import absolute_import, print_function, unicode_literals
+"""Standards fields."""
+from __future__ import unicode_literals
 
 from dojson.utils import filter_values, for_each_value
 
 from cds_dojson.marc21.fields.utils import clean_val
-from cds_dojson.marc21.models.books.book import model
+from cds_dojson.marc21.models.books.standard import model
 
 
-@model.over('titles', '(^245__)|(^246__)')
+@model.over('title_translations', '^246__')
 @for_each_value
 @filter_values
-def titles(self, key, value):
-    """Translates titles."""
-    print('BOOK titles rule +++++++')
-    alt_title = None
-    if key == '246__':
-        alt_title = True
+def title_translations(self, key, value):
+    """Translates title translations."""
     return {
         'title': clean_val('a', value, str, req=True),
+        'language': 'en',
         'subtitle': clean_val('b', value, str),
-        'is_alternative': alt_title
     }

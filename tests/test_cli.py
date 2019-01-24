@@ -27,11 +27,13 @@ from __future__ import absolute_import
 
 import json
 import os
+import shutil
+
 import pkg_resources
 import pytest
+from click.testing import CliRunner
 
 from cds_dojson.cli import compile_schema, convert_yaml2json
-from click.testing import CliRunner
 
 
 @pytest.mark.parametrize('src, compiled', [

@@ -18,10 +18,11 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Video rules tests."""
 
+from helpers import load_fixture_file, validate
+
 from cds_dojson.marc21.fields.videos.utils import language_to_isocode
 from cds_dojson.marc21.models.videos.video import model
 from cds_dojson.marc21.utils import create_record
-from helpers import load_fixture_file, validate
 
 
 def test_required_fields(app):

@@ -19,9 +19,12 @@
 """Common videos fields."""
 from __future__ import absolute_import, print_function
 
-from dojson.utils import force_list, for_each_value, filter_values
+from dojson.errors import IgnoreKey
+from dojson.utils import filter_values, for_each_value, force_list, \
+    ignore_value
 
-from ...fields.utils import build_contributor_videos, build_contributor_from_508
+from ...fields.utils import build_contributor_from_508, \
+    build_contributor_videos
 from ...models.videos.base import model
 
 
@@ -122,3 +125,17 @@ def external_system_identifiers(self, key, value):
 def note(self, key, value):
     """Note."""
     return value.get('a')
+
+
+@model.over('translations', '(^246_[1_])|(590__)')
+@ignore_value
+def translations(self, key, value):
+    """Translations."""
+    translation = self.get('translations', [{}])[0]
+    if key.startswith('246'):
+        translation['title'] = {'title': value.get('a')}
+    if key.startswith('590'):
+        translation['description'] = value.get('a')
+    translation['language'] = 'fr'
+    self['translations'] = [translation]
+    raise IgnoreKey('translations')

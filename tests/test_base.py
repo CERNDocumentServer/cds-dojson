@@ -19,9 +19,10 @@
 """Base model tests."""
 
 import os
-import mock
 
+import mock
 import pkg_resources
+
 from cds_dojson.marc21.models.base import model
 from cds_dojson.marc21.utils import create_record
 from cds_dojson.overdo import Overdo

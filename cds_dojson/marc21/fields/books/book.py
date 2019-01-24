@@ -31,7 +31,6 @@ from cds_dojson.marc21.models.books.book import model
 @filter_values
 def titles(self, key, value):
     """Translates titles."""
-    print('BOOK titles rule +++++++')
     alt_title = None
     if key == '246__':
         alt_title = True

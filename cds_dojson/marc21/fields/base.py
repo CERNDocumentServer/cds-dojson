@@ -59,12 +59,6 @@ def videos(self, key, value):
     }
 
 
-@model.over('original_source', '^541__')
-def original_source(self, key, value):
-    """Original source."""
-    return value.get('e')
-
-
 @model.over('modified_by', '^937__')
 @ignore_value
 def modified_by(self, key, value):

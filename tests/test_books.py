@@ -18,15 +18,14 @@
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 """Book fields tests."""
 
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 import pytest
 
-from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
-    ManualMigrationRequired, MissingRequiredField
-from cds_dojson.marc21.fields.books.values_mapping import mapping, MATERIALS
+from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
+    MissingRequiredField, UnexpectedValue
+from cds_dojson.marc21.fields.books.values_mapping import MATERIALS, mapping
 from cds_dojson.marc21.models.books.book import model
 from cds_dojson.marc21.utils import create_record
-
 
 marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
            """<record>{0}</record></collection>""")
@@ -1344,6 +1343,7 @@ def test_number_of_pages(app):
 
                 })
 
+
 # for book series model
 # def test_book_series(app):
 #     with app.app_context():
@@ -1690,17 +1690,36 @@ def test_titles(app):
                  des termes de commerce nationaux et internationaux
                 </subfield>
             </datafield>
-            <datafield tag="245" ind1=" " ind2=" ">
-                <subfield code="a">Titre test</subfield>
-            </datafield>
             """,
             {'titles': [
                 {'title': 'Incoterms 2010',
                  'subtitle': u"""les règles de l'ICC pour l'utilisation
                  des termes de commerce nationaux et internationaux""",
                  },
-                {'title': 'Titre test'}
             ]}
+        )
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="690" ind1="C" ind2=" ">
+                <subfield code="a">BOOK</subfield>
+            </datafield>
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="a">Water quality — sampling</subfield>
+                <subfield code="b">
+                part 15: guidance on the preservation and handling of sludge
+            </subfield>
+            </datafield>
+            """,
+            {
+                'document_type': ['BOOK'],
+                'titles': [
+                    {'title': 'Water quality — sampling',
+                     'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
+                     'is_alternative': True,
+                     },
+                ]
+            }
         )
 
 
@@ -1734,9 +1753,10 @@ def test_public_notes(app):
             </datafield>
             """, {
                 'public_notes': [
-                    {'value': """Comments: Book, 380 p., 88 figs., 7 tables; 1st volume of three-volume book "Dark energy and dark matter in the Universe", ed. V. Shulga, Kyiv, Academperiodyka, 2013; ISBN 978-966-360-239-4, ISBN 978-966-360-240-0 (vol. 1). arXiv admin note: text overlap with arXiv:0706.0033, arXiv:1104.3029 by other authors""",
-                     'source': 'arXiv',
-                     },
+                    {
+                        'value': """Comments: Book, 380 p., 88 figs., 7 tables; 1st volume of three-volume book "Dark energy and dark matter in the Universe", ed. V. Shulga, Kyiv, Academperiodyka, 2013; ISBN 978-966-360-239-4, ISBN 978-966-360-240-0 (vol. 1). arXiv admin note: text overlap with arXiv:0706.0033, arXiv:1104.3029 by other authors""",
+                        'source': 'arXiv',
+                    },
                 ]
             }
         )
@@ -1820,9 +1840,9 @@ def test_book_series(app):
             </datafield>
             """, {
                 'book_series':
-                [
-                    {'title': 'Minutes'},
-                ]
+                    [
+                        {'title': 'Minutes'},
+                    ]
             }
         )
         check_transformation(
@@ -1833,11 +1853,11 @@ def test_book_series(app):
             </datafield>
             """, {
                 'book_series':
-                [
-                    {'title': 'De Gruyter studies in mathematical physics',
-                     'volume': '16',
-                     },
-                ]
+                    [
+                        {'title': 'De Gruyter studies in mathematical physics',
+                         'volume': '16',
+                         },
+                    ]
             }
         )
         check_transformation(
@@ -1849,11 +1869,11 @@ def test_book_series(app):
             </datafield>
             """, {
                 'book_series':
-                [
-                    {'title': 'Springer tracts in modern physics',
-                     'volume': '267',
-                     'issn': '0081-3869',
-                     },
-                ]
+                    [
+                        {'title': 'Springer tracts in modern physics',
+                         'volume': '267',
+                         'issn': '0081-3869',
+                         },
+                    ]
             }
         )

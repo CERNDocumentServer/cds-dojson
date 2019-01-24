@@ -29,6 +29,7 @@ include *.rst
 include *.sh
 include *.txt
 include *.yml
+include *.json
 include .coveragerc
 include .dockerignore
 include .editorconfig
@@ -47,3 +48,4 @@ recursive-include tests *.py
 recursive-include tests *.xml
 recursive-include tests *.json
 recursive-include tests *.yml
+recursive-exclude tests/fixtures/books/results *.json

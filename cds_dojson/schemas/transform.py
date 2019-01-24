@@ -24,8 +24,8 @@
 """Create compiled version of JSON schemas."""
 
 import copy
-import six
 
+import six
 from jsonref import JsonRef
 
 

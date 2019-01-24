@@ -19,7 +19,9 @@
 """Book fields tests."""
 
 from __future__ import absolute_import, print_function, unicode_literals
+
 import pytest
+from dojson.errors import MissingRule
 
 from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
     MissingRequiredField, UnexpectedValue
@@ -1877,3 +1879,163 @@ def test_book_series(app):
                     ]
             }
         )
+
+
+def test_541(app):
+    with app.app_context():
+        with pytest.raises(MissingRule):
+            check_transformation(
+                """
+                <record>
+                    <controlfield tag="001">2654497</controlfield>
+                    <controlfield tag="003">SzGeCERN</controlfield>
+                    <datafield tag="980" ind1=" " ind2=" ">
+                        <subfield code="a">BOOK</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2=" ">
+                        <subfield code="a">Cai, Baoping</subfield>
+                        <subfield code="e">ed.</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2=" ">
+                        <subfield code="a">Liu, Yonghong</subfield>
+                        <subfield code="e">ed.</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2=" ">
+                        <subfield code="a">Hu, Jinqiu</subfield>
+                        <subfield code="e">ed.</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2=" ">
+                        <subfield code="a">Liu, Zengkai</subfield>
+                        <subfield code="e">ed.</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2=" ">
+                        <subfield code="a">Wu, Shengnan</subfield>
+                        <subfield code="e">ed.</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2=" ">
+                        <subfield code="a">Ji, Renjie</subfield>
+                        <subfield code="e">ed.</subfield>
+                    </datafield>
+                    <datafield tag="035" ind1=" " ind2=" ">
+                        <subfield code="9">SCEM</subfield>
+                        <subfield code="a">90.20.00.192.6</subfield>
+                    </datafield>
+                    <datafield tag="690" ind1="C" ind2=" ">
+                        <subfield code="a">BOOK</subfield>
+                    </datafield>
+                    <datafield tag="697" ind1="C" ind2=" ">
+                        <subfield code="a">BOOKSHOP</subfield>
+                    </datafield>
+                    <datafield tag="541" ind1=" " ind2=" ">
+                        <subfield code="9">85.00</subfield>
+                    </datafield>
+                    <datafield tag="916" ind1=" " ind2=" ">
+                        <subfield code="d">201901</subfield>
+                        <subfield code="s">h</subfield>
+                        <subfield code="w">201904</subfield>
+                    </datafield>
+                    <datafield tag="300" ind1=" " ind2=" ">
+                        <subfield code="a">401 p</subfield>
+                    </datafield>
+                    <datafield tag="080" ind1=" " ind2=" ">
+                        <subfield code="a">519.226</subfield>
+                    </datafield>
+                    <datafield tag="245" ind1=" " ind2=" ">
+                        <subfield code="a">Bayesian networks in fault diagnosis</subfield>
+                        <subfield code="b">practice and application</subfield>
+                    </datafield>
+                    <datafield tag="260" ind1=" " ind2=" ">
+                        <subfield code="a">Singapore</subfield>
+                        <subfield code="b">World Scientific</subfield>
+                        <subfield code="c">2019</subfield>
+                    </datafield>
+                    <datafield tag="020" ind1=" " ind2=" ">
+                        <subfield code="a">9789813271487</subfield>
+                        <subfield code="u">print version, hardback</subfield>
+                    </datafield>
+                    <datafield tag="041" ind1=" " ind2=" ">
+                        <subfield code="a">eng</subfield>
+                    </datafield>
+                    <datafield tag="960" ind1=" " ind2=" ">
+                        <subfield code="a">21</subfield>
+                    </datafield>
+                </record>
+                """,
+                {
+                    'agency_code': "SzGeCERN",
+                    'acquisition_source': {
+                        'datetime': "2019-01-21"
+                    },
+                    '_collections': [
+                        "BOOKSHOP"
+                    ],
+                    'number_of_pages': 401,
+                    'subject_classification': [
+                        {
+                            'value': "519.226",
+                            'schema': "UDC"
+                        }
+                    ],
+                    'languages': [
+                        "en"
+                    ],
+                    'titles': [
+                        {
+                            'subtitle': "practice and application",
+                            'title': "Bayesian networks in fault diagnosis"
+                        }
+                    ],
+                    'recid': 2654497,
+                    'isbns': [
+                        {
+                            'medium': "print version, hardback",
+                            'value': "9789813271487"
+                        }
+                    ],
+                    'authors': [
+                        {
+                            'role': "Editor",
+                            'full_name': "Cai, Baoping"
+                        },
+                        {
+                            'role': "Editor",
+                            'full_name': "Liu, Yonghong"
+                        },
+                        {
+                            'role': "Editor",
+                            'full_name': "Hu, Jinqiu"
+                        },
+                        {
+                            'role': "Editor",
+                            'full_name': "Liu, Zengkai"
+                        },
+                        {
+                            'role': "Editor",
+                            'full_name': "Wu, Shengnan"
+                        },
+                        {
+                            'role': "Editor",
+                            'full_name': "Ji, Renjie"
+                        }
+                    ],
+                    'original_source': None,
+                    'external_system_identifiers': [
+                        {
+                            'value': "90.20.00.192.6",
+                            'schema': "SCEM"
+                        }
+                    ],
+                    '$schema': {
+                        '$ref': "records/books/book/book-v.0.0.1.json"
+                    },
+                    'document_type': [
+                        "BOOK"
+                    ],
+                    'imprints': [
+                        {
+                            'date': "2019",
+                            'publisher': "World Scientific",
+                            'place': "Singapore"
+                        }
+                    ]
+                })

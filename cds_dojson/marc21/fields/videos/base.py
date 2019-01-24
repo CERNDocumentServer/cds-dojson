@@ -139,3 +139,9 @@ def translations(self, key, value):
     translation['language'] = 'fr'
     self['translations'] = [translation]
     raise IgnoreKey('translations')
+
+
+@model.over('original_source', '^541__')
+def original_source(self, key, value):
+    """Original source."""
+    return value.get('e')

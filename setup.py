@@ -105,6 +105,7 @@ setup(
             'videos_video = cds_dojson.marc21.models.videos.video:model',
             'videos_project = cds_dojson.marc21.models.videos.project:model',
             'books_book = cds_dojson.marc21.models.books.book:model',
+            'books_standard = cds_dojson.marc21.models.books.standard:model'
         ],
         'cds_dojson.marc21.base': [
             'base = cds_dojson.marc21.fields.base',
@@ -116,8 +117,13 @@ setup(
             'video = cds_dojson.marc21.fields.videos.video',
             'project = cds_dojson.marc21.fields.videos.project',
         ],
+        'cds_dojson.marc21.books': [
+            'base = cds_dojson.marc21.fields.books.base',
+        ],
         'cds_dojson.marc21.book': [
             'book = cds_dojson.marc21.fields.books.book',
+            'standard = cds_dojson.marc21.fields.books.standard',
+
         ],
         # DoJSON entry points
         'console_scripts': [

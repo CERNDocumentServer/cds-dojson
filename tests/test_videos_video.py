@@ -19,6 +19,8 @@
 """Video rules tests."""
 import mock
 
+from helpers import load_fixture_file, validate
+
 from cds_dojson.marc21.fields.videos.utils import language_to_isocode
 from cds_dojson.marc21.models.videos.video import model
 from cds_dojson.marc21.utils import create_record

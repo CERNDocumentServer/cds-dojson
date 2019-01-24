@@ -27,8 +27,8 @@ from copy import deepcopy
 
 import arrow
 from dojson.errors import IgnoreKey
-from dojson.utils import (filter_values, for_each_value, force_list,
-                          ignore_value)
+from dojson.utils import filter_values, for_each_value, force_list, \
+    ignore_value
 from six import iteritems
 
 from ...models.videos.video import model

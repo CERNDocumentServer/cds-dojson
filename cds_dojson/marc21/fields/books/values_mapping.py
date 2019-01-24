@@ -17,12 +17,15 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Book values mapping."""
+from __future__ import unicode_literals
+
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue
 
 DOCUMENT_TYPE = {
     'PROCEEDINGS': ['PROCEEDINGS', '42', '43'],
     'BOOK': ['BOOK', '21'],
-    'REPORT': ['REPORT']
+    'REPORT': ['REPORT'],
+    'STANDARD': ['STANDARD']
 }
 
 COLLECTION = {

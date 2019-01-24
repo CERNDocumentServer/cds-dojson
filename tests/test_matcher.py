@@ -19,8 +19,8 @@
 
 from dojson.contrib import marc21 as default
 
+from cds_dojson.marc21.models.books import book, standard
 from cds_dojson.marc21.models.videos import project, video
-from cds_dojson.marc21.models.books import book
 from cds_dojson.matcher import matcher
 
 
@@ -52,9 +52,12 @@ def test_marc21_matcher_books():
     book_blob1 = {'690C_': [{'a': 'BOOK'}]}
     book_blob2 = {'980__': [{'a': 'PROCEEDINGS'}]}
     book_blob3 = {'697C_': [{'a': 'ENGLISH BOOK CLUB'}]}
+    standard_blob1 = {'690C_': [{'a': 'STANDARD'}]}
     not_match = {'foo': 'bar'}
 
     assert book.model == matcher(book_blob1, 'cds_dojson.marc21.models')
     assert book.model == matcher(book_blob2, 'cds_dojson.marc21.models')
     assert book.model == matcher(book_blob3, 'cds_dojson.marc21.models')
+    assert standard.model == matcher(standard_blob1,
+                                     'cds_dojson.marc21.models')
     assert default.model == matcher(not_match, 'cds_dojson.marc21.models')

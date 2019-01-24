@@ -20,11 +20,10 @@
 
 from __future__ import absolute_import, print_function
 
-from dojson.utils import (IgnoreKey, filter_values, for_each_value, force_list,
-                          ignore_value)
+from dojson.utils import IgnoreKey, filter_values, for_each_value, \
+    force_list, ignore_value
 
 from ..models.base import model
-
 from .utils import clean_val
 
 
@@ -38,20 +37,6 @@ def recid(self, key, value):
 def agency_code(self, key, value):
     """Control number identifier."""
     return 'SzGeCERN'
-
-
-@model.over('translations', '(^246_[1_])|(590__)')
-@ignore_value
-def translations(self, key, value):
-    """Translations."""
-    translation = self.get('translations', [{}])[0]
-    if key.startswith('246'):
-        translation['title'] = {'title': value.get('a')}
-    if key.startswith('590'):
-        translation['description'] = value.get('a')
-    translation['language'] = 'fr'
-    self['translations'] = [translation]
-    raise IgnoreKey('translations')
 
 
 @model.over('keywords', '^6531_')

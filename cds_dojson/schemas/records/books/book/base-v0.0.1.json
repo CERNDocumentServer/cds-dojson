@@ -579,15 +579,15 @@
       "type": "array",
       "uniqueItems": true
     },
-    "titles": {
-      "description": ":MARC: ``245``\nThere can be several because the preprint title often differs from\nthe published version. The title should be kept as on the document\nand in the same language as the document (see :ref:`languages`).\nTranslations go into :ref:`title_translations`.",
-      "items": {
-        "$ref": "elements/title.json"
-      },
-      "minItems": 1,
-      "title": "List of titles",
-      "type": "array",
-      "uniqueItems": true
+    "title": {
+      "description": ":MARC: ``245``\nThe title should be kept as on the document and in the same language as\nthe document (see :ref:`languages`). Translations go into\n:ref:`title_translations`.",
+      "allOf": [
+        {
+          "$ref": "elements/title.json"
+        }
+      ],
+      "title": "Document title",
+      "type": "object"
     },
     "urls": {
       "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.",

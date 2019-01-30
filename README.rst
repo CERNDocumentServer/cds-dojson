@@ -18,22 +18,33 @@
         :target: https://github.com/CERNDocumentServer/cds-dojson/blob/master/LICENSE
 
 
-About
-=====
+Development
+===========
+Install your checked out code: ::
 
+  pip install -e .[all]
 
+Do your desired changes in the **yml** files.
+Build using a python 3.6 or greater to avoid shuffling properties.
+Keep the trailing slashes on the commands below.
 
-Installation
-============
+Build the source schemas from yml files: ::
+
+  cds-dojson convert-yaml2json <path_to_yml_source>/
+
+Build the final schemas from definitions: ::
+
+  cds-dojson compile_schema <path_to_-src-_schema>/
+
 
 
 Documentation
 =============
-
 Documentation can be built using Sphinx: ::
 
   pip install cds-dojson[docs]
   python setup.py build_sphinx
+
 
 Testing
 =======

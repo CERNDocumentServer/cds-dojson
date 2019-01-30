@@ -1654,36 +1654,28 @@
       "type": "array",
       "uniqueItems": true
     },
-    "titles": {
-      "description": ":MARC: ``245``\nThere can be several because the preprint title often differs from\nthe published version. The title should be kept as on the document\nand in the same language as the document (see :ref:`languages`).\nTranslations go into :ref:`title_translations`.",
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "is_alternative": {
-            "type": "boolean"
-          },
-          "source": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "subtitle": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "title": {
-            "minLength": 1,
-            "type": "string"
-          }
+    "title": {
+      "description": ":MARC: ``245``\nThe title should be kept as on the document and in the same language as\nthe document (see :ref:`languages`). Translations go into\n:ref:`title_translations`.",
+      "title": "Document title",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "minLength": 1,
+          "type": "string"
         },
-        "required": [
-          "title"
-        ],
-        "type": "object"
+        "subtitle": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "type": "string"
+        }
       },
-      "minItems": 1,
-      "title": "List of titles",
-      "type": "array",
-      "uniqueItems": true
+      "required": [
+        "title"
+      ]
     },
     "urls": {
       "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.",

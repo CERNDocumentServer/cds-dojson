@@ -39,27 +39,21 @@ def check_transformation(marcxml_body, json_body):
     assert record == expected
 
 
-def test_titles(app):
+def test_title(app):
     with app.app_context():
         check_transformation(
             """
             <datafield tag="245" ind1=" " ind2=" ">
                 <subfield code="a">Incoterms 2010</subfield>
-                <subfield code="b">les règles de l'ICC pour l'utilisation
-                 des termes de commerce nationaux et internationaux
-                </subfield>
-            </datafield>
-            <datafield tag="245" ind1=" " ind2=" ">
-                <subfield code="a">Titre test</subfield>
+                <subfield code="b">les règles de l'ICC</subfield>
             </datafield>
             """,
-            {'titles': [
-                {'title': 'Incoterms 2010',
-                 'subtitle': u"""les règles de l'ICC pour l'utilisation
-                 des termes de commerce nationaux et internationaux""",
-                 },
-                {'title': 'Titre test'}
-            ]}
+            {
+                'title': {
+                    'title': 'Incoterms 2010',
+                    'subtitle': u"""les règles de l'ICC"""
+                }
+            }
         )
     with app.app_context():
         check_transformation(
@@ -80,10 +74,10 @@ def test_titles(app):
             """,
             {
                 'document_type': ['STANDARD'],
-                'titles': [
-                    {'title': 'Test',
-                     'subtitle': 'Subtitle'}
-                ],
+                'title': {
+                    'title': 'Test',
+                    'subtitle': 'Subtitle'
+                },
                 'title_translations': [
                     {'title': 'Water quality — sampling',
                      'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",

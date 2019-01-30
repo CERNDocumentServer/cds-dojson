@@ -561,11 +561,10 @@ def title_translations(self, key, value):
     }
 
 
-@model.over('titles', '^245__')
-@for_each_value
+@model.over('title', '^245__')
 @filter_values
-def titles(self, key, value):
-    """Translates titles."""
+def title(self, key, value):
+    """Translates title."""
     return {
         'title': clean_val('a', value, str, req=True),
         'subtitle': clean_val('b', value, str),

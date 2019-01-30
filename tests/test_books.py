@@ -1682,23 +1682,21 @@ def test_title_translations(app):
         )
 
 
-def test_titles(app):
+def test_title(app):
     with app.app_context():
         check_transformation(
             """
             <datafield tag="245" ind1=" " ind2=" ">
                 <subfield code="a">Incoterms 2010</subfield>
-                <subfield code="b">les règles de l'ICC pour l'utilisation
-                 des termes de commerce nationaux et internationaux
-                </subfield>
+                <subfield code="b">les règles de l'ICC</subfield>
             </datafield>
             """,
-            {'titles': [
-                {'title': 'Incoterms 2010',
-                 'subtitle': u"""les règles de l'ICC pour l'utilisation
-                 des termes de commerce nationaux et internationaux""",
-                 },
-            ]}
+            {
+                'title': {
+                    'title': 'Incoterms 2010',
+                    'subtitle': u"""les règles de l'ICC""",
+                }
+            }
         )
     with app.app_context():
         check_transformation(
@@ -1715,10 +1713,9 @@ def test_titles(app):
             """,
             {
                 'document_type': ['BOOK'],
-                'titles': [
+                'alternative_titles': [
                     {'title': 'Water quality — sampling',
                      'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
-                     'is_alternative': True,
                      },
                 ]
             }
@@ -1979,12 +1976,10 @@ def test_541(app):
                     'languages': [
                         "en"
                     ],
-                    'titles': [
-                        {
-                            'subtitle': "practice and application",
-                            'title': "Bayesian networks in fault diagnosis"
-                        }
-                    ],
+                    'title': {
+                        'subtitle': "practice and application",
+                        'title': "Bayesian networks in fault diagnosis"
+                    },
                     'recid': 2654497,
                     'isbns': [
                         {

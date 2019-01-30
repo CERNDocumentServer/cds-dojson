@@ -26,16 +26,22 @@ from cds_dojson.marc21.fields.utils import clean_val
 from cds_dojson.marc21.models.books.book import model
 
 
-@model.over('titles', '(^245__)|(^246__)')
-@for_each_value
+@model.over('title', '(^245__)')
 @filter_values
-def titles(self, key, value):
+def title(self, key, value):
     """Translates titles."""
-    alt_title = None
-    if key == '246__':
-        alt_title = True
     return {
         'title': clean_val('a', value, str, req=True),
         'subtitle': clean_val('b', value, str),
-        'is_alternative': alt_title
+    }
+
+
+@model.over('alternative_titles', '(^246__)')
+@for_each_value
+@filter_values
+def alternative_titles(self, key, value):
+    """Translates alternative titles."""
+    return {
+        'title': clean_val('a', value, str, req=True),
+        'subtitle': clean_val('b', value, str),
     }

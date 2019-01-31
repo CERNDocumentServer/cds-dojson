@@ -1698,6 +1698,51 @@ def test_title(app):
                 }
             }
         )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="245" ind1=" " ind2=" ">
+                    <subfield code="a">Incoterms 2010</subfield>
+                    <subfield code="b">les règles de l'ICC</subfield>
+                </datafield>
+                <datafield tag="245" ind1=" " ind2=" ">
+                    <subfield code="a">With duplicate title</subfield>
+                </datafield>
+                """,
+                {}
+            )
+
+
+def test_alternative_titles(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="a">Air quality — sampling</subfield>
+                <subfield code="b">
+                    part 4: guidance on the metrics
+                </subfield>
+            </datafield>
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="a">Water quality — sampling</subfield>
+                <subfield code="b">
+                    part 15: guidance on preservation
+                </subfield>
+            </datafield>
+            """,
+            {
+                'alternative_titles': [
+                    {
+                        'title': 'Air quality — sampling',
+                        'subtitle': u"""part 4: guidance on the metrics""",
+                    },
+                    {
+                        'title': 'Water quality — sampling',
+                        'subtitle': u"""part 15: guidance on preservation""",
+                    },
+                ]
+            }
+        )
     with app.app_context():
         check_transformation(
             """
@@ -1707,16 +1752,17 @@ def test_title(app):
             <datafield tag="246" ind1=" " ind2=" ">
                 <subfield code="a">Water quality — sampling</subfield>
                 <subfield code="b">
-                part 15: guidance on the preservation and handling of sludge
-            </subfield>
+                    part 15: guidance on the preservation
+                </subfield>
             </datafield>
             """,
             {
                 'document_type': ['BOOK'],
                 'alternative_titles': [
-                    {'title': 'Water quality — sampling',
-                     'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
-                     },
+                    {
+                        'title': 'Water quality — sampling',
+                        'subtitle': u"""part 15: guidance on the preservation""",
+                    },
                 ]
             }
         )

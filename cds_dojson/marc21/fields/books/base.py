@@ -565,6 +565,9 @@ def title_translations(self, key, value):
 @filter_values
 def title(self, key, value):
     """Translates title."""
+    if 'title' in self:
+        raise UnexpectedValue()
+
     return {
         'title': clean_val('a', value, str, req=True),
         'subtitle': clean_val('b', value, str),

@@ -137,6 +137,35 @@
       "title": "Origin of the metadata in the record",
       "type": "object"
     },
+    "alternative_titles": {
+      "description": ":MARC: ``246``\nAlternative titles for books",
+      "items": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "source": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "subtitle": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "title": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "type": "object"
+        }
+      ],
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
     "authors": {
       "description": ":MARC: ``100``, ``700``\nBesides authors, also contains editors and supervisors (see\n:ref:`hep.json#/properties/authors/items/properties/inspire_roles`).",
       "items": {

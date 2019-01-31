@@ -51,6 +51,17 @@
     "acquisition_source": {
       "$ref": "elements/acquisition_source.json"
     },
+    "alternative_titles": {
+      "description": ":MARC: ``246``\nAlternative titles for books",
+      "items": [
+        {
+          "$ref": "elements/title.json"
+        }
+      ],
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
     "authors": {
       "description": ":MARC: ``100``, ``700``\nBesides authors, also contains editors and supervisors (see\n:ref:`hep.json#/properties/authors/items/properties/inspire_roles`).",
       "items": {

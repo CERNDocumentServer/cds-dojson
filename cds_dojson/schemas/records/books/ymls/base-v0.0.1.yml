@@ -49,6 +49,15 @@ properties:
     uniqueItems: true
   acquisition_source:
     $ref: elements/acquisition_source.json
+  alternative_titles:
+    description: |-
+      :MARC: ``246``
+      Alternative titles for books
+    items:
+      - $ref: elements/title.json
+    minItems: 1
+    type: array
+    uniqueItems: true
   authors:
     description: |-
       :MARC: ``100``, ``700``

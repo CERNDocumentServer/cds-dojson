@@ -104,6 +104,11 @@
       "title": "Number of pages of the document",
       "type": "integer"
     },
+    "physical_description": {
+      "description": ":MARC: ``300`` when no pagination",
+      "title": "Additional information about the physical description of an object",
+      "type": "string"
+    },
     "persistent_identifiers": {
       "description": ":MARC: ``0247``",
       "items": {

@@ -40,6 +40,9 @@ from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
     replace_in_result
 from cds_dojson.marc21.models.books.base import model
 
+from .utils import extract_page_number, extract_physical_description, \
+    is_excluded
+
 
 @model.over('acquisition_source', '(^916__)|(^859__)|(^595__)')
 @filter_values
@@ -617,14 +620,28 @@ def preprint_date(self, key, value):
 @model.over('number_of_pages', '^300__')
 def number_of_pages(self, key, value):
     """Translates number_of_pages fields."""
-    pages = clean_val('a', value, str)
-    if not pages:
+    val = clean_val('a', value, str)
+    if is_excluded(val):
         raise IgnoreKey('number_of_pages')
-    pages = re.search(r'(^[0-9]+) *p', pages)
-    if pages:
-        pages = int(pages.group(1))
-        return pages
-    raise UnexpectedValue(subfield='a')
+
+    if extract_physical_description(val):
+        self['physical_description'] = physical_description(self, key, value)
+
+    page_number = extract_page_number(val)
+    if page_number:
+        return page_number
+    raise IgnoreKey('number_of_pages')
+
+
+@model.over('physical_description', '^300__')
+@out_strip
+def physical_description(self, key, value):
+    """Translates physical_description from number_of_pages."""
+    val = clean_val('a', value, str)
+    physical_description = extract_physical_description(val)
+    if physical_description:
+        return physical_description
+    raise IgnoreKey('physical_description')
 
 
 @model.over('book_series', '^490__')

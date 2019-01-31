@@ -1326,6 +1326,50 @@ def test_number_of_pages(app):
             </datafield>
             """, {
                 'number_of_pages': 480,
+                'physical_description': '1 CD-ROM suppl'
+            })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">2 v</subfield>
+            </datafield>
+            """, {
+                'physical_description': '2 v'
+            })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">2 v + 2 CD-ROM</subfield>
+            </datafield>
+            """, {
+                'physical_description': '2 v , 2 CD-ROM'
+            })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">42 p. + 17 p</subfield>
+            </datafield>
+            """, {
+                'number_of_pages': 42,
+                'physical_description': '17 p'
+            })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">42 p. ; E22</subfield>
+            </datafield>
+            """, {
+                'number_of_pages': 42,
+                'physical_description': 'E22'
+            })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">42 p. ; 2 CD-ROM ; 2v</subfield>
+            </datafield>
+            """, {
+                'number_of_pages': 42,
+                'physical_description': '2 CD-ROM , 2v'
             })
         check_transformation(
             """
@@ -1333,17 +1377,14 @@ def test_number_of_pages(app):
                 <subfield code="a"></subfield>
             </datafield>
             """, {
-
             })
-        with pytest.raises(UnexpectedValue):
-            check_transformation(
-                """
-                <datafield tag="300" ind1=" " ind2=" ">
-                    <subfield code="a">p</subfield>
-                </datafield>
-                """, {
-
-                })
+        check_transformation(
+            """
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">mult. p</subfield>
+            </datafield>
+            """, {
+            })
 
 
 # for book series model

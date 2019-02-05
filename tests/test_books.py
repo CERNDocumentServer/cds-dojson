@@ -34,11 +34,13 @@ marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
 
 
 def test_mapping():
+    """Test mapping."""
     with pytest.raises(UnexpectedValue):
         assert mapping(MATERIALS, 'softwa', raise_exception=True) == 'software'
 
 
 def check_transformation(marcxml_body, json_body):
+    """Check transformation."""
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
@@ -51,6 +53,7 @@ def check_transformation(marcxml_body, json_body):
 
 
 def test_subject_classification(app):
+    """Test subject classification."""
     with app.app_context():
         check_transformation(
             """
@@ -153,6 +156,7 @@ def test_subject_classification(app):
 
 
 def test_acquisition(app):
+    """Test acquisition."""
     with app.app_context():
         check_transformation(
             """
@@ -198,6 +202,7 @@ def test_acquisition(app):
 
 
 def test_collections(app):
+    """Test collections."""
     with app.app_context():
         check_transformation(
             """
@@ -266,6 +271,7 @@ def test_collections(app):
 
 
 def test_document_type(app):
+    """Test document type."""
     with app.app_context():
         check_transformation(
             """
@@ -313,6 +319,7 @@ def test_document_type(app):
 
 
 def test_document_type_collection(app):
+    """Test document type collection."""
     with app.app_context():
         check_transformation(
             """
@@ -341,6 +348,7 @@ def test_document_type_collection(app):
 
 
 def test_urls(app):
+    """Test urls."""
     with app.app_context():
         check_transformation(
             """
@@ -376,6 +384,7 @@ def test_urls(app):
 
 
 def test_acquisition_email(app):
+    """Test acquisition email."""
     with app.app_context():
         check_transformation(
             """
@@ -401,6 +410,7 @@ def test_acquisition_email(app):
 
 
 def test_authors(app):
+    """Test authors."""
     with app.app_context():
         check_transformation(
             """
@@ -484,6 +494,7 @@ def test_authors(app):
 
 # better example to be provided
 def test_corporate_author(app):
+    """Test corporate author."""
     with app.app_context():
         check_transformation(
             """
@@ -506,6 +517,7 @@ def test_corporate_author(app):
 
 
 def test_collaborations(app):
+    """Test_collaborations."""
     with app.app_context():
         check_transformation(
             """
@@ -521,6 +533,7 @@ def test_collaborations(app):
 
 
 def test_publication_info(app):
+    """Test publication info."""
     with app.app_context():
         check_transformation(
             """
@@ -673,6 +686,7 @@ def test_publication_info(app):
 
 
 def test_related_record(app):
+    """Test related record."""
     with app.app_context():
         with pytest.raises(ManualMigrationRequired):
             check_transformation(
@@ -724,6 +738,7 @@ def test_related_record(app):
 
 
 def test_accelerator_experiments(app):
+    """Test accelerator experiments."""
     with app.app_context():
         check_transformation(
             """
@@ -748,6 +763,7 @@ def test_accelerator_experiments(app):
 
 
 def test_isbns(app):
+    """Test isbns."""
     with app.app_context():
         check_transformation(
             """
@@ -890,6 +906,7 @@ def test_isbns(app):
 
 
 def test_report_numbers(app):
+    """Test report numbers."""
     with app.app_context():
         check_transformation(
             """
@@ -981,6 +998,7 @@ def test_report_numbers(app):
 
 
 def test_dois(app):
+    """Test dois."""
     with app.app_context():
         check_transformation(
             """
@@ -1000,6 +1018,7 @@ def test_dois(app):
 
 
 def test_external_system_identifiers(app):
+    """Test external system identifiers."""
     with app.app_context():
         check_transformation(
             """
@@ -1139,6 +1158,7 @@ def test_external_system_identifiers(app):
 
 
 def test_arxiv_eprints(app):
+    """Test arxiv eprints."""
     with app.app_context():
         check_transformation(
             """
@@ -1188,6 +1208,7 @@ def test_arxiv_eprints(app):
 
 
 def test_languages(app):
+    """Test languages."""
     with app.app_context():
         check_transformation(
             """
@@ -1197,7 +1218,6 @@ def test_languages(app):
             """, {
                 'languages': ['en'],
             })
-        # with pytest.raises(UnexpectedValue):
         check_transformation(
             """
             <datafield tag="041" ind1=" " ind2=" ">
@@ -1242,6 +1262,7 @@ def test_languages(app):
 
 
 def test_editions(app):
+    """Test editions."""
     with app.app_context():
         check_transformation(
             """
@@ -1256,6 +1277,7 @@ def test_editions(app):
 
 
 def test_imprints(app):
+    """Test imprints."""
     with app.app_context():
         check_transformation(
             """
@@ -1276,6 +1298,7 @@ def test_imprints(app):
 
 
 def test_preprint_date(app):
+    """Test preprint date."""
     with app.app_context():
         check_transformation(
             """
@@ -1310,6 +1333,7 @@ def test_preprint_date(app):
 
 
 def test_number_of_pages(app):
+    """Test number of pages."""
     with app.app_context():
         check_transformation(
             """
@@ -1387,26 +1411,8 @@ def test_number_of_pages(app):
             })
 
 
-# for book series model
-# def test_book_series(app):
-#     with app.app_context():
-#         check_transformation(
-#             """
-#             <datafield tag="490" ind1=" " ind2=" ">
-#                 <subfield code="a">CISM International Centre</subfield>
-#                 <subfield code="v">490</subfield>
-#                 <subfield code="x">0317-8471</subfield>
-#             </datafield>
-#             """, {
-#                 'book_series': {
-#                     'title': 'CISM International Centre',
-#                     'volume': '490',
-#                     'issn': '0317-8471',
-#                 },
-#             })
-
-
 def test_abstracts(app):
+    """Test abstracts."""
     with app.app_context():
         check_transformation(
             """
@@ -1441,6 +1447,7 @@ def test_abstracts(app):
 
 
 def test_funding_info(app):
+    """Test funding info."""
     with app.app_context():
         check_transformation(
             """
@@ -1470,7 +1477,9 @@ def test_funding_info(app):
             check_transformation(
                 """
                 <datafield tag="536" ind1=" " ind2=" ">
-                    <subfield code="a">CERN Technical Student Program</subfield>
+                    <subfield code="a">
+                        CERN Technical Student Program
+                    </subfield>
                 </datafield>
                 <datafield tag="536" ind1=" " ind2=" ">
                     <subfield code="a">FP7</subfield>
@@ -1494,6 +1503,7 @@ def test_funding_info(app):
 
 
 def test_license(app):
+    """Test license."""
     with app.app_context():
         check_transformation(
             """
@@ -1534,6 +1544,7 @@ def test_license(app):
 
 
 def test_copyright(app):
+    """Test copyright."""
     with app.app_context():
         check_transformation(
             """
@@ -1550,7 +1561,9 @@ def test_copyright(app):
             </datafield>
             <datafield tag="542" ind1=" " ind2=" ">
                 <subfield code="f">This work is licensed.</subfield>
-                <subfield code="u">http://creativecommons.org/licenses/by/4.0</subfield>
+                <subfield code="u">
+                    http://creativecommons.org/licenses/by/4.0
+                </subfield>
             </datafield>
             """, {
                 'copyrights': [
@@ -1574,6 +1587,7 @@ def test_copyright(app):
 
 
 def test_conference_info(app):
+    """Test conference info."""
     with app.app_context():
         check_transformation(
             """
@@ -1703,6 +1717,7 @@ def test_conference_info(app):
 
 
 def test_title_translations(app):
+    """Test title translations."""
     with app.app_context():
         check_transformation(
             """
@@ -1724,6 +1739,7 @@ def test_title_translations(app):
 
 
 def test_title(app):
+    """Test title."""
     with app.app_context():
         check_transformation(
             """
@@ -1755,6 +1771,7 @@ def test_title(app):
 
 
 def test_alternative_titles(app):
+    """Test alternative titles."""
     with app.app_context():
         check_transformation(
             """
@@ -1810,6 +1827,7 @@ def test_alternative_titles(app):
 
 
 def test_public_notes(app):
+    """Test public notes."""
     with app.app_context():
         check_transformation(
             """
@@ -1849,6 +1867,7 @@ def test_public_notes(app):
 
 
 def test_table_of_contents(app):
+    """Test table of contents."""
     with app.app_context():
         check_transformation(
             """
@@ -1917,7 +1936,7 @@ def test_standard_numbers(app):
 
 
 def test_book_series(app):
-    """Tests book seris field translation."""
+    """Tests book series field translation."""
     with app.app_context():
         check_transformation(
             """
@@ -1934,7 +1953,9 @@ def test_book_series(app):
         check_transformation(
             """
             <datafield tag="490" ind1=" " ind2=" ">
-                <subfield code="a">De Gruyter studies in mathematical physics</subfield>
+                <subfield code="a">
+                    De Gruyter studies in mathematical physics
+                </subfield>
                 <subfield code="v">16</subfield>
             </datafield>
             """, {
@@ -1966,6 +1987,7 @@ def test_book_series(app):
 
 
 def test_541(app):
+    """Test 541."""
     with app.app_context():
         with pytest.raises(MissingRule):
             check_transformation(
@@ -2025,7 +2047,9 @@ def test_541(app):
                         <subfield code="a">519.226</subfield>
                     </datafield>
                     <datafield tag="245" ind1=" " ind2=" ">
-                        <subfield code="a">Bayesian networks in fault diagnosis</subfield>
+                        <subfield code="a">
+                            Bayesian networks in fault diagnosis
+                        </subfield>
                         <subfield code="b">practice and application</subfield>
                     </datafield>
                     <datafield tag="260" ind1=" " ind2=" ">

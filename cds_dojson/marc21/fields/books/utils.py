@@ -22,6 +22,7 @@ import re
 
 
 def is_excluded(value):
+    """Validate if field 300 should be excluded."""
     exclude = ['mult. p', 'mult p']
     if value in exclude:
         return True
@@ -29,6 +30,7 @@ def is_excluded(value):
 
 
 def extract_page_number(value):
+    """Extract page number from 300 if exists."""
     num_search = re.search(r'(^[0-9]+) *p', value)
     if num_search:
         return int(num_search.group(1))
@@ -36,6 +38,7 @@ def extract_page_number(value):
 
 
 def extract_physical_description(value):
+    """Extract extra information from 300 if any."""
     separators = ['+', ';', ',', ':']
     result = []
     for sep in separators:

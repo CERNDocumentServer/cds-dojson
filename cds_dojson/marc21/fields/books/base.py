@@ -40,8 +40,7 @@ from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
     replace_in_result
 from cds_dojson.marc21.models.books.base import model
 
-from .utils import extract_page_number, extract_physical_description, \
-    is_excluded
+from .utils import extract_parts, is_excluded
 
 
 @model.over('acquisition_source', '(^916__)|(^859__)|(^595__)')
@@ -624,24 +623,14 @@ def number_of_pages(self, key, value):
     if is_excluded(val):
         raise IgnoreKey('number_of_pages')
 
-    if extract_physical_description(val):
-        self['physical_description'] = physical_description(self, key, value)
-
-    page_number = extract_page_number(val)
-    if page_number:
-        return page_number
-    raise IgnoreKey('number_of_pages')
-
-
-@model.over('physical_description', '^300__')
-@out_strip
-def physical_description(self, key, value):
-    """Translates physical_description from number_of_pages."""
-    val = clean_val('a', value, str)
-    physical_description = extract_physical_description(val)
-    if physical_description:
-        return physical_description
-    raise IgnoreKey('physical_description')
+    parts = extract_parts(val)
+    if parts['has_extra']:
+        raise UnexpectedValue(subfield='a')
+    if parts['physical_description']:
+        self['physical_description'] = parts['physical_description']
+    if parts['number_of_pages']:
+        return parts['number_of_pages']
+    raise UnexpectedValue(subfield='a')
 
 
 @model.over('book_series', '^490__')

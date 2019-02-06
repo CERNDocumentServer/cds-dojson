@@ -21,33 +21,66 @@
 import re
 
 
+MAX_PAGES_NUMBER = 8192
+
+
 def is_excluded(value):
     """Validate if field 300 should be excluded."""
-    exclude = ['mult. p', 'mult p']
-    if value in exclude:
+    exclude = [
+        "mul. p",
+        "mult p",
+        "mult. p",
+        "mult. p.",
+        "multi p",
+        "multi pages",
+    ]
+    if not value or value.strip().lower() in exclude:
         return True
     return False
 
 
-def extract_page_number(value):
-    """Extract page number from 300 if exists."""
-    num_search = re.search(r'(^[0-9]+) *p', value)
-    if num_search:
-        return int(num_search.group(1))
+def extract_number_of_pages(value):
+    """Extract number of pages from 300 if exists."""
+    res = re.findall(r"([0-9]+) *p", value, flags=re.IGNORECASE)
+
+    # If we have more than one occurency of pages its UnexpectedValue
+    if len(res) == 1 and int(res[0]) < MAX_PAGES_NUMBER:
+        return int(res[0])
     return None
 
 
 def extract_physical_description(value):
-    """Extract extra information from 300 if any."""
-    separators = ['+', ';', ',', ':']
-    result = []
+    """Extract physical description from 300 if any."""
+    res = re.findall(
+        r"([0-9]+ \w[CD\-ROM|DVD\-ROM|diskette|VHS]+)",
+        value,
+        flags=re.IGNORECASE
+    )
+    if res:
+        return ", ".join(res).upper()
+    return None
+
+
+def extract_parts(value):
+    """Split our input to several parts."""
+    separators = ["+", ";", ",", ":"]
+    res = []
     for sep in separators:
         if sep in value:
-            result += value.split(sep)
+            res += value.split(sep)
 
-    has_number = extract_page_number(value)
-    if has_number:
-        return ','.join(result[1:])
-    elif result:
-        return ','.join(result[0:])
-    return value
+    valid_parts_count = len(list(filter(is_excluded, res)))
+
+    number_of_pages = extract_number_of_pages(value)
+    if number_of_pages:
+        valid_parts_count -= 1
+
+    physical_description = extract_physical_description(value)
+    if physical_description:
+        valid_parts_count -= len(physical_description.split(','))
+
+    return {
+        "has_extra": bool(valid_parts_count > 0),
+        "number_of_pages": number_of_pages,
+        "physical_description": physical_description,
+    }

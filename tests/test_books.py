@@ -1350,50 +1350,16 @@ def test_number_of_pages(app):
             </datafield>
             """, {
                 'number_of_pages': 480,
-                'physical_description': '1 CD-ROM suppl'
+                'physical_description': '1 CD-ROM'
             })
         check_transformation(
             """
             <datafield tag="300" ind1=" " ind2=" ">
-                <subfield code="a">2 v</subfield>
-            </datafield>
-            """, {
-                'physical_description': '2 v'
-            })
-        check_transformation(
-            """
-            <datafield tag="300" ind1=" " ind2=" ">
-                <subfield code="a">2 v + 2 CD-ROM</subfield>
-            </datafield>
-            """, {
-                'physical_description': '2 v , 2 CD-ROM'
-            })
-        check_transformation(
-            """
-            <datafield tag="300" ind1=" " ind2=" ">
-                <subfield code="a">42 p. + 17 p</subfield>
+                <subfield code="a">42 p. ; 2 CD-ROM ; 1 DVD, 1 vhs</subfield>
             </datafield>
             """, {
                 'number_of_pages': 42,
-                'physical_description': '17 p'
-            })
-        check_transformation(
-            """
-            <datafield tag="300" ind1=" " ind2=" ">
-                <subfield code="a">42 p. ; E22</subfield>
-            </datafield>
-            """, {
-                'number_of_pages': 42,
-                'physical_description': 'E22'
-            })
-        check_transformation(
-            """
-            <datafield tag="300" ind1=" " ind2=" ">
-                <subfield code="a">42 p. ; 2 CD-ROM ; 2v</subfield>
-            </datafield>
-            """, {
-                'number_of_pages': 42,
-                'physical_description': '2 CD-ROM , 2v'
+                'physical_description': '2 CD-ROM, 1 DVD, 1 VHS'
             })
         check_transformation(
             """
@@ -1409,6 +1375,47 @@ def test_number_of_pages(app):
             </datafield>
             """, {
             })
+
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="300" ind1=" " ind2=" ">
+                    <subfield code="a">2 v</subfield>
+                </datafield>
+                """, {
+                })
+            check_transformation(
+                """
+                <datafield tag="300" ind1=" " ind2=" ">
+                    <subfield code="a">42 p. + 17 p</subfield>
+                </datafield>
+                """, {
+                })
+            check_transformation(
+                """
+                <datafield tag="300" ind1=" " ind2=" ">
+                    <subfield code="a">
+                        amendment A1 (18 p) + amendment A2 (18 p)
+                    </subfield>
+                </datafield>
+                """, {
+                })
+            check_transformation(
+                """
+                <datafield tag="300" ind1=" " ind2=" ">
+                    <subfield code="a">
+                        amendment A1 (18 p) + amendment A2 (18 p)
+                    </subfield>
+                </datafield>
+                """, {
+                })
+            check_transformation(
+                """
+                <datafield tag="300" ind1=" " ind2=" ">
+                    <subfield code="a">42 p. ; E22</subfield>
+                </datafield>
+                """, {
+                })
 
 
 def test_abstracts(app):

@@ -463,10 +463,9 @@ def languages(self, key, value):
     """Translates languages fields."""
     lang = clean_val('a', value, str).lower()
     try:
-        iso_lang = pycountry.languages.lookup(lang).alpha_2
+        return pycountry.languages.lookup(lang).alpha_2
     except (KeyError, AttributeError, LookupError):
         raise UnexpectedValue(subfield='a')
-    return iso_lang
 
 
 @model.over('subject_classification',

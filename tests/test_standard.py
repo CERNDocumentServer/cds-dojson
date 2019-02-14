@@ -81,7 +81,7 @@ def test_title(app):
                 'title_translations': [
                     {'title': 'Water quality — sampling',
                      'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
-                     'language': 'en',
+                     'language': 'fr',
                      }
                 ]
             }

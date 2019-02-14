@@ -19,7 +19,6 @@
 
 from __future__ import absolute_import
 
-import filecmp
 import json
 import os
 
@@ -143,6 +142,8 @@ def test_yaml2json():
     with open(os.path.join(root_dir, 'books_title_mock.json')) as s:
         # read the mock JSON file
         json_mock = json.load(s)
+
+    assert os.path.exists(destination)
 
     with open(os.path.join(destination, 'books_title.json')) as s:
         # read the newly created JSON file

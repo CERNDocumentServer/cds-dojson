@@ -18,7 +18,7 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Utilities for converting MARC21."""
 
-from dojson.contrib.marc21.utils import MARC21_DTD, split_stream
+from dojson.contrib.marc21.utils import MARC21_DTD
 from lxml import etree
 from six import StringIO, binary_type, text_type
 
@@ -85,9 +85,3 @@ def create_record(marcxml, correct=False, keep_singletons=True):
             record.append((key, MementoDict(fields)))
 
     return MementoDict(record)
-
-
-def load(source):
-    """Load MARC XML and return Python dict."""
-    for data in split_stream(source):
-        yield create_record(data)

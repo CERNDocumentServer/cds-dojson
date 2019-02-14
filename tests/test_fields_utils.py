@@ -89,9 +89,20 @@ def test_clean_str_regex():
 def test_clean_val(subfield, value, var_type, req, default, manual, output):
     """Test if clean value works properly"""
 
-    # regex_format already tested in clean_str
     assert clean_val(subfield, value, var_type, req=req,
                      default=default, manual=manual) == output
+
+
+@pytest.mark.parametrize(
+    'subfield, value, var_type, req, default, manual, regexp, output',
+    [('a', {'a': '20-40'}, str, False, None, None,
+      r'\d+(?:[\-‐‑‒–—―⁻₋−﹘﹣－]\d+)$', '20-40'),
+     ])
+def test_clean_val_regexp(subfield, value, var_type, req, default, manual,
+                          regexp, output):
+    assert clean_val(subfield, value, var_type, req=req,
+                     default=default, manual=manual,
+                     regex_format=regexp) == output
 
 
 @pytest.mark.xfail(raises=ManualMigrationRequired)

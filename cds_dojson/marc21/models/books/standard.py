@@ -39,6 +39,8 @@ class CDSStandard(CDSOverdoBookBase):
         '020__q',
         '0248_a',
         '0248_p',
+        '050__b',
+        '050_4b',
         '082002',
         '082042',
         '0820_2',

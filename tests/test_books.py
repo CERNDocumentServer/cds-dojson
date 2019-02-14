@@ -71,6 +71,7 @@ def test_subject_classification(app):
             """
             <datafield tag="050" ind1=" " ind2="4">
                 <subfield code="a">QA76.642</subfield>
+                <subfield code="b">XXXX</subfield>
             </datafield>
             """, {
                 'subject_classification': [

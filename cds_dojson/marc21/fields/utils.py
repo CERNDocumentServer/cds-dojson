@@ -51,7 +51,6 @@ def clean_pages_range(pages_subfield, value):
         if len(pages) == 1:
             result = {'page_start': int(pages[0])}
             return result
-
         else:
             result = {'page_start': int(pages[0]),
                       'page_end': int(pages[1])}

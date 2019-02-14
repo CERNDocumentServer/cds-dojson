@@ -1155,6 +1155,15 @@ def test_external_system_identifiers(app):
                     'value': '92074207',
                 }],
             })
+        # ignore 035__9== arXiv
+        check_transformation(
+            """
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">5231528</subfield>
+            </datafield>
+            """, {
+            })
 
 
 def test_arxiv_eprints(app):

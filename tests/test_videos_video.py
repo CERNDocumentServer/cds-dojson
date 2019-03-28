@@ -43,7 +43,7 @@ def test_required_fields(app):
                                  'test-email@cern.ch',
                                  'example@test.com'],
                         'update': ['Jacques.Fichet@cern.ch',
-                                   'christoph.martin.madsen@cern.ch']},
+                                   'chmadsen@cern.ch']},
             '_files': [
                 {
                     'filepath': 'MediaArchive/Video/Masters/Movies/CERN/2017/CERN-MOVIE-2017-023/Final_Output/CERN-MOVIE-2017-023-001.mov',
@@ -205,7 +205,7 @@ def test_required_fields(app):
                 {'name': 'CERN Video Productions', 'role': 'Director'},
                 {
                     #  'affiliations': (u'CERN',),#01.01.2019 no longer at CERN
-                    'email': u'christoph.martin.madsen@cern.ch',
+                    'email': u'chmadsen@cern.ch',
                     'ids': [{'source': 'CERN', 'value': u'755568'},
                             {'source': 'CDS', 'value': u'2090563'}],
                     'name': 'Madsen, Christoph Martin',
@@ -221,7 +221,7 @@ def test_required_fields(app):
                 },
                 {
                     #  'affiliations': (u'CERN',),
-                    'email': u'christoph.martin.madsen@cern.ch',
+                    'email': u'chmadsen@cern.ch',
                     'ids': [{'source': 'CERN', 'value': u'755568'},
                             {'source': 'CDS', 'value': u'2090563'}],
                     'name': 'Madsen, Christoph Martin',
@@ -592,7 +592,7 @@ def test_fields(app):
                     {'name': 'test2', 'role': 'Credits'},
                     {
                         #  'affiliations': (u'CERN',),
-                        'email': u'christoph.martin.madsen@cern.ch',
+                        'email': u'chmadsen@cern.ch',
                         'ids': [{'source': 'CERN', 'value': u'755568'},
                                 {'source': 'CDS', 'value': u'2090563'}],
                         'name': 'Madsen, Christoph Martin', 'role': 'Director'

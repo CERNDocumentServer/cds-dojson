@@ -426,34 +426,48 @@ def report_numbers(self, key, value):
     return f
 
 
-@model.over('arxiv_eprints', '^037__')
+@model.over('arxiv_eprints', '(^037__)|(^695__)')
 @filter_list_values
 def arxiv_eprints(self, key, value):
     """Translates arxiv_eprints fields."""
-    def check_category(v):
-        sub_c = clean_val('c', v, str)
-        if sub_c:
-            if sub_c in ARXIV_CATEGORIES:
-                return sub_c
+    def check_category(field, val):
+        category = clean_val(field, val, str)
+        if category:
+            if category in ARXIV_CATEGORIES:
+                return category
+            raise UnexpectedValue(subfield=field)
+
+    if key == '037__':
+        _arxiv_eprints = self.get('arxiv_eprints', [])
+        for v in force_list(value):
+            eprint_id = clean_val('a', v, str, req=True)
+            duplicated = [
+                elem
+                for i, elem in enumerate(_arxiv_eprints)
+                if elem['value'] == eprint_id
+            ]
+            category = check_category('c', v)
+            if not duplicated:
+                eprint = {'value': eprint_id}
+                if category:
+                    eprint.update({'categories': [category]})
+                _arxiv_eprints.append(eprint)
             else:
-                raise UnexpectedValue(subfield='c')
+                duplicated[0]['categories'].append(category)
+        return _arxiv_eprints
 
-    _arxiv_eprints = self.get('arxiv_eprints', [])
-    for v in force_list(value):
-        eprint_id = clean_val('a', v, str, req=True)
-        duplicated = [elem for i, elem in enumerate(_arxiv_eprints)
-                      if elem['value'] == eprint_id]
-        if not duplicated:
-            eprint = {'value': eprint_id}
-            sub_c = check_category(v)
-            if sub_c:
-                eprint.update({'categories': [sub_c]})
-            _arxiv_eprints.append(eprint)
-        else:
-            sub_c = check_category(v)
-            duplicated[0]['categories'].append(sub_c)
-
-    return _arxiv_eprints
+    if key == '695__':
+        _arxiv_eprints = self.get('arxiv_eprints', [])
+        category = check_category('a', value)
+        if not _arxiv_eprints:
+            raise ManualMigrationRequired(message='037__ is missing')
+        if clean_val('9', value, str) != 'LANL EDS':
+            raise UnexpectedValue(subfield='9')
+        _entry = _arxiv_eprints[0]
+        if category in _entry['categories']:
+            raise IgnoreKey('arxiv_eprints')
+        _entry['categories'].append(category)
+        return _arxiv_eprints
 
 
 @model.over('languages', '^041__')

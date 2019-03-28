@@ -943,7 +943,31 @@ def test_report_numbers(app):
                     'categories': ['hep-ex'],
                 }],
             })
-
+        check_transformation(
+            """
+            <datafield tag="037" ind1=" " ind2=" ">
+                <subfield code="9">arXiv</subfield>
+                <subfield code="a">arXiv:1808.02335</subfield>
+                <subfield code="c">hep-ex</subfield>
+            </datafield>
+            <datafield tag="695" ind1=" " ind2=" ">
+                <subfield code="9">LANL EDS</subfield>
+                <subfield code="a">hep-th</subfield>
+            </datafield>
+            <datafield tag="695" ind1=" " ind2=" ">
+                <subfield code="9">LANL EDS</subfield>
+                <subfield code="a">math-ph</subfield>
+            </datafield>
+            <datafield tag="695" ind1=" " ind2=" ">
+                <subfield code="9">LANL EDS</subfield>
+                <subfield code="a">hep-ex</subfield>
+            </datafield>
+            """, {
+                'arxiv_eprints': [{
+                    'value': 'arXiv:1808.02335',
+                    'categories': ['hep-ex', 'hep-th', 'math-ph'],
+                }],
+            })
         check_transformation(
             """
             <datafield tag="037" ind1=" " ind2=" ">
@@ -954,7 +978,6 @@ def test_report_numbers(app):
                     'value': 'CERN-THESIS-2018-004', 'hidden': True
                 }],
             })
-
         check_transformation(
             """
             <datafield tag="037" ind1=" " ind2=" ">
@@ -965,7 +988,6 @@ def test_report_numbers(app):
                     'value': 'CERN-ISOLDE-2018-001', 'hidden': True
                 }],
             })
-
         check_transformation(
             """
             <datafield tag="088" ind1=" " ind2=" ">
@@ -984,7 +1006,6 @@ def test_report_numbers(app):
                     {'value': 'ATL-COM-PHYS-2017', 'hidden': True},
                 ],
             })
-
         with pytest.raises(MissingRequiredField):
             check_transformation(
                 """
@@ -995,6 +1016,29 @@ def test_report_numbers(app):
                     'report_numbers': [{
                         'value': 'hep-th/9509119',
                     }],
+                })
+        with pytest.raises(ManualMigrationRequired):
+            check_transformation(
+                """
+                <datafield tag="695" ind1=" " ind2=" ">
+                    <subfield code="9">LANL EDS</subfield>
+                    <subfield code="a">math-ph</subfield>
+                </datafield>
+                """, {
+                })
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="037" ind1=" " ind2=" ">
+                    <subfield code="9">arXiv</subfield>
+                    <subfield code="a">arXiv:1808.02335</subfield>
+                    <subfield code="c">hep-ex</subfield>
+                </datafield>
+                <datafield tag="695" ind1=" " ind2=" ">
+                    <subfield code="9">Something else thanLANL EDS</subfield>
+                    <subfield code="a">hep-th</subfield>
+                </datafield>
+                """, {
                 })
 
 

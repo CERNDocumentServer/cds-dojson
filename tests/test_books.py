@@ -361,7 +361,6 @@ def test_urls(app):
             </datafield>
             """, {
                 'document_type': ['PROCEEDINGS'],
-                'urls': [{'value': 'cds.cern.ch'}],
             })
         check_transformation(
             """
@@ -369,7 +368,40 @@ def test_urls(app):
                 <subfield code="u">cds.cern.ch</subfield>
             </datafield>
             """, {
-                'urls': [{'value': 'cds.cern.ch'}],
+            })
+        check_transformation(
+            """
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="8">1336158</subfield>
+                <subfield code="s">3334918</subfield>
+                <subfield code="u">
+                http://cds.cern.ch/record/1393420/files/NF-EN-13480-2-A2.pdf?subformat=pdfa
+                </subfield>
+                <subfield code="x">pdfa</subfield>
+            </datafield>
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="8">1336158</subfield>
+                <subfield code="s">2445021</subfield>
+                <subfield code="u">http://awesome.domain/with/a/path</subfield>
+            </datafield>
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="8">1336159</subfield>
+                <subfield code="s">726479</subfield>
+                <subfield code="u">
+                http://cds.cern.ch/record/1393420/files/NF-EN-13480-2-AC6.pdf
+                </subfield>
+            </datafield>
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="8">1336157</subfield>
+                <subfield code="s">2412918</subfield>
+                <subfield code="u">http://another.domain/with/a/path</subfield>
+                <subfield code="x">pdfa</subfield>
+            </datafield>
+            """, {
+                'urls': [
+                    {'value': 'http://awesome.domain/with/a/path'},
+                    {'value': 'http://another.domain/with/a/path'},
+                ],
             })
         with pytest.raises(ManualMigrationRequired):
             check_transformation(

@@ -279,7 +279,6 @@ def accelerator_experiments(self, key, value):
 
 
 # TODO - discuss how we would like to keep links to holdings (files and ebooks)
-# TODO maybe regex for links?
 @model.over('urls', '^8564_')
 @for_each_value
 @filter_values
@@ -290,7 +289,12 @@ def urls(self, key, value):
     except ManualMigrationRequired as e:
         e.subfield = 't'
         raise e
-    return {'value': clean_val('u', value, str, req=True)}
+    url = clean_val('u', value, str, req=True)
+    if 'cds.cern.ch' not in url:
+        return {'value': url}
+    # TODO: instead of IgnoreKey if link starts with cds.cern.ch it should be
+    # linked as files to the record, issue #200
+    raise IgnoreKey('urls')
 
 
 @model.over('isbns', '^020__')

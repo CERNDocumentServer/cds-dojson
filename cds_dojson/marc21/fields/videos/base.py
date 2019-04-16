@@ -24,7 +24,7 @@ from dojson.utils import filter_values, for_each_value, force_list, \
     ignore_value
 
 from ...fields.utils import build_contributor_from_508, \
-    build_contributor_videos
+    build_contributor_videos, clean_val
 from ...models.videos.base import model
 
 
@@ -145,3 +145,14 @@ def translations(self, key, value):
 def original_source(self, key, value):
     """Original source."""
     return value.get('e')
+
+
+@model.over('keywords', '^6531_')
+@for_each_value
+@filter_values
+def keywords(self, key, value):
+    """Keywords."""
+    return {
+        'name': clean_val('a', value, str),
+        'source': value.get('9') or value.get('g'),  # Easier to solve here
+    }

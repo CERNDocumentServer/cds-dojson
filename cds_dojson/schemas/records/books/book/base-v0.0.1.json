@@ -390,7 +390,7 @@
             "title": "Keyword vocabulary",
             "type": "string"
           },
-          "source": {
+          "provenance": {
             "$ref": "elements/source.json"
           },
           "value": {

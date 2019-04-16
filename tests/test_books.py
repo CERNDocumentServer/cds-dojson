@@ -138,10 +138,10 @@ def test_subject_classification(app):
             </datafield>
             """, {
                 'keywords': [
-                    {'name': '13.75.Jz', 'source': 'PACS'},
-                    {'name': '13.60.Rj', 'source': 'PACS'},
-                    {'name': '14.20.Jn', 'source': 'PACS'},
-                    {'name': '25.80.Nv', 'source': 'PACS'},
+                    {'name': '13.75.Jz', 'provenance': 'PACS'},
+                    {'name': '13.60.Rj', 'provenance': 'PACS'},
+                    {'name': '14.20.Jn', 'provenance': 'PACS'},
+                    {'name': '25.80.Nv', 'provenance': 'PACS'},
                 ]
             }
         )
@@ -317,6 +317,27 @@ def test_document_type(app):
             """,
             {'document_type': ['BOOK', 'REPORT']}
         )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="697" ind1="C" ind2=" ">
+                    <subfield code="a">virTScvyb</subfield>
+                </datafield>
+                """,
+                {'document_type': ['BOOK', 'REPORT']}
+            )
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="697" ind1="C" ind2=" ">
+                    <subfield code="b">ENGLISH BOOK CLUB</subfield>
+                </datafield>
+                <datafield tag="960" ind1=" " ind2=" ">
+                    <subfield code="a">21</subfield>
+                </datafield>
+                """,
+                {'document_type': ['BOOK', 'REPORT']}
+            )
 
 
 def test_document_type_collection(app):
@@ -2238,3 +2259,21 @@ def test_541(app):
                         }
                     ]
                 })
+
+
+def test_keywords(app):
+    """Test public notes."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="653" ind1="1" ind2=" ">
+                <subfield code="g">PACS</subfield>
+                <subfield code="a">Keyword Name 1</subfield>
+            </datafield>
+            """,
+            {
+                'keywords': [
+                    {'name': 'Keyword Name 1', 'provenance': 'PACS'},
+                ]
+            }
+        )

@@ -129,6 +129,10 @@ def document_type(self, key, value):
             _doc_type.append(val_a)
         if val_b not in _doc_type:
             _doc_type.append(val_b)
+        if 'a' in v and not val_a:
+            raise UnexpectedValue(subfield='a')
+        if 'b' in v and not val_b:
+            raise UnexpectedValue(subfield='b')
     return _doc_type
 
 
@@ -510,20 +514,27 @@ def subject_classification(self, key, value):
     return _subject_classification
 
 
-@model.over('keywords', '^084__')
+@model.over('keywords', '(^084__)|(^6531_)')
 @filter_list_values
 def keywords(self, key, value):
-    """PACS Keywords."""
+    """Keywords."""
     _keywords = self.get('keywords', [])
     for v in force_list(value):
-        sub_2 = clean_val('2', value, str)
-        if sub_2 and sub_2 == 'PACS':
+        if key == '084__':
+            sub_2 = clean_val('2', value, str)
+            if sub_2 and sub_2 == 'PACS':
+                _keywords.append({
+                    'name': clean_val('a', v, str, req=True),
+                    'provenance': 'PACS',
+                })
+            else:
+                raise IgnoreKey('keywords')
+        elif key == '6531_':
             _keywords.append({
-                'name': clean_val('a', v, str, req=True),
-                'source': 'PACS',
+                'name': clean_val('a', value, str),
+                'provenance': value.get('9') or value.get('g'),  # Easier to solve here
             })
-        else:
-            raise IgnoreKey('keywords')
+
     return _keywords
 
 

@@ -24,7 +24,6 @@ from dojson.utils import IgnoreKey, filter_values, for_each_value, \
     force_list, ignore_value
 
 from ..models.base import model
-from .utils import clean_val
 
 
 @model.over('recid', '^001')
@@ -37,17 +36,6 @@ def recid(self, key, value):
 def agency_code(self, key, value):
     """Control number identifier."""
     return 'SzGeCERN'
-
-
-@model.over('keywords', '^6531_')
-@for_each_value
-@filter_values
-def keywords(self, key, value):
-    """Keywords."""
-    return {
-        'name': clean_val('a', value, str),
-        'source': value.get('9') or value.get('g'),  # Easier to solve here
-    }
 
 
 @model.over('videos', '^774')

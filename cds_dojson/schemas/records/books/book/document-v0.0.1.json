@@ -993,7 +993,7 @@
             "title": "Keyword vocabulary",
             "type": "string"
           },
-          "source": {
+          "provenance": {
             "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
             "minLength": 1,
             "type": "string"

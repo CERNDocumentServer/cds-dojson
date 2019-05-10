@@ -65,14 +65,6 @@ allOf:
         title: List of related accelerators/experiments/study/project
         type: array
         uniqueItems: true
-      additional_subject_categories:
-        description: '.. note: does not exist in Inspire'
-        items:
-          $ref: elements/additional_subject_categories.json
-        minItems: 1
-        title: List of other subject (Project specific... ex. EUCARD)
-        type: array
-        uniqueItems: true
       arxiv_eprints:
         items:
           additionalProperties: false
@@ -147,14 +139,6 @@ allOf:
             - title
           type: object
         minItems: 1
-        type: array
-        uniqueItems: true
-      cds_subject_categories:
-        description: '.. note: does not exist in Inspire'
-        items:
-          $ref: elements/cds_subject_categories.json
-        minItems: 1
-        title: List of CDS subject
         type: array
         uniqueItems: true
       collaborations:
@@ -545,48 +529,6 @@ allOf:
         title: List of keywords
         type: array
         uniqueItems: true
-      thesis_info:
-        additionalProperties: false
-        description: |-
-          :MARC: ``502``
-          Information on a thesis (degree, date, university)
-        properties:
-          date:
-            description: |-
-              :MARC: ``502__d``
-              Publication date of the thesis
-            format: date
-            minLength: 1
-            type: string
-          defense_date:
-            description: |-
-              :MARC: ``500__a``
-              Date of the thesis defense. On legacy, this was put in the
-              note field as 'presented on ...'.
-            format: date
-            minLength: 1
-            type: string
-          degree_type:
-            $ref: elements/degree_type.json
-          institutions:
-            description: |-
-              :MARC: ``502__c``
-              List of institutions issuing the degree.
-            items:
-              additionalProperties: false
-              properties:
-                curated_relation:
-                  type: boolean
-                name:
-                  minLength: 1
-                  type: string
-                record:
-                  $ref: elements/json_reference.json
-              type: object
-            minItems: 1
-            type: array
-            uniqueItems: true
-        type: object
       volume:
         description: ':MARC: ``246__n``'
         minItems: 1

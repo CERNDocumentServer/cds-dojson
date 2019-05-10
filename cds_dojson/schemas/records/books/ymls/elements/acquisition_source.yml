@@ -16,18 +16,25 @@ properties:
     minLength: 1
     title: Date on which the metadata was obtained
     type: string
-  email:
-    description: |-
-      :MARC: ``859``
-      This only gets populated when `method` is `submitter`.
-    format: email
-    minLength: 1
-    title: Email address associated to the submitter's account
-    type: string
-  internal_uid:
-    description: This only gets populated when `method` is `submitter`.
-    title: Inspire user ID of the submitter
-    type: integer
+  submitter:
+    email:
+      description: |-
+        :MARC: ``859``
+        This only gets populated when `method` is `submitter`.
+      format: email
+      minLength: 1
+      title: Email address associated to the submitter's account
+      type: string
+    internal_uid:
+        description: This only gets populated when `method` is `submitter`.
+        title: Inspire user ID of the submitter
+        type: integer
+    orcid:
+      description: This only gets populated when `method` is `submitter`.
+      minLength: 1
+      pattern: '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'
+      title: ORCID of the submitter
+      type: string
   method:
     description: |-
       Possible values are:
@@ -49,12 +56,6 @@ properties:
       - submitter
     minLength: 1
     title: Data obtaining method
-    type: string
-  orcid:
-    description: This only gets populated when `method` is `submitter`.
-    minLength: 1
-    pattern: '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'
-    title: ORCID of the submitter
     type: string
   source:
     $ref: source.json

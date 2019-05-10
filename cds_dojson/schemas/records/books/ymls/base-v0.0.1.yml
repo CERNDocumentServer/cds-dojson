@@ -196,12 +196,6 @@ properties:
     title: Authors
     type: array
     uniqueItems: false
-  control_number:
-    description: |-
-      :MARC: ``001``
-      Read-only field.
-    title: ID of current record
-    type: integer
   copyright:
     description: ':MARC: ``542``'
     items:
@@ -526,41 +520,6 @@ properties:
   recid:
     description: Invenio record identifier (integer).
     type: number
-  record_affiliations:
-    description: |-
-      :MARC: ``901``
-      Because of technical limitations, for some older records the
-      affiliations were associated globally to the record instead of its
-      individual authors (using the
-      :ref:`authors/items/properties/affiliations` field).
-      .. note::
-          This field is present for legacy records and should not be used
-          for new records.
-    items:
-      additionalProperties: false
-      properties:
-        curated_relation:
-          type: boolean
-        record:
-          $ref: elements/json_reference.json
-        value:
-          description: |-
-            :MARC: ``901__a``
-            Currently, the old
-            :ref:`institutions.json#/properties/legacy_ICN`
-            is used here. In the future, this will
-            change and become the new
-            :ref:`institutions.json#/properties/ICN`.
-          minLength: 1
-          title: ICN of affiliation
-          type: string
-      required:
-        - value
-      type: object
-    minItems: 1
-    title: Affiliations not associated to authors
-    type: array
-    uniqueItems: true
   related_records:
     $ref: elements/related_record.json
     description: ':MARC: ``787`` ``775``'

@@ -5,17 +5,6 @@ description: |-
   metadata coming from a second source, the `acquisition_source` is not
   updated.
 properties:
-  datetime:
-    description: |-
-      :MARC: `916__w``,`595__a (with certain conditions)``
-      This does not necessarily coincide with the creation date of the
-      record, as there might be some delay between the moment the
-      original information is obtained and a record is finally created in
-      the system.
-    format: date-time
-    minLength: 1
-    title: Date on which the metadata was obtained
-    type: string
   submitter:
     email:
       description: |-
@@ -29,12 +18,6 @@ properties:
         description: This only gets populated when `method` is `submitter`.
         title: Inspire user ID of the submitter
         type: integer
-    orcid:
-      description: This only gets populated when `method` is `submitter`.
-      minLength: 1
-      pattern: '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'
-      title: ORCID of the submitter
-      type: string
   method:
     description: |-
       Possible values are:
@@ -51,7 +34,6 @@ properties:
           stores the publisher or the repository that was crawled.
     enum:
       - batchuploader
-      - hepcrawl
       - oai
       - submitter
     minLength: 1
@@ -59,10 +41,5 @@ properties:
     type: string
   source:
     $ref: source.json
-  submission_number:
-    description: This only gets populated when `method` is `submitter`.
-    minLength: 1
-    title: Holding pen record ID of the submission
-    type: string
 title: Origin of the metadata in the record
 type: object

@@ -84,13 +84,6 @@
       "additionalProperties": false,
       "description": ":MARC: ``595``,``859``,``916``\nOnly the first source is stored: if the record later gets enriched with\nmetadata coming from a second source, the `acquisition_source` is not\nupdated.",
       "properties": {
-        "datetime": {
-          "description": ":MARC: `916__w``,`595__a (with certain conditions)``\nThis does not necessarily coincide with the creation date of the\nrecord, as there might be some delay between the moment the\noriginal information is obtained and a record is finally created in\nthe system.",
-          "format": "date-time",
-          "minLength": 1,
-          "title": "Date on which the metadata was obtained",
-          "type": "string"
-        },
         "submitter": {
           "email": {
             "description": ":MARC: ``859``\nThis only gets populated when `method` is `submitter`.",
@@ -109,7 +102,6 @@
           "description": "Possible values are:\n`submitter`\n    when obtained from a user submission. In this case, `orcid`,\n    `internal_uid` and `email` store identifiers of the submitter,\n    and `submission_number` an ID of the submission. The submitter can be the cataloger.\n`oai`\n    when obtained by OAI-PMH harvesting.\n`batchuploader`\n    when obtained through the batch uploader.\n`hepcrawl`\n    when obtained from a hepcrawl crawler. In this case, `source`\n    stores the publisher or the repository that was crawled.",
           "enum": [
             "batchuploader",
-            "hepcrawl",
             "oai",
             "submitter"
           ],
@@ -117,22 +109,10 @@
           "title": "Data obtaining method",
           "type": "string"
         },
-        "orcid": {
-          "description": "This only gets populated when `method` is `submitter`.",
-          "minLength": 1,
-          "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$",
-          "title": "ORCID of the submitter",
-          "type": "string"
-        },
+
         "source": {
           "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
           "minLength": 1,
-          "type": "string"
-        },
-        "submission_number": {
-          "description": "This only gets populated when `method` is `submitter`.",
-          "minLength": 1,
-          "title": "Holding pen record ID of the submission",
           "type": "string"
         }
       },
@@ -206,39 +186,12 @@
             "type": "array",
             "uniqueItems": true
           },
-          "credit_roles": {
-            "items": {
-              "description": ":MARC: not present.\nRole of the author according to the `Contributor\nRoles Taxonomy (CRediT)\n<http://dictionary.casrai.org/Contributor_Roles>`_",
-              "enum": [
-                "Conceptualization",
-                "Data curation",
-                "Formal analysis",
-                "Funding acquisition",
-                "Investigation",
-                "Methodology",
-                "Project administration",
-                "Resources",
-                "Software",
-                "Supervision",
-                "Validation",
-                "Visualization",
-                "Writing - original draft",
-                "Writing - review & editing"
-              ],
-              "minLength": 1,
-              "title": "Credit role of author",
-              "type": "string"
-            },
-            "minItems": 1,
-            "type": "array",
-            "uniqueItems": true
-          },
           "curated_relation": {
             "description": "This field is true when the author ID was processed by \\#BEARD\\# script",
             "default": false,
             "type": "boolean"
           },
-          "emails": {
+          "email": {
             "description": ":MARC: ``100/700/__m``",
             "items": {
               "format": "email",
@@ -246,7 +199,7 @@
               "type": "string"
             },
             "minItems": 1,
-            "type": "array",
+            "type": "string",
             "uniqueItems": true
           },
           "full_name": {
@@ -705,31 +658,6 @@
             "type": "array",
             "uniqueItems": true
           },
-          "raw_affiliations": {
-            "description": ":MARC: ``100/700__v``\nList of full affiliations, as written on the paper.",
-            "items": {
-              "additionalProperties": false,
-              "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.",
-              "properties": {
-                "source": {
-                  "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
-                  "minLength": 1,
-                  "type": "string"
-                },
-                "value": {
-                  "minLength": 1,
-                  "type": "string"
-                }
-              },
-              "required": [
-                "value"
-              ],
-              "type": "object"
-            },
-            "minItems": 1,
-            "type": "array",
-            "uniqueItems": true
-          },
           "roles": {
             "description": ".. note: different from Inspire (Inspire_role)",
             "items": {
@@ -758,11 +686,6 @@
       "title": "Authors",
       "type": "array",
       "uniqueItems": false
-    },
-    "control_number": {
-      "description": ":MARC: ``001``\nRead-only field.",
-      "title": "ID of current record",
-      "type": "integer"
     },
     "copyright": {
       "description": ":MARC: ``542``",
@@ -821,24 +744,17 @@
       "type": "array",
       "uniqueItems": true
     },
-    "document_types": {
+    "document_type": {
       "description": ":MARC: ``980__a`` ``690C_a`` ``960__a``\nTypes of document this record represents.\n.. note::\n  As a record aggregates information from multiple sources, it\n  can have multiple document types simultaneously. (?)",
-      "items": {
         "default": "book",
-        "description": "Types of document this record represents.\n.. note::\n    As a record aggregates information from multiple sources, it\n    can have multiple document types simultaneously. (?)\n``book``\n    Published Monograph (usually has an ISBN and a publisher)\n``proceedings``\n    Proceedings of a conference.\n    The :ref:`conference_info` field contains the information of the conference.\n    If published in a journal, :ref:`publication_info` also contains the journal information.\n``report``\n    A report. It can be unpublished, but can also be a book or a proceedings. In this case, it keeps the document type Book and Report or Proceedings and Report\n``thesis``\n    A thesis. The :ref:`thesis_info` field contains additional\n    information about the thesis. If published as a book, the\n    :ref:`editions`, :ref:`imprints`, :ref:`isbns` and\n    :ref:`book_series` fields may contain specific metadata about\n    this book and the document type can also be Book.\n``standard``\n    A standard.\n",
         "enum": [
           "book",
           "proceedings",
-          "report",
-          "standard",
-          "thesis"
+          "standard"
         ],
         "minLength": 1,
-        "type": "string"
-      },
-      "minItems": 1,
-      "title": "Document types",
-      "type": "array",
+      "title": "Document type",
+      "type": "string",
       "uniqueItems": true
     },
     "dois": {
@@ -1311,65 +1227,11 @@
       "description": "Invenio record identifier (integer).",
       "type": "number"
     },
-    "record_affiliations": {
-      "description": ":MARC: ``901``\nBecause of technical limitations, for some older records the\naffiliations were associated globally to the record instead of its\nindividual authors (using the\n:ref:`authors/items/properties/affiliations` field).\n.. note::\n    This field is present for legacy records and should not be used\n    for new records.",
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "curated_relation": {
-            "type": "boolean"
-          },
-          "record": {
-            "additionalProperties": false,
-            "properties": {
-              "$ref": {
-                "description": "URL to the referenced resource",
-                "format": "uri",
-                "minLength": 1,
-                "type": "string"
-              }
-            },
-            "required": [
-              "$ref"
-            ],
-            "title": "Reference to another record",
-            "type": "object"
-          },
-          "value": {
-            "description": ":MARC: ``901__a``\nCurrently, the old\n:ref:`institutions.json#/properties/legacy_ICN`\nis used here. In the future, this will\nchange and become the new\n:ref:`institutions.json#/properties/ICN`.",
-            "minLength": 1,
-            "title": "ICN of affiliation",
-            "type": "string"
-          }
-        },
-        "required": [
-          "value"
-        ],
-        "type": "object"
-      },
-      "minItems": 1,
-      "title": "Affiliations not associated to authors",
-      "type": "array",
-      "uniqueItems": true
-    },
     "related_records": {
       "additionalProperties": false,
       "description": ":MARC: ``775``\n.. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language. But this could be extracted from the related record directly.",
       "properties": {
-        "curated_relation": {
-          "type": "boolean"
-        },
-        "edition": {
-          "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n",
-          "minLength": 1,
-          "type": "string"
-        },
-        "language": {
-          "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n",
-          "minLength": 1,
-          "type": "string"
-        },
-        "note_freetext": {
+        "notes": {
           "description": ":MARC:\nIf a note is necessary to describe better the link between the records",
           "minLength": 1,
           "type": "string"
@@ -1395,20 +1257,11 @@
           "enum": [
             "other edition",
             "other language",
-            "parent"
+            "parent",
+            "other"
           ],
           "minLength": 1,
           "title": "Relation of the linked record to this one",
-          "type": "string"
-        },
-        "relation_freetext": {
-          "description": ":MARC:\nIf none of the standard relations in :ref:`relation` fit, a textual\nrelation can alternatively be provided here.",
-          "minLength": 1,
-          "type": "string"
-        },
-        "year": {
-          "description": ":MARC:  775__c\nDo we need? or can it be extracted from the corresponding record?\n",
-          "minLength": 1,
           "type": "string"
         }
       },
@@ -1746,25 +1599,21 @@
             "minLength": 1,
             "type": "string"
           },
-          "curated_relation": {
-            "default": false,
-            "type": "boolean"
-          },
           "experiment": {
             "description": "If present, :ref:`institution` should contain the\ninstitution where this experiment is located and\n:ref:`accelerator` may contain the accelerator that this\nexperiment is using (if appropriate).\n.. note::\n    Currently not used, see :ref:`legacy_name`.",
             "minLength": 1,
+            "type": "string"
+          },
+          "facility": {
+            "description": ":MARC: 693__f",
+            "minLength": 1,
+            "title": "Project",
             "type": "string"
           },
           "institution": {
             "description": ":MARC: not present.\n.. note::\n    Currently not used, see :ref:`legacy_name`.",
             "minLength": 1,
             "title": "Institution hosting the experiment",
-            "type": "string"
-          },
-          "legacy_name": {
-            "description": ":MARC: ``693__e``\nThis field is used when migrating from legacy instead\nof separate :ref:`institution`, :ref:`accelerator` and\n:ref:`experiment`. In the future, it will be deprecated and\nthe other fields will be used instead.\n:example: ``CERN-LHC-CMS``",
-            "minLength": 1,
-            "title": "Identifier of the experiment on legacy",
             "type": "string"
           },
           "project": {
@@ -1784,36 +1633,6 @@
       },
       "minItems": 1,
       "title": "List of related accelerators/experiments/study/project",
-      "type": "array",
-      "uniqueItems": true
-    },
-    "additional_subject_categories": {
-      "description": ".. note: does not exist in Inspire",
-      "items": {
-        "additionalProperties": false,
-        "description": ":MARC: ``65017`` or ``65027`` not CERN subjects (ex. EUCARD)",
-        "properties": {
-          "main": {
-            "description": ":MARC: If 65017->yes\nIn case there are several subject terms.",
-            "type": "boolean"
-          },
-          "source": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "term": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "required": [
-          "term"
-        ],
-        "title": "Additional category",
-        "type": "object"
-      },
-      "minItems": 1,
-      "title": "List of other subject (Project specific... ex. EUCARD)",
       "type": "array",
       "uniqueItems": true
     },
@@ -2051,75 +1870,6 @@
       "type": "array",
       "uniqueItems": true
     },
-    "cds_subject_categories": {
-      "description": ".. note: does not exist in Inspire",
-      "items": {
-        "additionalProperties": false,
-        "description": ":MARC: ``65017`` with ``2:CERN``\nThe CDS category classifies the subject\nthis record is related to.",
-        "properties": {
-          "main": {
-            "description": ":MARC: If 65017->yes\nIn case there are several subject terms.",
-            "type": "boolean"
-          },
-          "source": {
-            "enum": [
-              "arXiv",
-              "curator",
-              "Inspire",
-              "user"
-            ],
-            "minLength": 1,
-            "type": "string"
-          },
-          "term": {
-            "enum": [
-              "AB",
-              "AC",
-              "AD",
-              "AE",
-              "BE",
-              "BT",
-              "CA",
-              "CC",
-              "DD",
-              "EE",
-              "EG",
-              "FF",
-              "FU",
-              "GG",
-              "HH",
-              "JA",
-              "JB",
-              "JC",
-              "JJ",
-              "JS",
-              "KK",
-              "LA",
-              "LB",
-              "LL",
-              "MM",
-              "PG",
-              "PP",
-              "QQ",
-              "RR",
-              "SG",
-              "XX"
-            ],
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "required": [
-          "term"
-        ],
-        "title": "CDS category",
-        "type": "object"
-      },
-      "minItems": 1,
-      "title": "List of CDS subject",
-      "type": "array",
-      "uniqueItems": true
-    },
     "collaborations": {
       "items": {
         "additionalProperties": false,
@@ -2187,12 +1937,6 @@
         "minLength": 1,
         "type": "string"
       },
-      "conference_dates": {
-        "description": ":MARC: ``111__d``\ndates of the conference, many items do not have 111__9 and/or z",
-        "format": "date",
-        "minLength": 1,
-        "type": "string"
-      },
       "conference_place": {
         "description": ":MARC: ``111__c``",
         "minLength": 1,
@@ -2201,20 +1945,16 @@
       "conference_series": {
         "description": ":MARC: Does not exist in CDS",
         "minLength": 1,
-        "type": "string"
-      },
-      "conference_series_number": {
+        "type": "string",
+        "conference_series_number": {
         "description": ":MARC: Does not exist in CDS",
         "minLength": 1,
         "type": "integer"
+      }
       },
+
       "conference_title": {
         "description": ":MARC: ``111__a``\n.. Note: There can be different values there.",
-        "minLength": 1,
-        "type": "string"
-      },
-      "conference_year": {
-        "description": ":MARC: ``111__f`` *Do we still need?*",
         "minLength": 1,
         "type": "string"
       },
@@ -2344,13 +2084,6 @@
       "type": "array",
       "uniqueItems": true
     },
-    "preprint_date": {
-      "description": ":MARC: ``269__c``\n.. note::\n    This is only for preprints. For the publication date of\n    published documents, see :ref:`imprints`.",
-      "format": "date",
-      "minLength": 1,
-      "title": "Preprint release date",
-      "type": "string"
-    },
     "publication_info": {
       "description": ":MARC: ``773``",
       "items": {
@@ -2379,9 +2112,6 @@
             "minLength": 1,
             "title": "Conference acronym",
             "type": "string"
-          },
-          "curated_relation": {
-            "type": "boolean"
           },
           "journal_issue": {
             "description": ":MARC: ``773__n``",
@@ -2414,26 +2144,6 @@
             "minLength": 1,
             "type": "string"
           },
-          "material": {
-            "description": "The possible values are:\n``addendum``\n    for a document extending the main publication.\n``additional material``\n    for additional material attached to the main publication, that is\n    neither the more specific ``data`` or ``software``.\n``data``\n    for data related to the main publication.\n``erratum``\n    for a document correcting errors in the content of the main\n    publication. When the errors are not in the content but in the\n    publication process, it is considered as an ``editorial note`` instead.\n``editorial note``\n    for a document correcting errors in the metadata of the publication but\n    not its content. Otherwise, it is an ``erratum``.\n``preprint``\n    for a document that is made public (typically on `arXiv\n    <http://arxiv.org>`_) but not yet published formally.\n``publication``\n    for the main publication. If it's not published, it's a ``preprint``.\n``reprint``\n    for a reprint of the main publication.\n``software``\n    for software related to the main publication.\n``translation``\n    for a translation of the main publication.",
-            "enum": [
-              "addendum",
-              "additional material",
-              "data",
-              "e-book",
-              "e-proceedings",
-              "editorial note",
-              "erratum",
-              "preprint",
-              "publication",
-              "reprint",
-              "software",
-              "translation"
-            ],
-            "minLength": 1,
-            "title": "Material to which the field refers",
-            "type": "string"
-          },
           "page_end": {
             "description": ":MARC: last page in ``773__c`` (if present)",
             "minLength": 1,
@@ -2446,34 +2156,7 @@
             "title": "First page of document",
             "type": "string"
           },
-          "parent_isbn": {
-            "description": ":MARC: ``773__z``\nISBN of the book of which this document is a part.",
-            "minLength": 1,
-            "pattern": "^\\d*[0-9X]$",
-            "type": "string"
-          },
-          "parent_record": {
-            "additionalProperties": false,
-            "properties": {
-              "$ref": {
-                "description": "URL to the referenced resource",
-                "format": "uri",
-                "minLength": 1,
-                "type": "string"
-              }
-            },
-            "required": [
-              "$ref"
-            ],
-            "title": "Reference to another record",
-            "type": "object"
-          },
-          "parent_report_number": {
-            "description": ":MARC: ``773__r``\nReport number of the document of which this record is a\npart. This applies e.g. for large reports containing\nseveral chapters that have been split into individual\nrecords.",
-            "minLength": 1,
-            "type": "string"
-          },
-          "pubinfo_freetext": {
+          "freetext": {
             "description": ":MARC: ``773__x``\nUnstructured text describing the publication\ninformation.\n.. note::\n    This field is used when provided with unstructured\n    publication information, e.g. from arXiv. If known,\n    the other fields should be used instead.",
             "minLength": 1,
             "type": "string"
@@ -2556,75 +2239,6 @@
       "title": "List of keywords",
       "type": "array",
       "uniqueItems": true
-    },
-    "thesis_info": {
-      "additionalProperties": false,
-      "description": ":MARC: ``502``\nInformation on a thesis (degree, date, university)",
-      "properties": {
-        "date": {
-          "description": ":MARC: ``502__d``\nPublication date of the thesis",
-          "format": "date",
-          "minLength": 1,
-          "type": "string"
-        },
-        "defense_date": {
-          "description": ":MARC: ``500__a``\nDate of the thesis defense. On legacy, this was put in the\nnote field as 'presented on ...'.",
-          "format": "date",
-          "minLength": 1,
-          "type": "string"
-        },
-        "degree_type": {
-          "description": ":MARC: ``502__b``\nThe `other` value means that the degree type is not known or is not among\nthe more specific values.",
-          "enum": [
-            "bachelor",
-            "diploma",
-            "habilitation",
-            "laurea",
-            "master",
-            "other",
-            "phd"
-          ],
-          "minLength": 1,
-          "title": "Academic degree type",
-          "type": "string"
-        },
-        "institutions": {
-          "description": ":MARC: ``502__c``\nList of institutions issuing the degree.",
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "curated_relation": {
-                "type": "boolean"
-              },
-              "name": {
-                "minLength": 1,
-                "type": "string"
-              },
-              "record": {
-                "additionalProperties": false,
-                "properties": {
-                  "$ref": {
-                    "description": "URL to the referenced resource",
-                    "format": "uri",
-                    "minLength": 1,
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "$ref"
-                ],
-                "title": "Reference to another record",
-                "type": "object"
-              }
-            },
-            "type": "object"
-          },
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
     },
     "volume": {
       "description": ":MARC: ``246__n``",

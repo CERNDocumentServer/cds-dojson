@@ -57,16 +57,6 @@
           "type": "array",
           "uniqueItems": true
         },
-        "additional_subject_categories": {
-          "description": ".. note: does not exist in Inspire",
-          "items": {
-            "$ref": "elements/additional_subject_categories.json"
-          },
-          "minItems": 1,
-          "title": "List of other subject (Project specific... ex. EUCARD)",
-          "type": "array",
-          "uniqueItems": true
-        },
         "arxiv_eprints": {
           "items": {
             "additionalProperties": false,
@@ -134,16 +124,6 @@
           "type": "array",
           "uniqueItems": true
         },
-        "cds_subject_categories": {
-          "description": ".. note: does not exist in Inspire",
-          "items": {
-            "$ref": "elements/cds_subject_categories.json"
-          },
-          "minItems": 1,
-          "title": "List of CDS subject",
-          "type": "array",
-          "uniqueItems": true
-        },
         "collaborations": {
           "items": {
             "additionalProperties": false,
@@ -183,49 +163,38 @@
             "minLength": 1,
             "type": "string"
           },
-          "conference_acronym": {
+          "acronym": {
             "description": ":MARC: ``711__a``",
             "minLength": 1,
             "type": "string"
           },
-          "conference_contact": {
+          "contact": {
             "description": ":MARC: ``270__m`` Do we still need?",
             "minLength": 1,
             "type": "string"
           },
-          "conference_country": {
+          "country": {
             "description": ":MARC: ``111__w`` Do we still need?",
             "minLength": 1,
             "type": "string"
           },
-          "conference_dates": {
-            "description": ":MARC: ``111__d``\ndates of the conference, many items do not have 111__9 and/or z",
-            "format": "date",
-            "minLength": 1,
-            "type": "string"
-          },
-          "conference_place": {
+          "place": {
             "description": ":MARC: ``111__c``",
             "minLength": 1,
             "type": "string"
           },
-          "conference_series": {
+          "series": {
             "description": ":MARC: Does not exist in CDS",
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "number": {
+              "description": ":MARC: Does not exist in CDS",
+              "minLength": 1,
+              "type": "integer"
+            }
           },
-          "conference_series_number": {
-            "description": ":MARC: Does not exist in CDS",
-            "minLength": 1,
-            "type": "integer"
-          },
-          "conference_title": {
+          "title": {
             "description": ":MARC: ``111__a``\n.. Note: There can be different values there.",
-            "minLength": 1,
-            "type": "string"
-          },
-          "conference_year": {
-            "description": ":MARC: ``111__f`` *Do we still need?*",
             "minLength": 1,
             "type": "string"
           },
@@ -242,9 +211,8 @@
             "type": "string"
           },
           "required": [
-            "conference_dates",
-            "conference_place",
-            "conference_title"
+            "place",
+            "title"
           ],
           "type": "object"
         },
@@ -263,7 +231,7 @@
           "description": ":MARC: `500__a` containing `*Temporary entry*`, `*Temporary\n    record*` or `*Brief entry*` correspond to `false`, otherwise it\n    is `true`.\nWhether this record has been curated by a human, to ensure the\nquality standards of Inspire. Records having the :ref:`core` flag\nare all curated eventually, whereas non-core records are\nnot systematically curated.",
           "type": "boolean"
         },
-        "editions": {
+        "edition": {
           "description": ":MARC: ``250__a``",
           "items": {
             "minLength": 1,
@@ -355,13 +323,6 @@
           "type": "array",
           "uniqueItems": true
         },
-        "preprint_date": {
-          "description": ":MARC: ``269__c``\n.. note::\n    This is only for preprints. For the publication date of\n    published documents, see :ref:`imprints`.",
-          "format": "date",
-          "minLength": 1,
-          "title": "Preprint release date",
-          "type": "string"
-        },
         "publication_info": {
           "description": ":MARC: ``773``",
           "items": {
@@ -388,9 +349,6 @@
                 "title": "Conference acronym",
                 "type": "string"
               },
-              "curated_relation": {
-                "type": "boolean"
-              },
               "journal_issue": {
                 "description": ":MARC: ``773__n``",
                 "minLength": 1,
@@ -410,10 +368,6 @@
                 "minLength": 1,
                 "type": "string"
               },
-              "material": {
-                "$ref": "elements/material.json",
-                "description": ":MARC: ``773__m``"
-              },
               "page_end": {
                 "description": ":MARC: last page in ``773__c`` (if present)",
                 "minLength": 1,
@@ -426,28 +380,13 @@
                 "title": "First page of document",
                 "type": "string"
               },
-              "parent_isbn": {
-                "description": ":MARC: ``773__z``\nISBN of the book of which this document is a part.",
-                "minLength": 1,
-                "pattern": "^\\d*[0-9X]$",
-                "type": "string"
-              },
-              "parent_record": {
-                "$ref": "elements/json_reference.json"
-              },
-              "parent_report_number": {
-                "description": ":MARC: ``773__r``\nReport number of the document of which this record is a\npart. This applies e.g. for large reports containing\nseveral chapters that have been split into individual\nrecords.",
-                "minLength": 1,
-                "type": "string"
-              },
-              "pubinfo_freetext": {
+              "note": {
                 "description": ":MARC: ``773__x``\nUnstructured text describing the publication\ninformation.\n.. note::\n    This field is used when provided with unstructured\n    publication information, e.g. from arXiv. If known,\n    the other fields should be used instead.",
                 "minLength": 1,
                 "type": "string"
               },
               "year": {
                 "description": ":MARC: ``773__y``",
-                "maximum": 2050,
                 "minimum": 1000,
                 "title": "Publication year",
                 "type": "integer"
@@ -521,50 +460,6 @@
           "title": "List of keywords",
           "type": "array",
           "uniqueItems": true
-        },
-        "thesis_info": {
-          "additionalProperties": false,
-          "description": ":MARC: ``502``\nInformation on a thesis (degree, date, university)",
-          "properties": {
-            "date": {
-              "description": ":MARC: ``502__d``\nPublication date of the thesis",
-              "format": "date",
-              "minLength": 1,
-              "type": "string"
-            },
-            "defense_date": {
-              "description": ":MARC: ``500__a``\nDate of the thesis defense. On legacy, this was put in the\nnote field as 'presented on ...'.",
-              "format": "date",
-              "minLength": 1,
-              "type": "string"
-            },
-            "degree_type": {
-              "$ref": "elements/degree_type.json"
-            },
-            "institutions": {
-              "description": ":MARC: ``502__c``\nList of institutions issuing the degree.",
-              "items": {
-                "additionalProperties": false,
-                "properties": {
-                  "curated_relation": {
-                    "type": "boolean"
-                  },
-                  "name": {
-                    "minLength": 1,
-                    "type": "string"
-                  },
-                  "record": {
-                    "$ref": "elements/json_reference.json"
-                  }
-                },
-                "type": "object"
-              },
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "type": "object"
         },
         "volume": {
           "description": ":MARC: ``246__n``",

@@ -3,7 +3,7 @@
   "decription": "A record in the books, proceedings, standards, theses and reports.",
   "properties": {
     "_collections": {
-      "description": ":MARC: ``980__a`` ``690C_a`` ``697C_a``\nCollections to which this record belongs\n.. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.",
+      "description": ":MARC: ``980__a`` ``690C_a`` ``697C_a``\nCollections to which this record belongs",
       "items": {
         "enum": [
           "BOOKSHOP",
@@ -27,13 +27,13 @@
       "uniqueItems": true
     },
     "_private_notes": {
-      "description": ":MARC: ``595``\nThese notes are only visible to privileged users, not regular\nusers.",
+      "description": ":MARC: ``595``\nVisible for librarians",
       "items": {
         "additionalProperties": false,
         "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.",
         "properties": {
           "source": {
-            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
@@ -60,7 +60,7 @@
           "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.",
           "properties": {
             "source": {
-              "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+              "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
               "minLength": 1,
               "type": "string"
             },
@@ -88,18 +88,18 @@
           "email": {
             "description": ":MARC: ``859``\nThis only gets populated when `method` is `submitter`.",
             "format": "email",
-            "minLength": 1,
+            "minLength": 4,
             "title": "Email address associated to the submitter's account",
             "type": "string"
           },
-          "internal_uid": {
-            "description": "This only gets populated when `method` is `submitter`.",
-            "title": "Inspire user ID of the submitter",
+          "id": {
+            "description": "This field is used when `method` is `submitter`.",
+            "title": "User ID of the submitter",
             "type": "integer"
           }
         },
         "method": {
-          "description": "Possible values are:\n`submitter`\n    when obtained from a user submission. In this case, `orcid`,\n    `internal_uid` and `email` store identifiers of the submitter,\n    and `submission_number` an ID of the submission. The submitter can be the cataloger.\n`oai`\n    when obtained by OAI-PMH harvesting.\n`batchuploader`\n    when obtained through the batch uploader.\n`hepcrawl`\n    when obtained from a hepcrawl crawler. In this case, `source`\n    stores the publisher or the repository that was crawled.",
+          "description": "`submitter`\n    when obtained from a user submission. The submitter can be the cataloger.\n`oai`\n    when obtained by OAI-PMH harvesting.\n`batchuploader`\n    when obtained through the batch uploader.",
           "enum": [
             "batchuploader",
             "oai",
@@ -109,9 +109,8 @@
           "title": "Data obtaining method",
           "type": "string"
         },
-
         "source": {
-          "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+          "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
           "minLength": 1,
           "type": "string"
         }
@@ -193,14 +192,9 @@
           },
           "email": {
             "description": ":MARC: ``100/700/__m``",
-            "items": {
-              "format": "email",
-              "minLength": 1,
-              "type": "string"
-            },
-            "minItems": 1,
-            "type": "string",
-            "uniqueItems": true
+            "format": "email",
+            "minLength": 1,
+            "type": "string"
           },
           "full_name": {
             "description": ":MARC: ``100/700/__a``\nAuthor name in Latin alphabet (may contain diacritics).\nShould be of the form 'family names, first names', and,\nexcept for a possible reordering, be exactly as on the\npaper.\n:example: ``Smith Davis, John F.K.``",
@@ -658,7 +652,7 @@
             "type": "array",
             "uniqueItems": true
           },
-          "roles": {
+          "role": {
             "description": ".. note: different from Inspire (Inspire_role)",
             "items": {
               "default": "Author",
@@ -666,8 +660,7 @@
               "enum": [
                 "Author",
                 "Editor",
-                "Illustrator",
-                "Supervisor"
+                "Illustrator"
               ],
               "minLength": 1,
               "type": "string"
@@ -687,7 +680,7 @@
       "type": "array",
       "uniqueItems": false
     },
-    "copyright": {
+    "copyrights": {
       "description": ":MARC: ``542``",
       "items": {
         "additionalProperties": false,
@@ -732,7 +725,6 @@
           },
           "year": {
             "description": ":MARC: ``542__g``",
-            "maximum": 2050,
             "minimum": 1000,
             "type": "integer"
           }
@@ -745,17 +737,15 @@
       "uniqueItems": true
     },
     "document_type": {
-      "description": ":MARC: ``980__a`` ``690C_a`` ``960__a``\nTypes of document this record represents.\n.. note::\n  As a record aggregates information from multiple sources, it\n  can have multiple document types simultaneously. (?)",
-        "default": "book",
-        "enum": [
-          "book",
-          "proceedings",
-          "standard"
-        ],
-        "minLength": 1,
+      "default": "book",
+      "enum": [
+        "book",
+        "proceedings",
+        "standard"
+      ],
+      "minLength": 1,
       "title": "Document type",
-      "type": "string",
-      "uniqueItems": true
+      "type": "string"
     },
     "dois": {
       "description": ".. Note: This element can be found at the holding level or at the bibliographic record level.",
@@ -783,7 +773,7 @@
             "type": "string"
           },
           "source": {
-            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
@@ -912,7 +902,7 @@
             "type": "string"
           },
           "provenance": {
-            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
@@ -1133,7 +1123,7 @@
       "type": "array",
       "uniqueItems": true
     },
-    "license": {
+    "licenses": {
       "description": ":MARC: ``540``",
       "items": {
         "additionalProperties": false,
@@ -1197,6 +1187,65 @@
       "type": "array",
       "uniqueItems": true
     },
+    "persistent_identifiers": {
+      "description": ":MARC: ``0247``",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "material": {
+            "description": "The possible values are:\n``addendum``\n    for a document extending the main publication.\n``additional material``\n    for additional material attached to the main publication, that is\n    neither the more specific ``data`` or ``software``.\n``data``\n    for data related to the main publication.\n``erratum``\n    for a document correcting errors in the content of the main\n    publication. When the errors are not in the content but in the\n    publication process, it is considered as an ``editorial note`` instead.\n``editorial note``\n    for a document correcting errors in the metadata of the publication but\n    not its content. Otherwise, it is an ``erratum``.\n``preprint``\n    for a document that is made public (typically on `arXiv\n    <http://arxiv.org>`_) but not yet published formally.\n``publication``\n    for the main publication. If it's not published, it's a ``preprint``.\n``reprint``\n    for a reprint of the main publication.\n``software``\n    for software related to the main publication.\n``translation``\n    for a translation of the main publication.",
+            "enum": [
+              "addendum",
+              "additional material",
+              "data",
+              "e-book",
+              "e-proceedings",
+              "editorial note",
+              "erratum",
+              "preprint",
+              "publication",
+              "reprint",
+              "software",
+              "translation"
+            ],
+            "minLength": 1,
+            "title": "Material to which the field refers",
+            "type": "string"
+          },
+          "schema": {
+            "description": ":MARC: ``0247_2``\nCurrently, the following identifiers are recognized:\n* `HDL <http://handle.net>`_\n* `URN\n  <https://en.wikipedia.org/wiki/Uniform_Resource_Name>`_\n.. note::\n    DOIs should be put into :ref:`hep.json#/properties/dois`, not here.\n    Although ISBNs can also be mapped to a URN (by\n    prepending ``urn:isbn:`` to the ISBN), they should\n    be put in the :ref:`hep.json#/properties/isbns` field instead.",
+            "enum": [
+              "HDL",
+              "URN"
+            ],
+            "minLength": 1,
+            "title": "Type of identifier",
+            "type": "string"
+          },
+          "source": {
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "value": {
+            "description": ":MARC: ``0247_a``\nThis value gets interpreted as an identfier of the type\nspecified by :ref:`schema`.\n:example: ``10138/168995`` (when :ref:`schema` = ``HDL``)\n:example: ``urn:nbn:de:hebis:77-diss-1000009520`` (when\n    :ref:`schema` = ``URN``)",
+            "minLength": 1,
+            "pattern": "^\\S+$",
+            "title": "Persistent identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema",
+          "value"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "title": "List of persistent identifiers",
+      "type": "array",
+      "uniqueItems": true
+    },
     "public_notes": {
       "description": ":MARC: ``500``\nAny notes about the document that do not fit into another field.\nFor arXiv eprints, also contains the contents of the comment field\non arXiv.\n.. note::\n    These notes are publicly visible. For notes not shown to\n    regular users, see :ref:`_private_notes`.",
       "items": {
@@ -1204,7 +1253,7 @@
         "description": "This is used to add, besides the `value`, the `source` where this value\ncame from.",
         "properties": {
           "source": {
-            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
@@ -1229,10 +1278,13 @@
     },
     "related_records": {
       "additionalProperties": false,
-      "description": ":MARC: ``775``\n.. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language. But this could be extracted from the related record directly.",
+      "description": ":MARC: ``775``\n.. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language.",
       "properties": {
-        "notes": {
-          "description": ":MARC:\nIf a note is necessary to describe better the link between the records",
+        "curated_relation": {
+          "type": "boolean"
+        },
+        "note": {
+          "description": "Detailed description of the relation",
           "minLength": 1,
           "type": "string"
         },
@@ -1255,8 +1307,8 @@
         "relation": {
           "description": ":MARC: depending on ``775__b`` and ``775__c``\nThe possible values are:\n``other edition``\n``other language``\n``parent``\nIf none of the relations apply, a free textual relation can be\nprovided in :ref:`relation_freetext`.\n.. note::\n   This should be used to link the different editions (date, language) of a same book, but also to link one volume to its parent record. In this case the display should be adapted.",
           "enum": [
-            "other edition",
-            "other language",
+            "edition",
+            "language",
             "parent",
             "other"
           ],
@@ -1282,7 +1334,7 @@
             "type": "boolean"
           },
           "source": {
-            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
@@ -1302,7 +1354,7 @@
       "uniqueItems": true
     },
     "table_of_content": {
-      "description": ":MARC: ``505`` whatever is the indicator\nList of chapters\n.. note::\n    Does not exist in Inspire",
+      "description": "List of chapters",
       "items": {
         "additionalProperties": false,
         "properties": {
@@ -1515,7 +1567,7 @@
             "type": "string"
           },
           "source": {
-            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
@@ -1599,21 +1651,25 @@
             "minLength": 1,
             "type": "string"
           },
+          "curated_relation": {
+            "default": false,
+            "type": "boolean"
+          },
           "experiment": {
             "description": "If present, :ref:`institution` should contain the\ninstitution where this experiment is located and\n:ref:`accelerator` may contain the accelerator that this\nexperiment is using (if appropriate).\n.. note::\n    Currently not used, see :ref:`legacy_name`.",
             "minLength": 1,
-            "type": "string"
-          },
-          "facility": {
-            "description": ":MARC: 693__f",
-            "minLength": 1,
-            "title": "Project",
             "type": "string"
           },
           "institution": {
             "description": ":MARC: not present.\n.. note::\n    Currently not used, see :ref:`legacy_name`.",
             "minLength": 1,
             "title": "Institution hosting the experiment",
+            "type": "string"
+          },
+          "legacy_name": {
+            "description": ":MARC: ``693__e``\nThis field is used when migrating from legacy instead\nof separate :ref:`institution`, :ref:`accelerator` and\n:ref:`experiment`. In the future, it will be deprecated and\nthe other fields will be used instead.\n:example: ``CERN-LHC-CMS``",
+            "minLength": 1,
+            "title": "Identifier of the experiment on legacy",
             "type": "string"
           },
           "project": {
@@ -1922,38 +1978,37 @@
         "minLength": 1,
         "type": "string"
       },
-      "conference_acronym": {
+      "acronym": {
         "description": ":MARC: ``711__a``",
         "minLength": 1,
         "type": "string"
       },
-      "conference_contact": {
+      "contact": {
         "description": ":MARC: ``270__m`` Do we still need?",
         "minLength": 1,
         "type": "string"
       },
-      "conference_country": {
+      "country": {
         "description": ":MARC: ``111__w`` Do we still need?",
         "minLength": 1,
         "type": "string"
       },
-      "conference_place": {
+      "place": {
         "description": ":MARC: ``111__c``",
         "minLength": 1,
         "type": "string"
       },
-      "conference_series": {
+      "series": {
         "description": ":MARC: Does not exist in CDS",
         "minLength": 1,
         "type": "string",
-        "conference_series_number": {
-        "description": ":MARC: Does not exist in CDS",
-        "minLength": 1,
-        "type": "integer"
-      }
+        "number": {
+          "description": ":MARC: Does not exist in CDS",
+          "minLength": 1,
+          "type": "integer"
+        }
       },
-
-      "conference_title": {
+      "title": {
         "description": ":MARC: ``111__a``\n.. Note: There can be different values there.",
         "minLength": 1,
         "type": "string"
@@ -1971,9 +2026,8 @@
         "type": "string"
       },
       "required": [
-        "conference_dates",
-        "conference_place",
-        "conference_title"
+        "place",
+        "title"
       ],
       "type": "object"
     },
@@ -2156,14 +2210,13 @@
             "title": "First page of document",
             "type": "string"
           },
-          "freetext": {
+          "note": {
             "description": ":MARC: ``773__x``\nUnstructured text describing the publication\ninformation.\n.. note::\n    This field is used when provided with unstructured\n    publication information, e.g. from arXiv. If known,\n    the other fields should be used instead.",
             "minLength": 1,
             "type": "string"
           },
           "year": {
             "description": ":MARC: ``773__y``",
-            "maximum": 2050,
             "minimum": 1000,
             "title": "Publication year",
             "type": "integer"
@@ -2219,7 +2272,7 @@
             "type": "string"
           },
           "source": {
-            "description": "Source of the information in this field. As several records can be merged,\nthis information allows us to remember where every bit of metadata came\nfrom and make decisions based on it.\n:MARC: Often not present.\n.. Notes::",
+            "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
@@ -2250,7 +2303,7 @@
   "required": [
     "document_type",
     "recid",
-    "titles"
+    "title"
   ],
   "title": "CDS Base Record Schema v1.0.0",
   "type": "object"

@@ -3,7 +3,7 @@
   "decription": "A record in the books, proceedings, standards, theses and reports.",
   "properties": {
     "_collections": {
-      "description": ":MARC: ``980__a`` ``690C_a`` ``697C_a``\nCollections to which this record belongs\n.. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.",
+      "description": ":MARC: ``980__a`` ``690C_a`` ``697C_a``\nCollections to which this record belongs",
       "items": {
         "enum": [
           "BOOKSHOP",
@@ -27,7 +27,7 @@
       "uniqueItems": true
     },
     "_private_notes": {
-      "description": ":MARC: ``595``\nThese notes are only visible to privileged users, not regular\nusers.",
+      "description": ":MARC: ``595``\nVisible for librarians",
       "items": {
         "$ref": "elements/sourced_value.json"
       },
@@ -100,48 +100,16 @@
             "type": "array",
             "uniqueItems": true
           },
-          "credit_roles": {
-            "items": {
-              "description": ":MARC: not present.\nRole of the author according to the `Contributor\nRoles Taxonomy (CRediT)\n<http://dictionary.casrai.org/Contributor_Roles>`_",
-              "enum": [
-                "Conceptualization",
-                "Data curation",
-                "Formal analysis",
-                "Funding acquisition",
-                "Investigation",
-                "Methodology",
-                "Project administration",
-                "Resources",
-                "Software",
-                "Supervision",
-                "Validation",
-                "Visualization",
-                "Writing - original draft",
-                "Writing - review & editing"
-              ],
-              "minLength": 1,
-              "title": "Credit role of author",
-              "type": "string"
-            },
-            "minItems": 1,
-            "type": "array",
-            "uniqueItems": true
-          },
           "curated_relation": {
             "description": "This field is true when the author ID was processed by \\#BEARD\\# script",
             "default": false,
             "type": "boolean"
           },
-          "emails": {
+          "email": {
             "description": ":MARC: ``100/700/__m``",
-            "items": {
-              "format": "email",
-              "minLength": 1,
-              "type": "string"
-            },
-            "minItems": 1,
-            "type": "array",
-            "uniqueItems": true
+            "format": "email",
+            "minLength": 1,
+            "type": "string"
           },
           "full_name": {
             "description": ":MARC: ``100/700/__a``\nAuthor name in Latin alphabet (may contain diacritics).\nShould be of the form 'family names, first names', and,\nexcept for a possible reordering, be exactly as on the\npaper.\n:example: ``Smith Davis, John F.K.``",
@@ -159,16 +127,7 @@
             "type": "array",
             "uniqueItems": true
           },
-          "raw_affiliations": {
-            "description": ":MARC: ``100/700__v``\nList of full affiliations, as written on the paper.",
-            "items": {
-              "$ref": "elements/sourced_value.json"
-            },
-            "minItems": 1,
-            "type": "array",
-            "uniqueItems": true
-          },
-          "roles": {
+          "role": {
             "description": ".. note: different from Inspire (Inspire_role)",
             "items": {
               "default": "Author",
@@ -176,8 +135,7 @@
               "enum": [
                 "Author",
                 "Editor",
-                "Illustrator",
-                "Supervisor"
+                "Illustrator"
               ],
               "minLength": 1,
               "type": "string"
@@ -197,12 +155,7 @@
       "type": "array",
       "uniqueItems": false
     },
-    "control_number": {
-      "description": ":MARC: ``001``\nRead-only field.",
-      "title": "ID of current record",
-      "type": "integer"
-    },
-    "copyright": {
+    "copyrights": {
       "description": ":MARC: ``542``",
       "items": {
         "additionalProperties": false,
@@ -231,7 +184,6 @@
           },
           "year": {
             "description": ":MARC: ``542__g``",
-            "maximum": 2050,
             "minimum": 1000,
             "type": "integer"
           }
@@ -243,15 +195,9 @@
       "type": "array",
       "uniqueItems": true
     },
-    "document_types": {
-      "description": ":MARC: ``980__a`` ``690C_a`` ``960__a``\nTypes of document this record represents.\n.. note::\n  As a record aggregates information from multiple sources, it\n  can have multiple document types simultaneously. (?)",
-      "items": {
-        "$ref": "elements/document_type.json"
-      },
-      "minItems": 1,
-      "title": "Document types",
-      "type": "array",
-      "uniqueItems": true
+    "document_type": {
+      "$ref": "elements/document_type.json",
+      "description": ":MARC: ``980__a`` ``690C_a`` ``960__a``\nTypes of document this record represents.\n.. note::\n  As a record aggregates information from multiple sources, it\n  can have multiple document types simultaneously. (?)"
     },
     "dois": {
       "description": ".. Note: This element can be found at the holding level or at the bibliographic record level.",
@@ -420,7 +366,7 @@
       "type": "array",
       "uniqueItems": true
     },
-    "license": {
+    "licenses": {
       "description": ":MARC: ``540``",
       "items": {
         "additionalProperties": false,
@@ -468,6 +414,46 @@
       "type": "array",
       "uniqueItems": true
     },
+    "persistent_identifiers": {
+      "description": ":MARC: ``0247``",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "material": {
+            "$ref": "elements/material.json"
+          },
+          "schema": {
+            "description": ":MARC: ``0247_2``\nCurrently, the following identifiers are recognized:\n* `HDL <http://handle.net>`_\n* `URN\n  <https://en.wikipedia.org/wiki/Uniform_Resource_Name>`_\n.. note::\n    DOIs should be put into :ref:`hep.json#/properties/dois`, not here.\n    Although ISBNs can also be mapped to a URN (by\n    prepending ``urn:isbn:`` to the ISBN), they should\n    be put in the :ref:`hep.json#/properties/isbns` field instead.",
+            "enum": [
+              "HDL",
+              "URN"
+            ],
+            "minLength": 1,
+            "title": "Type of identifier",
+            "type": "string"
+          },
+          "source": {
+            "$ref": "elements/source.json"
+          },
+          "value": {
+            "description": ":MARC: ``0247_a``\nThis value gets interpreted as an identfier of the type\nspecified by :ref:`schema`.\n:example: ``10138/168995`` (when :ref:`schema` = ``HDL``)\n:example: ``urn:nbn:de:hebis:77-diss-1000009520`` (when\n    :ref:`schema` = ``URN``)",
+            "minLength": 1,
+            "pattern": "^\\S+$",
+            "title": "Persistent identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema",
+          "value"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "title": "List of persistent identifiers",
+      "type": "array",
+      "uniqueItems": true
+    },
     "public_notes": {
       "description": ":MARC: ``500``\nAny notes about the document that do not fit into another field.\nFor arXiv eprints, also contains the contents of the comment field\non arXiv.\n.. note::\n    These notes are publicly visible. For notes not shown to\n    regular users, see :ref:`_private_notes`.",
       "items": {
@@ -481,34 +467,6 @@
     "recid": {
       "description": "Invenio record identifier (integer).",
       "type": "number"
-    },
-    "record_affiliations": {
-      "description": ":MARC: ``901``\nBecause of technical limitations, for some older records the\naffiliations were associated globally to the record instead of its\nindividual authors (using the\n:ref:`authors/items/properties/affiliations` field).\n.. note::\n    This field is present for legacy records and should not be used\n    for new records.",
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "curated_relation": {
-            "type": "boolean"
-          },
-          "record": {
-            "$ref": "elements/json_reference.json"
-          },
-          "value": {
-            "description": ":MARC: ``901__a``\nCurrently, the old\n:ref:`institutions.json#/properties/legacy_ICN`\nis used here. In the future, this will\nchange and become the new\n:ref:`institutions.json#/properties/ICN`.",
-            "minLength": 1,
-            "title": "ICN of affiliation",
-            "type": "string"
-          }
-        },
-        "required": [
-          "value"
-        ],
-        "type": "object"
-      },
-      "minItems": 1,
-      "title": "Affiliations not associated to authors",
-      "type": "array",
-      "uniqueItems": true
     },
     "related_records": {
       "$ref": "elements/related_record.json",
@@ -546,7 +504,7 @@
       "uniqueItems": true
     },
     "table_of_content": {
-      "description": ":MARC: ``505`` whatever is the indicator\nList of chapters\n.. note::\n    Does not exist in Inspire",
+      "description": "List of chapters",
       "items": {
         "additionalProperties": false,
         "properties": {
@@ -613,7 +571,7 @@
   "required": [
     "document_type",
     "recid",
-    "titles"
+    "title"
   ],
   "title": "CDS Base Record Schema v1.0.0",
   "type": "object"

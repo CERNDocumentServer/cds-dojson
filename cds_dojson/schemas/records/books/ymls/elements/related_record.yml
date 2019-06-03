@@ -1,14 +1,12 @@
 additionalProperties: false
 description: |-
   :MARC: ``775``
-  .. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language. But this could be extracted from the related record directly.
+  .. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language.
 properties:
   curated_relation:
     type: boolean
-  notes:
-    description: |-
-      :MARC:
-      If a note is necessary to describe better the link between the records
+  note:
+    description: Detailed description of the relation
     minLength: 1
     type: string
   record:
@@ -27,8 +25,8 @@ properties:
       .. note::
          This should be used to link the different editions (date, language) of a same book, but also to link one volume to its parent record. In this case the display should be adapted.
     enum:
-      - other edition
-      - other language
+      - edition
+      - language
       - parent
       - other
     minLength: 1

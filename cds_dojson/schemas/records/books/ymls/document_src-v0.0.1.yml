@@ -178,23 +178,23 @@ allOf:
           format: date
           minLength: 1
           type: string
-        conference_acronym:
+        acronym:
           description: ':MARC: ``711__a``'
           minLength: 1
           type: string
-        conference_contact:
+        contact:
           description: ':MARC: ``270__m`` Do we still need?'
           minLength: 1
           type: string
-        conference_country:
+        country:
           description: ':MARC: ``111__w`` Do we still need?'
           minLength: 1
           type: string
-        conference_place:
+        place:
           description: ':MARC: ``111__c``'
           minLength: 1
           type: string
-        conference_series:
+        series:
           description: ':MARC: Does not exist in CDS'
           minLength: 1
           type: string
@@ -202,7 +202,7 @@ allOf:
             description: ':MARC: Does not exist in CDS'
             minLength: 1
             type: integer
-        conference_title:
+        title:
           description: |-
             :MARC: ``111__a``
             .. Note: There can be different values there.
@@ -223,8 +223,8 @@ allOf:
           minLength: 1
           type: string
         required:
-          - conference_place
-          - conference_title
+          - place
+          - title
         type: object
       corporate_authors:
         items:
@@ -249,7 +249,7 @@ allOf:
           are all curated eventually, whereas non-core records are
           not systematically curated.
         type: boolean
-      editions:
+      edition:
         description: ':MARC: ``250__a``'
         items:
           minLength: 1
@@ -408,7 +408,6 @@ allOf:
               type: string
             year:
               description: ':MARC: ``773__y``'
-              maximum: 2050
               minimum: 1000
               title: Publication year
               type: integer

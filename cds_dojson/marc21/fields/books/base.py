@@ -629,7 +629,7 @@ def imprints(self, key, value):
     }
 
 
-@model.over('preprint_date', '^269__')
+@model.over('preprint_date', '^269__')     # item, RDM?!
 @out_strip
 def preprint_date(self, key, value):
     """Translates preprint_date fields."""
@@ -644,7 +644,7 @@ def preprint_date(self, key, value):
         raise IgnoreKey('preprint_date')
 
 
-@model.over('number_of_pages', '^300__')
+@model.over('number_of_pages', '^300__')   # item
 def number_of_pages(self, key, value):
     """Translates number_of_pages fields."""
     val = clean_val('a', value, str)

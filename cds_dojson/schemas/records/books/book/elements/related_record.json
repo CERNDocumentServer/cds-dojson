@@ -1,22 +1,12 @@
 {
   "additionalProperties": false,
-  "description": ":MARC: ``775``\n.. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language. But this could be extracted from the related record directly.",
+  "description": ":MARC: ``775``\n.. Note:: in the current MARC model, we use 775__b and 775__c to indicate the year, edition and language.",
   "properties": {
     "curated_relation": {
       "type": "boolean"
     },
-    "edition": {
-      "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n",
-      "minLength": 1,
-      "type": "string"
-    },
-    "language": {
-      "description": ":MARC: 775__b\nDo we need? or can it be extracted from the corresponding record?\n",
-      "minLength": 1,
-      "type": "string"
-    },
-    "note_freetext": {
-      "description": ":MARC:\nIf a note is necessary to describe better the link between the records",
+    "note": {
+      "description": "Detailed description of the relation",
       "minLength": 1,
       "type": "string"
     },
@@ -28,22 +18,13 @@
     "relation": {
       "description": ":MARC: depending on ``775__b`` and ``775__c``\nThe possible values are:\n``other edition``\n``other language``\n``parent``\nIf none of the relations apply, a free textual relation can be\nprovided in :ref:`relation_freetext`.\n.. note::\n   This should be used to link the different editions (date, language) of a same book, but also to link one volume to its parent record. In this case the display should be adapted.",
       "enum": [
-        "other edition",
-        "other language",
-        "parent"
+        "edition",
+        "language",
+        "parent",
+        "other"
       ],
       "minLength": 1,
       "title": "Relation of the linked record to this one",
-      "type": "string"
-    },
-    "relation_freetext": {
-      "description": ":MARC:\nIf none of the standard relations in :ref:`relation` fit, a textual\nrelation can alternatively be provided here.",
-      "minLength": 1,
-      "type": "string"
-    },
-    "year": {
-      "description": ":MARC:  775__c\nDo we need? or can it be extracted from the corresponding record?\n",
-      "minLength": 1,
       "type": "string"
     }
   },

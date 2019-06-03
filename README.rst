@@ -30,11 +30,11 @@ Keep the trailing slashes on the commands below.
 
 Build the source schemas from yml files: ::
 
-  cds-dojson convert-yaml2json <path_to_yml_src> <path_to_json_dest>
+  cds-dojson convert-yaml2json <path_to_yml_source_folder>/ <path_to_json_destination_folder>/
 
 Build the final schemas from definitions: ::
 
-  cds-dojson compile-schema <path_to_-src-_schema>/
+  cds-dojson compile-schema <path_to_-src-_schema>/ > output_file.json
 
 
 

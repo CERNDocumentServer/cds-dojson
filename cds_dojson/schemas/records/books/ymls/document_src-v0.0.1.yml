@@ -190,13 +190,6 @@ allOf:
           description: ':MARC: ``111__w`` Do we still need?'
           minLength: 1
           type: string
-        conference_dates:
-          description: |-
-            :MARC: ``111__d``
-            dates of the conference, many items do not have 111__9 and/or z
-          format: date
-          minLength: 1
-          type: string
         conference_place:
           description: ':MARC: ``111__c``'
           minLength: 1
@@ -205,18 +198,14 @@ allOf:
           description: ':MARC: Does not exist in CDS'
           minLength: 1
           type: string
-        conference_series_number:
-          description: ':MARC: Does not exist in CDS'
-          minLength: 1
-          type: integer
+          number:
+            description: ':MARC: Does not exist in CDS'
+            minLength: 1
+            type: integer
         conference_title:
           description: |-
             :MARC: ``111__a``
             .. Note: There can be different values there.
-          minLength: 1
-          type: string
-        conference_year:
-          description: ':MARC: ``111__f`` *Do we still need?*'
           minLength: 1
           type: string
         description: |-
@@ -234,7 +223,6 @@ allOf:
           minLength: 1
           type: string
         required:
-          - conference_dates
           - conference_place
           - conference_title
         type: object
@@ -344,16 +332,6 @@ allOf:
         title: List of ISBNs
         type: array
         uniqueItems: true
-      preprint_date:
-        description: |-
-          :MARC: ``269__c``
-          .. note::
-              This is only for preprints. For the publication date of
-              published documents, see :ref:`imprints`.
-        format: date
-        minLength: 1
-        title: Preprint release date
-        type: string
       publication_info:
         description: ':MARC: ``773``'
         items:
@@ -388,8 +366,6 @@ allOf:
               minLength: 1
               title: Conference acronym
               type: string
-            curated_relation:
-              type: boolean
             journal_issue:
               description: ':MARC: ``773__n``'
               minLength: 1
@@ -409,9 +385,6 @@ allOf:
               description: ':MARC: ``773__v``'
               minLength: 1
               type: string
-            material:
-              $ref: elements/material.json
-              description: ':MARC: ``773__m``'
             page_end:
               description: ':MARC: last page in ``773__c`` (if present)'
               minLength: 1
@@ -422,25 +395,7 @@ allOf:
               minLength: 1
               title: First page of document
               type: string
-            parent_isbn:
-              description: |-
-                :MARC: ``773__z``
-                ISBN of the book of which this document is a part.
-              minLength: 1
-              pattern: '^\d*[0-9X]$'
-              type: string
-            parent_record:
-              $ref: elements/json_reference.json
-            parent_report_number:
-              description: |-
-                :MARC: ``773__r``
-                Report number of the document of which this record is a
-                part. This applies e.g. for large reports containing
-                several chapters that have been split into individual
-                records.
-              minLength: 1
-              type: string
-            pubinfo_freetext:
+            note:
               description: |-
                 :MARC: ``773__x``
                 Unstructured text describing the publication

@@ -30,6 +30,7 @@ properties:
       - other edition
       - other language
       - parent
+      - other
     minLength: 1
     title: Relation of the linked record to this one
     type: string

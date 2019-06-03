@@ -11,27 +11,21 @@ properties:
         :MARC: ``859``
         This only gets populated when `method` is `submitter`.
       format: email
-      minLength: 1
+      minLength: 4
       title: Email address associated to the submitter's account
       type: string
-    internal_uid:
-        description: This only gets populated when `method` is `submitter`.
-        title: Inspire user ID of the submitter
+    id:
+        description: This field is used when `method` is `submitter`.
+        title: User ID of the submitter
         type: integer
   method:
     description: |-
-      Possible values are:
       `submitter`
-          when obtained from a user submission. In this case, `orcid`,
-          `internal_uid` and `email` store identifiers of the submitter,
-          and `submission_number` an ID of the submission. The submitter can be the cataloger.
+          when obtained from a user submission. The submitter can be the cataloger.
       `oai`
           when obtained by OAI-PMH harvesting.
       `batchuploader`
           when obtained through the batch uploader.
-      `hepcrawl`
-          when obtained from a hepcrawl crawler. In this case, `source`
-          stores the publisher or the repository that was crawled.
     enum:
       - batchuploader
       - oai

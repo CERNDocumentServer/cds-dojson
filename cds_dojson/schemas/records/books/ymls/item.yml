@@ -7,7 +7,7 @@ properties:
     format: uri
     minLength: 1
     type: string
-  _private_notes:
+  _internal_notes:
     description: ':MARC: No Marc'
     minLength: 1
     title: Private Note
@@ -92,53 +92,6 @@ properties:
     description: ':MARC: ``300`` when no pagination'
     title: Additional information about the physical description of an object
     type: string
-  persistent_identifiers:
-    description: ':MARC: ``0247``'
-    items:
-      additionalProperties: false
-      properties:
-        material:
-          $ref: elements/material.json
-        schema:
-          description: |-
-            :MARC: ``0247_2``
-            Currently, the following identifiers are recognized:
-            * `HDL <http://handle.net>`_
-            * `URN
-              <https://en.wikipedia.org/wiki/Uniform_Resource_Name>`_
-            .. note::
-                DOIs should be put into :ref:`hep.json#/properties/dois`, not here.
-                Although ISBNs can also be mapped to a URN (by
-                prepending ``urn:isbn:`` to the ISBN), they should
-                be put in the :ref:`hep.json#/properties/isbns` field instead.
-          enum:
-            - HDL
-            - URN
-          minLength: 1
-          title: Type of identifier
-          type: string
-        source:
-          $ref: elements/source.json
-        value:
-          description: |-
-            :MARC: ``0247_a``
-            This value gets interpreted as an identfier of the type
-            specified by :ref:`schema`.
-            :example: ``10138/168995`` (when :ref:`schema` = ``HDL``)
-            :example: ``urn:nbn:de:hebis:77-diss-1000009520`` (when
-                :ref:`schema` = ``URN``)
-          minLength: 1
-          pattern: ^\S+$
-          title: Persistent identifier
-          type: string
-      required:
-        - schema
-        - value
-      type: object
-    minItems: 1
-    title: List of persistent identifiers
-    type: array
-    uniqueItems: true
   public_note:
     description: ':MARC: No Marc'
     minLength: 1

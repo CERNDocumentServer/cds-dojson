@@ -5,7 +5,6 @@ properties:
     description: |-
       :MARC: ``980__a`` ``690C_a`` ``697C_a``
       Collections to which this record belongs
-      .. note:: Different values compared to Inspire. Not mandatory, used for some specific subsets of the collection.
     items:
       enum:
         - BOOKSHOP
@@ -28,8 +27,7 @@ properties:
   _private_notes:
     description: |-
       :MARC: ``595``
-      These notes are only visible to privileged users, not regular
-      users.
+      Visible for librarians
     items:
       $ref: elements/sourced_value.json
     minItems: 1
@@ -122,7 +120,7 @@ properties:
           title: Identifiers of the author
           type: array
           uniqueItems: true
-        roles:
+        role:
           description: '.. note: different from Inspire (Inspire_role)'
           items:
             default: Author
@@ -142,7 +140,6 @@ properties:
               - Author
               - Editor
               - Illustrator
-              - Supervisor
             minLength: 1
             type: string
           minItems: 1
@@ -155,7 +152,7 @@ properties:
     title: Authors
     type: array
     uniqueItems: false
-  copyright:
+  copyrights:
     description: ':MARC: ``542``'
     items:
       additionalProperties: false
@@ -191,7 +188,6 @@ properties:
           type: string
         year:
           description: ':MARC: ``542__g``'
-          maximum: 2050
           minimum: 1000
           type: integer
       type: object
@@ -402,7 +398,7 @@ properties:
     title: List of languages of the document
     type: array
     uniqueItems: true
-  license:
+  licenses:
     description: ':MARC: ``540``'
     items:
       additionalProperties: false
@@ -454,6 +450,53 @@ properties:
       type: object
     minItems: 1
     title: List of licenses
+    type: array
+    uniqueItems: true
+  persistent_identifiers:
+    description: ':MARC: ``0247``'
+    items:
+      additionalProperties: false
+      properties:
+        material:
+          $ref: elements/material.json
+        schema:
+          description: |-
+            :MARC: ``0247_2``
+            Currently, the following identifiers are recognized:
+            * `HDL <http://handle.net>`_
+            * `URN
+              <https://en.wikipedia.org/wiki/Uniform_Resource_Name>`_
+            .. note::
+                DOIs should be put into :ref:`hep.json#/properties/dois`, not here.
+                Although ISBNs can also be mapped to a URN (by
+                prepending ``urn:isbn:`` to the ISBN), they should
+                be put in the :ref:`hep.json#/properties/isbns` field instead.
+          enum:
+            - HDL
+            - URN
+          minLength: 1
+          title: Type of identifier
+          type: string
+        source:
+          $ref: elements/source.json
+        value:
+          description: |-
+            :MARC: ``0247_a``
+            This value gets interpreted as an identfier of the type
+            specified by :ref:`schema`.
+            :example: ``10138/168995`` (when :ref:`schema` = ``HDL``)
+            :example: ``urn:nbn:de:hebis:77-diss-1000009520`` (when
+                :ref:`schema` = ``URN``)
+          minLength: 1
+          pattern: ^\S+$
+          title: Persistent identifier
+          type: string
+      required:
+        - schema
+        - value
+      type: object
+    minItems: 1
+    title: List of persistent identifiers
     type: array
     uniqueItems: true
   public_notes:
@@ -513,11 +556,7 @@ properties:
     type: array
     uniqueItems: true
   table_of_content:
-    description: |-
-      :MARC: ``505`` whatever is the indicator
-      List of chapters
-      .. note::
-          Does not exist in Inspire
+    description: List of chapters
     items:
       additionalProperties: false
       properties:
@@ -579,6 +618,6 @@ properties:
 required:
   - document_type
   - recid
-  - titles
+  - title
 title: CDS Base Record Schema v1.0.0
 type: object

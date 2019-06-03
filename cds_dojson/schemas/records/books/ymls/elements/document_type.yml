@@ -1,30 +1,9 @@
 default: book
-description: |
-  Types of document this record represents.
-  .. note::
-      As a record aggregates information from multiple sources, it
-      can have multiple document types simultaneously. (?)
-  ``book``
-      Published Monograph (usually has an ISBN and a publisher)
-  ``proceedings``
-      Proceedings of a conference.
-      The :ref:`conference_info` field contains the information of the conference.
-      If published in a journal, :ref:`publication_info` also contains the journal information.
-  ``report``
-      A report. It can be unpublished, but can also be a book or a proceedings. In this case, it keeps the document type Book and Report or Proceedings and Report
-  ``thesis``
-      A thesis. The :ref:`thesis_info` field contains additional
-      information about the thesis. If published as a book, the
-      :ref:`editions`, :ref:`imprints`, :ref:`isbns` and
-      :ref:`book_series` fields may contain specific metadata about
-      this book and the document type can also be Book.
-  ``standard``
-      A standard.
 enum:
   - book
   - proceedings
-  - report
   - standard
-  - thesis
 minLength: 1
+title: Document type
 type: string
+

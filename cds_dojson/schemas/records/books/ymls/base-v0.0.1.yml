@@ -94,47 +94,15 @@ properties:
           minItems: 1
           type: array
           uniqueItems: true
-        credit_roles:
-          items:
-            description: |-
-              :MARC: not present.
-              Role of the author according to the `Contributor
-              Roles Taxonomy (CRediT)
-              <http://dictionary.casrai.org/Contributor_Roles>`_
-            enum:
-              - Conceptualization
-              - Data curation
-              - Formal analysis
-              - Funding acquisition
-              - Investigation
-              - Methodology
-              - Project administration
-              - Resources
-              - Software
-              - Supervision
-              - Validation
-              - Visualization
-              - Writing - original draft
-              - Writing - review & editing
-            minLength: 1
-            title: Credit role of author
-            type: string
-          minItems: 1
-          type: array
-          uniqueItems: true
         curated_relation:
           description: This field is true when the author ID was processed by \#BEARD\# script
           default: false
           type: boolean
-        emails:
+        email:
           description: ':MARC: ``100/700/__m``'
-          items:
-            format: email
-            minLength: 1
-            type: string
-          minItems: 1
-          type: array
-          uniqueItems: true
+          format: email
+          minLength: 1
+          type: string
         full_name:
           description: |-
             :MARC: ``100/700/__a``
@@ -152,15 +120,6 @@ properties:
             $ref: elements/author_id.json
           minItems: 1
           title: Identifiers of the author
-          type: array
-          uniqueItems: true
-        raw_affiliations:
-          description: |-
-            :MARC: ``100/700__v``
-            List of full affiliations, as written on the paper.
-          items:
-            $ref: elements/sourced_value.json
-          minItems: 1
           type: array
           uniqueItems: true
         roles:
@@ -240,19 +199,14 @@ properties:
     title: List of copyrights to documents in this record
     type: array
     uniqueItems: true
-  document_types:
+  document_type:
+    $ref: elements/document_type.json
     description: |-
       :MARC: ``980__a`` ``690C_a`` ``960__a``
       Types of document this record represents.
       .. note::
         As a record aggregates information from multiple sources, it
         can have multiple document types simultaneously. (?)
-    items:
-      $ref: elements/document_type.json
-    minItems: 1
-    title: Document types
-    type: array
-    uniqueItems: true
   dois:
     description: '.. Note: This element can be found at the holding level or at the bibliographic record level.'
     items:

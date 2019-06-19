@@ -167,61 +167,62 @@ allOf:
         type: array
         uniqueItems: true
       conference_info:
-        cern_conference_code:
-          description: ':MARC: ``111__g``'
-          minLength: 1
-          type: string
-        closing_date:
-          description: |-
-            :MARC: ``111__z``
-            closing date of the conference
-          format: date
-          minLength: 1
-          type: string
-        acronym:
-          description: ':MARC: ``711__a``'
-          minLength: 1
-          type: string
-        contact:
-          description: ':MARC: ``270__m`` Do we still need?'
-          minLength: 1
-          type: string
-        country:
-          description: ':MARC: ``111__w`` Do we still need?'
-          minLength: 1
-          type: string
-        place:
-          description: ':MARC: ``111__c``'
-          minLength: 1
-          type: string
-        series:
-          description: ':MARC: Does not exist in CDS'
-          minLength: 1
-          type: string
-          number:
-            description: ':MARC: Does not exist in CDS'
-            minLength: 1
-            type: integer
-        title:
-          description: |-
-            :MARC: ``111__a``
-            .. Note: There can be different values there.
-          minLength: 1
-          type: string
         description: |-
           :MARC: ``111/711``
           .. Notes:: In Inspire there is a separate entity for conferences.
-        inspire_cnum:
-          description: ':MARC: ``035__a`` when 9:INSPIRE-CNUM'
-          minLength: 1
-          type: string
-        opening_date:
-          description: |-
-            :MARC: ``111__9``
-            starting date of the conference
-          format: date
-          minLength: 1
-          type: string
+        properties:
+          acronym:
+            description: ':MARC: ``711__a``'
+            minLength: 1
+            type: string
+          cern_conference_code:
+            description: ':MARC: ``111__g``'
+            minLength: 1
+            type: string
+          closing_date:
+            description: |-
+              :MARC: ``111__z``
+              closing date of the conference
+            format: date
+            minLength: 1
+            type: string
+          contact:
+            description: ':MARC: ``270__m`` Do we still need?'
+            minLength: 1
+            type: string
+          country:
+            description: ':MARC: ``111__w`` Do we still need?'
+            minLength: 1
+            type: string
+          inspire_cnum:
+            description: ':MARC: ``035__a`` when 9:INSPIRE-CNUM'
+            minLength: 1
+            type: string
+          opening_date:
+            description: |-
+              :MARC: ``111__9``
+              starting date of the conference
+            format: date
+            minLength: 1
+            type: string
+          place:
+            description: ':MARC: ``111__c``'
+            minLength: 1
+            type: string
+          series:
+            description: ':MARC: Does not exist in CDS'
+            minLength: 1
+            type: string
+            number:
+              description: ':MARC: Does not exist in CDS'
+              minLength: 1
+              type: integer
+          title:
+            description: |-
+              :MARC: ``111__a``
+              .. Note: There can be different values there.
+            minLength: 1
+            type: string
         required:
           - place
           - title
@@ -255,7 +256,7 @@ allOf:
           minLength: 1
           type: string
         minItems: 1
-        title: List of book editions
+        title: Book edition indicator
         type: array
         uniqueItems: true
       funding_info:

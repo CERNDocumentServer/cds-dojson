@@ -39,14 +39,25 @@ COMMON_IGNORE_FIELDS = {
     '082042',
     '0820_2',
     '082__2',
+    '111__d',
+    '111__f',
+    '269__a',  # preprint info
+    '269__b',  # preprint info
+    '269__c',  # preprint date
     '340__a',
     '541__9',
+    '502__a',  # thesis_info/defense_date
+    '502__b',  # thesis_info/degree_type
+    '502__c',  # thesis_info/institutions
+    '502__d',  # thesis_info/date (publication)
     '650172',
     '65017a',
     '650272',
     '65027a',
     '694__9',
     '694__a',
+    '773__r',  # publication_info/parent_report_number
+    '773__z',  # publication_info/parent_isbn
     '852__c',
     '852__h',
     '901__a',  # record affiliation
@@ -58,6 +69,8 @@ COMMON_IGNORE_FIELDS = {
     '961__h',
     '961__l',
     '961__x',
+    '962__b',
+    '962__n',
     '963__a',
     '964__a',
     '981__a',

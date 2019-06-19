@@ -24,7 +24,6 @@ from cds_dojson.marc21.fields.books.errors import UnexpectedValue
 DOCUMENT_TYPE = {
     'PROCEEDINGS': ['PROCEEDINGS', '42', '43'],
     'BOOK': ['BOOK', '21'],
-    'REPORT': ['REPORT'],
     'STANDARD': ['STANDARD']
 }
 

@@ -49,13 +49,8 @@ def acquisition_source(self, key, value):
     """Translates acquisition source field."""
     _acquisition_source = self.get('acquisition_source', {})
     if key == '916__':
-        date = clean_val('w', value, int, regex_format=r'\d{4}$')
-        if date:
-            year, week = str(date)[:4], str(date)[4:]
-            date = get_week_start(int(year), int(week))
         _acquisition_source.update(
-            {'datetime': str(date),
-             'method': mapping(ACQUISITION_METHOD,
+            {'method': mapping(ACQUISITION_METHOD,
                                clean_val('s', value, str))})
     elif key == '859__' and 'f' in value:
         _acquisition_source.update(
@@ -66,12 +61,7 @@ def acquisition_source(self, key, value):
                               regex_format=r'[A-Z]{3}[0-9]{6}$')
             if sub_a:
                 source = sub_a[:3]
-                year, month = int(sub_a[3:7]), int(sub_a[7:])
-                if 'datetime' in _acquisition_source:
-                    raise ManualMigrationRequired(subfield='a')
-                _acquisition_source.update(
-                    {'datetime': datetime.date(year, month, 1).isoformat(),
-                     'source': source})
+                _acquisition_source.update({'source': source})
         except UnexpectedValue as e:
             e.subfield = 'a'
             self['_private_notes'] = private_notes(self, key, value)
@@ -116,7 +106,7 @@ def collection(self, key, value):
 @out_strip
 def document_type(self, key, value):
     """Translates document type field."""
-    _doc_type = self.get('document_type', [])
+    _doc_type = self.get('document_type', {})
 
     def doc_type_mapping(val):
         if val:
@@ -125,14 +115,23 @@ def document_type(self, key, value):
     for v in force_list(value):
         val_a = doc_type_mapping(clean_val('a', v, str))
         val_b = doc_type_mapping(clean_val('b', v, str))
-        if val_a not in _doc_type:
-            _doc_type.append(val_a)
-        if val_b not in _doc_type:
-            _doc_type.append(val_b)
-        if 'a' in v and not val_a:
+
+        if not val_a and not val_b and not _doc_type:
             raise UnexpectedValue(subfield='a')
-        if 'b' in v and not val_b:
-            raise UnexpectedValue(subfield='b')
+
+        if val_a and val_b and (val_a != val_b != _doc_type):
+            raise ManualMigrationRequired(subfield='a or b - '
+                                                   'inconsistent doc type')
+        if val_a:
+            if _doc_type and _doc_type != val_a:
+                raise ManualMigrationRequired(subfield='a'
+                                                       'inconsistent doc type')
+            _doc_type = val_a
+        if val_b:
+            if _doc_type and _doc_type != val_a:
+                raise ManualMigrationRequired(subfield='b'
+                                                       'inconsistent doc type')
+            _doc_type = val_b
     return _doc_type
 
 

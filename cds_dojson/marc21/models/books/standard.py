@@ -21,7 +21,7 @@
 from __future__ import unicode_literals
 
 from ..base import model as cds_base
-from .base import CDSOverdoBookBase
+from .base import CDSOverdoBookBase, COMMON_IGNORE_FIELDS
 from .base import model as books_base
 
 
@@ -32,41 +32,7 @@ class CDSStandard(CDSOverdoBookBase):
 
     __schema__ = 'records/books/book/book-v.0.0.1.json'
 
-    __ignore_keys__ = {
-
-        '003',
-        '005',
-        '020__q',
-        '0248_a',
-        '0248_p',
-        '050__b',
-        '050_4b',
-        '082002',
-        '082042',
-        '0820_2',
-        '082__2',
-        '340__a',
-        '541__9',
-        '650172',
-        '65017a',
-        '650272',
-        '65027a',
-        '694__9',
-        '694__a',
-        '852__c',
-        '852__h',
-        '916__d',
-        '916__e',
-        '916__y',
-        '940__u',
-        '961__c',
-        '961__h',
-        '961__l',
-        '961__x',
-        '963__a',
-        '964__a',
-        '981__a',
-    }
+    __ignore_keys__ = COMMON_IGNORE_FIELDS
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""

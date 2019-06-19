@@ -217,7 +217,7 @@ def publication_info(self, key, value):
             clean_val('o', v, str) or '',
             clean_val('x', v, str) or '').strip()
         if text:
-            temp_info.update({'pubinfo_freetext': text})
+            temp_info.update({'note': text})
         if temp_info:
             _publication_info.append(temp_info)
     return _publication_info
@@ -563,7 +563,7 @@ def conference_info(self, key, value):
                 'opening_date': opening_date.date().isoformat(),
                 'closing_date': closing_date.date().isoformat(),
                 'cern_conference_code': clean_val('g', v, str),
-                'series_number': clean_val('n', v, int),
+                'series': {'number': clean_val('n', v, int)},
                 'country_code': country_code,
             })
         elif key == '270__':
@@ -574,7 +574,7 @@ def conference_info(self, key, value):
                 raise MissingRequiredField(subfield='m')
         else:
             _conference_info.update({
-                'conference_acronym': clean_val('a', v, str)})
+                'acronym': clean_val('a', v, str)})
     return _conference_info
 
 
@@ -603,11 +603,11 @@ def title(self, key, value):
     }
 
 
-@model.over('editions', '^250__')
+@model.over('edition', '^250__')
 @out_strip
 @for_each_value
-def editions(self, key, value):
-    """Translates editions fields."""
+def edition(self, key, value):
+    """Translates edition indicator field."""
     return clean_val('a', value, str)
 
 
@@ -626,21 +626,6 @@ def imprints(self, key, value):
         'publisher': clean_val('b', value, str),
         'reprint': reprint,
     }
-
-
-@model.over('preprint_date', '^269__')     # item, RDM?!
-@out_strip
-def preprint_date(self, key, value):
-    """Translates preprint_date fields."""
-    date = clean_val('c', value, str)
-    if date:
-        try:
-            date = parser.parse(date)
-            return date.date().isoformat()
-        except (ValueError, AttributeError):
-            raise ManualMigrationRequired(subfield='c')
-    else:
-        raise IgnoreKey('preprint_date')
 
 
 @model.over('number_of_pages', '^300__')   # item

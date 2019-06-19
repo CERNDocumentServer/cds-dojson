@@ -10,7 +10,7 @@
         "title": "Email address associated to the submitter's account",
         "type": "string"
       },
-      "id": {
+      "user_id": {
         "description": "This field is used when `method` is `submitter`.",
         "title": "User ID of the submitter",
         "type": "integer"

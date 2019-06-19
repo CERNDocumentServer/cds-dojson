@@ -73,7 +73,7 @@ def test_title(app):
             </datafield>
             """,
             {
-                'document_type': ['STANDARD'],
+                'document_type': 'STANDARD',
                 'title': {
                     'title': 'Test',
                     'subtitle': 'Subtitle'

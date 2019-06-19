@@ -159,23 +159,22 @@ def test_subject_classification(app):
 def test_acquisition(app):
     """Test acquisition."""
     with app.app_context():
-        check_transformation(
-            """
-            <datafield tag="916" ind1=" " ind2=" ">
-                <subfield code="s">h</subfield>
-                <subfield code="w">201829</subfield>
-            </datafield>
-            """, {
-                'acquisition_source': {'datetime': '2018-07-16'},
-            })
+        # check_transformation(
+        #     """
+        #     <datafield tag="916" ind1=" " ind2=" ">
+        #         <subfield code="s">h</subfield>
+        #         <subfield code="w">201829</subfield>
+        #     </datafield>
+        #     """, {
+        #         'acquisition_source': {'datetime': '2018-07-16'},
+        #     })
         check_transformation(
             """
             <datafield tag="595" ind1=" " ind2=" ">
                 <subfield code="a">SPR201701</subfield>
             </datafield>
             """, {
-                'acquisition_source': {'datetime': '2017-01-01',
-                                       'source': 'SPR'},
+                'acquisition_source': {'source': 'SPR'},
             })
         check_transformation(
             """
@@ -187,19 +186,18 @@ def test_acquisition(app):
                     {'value': 'random text'},
                 ]
             })
-        with pytest.raises(ManualMigrationRequired):
-            check_transformation(
-                """
-                <datafield tag="916" ind1=" " ind2=" ">
-                    <subfield code="s">h</subfield>
-                    <subfield code="w">201829</subfield>
-                </datafield>
-                <datafield tag="595" ind1=" " ind2=" ">
-                    <subfield code="a">SPR201701</subfield>
-                </datafield>
-                """, {
-                    'acquisition_source': {'datetime': '2018-07-16'},
-                })
+        check_transformation(
+            """
+            <datafield tag="916" ind1=" " ind2=" ">
+                <subfield code="s">h</subfield>
+                <subfield code="w">201829</subfield>
+            </datafield>
+            <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">SPR201701</subfield>
+            </datafield>
+            """, {
+                'acquisition_source': {'source': 'SPR'},
+            })
 
 
 def test_collections(app):
@@ -280,7 +278,7 @@ def test_document_type(app):
                 <subfield code="a">BOOK</subfield>
             </datafield>
             """, {
-                'document_type': ['BOOK'],
+                'document_type': 'BOOK',
             })
         check_transformation(
             """
@@ -288,7 +286,7 @@ def test_document_type(app):
                 <subfield code="a">21</subfield>
             </datafield>
             """, {
-                'document_type': ['BOOK'],
+                'document_type': 'BOOK',
             })
         check_transformation(
             """
@@ -296,7 +294,7 @@ def test_document_type(app):
                 <subfield code="a">42</subfield>
             </datafield>
             """, {
-                'document_type': ['PROCEEDINGS'],
+                'document_type': 'PROCEEDINGS',
             })
         check_transformation(
             """
@@ -304,7 +302,7 @@ def test_document_type(app):
                 <subfield code="a">43</subfield>
             </datafield>
             """, {
-                'document_type': ['PROCEEDINGS'],
+                'document_type': 'PROCEEDINGS',
             })
         check_transformation(
             """
@@ -312,10 +310,10 @@ def test_document_type(app):
                 <subfield code="a">BOOK</subfield>
             </datafield>
             <datafield tag="690" ind1="C" ind2=" ">
-                <subfield code="a">REPORT</subfield>
+                <subfield code="b">REPORT</subfield>
             </datafield>
             """,
-            {'document_type': ['BOOK', 'REPORT']}
+            {'document_type': 'BOOK'}
         )
         with pytest.raises(UnexpectedValue):
             check_transformation(
@@ -324,7 +322,7 @@ def test_document_type(app):
                     <subfield code="a">virTScvyb</subfield>
                 </datafield>
                 """,
-                {'document_type': ['BOOK', 'REPORT']}
+                {'document_type': 'BOOK'}
             )
         with pytest.raises(UnexpectedValue):
             check_transformation(
@@ -336,7 +334,7 @@ def test_document_type(app):
                     <subfield code="a">21</subfield>
                 </datafield>
                 """,
-                {'document_type': ['BOOK', 'REPORT']}
+                {'document_type': 'BOOK'}
             )
 
 
@@ -353,7 +351,7 @@ def test_document_type_collection(app):
             </datafield>
             """, {
                 '_collections': ['LEGSERLIB'],
-                'document_type': ['BOOK'],
+                'document_type': 'BOOK',
             })
         check_transformation(
             """
@@ -365,7 +363,7 @@ def test_document_type_collection(app):
             </datafield>
             """, {
                 '_collections': ['LEGSERLIB'],
-                'document_type': ['BOOK'],
+                'document_type': 'BOOK',
             })
 
 
@@ -381,7 +379,7 @@ def test_urls(app):
                 <subfield code="u">cds.cern.ch</subfield>
             </datafield>
             """, {
-                'document_type': ['PROCEEDINGS'],
+                'document_type': 'PROCEEDINGS',
             })
         check_transformation(
             """
@@ -458,8 +456,7 @@ def test_acquisition_email(app):
                 <subfield code="f">karolina.przerwa@cern.ch</subfield>
             </datafield>
             """, {
-                'acquisition_source': {'datetime': '2018-07-16',
-                                       'email': 'karolina.przerwa@cern.ch'},
+                'acquisition_source': {'email': 'karolina.przerwa@cern.ch'},
             })
 
 
@@ -1929,7 +1926,7 @@ def test_alternative_titles(app):
             </datafield>
             """,
             {
-                'document_type': ['BOOK'],
+                'document_type': 'BOOK',
                 'alternative_titles': [
                     {
                         'title': 'Water quality — sampling',
@@ -2185,9 +2182,9 @@ def test_541(app):
                 """,
                 {
                     'agency_code': "SzGeCERN",
-                    'acquisition_source': {
-                        'datetime': "2019-01-21"
-                    },
+                    # 'acquisition_source': {
+                    #     'datetime': "2019-01-21"
+                    # },
                     '_collections': [
                         "BOOKSHOP"
                     ],
@@ -2248,9 +2245,8 @@ def test_541(app):
                     '$schema': {
                         '$ref': "records/books/book/book-v.0.0.1.json"
                     },
-                    'document_type': [
-                        "BOOK"
-                    ],
+                    'document_type':
+                        "BOOK",
                     'imprints': [
                         {
                             'date': "2019",

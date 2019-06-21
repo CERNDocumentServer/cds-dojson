@@ -33,6 +33,8 @@ COMMON_IGNORE_FIELDS = {
     '020__q',
     '0248_a',
     '0248_p',
+    '041__h',  # 206 cds-dojson
+    '035__z',
     '050__b',
     '050_4b',
     '082002',
@@ -44,22 +46,30 @@ COMMON_IGNORE_FIELDS = {
     '269__a',  # preprint info
     '269__b',  # preprint info
     '269__c',  # preprint date
+    '300__b',  # 206 cds-dojson
     '340__a',
+    '440_3a',  # 206 cds-dojson
     '541__9',
+    '541__h',
     '502__a',  # thesis_info/defense_date
     '502__b',  # thesis_info/degree_type
     '502__c',  # thesis_info/institutions
     '502__d',  # thesis_info/date (publication)
+    '5208_a',  # 206 cds-dojson
     '650172',
     '65017a',
     '650272',
     '65027a',
+    '690__c',  # 206 cds-dojson
     '694__9',
     '694__a',
     '773__r',  # publication_info/parent_report_number
     '773__z',  # publication_info/parent_isbn
     '852__c',
     '852__h',
+    '900__s',  # 206 cds-dojson
+    '900__u',  # 206 cds-dojson
+    '900__y',  # 206 cds-dojson
     '901__a',  # record affiliation
     '916__d',
     '916__e',

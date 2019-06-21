@@ -81,6 +81,18 @@ def test_subject_classification(app):
             })
         check_transformation(
             """
+            <datafield tag="050" ind1=" " ind2=" ">
+                <subfield code="a">QA76.642</subfield>
+                <subfield code="b">XXXX</subfield>
+            </datafield>
+            """, {
+                'subject_classification': [
+                    {'value': 'QA76.642',
+                     'schema': 'LoC'}
+                ]
+            })
+        check_transformation(
+            """
             <datafield tag="050" ind1=" " ind2="4">
                 <subfield code="a">QA76.642</subfield>
             </datafield>
@@ -1892,6 +1904,7 @@ def test_alternative_titles(app):
                 <subfield code="b">
                     part 4: guidance on the metrics
                 </subfield>
+                <subfield code="i">CERN</subfield>
             </datafield>
             <datafield tag="246" ind1=" " ind2=" ">
                 <subfield code="a">Water quality — sampling</subfield>
@@ -1905,6 +1918,7 @@ def test_alternative_titles(app):
                     {
                         'title': 'Air quality — sampling',
                         'subtitle': u"""part 4: guidance on the metrics""",
+                        'source': 'CERN',
                     },
                     {
                         'title': 'Water quality — sampling',

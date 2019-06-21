@@ -34,4 +34,5 @@ def title_translations(self, key, value):
         'title': clean_val('a', value, str, req=True),
         'language': 'fr',
         'subtitle': clean_val('b', value, str),
+        'source': clean_val('i', value, str),
     }

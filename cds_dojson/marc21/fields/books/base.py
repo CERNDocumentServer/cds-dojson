@@ -490,7 +490,7 @@ def languages(self, key, value):
 
 
 @model.over('subject_classification',
-            '(^050_4)|(^080__)|(^08204)|(^084__)|(^082__)')
+            '(^050)|(^080__)|(^08204)|(^084__)|(^082)')
 @for_each_value
 @out_strip
 def subject_classification(self, key, value):
@@ -498,7 +498,7 @@ def subject_classification(self, key, value):
     _subject_classification = {'value': clean_val('a', value, str, req=True)}
     if key == '080__':
         _subject_classification.update({'schema': 'UDC'})
-    elif key == '08204' or key == '082__':
+    elif key.startswith('082'):
         _subject_classification.update({'schema': 'Dewey'})
     elif key == '084__':
         sub_2 = clean_val('2', value, str)
@@ -507,9 +507,8 @@ def subject_classification(self, key, value):
             raise IgnoreKey('subject_classification')
         else:
             _subject_classification.update({'schema': 'ICS'})
-    elif key == '050_4':
+    elif key.startswith('050'):
         _subject_classification.update({'schema': 'LoC'})
-
     return _subject_classification
 
 
@@ -531,7 +530,8 @@ def keywords(self, key, value):
         elif key == '6531_':
             _keywords.append({
                 'name': clean_val('a', value, str),
-                'provenance': value.get('9') or value.get('g'),  # Easier to solve here
+                'provenance': value.get('9') or value.get('g'),
+                # Easier to solve here
             })
 
     return _keywords

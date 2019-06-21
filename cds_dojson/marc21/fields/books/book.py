@@ -34,4 +34,5 @@ def alternative_titles(self, key, value):
     return {
         'title': clean_val('a', value, str, req=True),
         'subtitle': clean_val('b', value, str),
+        'source': clean_val('i', value, str),
     }

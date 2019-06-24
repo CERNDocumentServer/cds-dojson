@@ -29,12 +29,54 @@ class CDSSerial(CDSOverdoBookBase):
 
     __query__ = '(690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
                 '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
-                '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED)'\
+                '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED)' \
                 ' AND 490__:/[a-zA-Z0-9]+/'
 
     __schema__ = 'records/books/book/series-v.0.0.1.json'
 
-    __ignore_keys__ = COMMON_IGNORE_FIELDS
+    __model_ignore_keys__ = {
+        '020__a',
+        '020__u',
+        '0247_2',
+        '0247_a',
+        '0247_q',
+        '0248_q',
+        '035__9',
+        '035__a',
+        '041__a',
+        '050_4a',
+        '08204a',
+        '111__9',
+        '111__a',
+        '111__c',
+        '111__g',
+        '111__n',
+        '111__w',
+        '111__z',
+        '260__a',
+        '260__b',
+        '260__c',
+        '300__a',
+        '490__v',
+        '5050_a',
+        '520__a',
+        '595__a',
+        '6531_9',
+        '6531_a',
+        '690C_a',
+        '700__0',
+        '700__9',
+        '700__a',
+        '700__e',
+        '711__a',
+        '916__s',
+        '916__w',
+        '960__a',
+        '970__a',
+        '980__a',
+    }
+
+    __ignore_keys__ = COMMON_IGNORE_FIELDS | __model_ignore_keys__
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
@@ -48,5 +90,5 @@ class CDSSerial(CDSOverdoBookBase):
 
 
 model = CDSSerial(
-    bases=(cds_base, ),
+    bases=(cds_base,),
     entry_point_group='cds_dojson.marc21.series')

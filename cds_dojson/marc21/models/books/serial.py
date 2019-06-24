@@ -24,27 +24,29 @@ from .base import CDSOverdoBookBase, COMMON_IGNORE_FIELDS
 from .base import model as books_base
 
 
-class CDSBook(CDSOverdoBookBase):
+class CDSSerial(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
-    __query__ = '690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
+    __query__ = '(690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
                 '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
-                '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED'
+                '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED)'\
+                ' AND 490__:/[a-zA-Z0-9]+/'
 
-    __schema__ = 'records/books/book/book-v.0.0.1.json'
+    __schema__ = 'records/books/book/series-v.0.0.1.json'
 
     __ignore_keys__ = COMMON_IGNORE_FIELDS
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
-        json = super(CDSBook, self).do(
+        json = super(CDSSerial, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
         json['$schema'] = {'$ref': self.__class__.__schema__}
+        json['_record_type'] = 'series'
         return json
 
 
-model = CDSBook(
-    bases=(books_base, cds_base, ),
-    entry_point_group='cds_dojson.marc21.book')
+model = CDSSerial(
+    bases=(cds_base, ),
+    entry_point_group='cds_dojson.marc21.series')

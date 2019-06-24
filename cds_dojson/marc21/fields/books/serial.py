@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2017, 2018 CERN.
+# Copyright (C) 2017-2019 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -17,3 +17,21 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Books fields."""
+from cds_dojson.marc21.fields.books.errors import UnexpectedValue
+from cds_dojson.marc21.fields.utils import clean_val
+from cds_dojson.marc21.models.books.serial import model
+
+
+@model.over('title', '^490__')
+def title(self, key, value):
+    """Translates book series title."""
+    _series_title = self.get('title', None)
+    if not _series_title:
+        issn = clean_val('x', value, str)
+        if issn:
+            self['issn'] = issn
+        self['mode_of_issuance'] = 'serial'
+        return {'title': clean_val('a', value, str, req=True)}
+    else:
+        raise UnexpectedValue(subfield='a',
+                              message=' series title already provided')

@@ -33,7 +33,8 @@ def check_transformation(marcxml_body, json_body):
     expected = {
         '$schema': {
             '$ref': 'records/books/book/book-v.0.0.1.json'
-        }
+        },
+        '_record_type': 'document',
     }
     expected.update(**json_body)
     assert record == expected

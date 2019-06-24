@@ -22,6 +22,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from dojson.utils import filter_values, for_each_value
 
+from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired
 from cds_dojson.marc21.fields.utils import clean_val
 from cds_dojson.marc21.models.books.book import model
 
@@ -31,8 +32,34 @@ from cds_dojson.marc21.models.books.book import model
 @filter_values
 def alternative_titles(self, key, value):
     """Alternative titles."""
-    return {
-        'title': clean_val('a', value, str, req=True),
-        'subtitle': clean_val('b', value, str),
-        'source': clean_val('i', value, str),
-    }
+    if 'n' in value:
+        self['volume'] = volume(self, key, value)
+    if 'p' in value:
+        # if series detected
+        if self.get('volumes', None):
+            val_p = clean_val('p', value, str)
+            self['volumes_titles'].append(
+                {
+                    'title': val_p, 'volume': volume(self, key, value)
+                 }
+            ) if val_p else None
+        else:
+            self['volumes_titles'] = []
+    else:
+        return {
+            'title': clean_val('a', value, str, req=True),
+            'subtitle': clean_val('b', value, str),
+            'source': clean_val('i', value, str),
+        }
+
+
+@model.over('volume', '^246__n')
+@for_each_value
+@filter_values
+def volume(self, key, value):
+    """Translates volumes index in series."""
+    _volume = self.get('volume', None)
+    val_n = clean_val('n', value, str, req=True)
+    if volume and volume != val_n:
+        raise ManualMigrationRequired(subfield='n')
+    return val_n

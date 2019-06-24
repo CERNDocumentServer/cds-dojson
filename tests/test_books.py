@@ -33,12 +33,6 @@ marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
            """<record>{0}</record></collection>""")
 
 
-def test_mapping():
-    """Test mapping."""
-    with pytest.raises(UnexpectedValue):
-        assert mapping(MATERIALS, 'softwa', raise_exception=True) == 'software'
-
-
 def check_transformation(marcxml_body, json_body):
     """Check transformation."""
     blob = create_record(marcxml.format(marcxml_body))
@@ -46,10 +40,17 @@ def check_transformation(marcxml_body, json_body):
     expected = {
         '$schema': {
             '$ref': ('records/books/book/book-v.0.0.1.json')
-        }
+        },
+        '_record_type': 'document',
     }
     expected.update(**json_body)
     assert record == expected
+
+
+def test_mapping():
+    """Test mapping."""
+    with pytest.raises(UnexpectedValue):
+        assert mapping(MATERIALS, 'softwa', raise_exception=True) == 'software'
 
 
 def test_subject_classification(app):

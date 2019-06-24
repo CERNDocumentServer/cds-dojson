@@ -42,6 +42,7 @@ class CDSBook(CDSOverdoBookBase):
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
         json['$schema'] = {'$ref': self.__class__.__schema__}
+        json['_record_type'] = 'document'
         return json
 
 

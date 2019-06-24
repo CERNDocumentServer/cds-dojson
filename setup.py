@@ -101,10 +101,13 @@ setup(
     ],
     tests_require=tests_require,
     entry_points={
+        'cds_dojson.marc21.parent_models': [
+            'books_serial = cds_dojson.marc21.models.books.serial:model',
+            'books_multipart = cds_dojson.marc21.models.books.multipart:model',
+        ],
         'cds_dojson.marc21.models': [
             'videos_video = cds_dojson.marc21.models.videos.video:model',
             'videos_project = cds_dojson.marc21.models.videos.project:model',
-            'books_series = cds_dojson.marc21.models.books.series:model'
             'books_book = cds_dojson.marc21.models.books.book:model',
             'books_standard = cds_dojson.marc21.models.books.standard:model'
         ],
@@ -124,7 +127,10 @@ setup(
         'cds_dojson.marc21.book': [
             'book = cds_dojson.marc21.fields.books.book',
             'standard = cds_dojson.marc21.fields.books.standard',
-            'series = cds_dojson.marc21.fields.books.series',
+        ],
+        'cds_dojson.marc21.series': [
+            'serial = cds_dojson.marc21.fields.books.serial',
+            'multipart = cds_dojson.marc21.fields.books.multipart',
         ],
         # DoJSON entry points
         'console_scripts': [

@@ -52,6 +52,11 @@ def acquisition_source(self, key, value):
         _acquisition_source.update(
             {'method': mapping(ACQUISITION_METHOD,
                                clean_val('s', value, str))})
+        date = clean_val('w', value, int, regex_format=r'\d{4}$')
+        if date:
+            year, week = str(date)[:4], str(date)[4:]
+            date = get_week_start(int(year), int(week))
+            self['creation_date'] = date.isoformat()
     elif key == '859__' and 'f' in value:
         _acquisition_source.update(
             {'email': clean_email(clean_val('f', value, str))})
@@ -62,6 +67,9 @@ def acquisition_source(self, key, value):
             if sub_a:
                 source = sub_a[:3]
                 _acquisition_source.update({'source': source})
+                year, month = int(sub_a[3:7]), int(sub_a[7:])
+                self['creation_date'] = \
+                    datetime.date(year, month, 1).isoformat()
         except UnexpectedValue as e:
             e.subfield = 'a'
             self['_private_notes'] = private_notes(self, key, value)
@@ -143,7 +151,14 @@ def authors(self, key, value):
     item = build_contributor_books(value)
     if item and item not in _authors:
         _authors.append(item)
-
+    try:
+        if 'u' in value:
+            other = ['et al.', 'et al']
+            val_u = list(force_list(value.get('u')))
+            if [i for i in other if i in val_u]:
+                _authors.append({'others': True})
+    except UnexpectedValue:
+        pass
     return _authors
 
 
@@ -590,19 +605,6 @@ def title_translations(self, key, value):
     }
 
 
-@model.over('title', '^245__')
-@filter_values
-def title(self, key, value):
-    """Translates title."""
-    if 'title' in self:
-        raise UnexpectedValue()
-
-    return {
-        'title': clean_val('a', value, str, req=True),
-        'subtitle': clean_val('b', value, str),
-    }
-
-
 @model.over('edition', '^250__')
 @out_strip
 @for_each_value
@@ -626,23 +628,6 @@ def imprints(self, key, value):
         'publisher': clean_val('b', value, str),
         'reprint': reprint,
     }
-
-
-@model.over('number_of_pages', '^300__')   # item
-def number_of_pages(self, key, value):
-    """Translates number_of_pages fields."""
-    val = clean_val('a', value, str)
-    if is_excluded(val):
-        raise IgnoreKey('number_of_pages')
-
-    parts = extract_parts(val)
-    if parts['has_extra']:
-        raise UnexpectedValue(subfield='a')
-    if parts['physical_description']:
-        self['physical_description'] = parts['physical_description']
-    if parts['number_of_pages']:
-        return parts['number_of_pages']
-    raise UnexpectedValue(subfield='a')
 
 
 @model.over('book_series', '^490__')

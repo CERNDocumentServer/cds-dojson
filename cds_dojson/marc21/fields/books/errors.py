@@ -22,12 +22,14 @@ from dojson.errors import DoJSONException
 
 class CDSDoJSONException(DoJSONException):
     """CDSDoJSONException class."""
+
     def __init__(self, *args, **kwargs):
         """Constructor."""
         self.subfield = kwargs.get('subfield', None)
         message = kwargs.get('message', None)
         if message:
             self.message = self.message + message
+
         super(CDSDoJSONException, self).__init__(*args)
 
 

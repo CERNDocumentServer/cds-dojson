@@ -20,6 +20,7 @@
 import re
 
 from dojson.errors import IgnoreKey
+from dojson.utils import for_each_value, filter_values
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     MissingRequiredField
@@ -29,9 +30,10 @@ from cds_dojson.marc21.models.books.multipart import model
 
 
 @model.over('title', '^245__')
+@for_each_value
+@filter_values
 def title(self, key, value):
     """Translates book series title."""
-    _series_title = self.get('title', None)
     # assume that is goes by order of fields and check 245 first
     return {'title': clean_val('a', value, str),
             'subtitle': clean_val('b', value, str),
@@ -40,6 +42,7 @@ def title(self, key, value):
 
 @model.over('volumes', '^246__')
 def volumes(self, key, value):
+    """Translates volumes titles."""
     _series_title = self.get('title', None)
 
     # check if it is a multipart monograph
@@ -56,10 +59,11 @@ def volumes(self, key, value):
 
     # if __n matches the pattern it is isbn if not it is a volume index
     # of the document within this series
+    # TODO this field is not true, not found in the real data
     if re.match(r'^\d*[0-9X]$', val_n):
         self['isbn'] = val_n
     # series created
-    self['mode_of_issuance'] = 'multipart_monograph'
+    self['mode_of_issuance'] = 'MULTIPART_MONOGRAPH'
     raise IgnoreKey('volumes')
 
 
@@ -73,6 +77,8 @@ def number_of_volumes(self, key, value):
             subfield='a', message=' this record is missing a main title')
     val_a = clean_val('a', value, str)
     parsed_a = extract_parts(val_a)
-    if not parsed_a["number_of_pages"] and 'v' in val_a:
-        return re.findall(r'\d+', val_a)[0]
-    raise UnexpectedValue(subfield='a')
+    if not parsed_a["number_of_pages"] and ('v' in val_a or 'vol' in val_a):
+        _volumes = re.findall(r'\d+', val_a)
+        if _volumes:
+            return _volumes[0]
+    raise IgnoreKey('number_of_volumes')

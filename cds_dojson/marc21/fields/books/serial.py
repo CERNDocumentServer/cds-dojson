@@ -17,21 +17,20 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Books fields."""
+from dojson.utils import filter_values, for_each_value
+
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue
 from cds_dojson.marc21.fields.utils import clean_val
 from cds_dojson.marc21.models.books.serial import model
 
 
 @model.over('title', '^490__')
+@for_each_value
+@filter_values
 def title(self, key, value):
     """Translates book series title."""
-    _series_title = self.get('title', None)
-    if not _series_title:
-        issn = clean_val('x', value, str)
-        if issn:
-            self['issn'] = issn
-        self['mode_of_issuance'] = 'serial'
-        return {'title': clean_val('a', value, str, req=True)}
-    else:
-        raise UnexpectedValue(subfield='a',
-                              message=' series title already provided')
+    issn = clean_val('x', value, str)
+    if issn:
+        self['issn'] = issn
+    self['mode_of_issuance'] = 'SERIAL'
+    return {'title': clean_val('a', value, str, req=True)}

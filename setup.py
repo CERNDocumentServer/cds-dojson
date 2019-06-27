@@ -45,7 +45,7 @@ tests_require = [
     'pytest-cache>=1.0',
     'pytest-cov>=2.1.0',
     'pytest-pep8>=1.0.6',
-    'pytest>=2.8.0',
+    'pytest>=3.8.1,<5.0.0',
     'pycountry>=17.5.14',
 ]
 

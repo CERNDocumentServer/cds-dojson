@@ -375,11 +375,17 @@ def build_contributor_books(value):
     value_u = value.get('u')
     if value_u:
         contributor['affiliations'] = list(force_list(value_u))
-
+        other = ['et al.', 'et al']
+        found_other = [i for i in other if i in contributor['affiliations']]
+        if found_other:
+            try:
+                for x in found_other:
+                    contributor['affiliations'].remove(x)
+            except ValueError:
+                pass
     contributor = dict(
         (k, v) for k, v in iteritems(contributor) if v is not None
     )
-
     return contributor
 
 

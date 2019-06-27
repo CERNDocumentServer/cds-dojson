@@ -60,6 +60,11 @@ def test_marc21_matcher_books():
         '245__': [{'a': 'Test '}],
         '246__': [{'p': 'Volume Title', 'n': '2'}]
     }
+    multipart_blob2 = {
+        '690C_': [{'a': 'BOOK'}],
+        '245__': [{'a': 'Test '}],
+        '246__': [{'n': '2'}]
+    }
     standard_blob1 = {'690C_': [{'a': 'STANDARD'}]}
     not_match = {'foo': 'bar'}
 
@@ -72,6 +77,8 @@ def test_marc21_matcher_books():
                                    'cds_dojson.marc21.parent_models'
                                    )
     assert multipart.model == matcher(multipart_blob1,
+                                      'cds_dojson.marc21.parent_models')
+    assert multipart.model == matcher(multipart_blob2,
                                       'cds_dojson.marc21.parent_models')
     # make sure that it won't match if 490 not there
     assert default.model == matcher(serial_blob2,

@@ -20,34 +20,32 @@
 from dojson.errors import DoJSONException
 
 
-class UnexpectedValue(DoJSONException):
+class CDSDoJSONException(DoJSONException):
+    """CDSDoJSONException class."""
+
+    def __init__(self, *args, **kwargs):
+        """Constructor."""
+        self.subfield = kwargs.get('subfield', None)
+        message = kwargs.get('message', None)
+        if message:
+            self.message = self.message + message
+
+        super(CDSDoJSONException, self).__init__(*args)
+
+
+class UnexpectedValue(CDSDoJSONException):
     """The corresponding value is unexpected."""
 
     message = '[UNEXPECTED INPUT VALUE]'
 
-    def __init__(self, *args, **kwargs):
-        """Constructor."""
-        self.subfield = kwargs.get('subfield', None)
-        super(UnexpectedValue, self).__init__(*args)
 
-
-class MissingRequiredField(DoJSONException):
+class MissingRequiredField(CDSDoJSONException):
     """The corresponding value is required."""
 
     message = '[MISSING REQUIRED FIELD]'
 
-    def __init__(self, *args, **kwargs):
-        """Constructor."""
-        self.subfield = kwargs.get('subfield', None)
-        super(MissingRequiredField, self).__init__(*args)
 
-
-class ManualMigrationRequired(DoJSONException):
+class ManualMigrationRequired(CDSDoJSONException):
     """The corresponding field should be manually migrated."""
 
     message = '[MANUAL MIGRATION REQUIRED]'
-
-    def __init__(self, *args, **kwargs):
-        """Constructor."""
-        self.subfield = kwargs.get('subfield', None)
-        super(ManualMigrationRequired, self).__init__(*args)

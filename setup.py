@@ -45,7 +45,7 @@ tests_require = [
     'pytest-cache>=1.0',
     'pytest-cov>=2.1.0',
     'pytest-pep8>=1.0.6',
-    'pytest>=2.8.0',
+    'pytest>=3.8.1,<5.0.0',
     'pycountry>=17.5.14',
 ]
 
@@ -101,6 +101,10 @@ setup(
     ],
     tests_require=tests_require,
     entry_points={
+        'cds_dojson.marc21.parent_models': [
+            'books_serial = cds_dojson.marc21.models.books.serial:model',
+            'books_multipart = cds_dojson.marc21.models.books.multipart:model',
+        ],
         'cds_dojson.marc21.models': [
             'videos_video = cds_dojson.marc21.models.videos.video:model',
             'videos_project = cds_dojson.marc21.models.videos.project:model',
@@ -123,7 +127,10 @@ setup(
         'cds_dojson.marc21.book': [
             'book = cds_dojson.marc21.fields.books.book',
             'standard = cds_dojson.marc21.fields.books.standard',
-
+        ],
+        'cds_dojson.marc21.series': [
+            'serial = cds_dojson.marc21.fields.books.serial',
+            'multipart = cds_dojson.marc21.fields.books.multipart',
         ],
         # DoJSON entry points
         'console_scripts': [

@@ -16,35 +16,49 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Book model."""
-
+"""Series model."""
 from __future__ import unicode_literals
 
 from ..base import model as cds_base
-from .base import CDSOverdoBookBase, COMMON_IGNORE_FIELDS
 from .base import model as books_base
+from .base import CDSOverdoBookBase, COMMON_IGNORE_FIELDS
 
 
-class CDSStandard(CDSOverdoBookBase):
+class CDSMultipart(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
-    __query__ = '690C_:STANDARD -980__:DELETED'
+    __query__ = '(690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
+                '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
+                '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED)'\
+                'AND 246__:/[a-zA-Z0-9]+/ '
 
-    __schema__ = 'records/books/book/book-v.0.0.1.json'
+    __schema__ = 'records/books/book/series-v.0.0.1.json'
 
-    __ignore_keys__ = COMMON_IGNORE_FIELDS
+    __model_ignore_keys__ = {
+        '505__a',
+        '505__t',
+        '5050_a',
+        '5050_t',
+        '021__a',
+        '021__b',
+        '490__a',
+        '490__b',
+        '490__c',
+    }
+
+    __ignore_keys__ = COMMON_IGNORE_FIELDS | __model_ignore_keys__
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
-        json = super(CDSStandard, self).do(
+        json = super(CDSMultipart, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
         json['$schema'] = {'$ref': self.__class__.__schema__}
-        json['_record_type'] = 'document'
+        json['_record_type'] = 'multipart'
         return json
 
 
-model = CDSStandard(
+model = CDSMultipart(
     bases=(books_base, cds_base, ),
-    entry_point_group='cds_dojson.marc21.book')
+    entry_point_group='cds_dojson.marc21.series')

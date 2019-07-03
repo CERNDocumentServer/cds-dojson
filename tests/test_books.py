@@ -33,12 +33,6 @@ marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
            """<record>{0}</record></collection>""")
 
 
-def test_mapping():
-    """Test mapping."""
-    with pytest.raises(UnexpectedValue):
-        assert mapping(MATERIALS, 'softwa', raise_exception=True) == 'software'
-
-
 def check_transformation(marcxml_body, json_body):
     """Check transformation."""
     blob = create_record(marcxml.format(marcxml_body))
@@ -46,10 +40,18 @@ def check_transformation(marcxml_body, json_body):
     expected = {
         '$schema': {
             '$ref': ('records/books/book/book-v.0.0.1.json')
-        }
+        },
+        '_record_type': 'document',
     }
     expected.update(**json_body)
+    print(record, '---------------------------')
     assert record == expected
+
+
+def test_mapping():
+    """Test mapping."""
+    with pytest.raises(UnexpectedValue):
+        assert mapping(MATERIALS, 'softwa', raise_exception=True) == 'software'
 
 
 def test_subject_classification(app):
@@ -171,15 +173,6 @@ def test_subject_classification(app):
 def test_acquisition(app):
     """Test acquisition."""
     with app.app_context():
-        # check_transformation(
-        #     """
-        #     <datafield tag="916" ind1=" " ind2=" ">
-        #         <subfield code="s">h</subfield>
-        #         <subfield code="w">201829</subfield>
-        #     </datafield>
-        #     """, {
-        #         'acquisition_source': {'datetime': '2018-07-16'},
-        #     })
         check_transformation(
             """
             <datafield tag="595" ind1=" " ind2=" ">
@@ -187,6 +180,7 @@ def test_acquisition(app):
             </datafield>
             """, {
                 'acquisition_source': {'source': 'SPR'},
+                'creation_date': '2017-01-01'
             })
         check_transformation(
             """
@@ -209,6 +203,7 @@ def test_acquisition(app):
             </datafield>
             """, {
                 'acquisition_source': {'source': 'SPR'},
+                'creation_date': '2017-01-01',
             })
 
 
@@ -469,6 +464,7 @@ def test_acquisition_email(app):
             </datafield>
             """, {
                 'acquisition_source': {'email': 'karolina.przerwa@cern.ch'},
+                'creation_date': '2018-07-16',
             })
 
 
@@ -553,6 +549,33 @@ def test_authors(app):
                     }
                 ],
             })
+
+        check_transformation(
+            """
+             <datafield tag="700" ind1=" " ind2=" ">
+                <subfield code="a">Frampton, Paul H</subfield>
+                <subfield code="e">ed.</subfield>
+                <subfield code="u">et al.</subfield>
+            </datafield>
+            <datafield tag="700" ind1=" " ind2=" ">
+                <subfield code="a">Glashow, Sheldon Lee</subfield>
+                <subfield code="e">ed.</subfield>
+            </datafield>
+            """,
+            {
+                'authors': [
+                    {
+                        'full_name': 'Frampton, Paul H',
+                        'role': 'Editor',
+                    },
+                    {'others': True},
+                    {
+                        'full_name': 'Glashow, Sheldon Lee',
+                        'role': 'Editor'
+                    },
+                ]
+            }
+        )
 
 
 # better example to be provided
@@ -2200,6 +2223,7 @@ def test_541(app):
                     # 'acquisition_source': {
                     #     'datetime': "2019-01-21"
                     # },
+                    'creation_date': '2019-01-21',
                     '_collections': [
                         "BOOKSHOP"
                     ],

@@ -33,7 +33,8 @@ def check_transformation(marcxml_body, json_body):
     expected = {
         '$schema': {
             '$ref': 'records/books/book/book-v.0.0.1.json'
-        }
+        },
+        '_record_type': 'document',
     }
     expected.update(**json_body)
     assert record == expected
@@ -55,7 +56,6 @@ def test_title(app):
                 }
             }
         )
-    with app.app_context():
         check_transformation(
             """
             <datafield tag="690" ind1="C" ind2=" ">
@@ -86,3 +86,66 @@ def test_title(app):
                 ]
             }
         )
+        check_transformation(
+            """
+            <datafield tag="690" ind1="C" ind2=" ">
+                <subfield code="a">STANDARD</subfield>
+            </datafield>
+            <datafield tag="245" ind1=" " ind2=" ">
+                <subfield code="a">Test</subfield>
+                <subfield code="b">Subtitle</subfield>
+            </datafield>
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="a">Water quality — sampling</subfield>
+                <subfield code="b">
+                part 15: guidance on the preservation and handling of sludge
+            </subfield>
+            </datafield>
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">373 p</subfield>
+            </datafield>
+            """, {
+                'document_type': 'STANDARD',
+                'title': {
+                    'title': 'Test',
+                    'subtitle': 'Subtitle'
+                },
+                'title_translations': [
+                    {'title': 'Water quality — sampling',
+                     'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
+                     'language': 'fr',
+                     }
+                ],
+                'number_of_pages': 373,
+            })
+        check_transformation(
+            """
+            <datafield tag="690" ind1="C" ind2=" ">
+                <subfield code="a">STANDARD</subfield>
+            </datafield>
+            <datafield tag="245" ind1=" " ind2=" ">
+                <subfield code="a">Test</subfield>
+                <subfield code="b">Subtitle</subfield>
+            </datafield>
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="a">Water quality — sampling</subfield>
+                <subfield code="b">
+                part 15: guidance on the preservation and handling of sludge
+            </subfield>
+            </datafield>
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">mult. p</subfield>
+            </datafield>
+            """, {
+                'document_type': 'STANDARD',
+                'title': {
+                    'title': 'Test',
+                    'subtitle': 'Subtitle'
+                },
+                'title_translations': [
+                    {'title': 'Water quality — sampling',
+                     'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
+                     'language': 'fr',
+                     }
+                ],
+            })

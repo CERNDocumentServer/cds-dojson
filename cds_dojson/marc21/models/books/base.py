@@ -71,6 +71,7 @@ COMMON_IGNORE_FIELDS = {
     '900__u',  # 206 cds-dojson
     '900__y',  # 206 cds-dojson
     '901__a',  # record affiliation
+    '901__u',
     '916__d',
     '916__e',
     '916__y',
@@ -83,6 +84,7 @@ COMMON_IGNORE_FIELDS = {
     '962__n',
     '963__a',
     '964__a',
+    '970__a',
     '981__a',
 }
 

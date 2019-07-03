@@ -31,6 +31,7 @@ def is_excluded(value):
         "mult p",
         "mult. p",
         "mult. p.",
+        "mult. p",
         "multi p",
         "multi pages",
     ]
@@ -83,4 +84,5 @@ def extract_parts(value):
         "has_extra": bool(valid_parts_count > 0),
         "number_of_pages": number_of_pages,
         "physical_description": physical_description,
+
     }

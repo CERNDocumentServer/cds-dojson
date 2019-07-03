@@ -19,7 +19,7 @@
 
 from dojson.contrib import marc21 as default
 
-from cds_dojson.marc21.models.books import book, standard
+from cds_dojson.marc21.models.books import book, standard, serial, multipart
 from cds_dojson.marc21.models.videos import project, video
 from cds_dojson.matcher import matcher
 
@@ -52,6 +52,19 @@ def test_marc21_matcher_books():
     book_blob1 = {'690C_': [{'a': 'BOOK'}]}
     book_blob2 = {'980__': [{'a': 'PROCEEDINGS'}]}
     book_blob3 = {'697C_': [{'a': 'ENGLISH BOOK CLUB'}]}
+    serial_blob1 = {'690C_': [{'a': 'BOOK'}],
+                    '490__': {'a': 'Test title'}}
+    serial_blob2 = {'690C_': [{'a': 'BOOK'}]}
+    multipart_blob1 = {
+        '690C_': [{'a': 'BOOK'}],
+        '245__': [{'a': 'Test '}],
+        '246__': [{'p': 'Volume Title', 'n': '2'}]
+    }
+    multipart_blob2 = {
+        '690C_': [{'a': 'BOOK'}],
+        '245__': [{'a': 'Test '}],
+        '246__': [{'n': '2'}]
+    }
     standard_blob1 = {'690C_': [{'a': 'STANDARD'}]}
     not_match = {'foo': 'bar'}
 
@@ -60,4 +73,15 @@ def test_marc21_matcher_books():
     assert book.model == matcher(book_blob3, 'cds_dojson.marc21.models')
     assert standard.model == matcher(standard_blob1,
                                      'cds_dojson.marc21.models')
+    assert serial.model == matcher(serial_blob1,
+                                   'cds_dojson.marc21.parent_models'
+                                   )
+    assert multipart.model == matcher(multipart_blob1,
+                                      'cds_dojson.marc21.parent_models')
+    assert multipart.model == matcher(multipart_blob2,
+                                      'cds_dojson.marc21.parent_models')
+    # make sure that it won't match if 490 not there
+    assert default.model == matcher(serial_blob2,
+                                    'cds_dojson.marc21.parent_models'
+                                    )
     assert default.model == matcher(not_match, 'cds_dojson.marc21.models')

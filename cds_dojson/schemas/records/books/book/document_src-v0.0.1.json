@@ -91,34 +91,15 @@
           "uniqueItems": true
         },
         "book_series": {
-          "description": ":MARC: ``490``\nList of book series in which this record has been published.\n.. note::\n    This field should only be present if ``book``, ``thesis`` or\n    ``proceedings`` are among\n    :ref:`hep.json#/properties/document_type`.",
+          "description": ":MARC: ``490`` List of book series in which this record has been published.",
           "items": {
-            "additionalProperties": false,
-            "description": ".. note::\n    If the book series has a Journal record,\n    `hep.json#/properties/publication_info` should be used\n    instead.",
-            "properties": {
-              "issn": {
-                "description": ":MARC: ``490__x``\n.. note: Does not exist in Inspire",
-                "minLength": 1,
-                "title": "ISSN of the series",
-                "type": "string"
-              },
-              "title": {
-                "description": ":MARC: ``490__a``",
-                "minLength": 1,
-                "title": "Title of the book series",
-                "type": "string"
-              },
-              "volume": {
-                "description": ":MARC: ``490__v``",
-                "minLength": 1,
-                "title": "Volume of the book in the series",
-                "type": "string"
-              }
-            },
-            "required": [
-              "title"
-            ],
-            "type": "object"
+            "$ref": "series-v.0.0.1.json",
+            "volume": {
+              "description": ":MARC: ``490__v``",
+              "minLength": 1,
+              "title": "Volume of the book in the series",
+              "type": "string"
+            }
           },
           "minItems": 1,
           "type": "array",
@@ -462,12 +443,6 @@
           "title": "List of keywords",
           "type": "array",
           "uniqueItems": true
-        },
-        "volume": {
-          "description": ":MARC: ``246__n``",
-          "minItems": 1,
-          "title": "Volume number",
-          "type": "string"
         }
       }
     }

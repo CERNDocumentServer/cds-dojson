@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "additionalProperties": false,
+  "description": "Data model for the electronic items of the books, proceedings, standards CDS.",
+  "properties": {
+    "$schema": {
+      "format": "uri",
+      "minLength": 1,
+      "type": "string"
+    },
+    "internal_notes": {
+      "minLength": 1,
+      "title": "Internal Note",
+      "type": "string"
+    },
+    "description": {
+      "description": ":MARC: 0247__q or 8564_y",
+      "minLength": 1,
+      "title": "EItem description",
+      "type": "string"
+    },
+    "dois": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "material": {
+            "$ref": "elements/material.json",
+            "description": ":MARC: 0247_q"
+          },
+          "source": {
+            "$ref": "elements/source.json",
+            "description": ":MARC: 0247_9"
+          },
+          "value": {
+            "description": "':MARC: 0247_a\n:example: 10.1023/A:1026654312961'",
+            "minLength": 1,
+            "pattern": "^10\\.\\d+(\\.\\d+)?/\\S+$",
+            "title": "DOI",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "title": "List of DOIs",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "files": {
+      "items": {
+        "$ref": "elements/file.json"
+      },
+      "minItems": 1,
+      "title": "List of files",
+      "type": "array"
+    },
+    "number_of_pages": {
+      "description": ":MARC: ``300``",
+      "minimum": 1,
+      "title": "Number of pages of the EItem",
+      "type": "integer"
+    },
+    "public_note": {
+      "minLength": 1,
+      "title": "Public Note",
+      "type": "string"
+    },
+    "urls": {
+      "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.",
+      "items": {
+        "$ref": "elements/url.json"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "open_access": {
+      "description": "Define if the electronic item is publically accessible.",
+      "title": "Public access",
+      "type": "boolean"
+    }
+  }
+}

@@ -61,6 +61,7 @@ def test_cli(src, compiled):
             pkg_resources.resource_filename('cds_dojson.schemas',
                                             compiled), 'r') as f:
         compile_schema_expected = json.load(f)
+
     assert compile_schema_expected == compiled_schema_result
 
 

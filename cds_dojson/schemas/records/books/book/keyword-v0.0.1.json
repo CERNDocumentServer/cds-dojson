@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "additionalProperties": false,
+  "description": ":MARC: ```6531`` and ``695``",
+  "properties": {
+    "provenance": {
+      "description": ":MARC: ``6531_9/695__2``",
+      "$ref": "elements/source.json"
+    },
+    "value": {
+      "minLength": 1,
+      "title": "A keyword",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value"
+  ],
+  "title": "Keyword",
+  "type": "object"
+}

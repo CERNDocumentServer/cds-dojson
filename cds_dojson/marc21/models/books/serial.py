@@ -32,7 +32,7 @@ class CDSSerial(CDSOverdoBookBase):
                 '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED)' \
                 ' AND 490__:/[a-zA-Z0-9]+/'
 
-    __schema__ = 'records/books/book/series-v.0.0.1.json'
+    __schema__ = 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json'
 
     __model_ignore_keys__ = {
         '020__a',
@@ -206,7 +206,7 @@ class CDSSerial(CDSOverdoBookBase):
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
-        json['$schema'] = {'$ref': self.__class__.__schema__}
+        json['$schema'] = self.__class__.__schema__
         json['_record_type'] = 'serial'
         return json
 

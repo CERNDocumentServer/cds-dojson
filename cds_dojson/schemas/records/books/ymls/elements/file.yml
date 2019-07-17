@@ -1,0 +1,20 @@
+file:
+  description: A file object described using some basic subfields. (Usually to be extended)
+  type: object,
+  properties:
+    bucket:
+      type: string
+    checksum:
+      type: string
+    key:
+      type: string
+    size:
+      type: integer
+    type:
+      description: File type extension.
+      type: string
+    category:
+      description: Former BibDocFile.doctype
+      type: string
+    version_id:
+      type: string

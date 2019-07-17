@@ -26,7 +26,7 @@
       "type": "array",
       "uniqueItems": true
     },
-    "_private_notes": {
+    "internal_notes": {
       "description": ":MARC: ``595``\nVisible for librarians",
       "items": {
         "$ref": "elements/sourced_value.json"
@@ -319,37 +319,8 @@
       "uniqueItems": true
     },
     "keywords": {
-      "description": ":MARC: ```6531`` and ``695`` (corresponding to different\n    :ref:`keywords/items/properties/schema`)\nKeywords give information about the specific contents of the\nrecord, much more precisely than :ref:`inspire_categories`.",
       "items": {
-        "additionalProperties": false,
-        "properties": {
-          "schema": {
-            "description": "Describes to which vocabulary the keyword in :ref:`value`\nbelongs.\n``INIS``\n    :MARC: ``695__2:INIS``\n    The keyword is part of the `International\n    Nuclear Information System (INIS)\n    <https://www.iaea.org/inis/>`_ vocabulary.\n``INSPIRE``\n    :MARC: ``695__2:INSPIRE``\n    The keyword has been assigned by Inspire, and\n    belongs to its vocabulary.\n``JACOW``\n    :MARC: ``6531_2:JACOW``\n    The keyword is part of the `Joint Accelerator\n    Conference Website (JACoW) vocabulary\n    <http://jacow.org/Tools/Keywords>`_.\n``PACS``\n    :MARC: ``084__2:PACS``\n    The keyword is a number from the `Physics and\n    Astronomy Classification Scheme (PACS)\n    <https://publishing.aip.org/publishing/pacs/pacs-2010-regular-edition>`_.\n``PDG``\n    :MARC: ``084__2:PDG``\n    The keyword is a `PDG Indentifier\n    <http://pdg.lbl.gov/2016/pdgid/PDGIdentifiers.html>`_.\n.. note::\n    If not present, the keyword is a free-form keyword,\n    not necessarily part of any vocabulary.",
-            "enum": [
-              "INIS",
-              "INSPIRE",
-              "JACOW",
-              "PACS",
-              "PDG"
-            ],
-            "minLength": 1,
-            "title": "Keyword vocabulary",
-            "type": "string"
-          },
-          "provenance": {
-            "$ref": "elements/source.json"
-          },
-          "value": {
-            "description": ":MARC: ``084/6531/695__a`` (depending on :ref:`schema`)\nIt belongs to the vocabulary specified by :ref:`schema`.\n:example: ``black hole: mass`` (for :ref:`schema` =\n    ``INSPIRE``)\n:example: ``29.27.Fh`` (for :ref:`schema` = ``PACS``)\n:example: ``G033M`` (for :ref:`schema` = ``PDG``)",
-            "minLength": 1,
-            "title": "A keyword",
-            "type": "string"
-          }
-        },
-        "required": [
-          "value"
-        ],
-        "type": "object"
+        "$ref": "keyword-v0.0.1.json"
       },
       "minItems": 1,
       "title": "List of keywords",

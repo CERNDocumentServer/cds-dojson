@@ -103,41 +103,14 @@ allOf:
         type: array
         uniqueItems: true
       book_series:
-        description: |-
-          :MARC: ``490``
-          List of book series in which this record has been published.
-          .. note::
-              This field should only be present if ``book``, ``thesis`` or
-              ``proceedings`` are among
-              :ref:`hep.json#/properties/document_type`.
+        description: ":MARC: ``490`` List of book series in which this record has been published."
         items:
-          additionalProperties: false
-          description: |-
-            .. note::
-                If the book series has a Journal record,
-                `hep.json#/properties/publication_info` should be used
-                instead.
-          properties:
-            issn:
-              description: |-
-                :MARC: ``490__x``
-                .. note: Does not exist in Inspire
-              minLength: 1
-              title: ISSN of the series
-              type: string
-            title:
-              description: ':MARC: ``490__a``'
-              minLength: 1
-              title: Title of the book series
-              type: string
-            volume:
-              description: ':MARC: ``490__v``'
-              minLength: 1
-              title: Volume of the book in the series
-              type: string
-          required:
-            - title
-          type: object
+          $ref: series-v.0.0.1.json
+          volume:
+            description: ':MARC: ``490__v``'
+            minLength: 1
+            title: Volume of the book in the series
+            type: string
         minItems: 1
         type: array
         uniqueItems: true
@@ -484,8 +457,3 @@ allOf:
         title: List of keywords
         type: array
         uniqueItems: true
-      volume:
-        description: ':MARC: ``246__n``'
-        minItems: 1
-        title: Volume number
-        type: string

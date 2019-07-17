@@ -1,24 +1,22 @@
 $schema: 'http://json-schema.org/schema#'
-'.. note:': 'This model does not exist in Inspire, since it is used to manage the holdings (paper and electronic) held by the Library'
 additionalProperties: false
-description: 'JSON data model for the holdings of the books, proceedings, standards, theses and reports in CDS.'
+description: 'Data model for the holdings of the books, proceedings, standards in CDS.'
 properties:
   $schema:
     format: uri
     minLength: 1
     type: string
-  _internal_notes:
-    description: ':MARC: No Marc'
+  internal_notes:
     minLength: 1
     title: Private Note
     type: string
   barcode:
-    description: ':MARC: No Marc - BibCirculation field ``barcode``'
+    description: 'BibCirculation field: barcode'
     minLength: 1
     title: Holding description
     type: string
   description:
-    description: ':MARC: In BibCirculation field ``description`` or for electronic holding: 0247__q or ``8564_y``'
+    description: 'In BibCirculation field: description'
     minLength: 1
     title: Holding description
     type: string
@@ -49,7 +47,7 @@ properties:
     uniqueItems: true
   library:
     description: |-
-      :MARC: No Marc - BibCirculation field ``library``
+      :BibCirculation field ``library``
       .. Note:: list should come from the list of Libraries registered in the system.
     items:
       enum:
@@ -66,7 +64,7 @@ properties:
     type: array
     uniqueItems: true
   location:
-    description: ':MARC: No Marc - BibCirculation field ``location``'
+    description: 'BibCirculation field ``location``'
     minLength: 1
     title: Holding shelf number
     type: string
@@ -80,20 +78,19 @@ properties:
       minLength: 1
       type: string
     minItems: 1
-    title: Holding medium
+    title: Item medium
     type: array
     uniqueItems: true
   number_of_pages:
     description: ':MARC: ``300``'
     minimum: 1
-    title: Number of pages of the document
+    title: Number of pages of the item
     type: integer
   physical_description:
     description: ':MARC: ``300`` when no pagination'
-    title: Additional information about the physical description of an object
+    title: Physical description of an item
     type: string
   public_note:
-    description: ':MARC: No Marc'
     minLength: 1
     title: Public Note
     type: string
@@ -108,12 +105,7 @@ properties:
     minItems: 1
     type: array
     uniqueItems: true
-  visible:
-    description: |-
-      :MARC: Does not exist in MARC
-      Used to hide records that should not be made visible in the collection.
-    type: boolean
 required:
   - medium
-title: A record in the Literature collection
+title: Physical copy of a document
 type: object

@@ -20,31 +20,6 @@ properties:
     minLength: 1
     title: Holding description
     type: string
-  dois:
-    items:
-      additionalProperties: false
-      properties:
-        material:
-          $ref: elements/material.json
-          description: ':MARC: ``0247_q``'
-        source:
-          $ref: elements/source.json
-          description: ':MARC: ``0247_9``'
-        value:
-          description: |-
-            :MARC: ``0247_a``
-            :example: ``10.1023/A:1026654312961``
-          minLength: 1
-          pattern: ^10\.\d+(\.\d+)?/\S+$
-          title: DOI
-          type: string
-      required:
-        - value
-      type: object
-    minItems: 1
-    title: List of DOIs
-    type: array
-    uniqueItems: true
   library:
     description: |-
       :BibCirculation field ``library``

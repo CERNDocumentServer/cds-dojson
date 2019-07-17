@@ -21,6 +21,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import pytest
+from dojson.errors import MissingRule
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     MissingRequiredField
@@ -38,9 +39,7 @@ def check_transformation(marcxml_body, json_body, model=None,
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
-        '$schema': {
-            '$ref': ('records/books/book/series-v.0.0.1.json')
-        },
+        '$schema': 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json',
         '_record_type': rectype,
     }
     expected.update(**json_body)
@@ -105,6 +104,23 @@ def test_serial(app):
             },
             serial_model
         )
+
+        with pytest.raises(MissingRule):
+            check_transformation(
+                """
+                <datafield tag="490" ind1="1" ind2=" ">
+                    <subfield code="a">Modesty Blaise / Peter O'Donnell</subfield>
+                </datafield>
+                """,
+                {
+                    'title':
+                        [{
+                            'title': 'Springerbriefs in history'
+                                     ' of science and technology'
+                        }],
+                },
+                serial_model
+            )
 
 
 def test_monograph(app):

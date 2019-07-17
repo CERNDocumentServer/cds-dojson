@@ -26,7 +26,7 @@
       "type": "array",
       "uniqueItems": true
     },
-    "_private_notes": {
+    "internal_notes": {
       "description": ":MARC: ``595``\nVisible for librarians",
       "items": {
         "additionalProperties": false,
@@ -884,30 +884,17 @@
       "uniqueItems": true
     },
     "keywords": {
-      "description": ":MARC: ```6531`` and ``695`` (corresponding to different\n    :ref:`keywords/items/properties/schema`)\nKeywords give information about the specific contents of the\nrecord, much more precisely than :ref:`inspire_categories`.",
       "items": {
+        "$schema": "http://json-schema.org/schema#",
         "additionalProperties": false,
+        "description": ":MARC: ```6531`` and ``695``",
         "properties": {
-          "schema": {
-            "description": "Describes to which vocabulary the keyword in :ref:`value`\nbelongs.\n``INIS``\n    :MARC: ``695__2:INIS``\n    The keyword is part of the `International\n    Nuclear Information System (INIS)\n    <https://www.iaea.org/inis/>`_ vocabulary.\n``INSPIRE``\n    :MARC: ``695__2:INSPIRE``\n    The keyword has been assigned by Inspire, and\n    belongs to its vocabulary.\n``JACOW``\n    :MARC: ``6531_2:JACOW``\n    The keyword is part of the `Joint Accelerator\n    Conference Website (JACoW) vocabulary\n    <http://jacow.org/Tools/Keywords>`_.\n``PACS``\n    :MARC: ``084__2:PACS``\n    The keyword is a number from the `Physics and\n    Astronomy Classification Scheme (PACS)\n    <https://publishing.aip.org/publishing/pacs/pacs-2010-regular-edition>`_.\n``PDG``\n    :MARC: ``084__2:PDG``\n    The keyword is a `PDG Indentifier\n    <http://pdg.lbl.gov/2016/pdgid/PDGIdentifiers.html>`_.\n.. note::\n    If not present, the keyword is a free-form keyword,\n    not necessarily part of any vocabulary.",
-            "enum": [
-              "INIS",
-              "INSPIRE",
-              "JACOW",
-              "PACS",
-              "PDG"
-            ],
-            "minLength": 1,
-            "title": "Keyword vocabulary",
-            "type": "string"
-          },
           "provenance": {
             "description": "Decision making factor, keeps provenance of fields.\n:MARC: Often not present.",
             "minLength": 1,
             "type": "string"
           },
           "value": {
-            "description": ":MARC: ``084/6531/695__a`` (depending on :ref:`schema`)\nIt belongs to the vocabulary specified by :ref:`schema`.\n:example: ``black hole: mass`` (for :ref:`schema` =\n    ``INSPIRE``)\n:example: ``29.27.Fh`` (for :ref:`schema` = ``PACS``)\n:example: ``G033M`` (for :ref:`schema` = ``PDG``)",
             "minLength": 1,
             "title": "A keyword",
             "type": "string"
@@ -916,6 +903,7 @@
         "required": [
           "value"
         ],
+        "title": "Keyword",
         "type": "object"
       },
       "minItems": 1,
@@ -1893,33 +1881,52 @@
       "uniqueItems": true
     },
     "book_series": {
-      "description": ":MARC: ``490``\nList of book series in which this record has been published.\n.. note::\n    This field should only be present if ``book``, ``thesis`` or\n    ``proceedings`` are among\n    :ref:`hep.json#/properties/document_type`.",
+      "description": ":MARC: ``490`` List of book series in which this record has been published.",
       "items": {
+        "$schema": "http://json-schema.org/schema#",
         "additionalProperties": false,
-        "description": ".. note::\n    If the book series has a Journal record,\n    `hep.json#/properties/publication_info` should be used\n    instead.",
+        "description": "Entity to group documents in series",
         "properties": {
           "issn": {
-            "description": ":MARC: ``490__x``\n.. note: Does not exist in Inspire",
-            "minLength": 1,
-            "title": "ISSN of the series",
             "type": "string"
+          },
+          "mode_of_issuance": {
+            "enum": [
+              "serial",
+              "multipart_monograph"
+            ],
+            "type": "string"
+          },
+          "number_of_volumes": {
+            "type": "integer"
           },
           "title": {
-            "description": ":MARC: ``490__a``",
-            "minLength": 1,
-            "title": "Title of the book series",
-            "type": "string"
-          },
-          "volume": {
-            "description": ":MARC: ``490__v``",
-            "minLength": 1,
-            "title": "Volume of the book in the series",
-            "type": "string"
+            "title": "Document title",
+            "additionalProperties": false,
+            "properties": {
+              "source": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "subtitle": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "title": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "title"
+            ],
+            "type": "object"
           }
         },
         "required": [
           "title"
         ],
+        "title": "Physical copy of a document",
         "type": "object"
       },
       "minItems": 1,
@@ -2294,12 +2301,6 @@
       "title": "List of keywords",
       "type": "array",
       "uniqueItems": true
-    },
-    "volume": {
-      "description": ":MARC: ``246__n``",
-      "minItems": 1,
-      "title": "Volume number",
-      "type": "string"
     }
   },
   "required": [

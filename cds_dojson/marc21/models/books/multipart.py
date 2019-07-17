@@ -32,7 +32,7 @@ class CDSMultipart(CDSOverdoBookBase):
                 '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED)'\
                 'AND 246__:/[a-zA-Z0-9]+/ '
 
-    __schema__ = 'records/books/book/series-v.0.0.1.json'
+    __schema__ = 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json'
 
     __model_ignore_keys__ = {
         '505__a',
@@ -54,11 +54,12 @@ class CDSMultipart(CDSOverdoBookBase):
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
-        json['$schema'] = {'$ref': self.__class__.__schema__}
+        json['$schema'] = self.__class__.__schema__
+
         json['_record_type'] = 'multipart'
         return json
 
 
 model = CDSMultipart(
-    bases=(books_base, cds_base, ),
+    bases=(cds_base, ),
     entry_point_group='cds_dojson.marc21.series')

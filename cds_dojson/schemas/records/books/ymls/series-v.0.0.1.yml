@@ -1,0 +1,21 @@
+$schema: 'http://json-schema.org/schema#'
+additionalProperties: false
+description: 'Entity to group documents in series'
+properties:
+  issn:
+    type: string
+  mode_of_issuance:
+    enum:
+      - serial
+      - multipart_monograph
+    type: string
+  number_of_volumes:
+    type: integer
+  title:
+    allOf:
+      -   $ref: elements/title.json
+    title: Document title
+required:
+  - title
+title: Physical copy of a document
+type: object

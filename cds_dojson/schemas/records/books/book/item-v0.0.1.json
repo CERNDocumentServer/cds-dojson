@@ -8,11 +8,6 @@
       "minLength": 1,
       "type": "string"
     },
-    "internal_notes": {
-      "minLength": 1,
-      "title": "Private Note",
-      "type": "string"
-    },
     "barcode": {
       "description": "BibCirculation field: barcode",
       "minLength": 1,
@@ -23,6 +18,11 @@
       "description": "In BibCirculation field: description",
       "minLength": 1,
       "title": "Holding description",
+      "type": "string"
+    },
+    "internal_notes": {
+      "minLength": 1,
+      "title": "Private Note",
       "type": "string"
     },
     "library": {
@@ -55,7 +55,6 @@
       "items": {
         "enum": [
           "print",
-          "online",
           "CD-ROM"
         ],
         "minLength": 1,
@@ -77,11 +76,6 @@
       "title": "Physical description of an item",
       "type": "string"
     },
-    "public_note": {
-      "minLength": 1,
-      "title": "Public Note",
-      "type": "string"
-    },
     "urls": {
       "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.",
       "items": {
@@ -93,7 +87,10 @@
     }
   },
   "required": [
-    "medium"
+    "medium",
+    "barcode",
+    "library",
+    "location"
   ],
   "title": "Physical copy of a document",
   "type": "object"

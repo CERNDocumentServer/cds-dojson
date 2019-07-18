@@ -8,11 +8,6 @@
       "minLength": 1,
       "type": "string"
     },
-    "internal_notes": {
-      "minLength": 1,
-      "title": "Internal Note",
-      "type": "string"
-    },
     "description": {
       "description": ":MARC: 0247__q or 8564_y",
       "minLength": 1,
@@ -27,16 +22,21 @@
       "title": "List of files",
       "type": "array"
     },
+    "internal_notes": {
+      "minLength": 1,
+      "title": "Internal Note",
+      "type": "string"
+    },
     "number_of_pages": {
       "description": ":MARC: ``300``",
       "minimum": 1,
       "title": "Number of pages of the EItem",
       "type": "integer"
     },
-    "public_note": {
-      "minLength": 1,
-      "title": "Public Note",
-      "type": "string"
+    "open_access": {
+      "description": "Define if the electronic item is publically accessible.",
+      "title": "Public access",
+      "type": "boolean"
     },
     "urls": {
       "description": ":MARC: ``8564``\nURLs to external resources related to this record.\n.. note::\n    Links to internal CDS resources are found in another element.",
@@ -46,11 +46,6 @@
       "minItems": 1,
       "type": "array",
       "uniqueItems": true
-    },
-    "open_access": {
-      "description": "Define if the electronic item is publically accessible.",
-      "title": "Public access",
-      "type": "boolean"
     }
   }
 }

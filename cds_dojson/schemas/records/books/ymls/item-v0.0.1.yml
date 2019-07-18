@@ -6,10 +6,6 @@ properties:
     format: uri
     minLength: 1
     type: string
-  internal_notes:
-    minLength: 1
-    title: Private Note
-    type: string
   barcode:
     description: 'BibCirculation field: barcode'
     minLength: 1
@@ -19,6 +15,10 @@ properties:
     description: 'In BibCirculation field: description'
     minLength: 1
     title: Holding description
+    type: string
+  internal_notes:
+    minLength: 1
+    title: Private Note
     type: string
   library:
     description: |-
@@ -48,7 +48,6 @@ properties:
     items:
       enum:
         - print
-        - online
         - CD-ROM
       minLength: 1
       type: string
@@ -65,10 +64,6 @@ properties:
     description: ':MARC: ``300`` when no pagination'
     title: Physical description of an item
     type: string
-  public_note:
-    minLength: 1
-    title: Public Note
-    type: string
   urls:
     description: |-
       :MARC: ``8564``
@@ -82,5 +77,8 @@ properties:
     uniqueItems: true
 required:
   - medium
+  - barcode
+  - library
+  - location
 title: Physical copy of a document
 type: object

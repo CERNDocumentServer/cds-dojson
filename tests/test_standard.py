@@ -31,10 +31,14 @@ def check_transformation(marcxml_body, json_body):
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
-        '$schema': {
-            '$ref': 'records/books/book/book-v.0.0.1.json'
-        },
-        '_record_type': 'document',
+        '$schema': 'records/books/book/book-v.0.0.1.json',
+        '_migration': {'has_keywords': False,
+                       'has_multipart': False,
+                       'has_related': False,
+                       'has_serial': False,
+                       'record_type': 'document',
+                       'volumes': []
+                       }
     }
     expected.update(**json_body)
     assert record == expected

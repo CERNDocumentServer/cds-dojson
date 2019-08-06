@@ -40,11 +40,18 @@ class CDSStandard(CDSOverdoBookBase):
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
-        json['$schema'] = {'$ref': self.__class__.__schema__}
-        json['_record_type'] = 'document'
+        json['$schema'] = self.__class__.__schema__
+        json['_migration'] = {
+            'record_type': 'document',
+            'has_serial': False,
+            'has_multipart': False,
+            'has_keywords': False,
+            'has_related': False,
+            'volumes': []
+        }
         return json
 
 
 model = CDSStandard(
-    bases=(books_base, cds_base, ),
+    bases=(books_base, cds_base,),
     entry_point_group='cds_dojson.marc21.book')

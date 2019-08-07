@@ -24,6 +24,12 @@ from cds_dojson.marc21.fields.utils import clean_val
 from cds_dojson.marc21.models.books.serial import model
 
 
+@model.over('legacy_recid', '^001')
+def recid(self, key, value):
+    """Record Identifier."""
+    return int(value)
+
+
 @model.over('title', '^490__')
 @for_each_value
 @filter_values

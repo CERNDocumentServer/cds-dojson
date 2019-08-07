@@ -20,7 +20,7 @@
 import re
 
 from dojson.errors import IgnoreKey
-from dojson.utils import for_each_value, filter_values
+from dojson.utils import for_each_value, filter_values, force_list
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     MissingRequiredField
@@ -29,8 +29,59 @@ from cds_dojson.marc21.fields.utils import clean_val, out_strip
 from cds_dojson.marc21.models.books.multipart import model
 
 
-@model.over('title', '^245__')
+@model.over('legacy_recid', '^001')
+def recid(self, key, value):
+    """Record Identifier."""
+    return int(value)
+
+
+@model.over('isbns', '^020__')
+@out_strip
 @for_each_value
+def isbns(self, key, value):
+    """Translates isbns stored in the record."""
+    _migration = self.get('_migration', {'volumes': []})
+    _isbns = self.get('isbns', [])
+
+    val_u = clean_val('u', value, str)
+    val_a = clean_val('a', value, str)
+
+    if val_u:
+        volume_search = \
+            re.search('(.*?)\(((v\.*|vol\.*|volume\.*|part)(\d+))\)', val_u)
+        # if set found it means that the isbn is for the whole multipart
+        set_search = re.search('(.*?)\(set\.*\)', val_u)
+        if volume_search:
+            print('FOUND volumes...')
+            try:
+                volume_obj = {'volume': int(volume_search.group(4)),
+                              'isbn': clean_val('a', value, str),
+                              'physical_description':
+                                  volume_search.group(1).strip()
+                              }
+
+                _migration['volumes'].append(volume_obj)
+                self['_migration'] = _migration
+            except ValueError:
+                raise UnexpectedValue(subfield='u',
+                                      message=' volume index not a number')
+        if set_search:
+            self['physical_description'] = set_search.group(1).strip()
+            return val_a if val_a not in _isbns else None  # monograph isbn
+        if not volume_search:
+            self['physical_description'] = val_u
+            return val_a if val_a not in _isbns else None
+        if not set_search and not volume_search:
+            self['physical_description'] = val_u
+            return val_a if val_a not in _isbns else None
+    elif not val_u and val_a:
+        # if I dont have volume info but only isbn
+        return val_a if val_a not in _isbns else None
+    else:
+        raise UnexpectedValue(subfield='a', message=' isbn not provided')
+
+
+@model.over('title', '^245__')
 @filter_values
 def title(self, key, value):
     """Translates book series title."""
@@ -40,31 +91,38 @@ def title(self, key, value):
             }
 
 
-@model.over('volumes', '^246__')
-def volumes(self, key, value):
+@model.over('_migration', '^246__')
+def migration(self, key, value):
     """Translates volumes titles."""
     _series_title = self.get('title', None)
 
-    # check if it is a multipart monograph
-    val_n = clean_val('n', value, str)
-    val_p = clean_val('p', value, str)
-    if not val_n and not val_p:
-        raise UnexpectedValue(subfield='a',
-                              message=' this record is probably not a series')
+    # I added this in the model, I'm sure it's there
+    _migration = self.get('_migration', {'volumes': []})
+
+    for v in force_list(value):
+        # check if it is a multipart monograph
+        val_n = clean_val('n', v, str)
+        val_p = clean_val('p', v, str)
+        if not val_n and not val_p:
+            raise UnexpectedValue(
+                subfield='n', message=' this record is probably not a series')
+
+        volume_index = re.findall(r'\d+', val_n) if val_n else None
+        if volume_index and len(volume_index) > 1:
+            raise UnexpectedValue(subfield='n',
+                                  message=' volume has more than one digit ')
+        else:
+            volume_obj = {'title': val_p,
+                          'volume': int(volume_index[0]) if volume_index else None,
+                          }
+            _migration['volumes'].append(volume_obj)
     if not _series_title:
         raise MissingRequiredField(
             subfield='a', message=' this record is missing a main title')
 
-    val_n = clean_val('n', value, str)
-
-    # if __n matches the pattern it is isbn if not it is a volume index
-    # of the document within this series
-    # TODO this field is not true, not found in the real data
-    if re.match(r'^\d*[0-9X]$', val_n):
-        self['isbn'] = val_n
     # series created
-    self['mode_of_issuance'] = 'MULTIPART_MONOGRAPH'
-    raise IgnoreKey('volumes')
+
+    return _migration
 
 
 @model.over('number_of_volumes', '^300__')

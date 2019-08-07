@@ -207,7 +207,9 @@ class CDSSerial(CDSOverdoBookBase):
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
         json['$schema'] = self.__class__.__schema__
-        json['_record_type'] = 'serial'
+        json['_migration'] = {'record_type': 'serial',
+                              'children': []
+                              }
         return json
 
 

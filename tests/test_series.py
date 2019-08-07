@@ -33,14 +33,12 @@ marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
            """<record>{0}</record></collection>""")
 
 
-def check_transformation(marcxml_body, json_body, model=None,
-                         rectype='serial'):
+def check_transformation(marcxml_body, json_body, model=None):
     """Check transformation."""
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
         '$schema': 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json',
-        '_record_type': rectype,
     }
     expected.update(**json_body)
     assert record == expected
@@ -50,7 +48,6 @@ def test_serial(app):
     """Test serials."""
 
     with app.app_context():
-
         check_transformation(
             """
             <datafield tag="490" ind1=" " ind2=" ">
@@ -62,7 +59,8 @@ def test_serial(app):
                     [{
                         'title': 'Esl and applied linguistics professional'
                     }],
-                'mode_of_issuance': 'SERIAL'
+                'mode_of_issuance': 'SERIAL',
+                '_migration': {'record_type': 'serial', 'children': []}
             },
             serial_model
         )
@@ -82,6 +80,7 @@ def test_serial(app):
                     }],
                 'mode_of_issuance': 'SERIAL',
                 'issn': '2211-4564',
+                '_migration': {'record_type': 'serial', 'children': []}
             },
             serial_model
         )
@@ -101,6 +100,7 @@ def test_serial(app):
                     }],
                 'mode_of_issuance': 'SERIAL',
                 'issn': '2211-4564',
+                '_migration': {'record_type': 'serial', 'children': []}
             },
             serial_model
         )
@@ -118,6 +118,7 @@ def test_serial(app):
                             'title': 'Springerbriefs in history'
                                      ' of science and technology'
                         }],
+                    '_migration': {'record_type': 'serial', 'children': []}
                 },
                 serial_model
             )
@@ -127,7 +128,6 @@ def test_monograph(app):
     """Test monographs."""
 
     with app.app_context():
-
         check_transformation(
             """
             <datafield tag="245" ind1=" " ind2=" ">
@@ -147,14 +147,20 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': [{'title': 'La fisica di Amaldi',
+                'title': {'title': 'La fisica di Amaldi',
                           'subtitle': 'idee ed esperimenti : con CD-ROM'
-                           }],
+                          },
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '2',
+                '_migration': {'record_type': 'multipart', 'volumes': [
+                    {'title': 'Introduzione alla fisica meccanica',
+                     'volume': 1},
+                    {'title': 'Termologia, onde, relatività',
+                     'volume': 2}
+                ]}
 
             },
-            multipart_model, 'multipart'
+            multipart_model
         )
 
         check_transformation(
@@ -172,14 +178,18 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': [{'title': 'La fisica di Amaldi',
+                'title': {'title': 'La fisica di Amaldi',
                           'subtitle': 'idee ed esperimenti : con CD-ROM'
-                           }],
+                          },
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '2',
+                '_migration': {'record_type': 'multipart', 'volumes': [
+                    {'title': 'Termologia, onde, relatività',
+                     'volume': 2}
+                ]}
 
             },
-            multipart_model, 'multipart'
+            multipart_model,
         )
 
         check_transformation(
@@ -197,13 +207,17 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': [{'title': 'La fisica di Amaldi',
-                           'subtitle': 'idee ed esperimenti : con CD-ROM'
-                           }],
+                'title': {'title': 'La fisica di Amaldi',
+                          'subtitle': 'idee ed esperimenti : con CD-ROM'
+                          },
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
+                '_migration': {'record_type': 'multipart', 'volumes': [
+                    {'title': 'Termologia, onde, relatività',
+                     'volume': 2}
+                ]}
 
             },
-            multipart_model, 'multipart'
+            multipart_model,
         )
 
         check_transformation(
@@ -222,13 +236,17 @@ def test_monograph(app):
 
             """,
             {
-                'title': [{'title': 'La fisica di Amaldi',
-                           'subtitle': 'idee ed esperimenti : con CD-ROM'
-                           }],
+                'title': {'title': 'La fisica di Amaldi',
+                          'subtitle': 'idee ed esperimenti : con CD-ROM'
+                          },
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
+                '_migration': {'record_type': 'multipart', 'volumes': [
+                    {'title': 'Termologia, onde, relatività',
+                     'volume': 2}
+                ]}
 
             },
-            multipart_model, 'multipart'
+            multipart_model,
         )
 
         with pytest.raises(UnexpectedValue):
@@ -247,14 +265,17 @@ def test_monograph(app):
                 </datafield>
                 """,
                 {
-                    'title': [{'title': 'La fisica di Amaldi',
-                               'subtitle': 'idee ed esperimenti : con CD-ROM'
-                               }],
+                    'title': {'title': 'La fisica di Amaldi',
+                              'subtitle': 'idee ed esperimenti : con CD-ROM'
+                              },
                     'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                     'number_of_volumes': '2',
+                    '_migration': {'record_type': 'multipart', 'volumes': [
+
+                    ]}
 
                 },
-                multipart_model, 'multipart'
+                multipart_model,
             )
 
         with pytest.raises(MissingRequiredField):
@@ -269,12 +290,124 @@ def test_monograph(app):
                 </datafield>
                 """,
                 {
-                    'title': [{'title': 'La fisica di Amaldi',
-                               'subtitle': 'idee ed esperimenti : con CD-ROM'
-                               }],
+                    'title': {'title': 'La fisica di Amaldi',
+                              'subtitle': 'idee ed esperimenti : con CD-ROM'
+                              },
                     'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                     'number_of_volumes': '2',
-
+                    '_migration': {'record_type': 'multipart', 'volumes': []}
                 },
-                multipart_model, 'multipart'
+                multipart_model,
             )
+
+
+def test_monograph_migration(app):
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">1108052819</subfield>
+                <subfield code="u">print version, paperback (v.3)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781108052818</subfield>
+                <subfield code="u">print version, paperback (v.3)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781108052801</subfield>
+                <subfield code="u">print version, paperback (v.2)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">1108052800</subfield>
+                <subfield code="u">print version, paperback (v.2)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781108052825</subfield>
+                <subfield code="u">print version, paperback (set)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781108052795</subfield>
+                <subfield code="u">print version, paperback (v.1)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">1108052797</subfield>
+                <subfield code="u">print version, paperback (v.1)</subfield>
+            </datafield>
+            <datafield tag="245" ind1=" " ind2=" ">
+                <subfield code="a">Wissenschaftliche Abhandlungen</subfield>
+            </datafield>
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="n">v.1</subfield>
+                <subfield code="p">1865-1874</subfield>
+            </datafield>
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="n">v.2</subfield>
+                <subfield code="p">1875-1881</subfield>
+            </datafield>
+            <datafield tag="246" ind1=" " ind2=" ">
+                <subfield code="n">v.3</subfield>
+                <subfield code="p">1882-1905</subfield>
+            </datafield>
+            <datafield tag="300" ind1=" " ind2=" ">
+                <subfield code="a">3 v</subfield>
+            </datafield>
+            """,
+            {
+                '_migration': {'volumes': [
+                    {
+                        'volume': 3,
+                        'isbn': '1108052819',
+                        'physical_description':
+                            'print version, paperback',
+                    },
+                    {
+                        'volume': 3,
+                        'isbn': '9781108052818',
+                        'physical_description':
+                            'print version, paperback',
+                    },
+                    {
+                        'volume': 2,
+                        'isbn': '9781108052801',
+                        'physical_description':
+                            'print version, paperback',
+                    },
+                    {
+                        'volume': 2,
+                        'isbn': '1108052800',
+                        'physical_description':
+                            'print version, paperback',
+                    },
+                    {
+                        'volume': 1,
+                        'isbn': '9781108052795',
+                        'physical_description':
+                            'print version, paperback',
+                    },
+                    {
+                        'volume': 1,
+                        'isbn': '1108052797',
+                        'physical_description':
+                            'print version, paperback',
+                    },
+                    {
+                        'title': '1865-1874',
+                        'volume': 1
+                    },
+                    {
+                        'title': '1875-1881',
+                        'volume': 2
+                    },
+                    {
+                        'title': '1882-1905',
+                        'volume': 3
+                    },
+                ],
+                    'record_type': 'multipart',
+                },
+                "title": {'title': 'Wissenschaftliche Abhandlungen'},
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
+                'number_of_volumes': '3',
+                'isbns': ['9781108052825'],
+                'physical_description': 'print version, paperback',
+            }, multipart_model)

@@ -54,7 +54,7 @@ def alternative_titles(self, key, value):
         }
 
 
-@model.over('volume', '^246__n')
+@model.over('volume', '^246__')
 @for_each_value
 @filter_values
 def volume(self, key, value):

@@ -23,6 +23,14 @@ import re
 
 MAX_PAGES_NUMBER = 8192
 
+RE_STR_VOLUME_NUMBER = r'(v(ol(ume)?)?|part|p|pt)[\s\.]*(\d+)'
+
+RE_VOLUME_NUMBER = re.compile(RE_STR_VOLUME_NUMBER, re.IGNORECASE)
+RE_VOLUME_INFO = re.compile(
+    r'(.*?)\({}\)'.format(RE_STR_VOLUME_NUMBER),
+    re.IGNORECASE
+)
+
 
 def is_excluded(value):
     """Validate if field 300 should be excluded."""
@@ -84,5 +92,28 @@ def extract_parts(value):
         "has_extra": bool(valid_parts_count > 0),
         "number_of_pages": number_of_pages,
         "physical_description": physical_description,
-
     }
+
+
+def extract_volume_number(value, search=False):
+    """Extract the volume number from a string, returns None if not matched."""
+    if search:
+        func = RE_VOLUME_NUMBER.search
+    else:
+        func = RE_VOLUME_NUMBER.match
+
+    result = func(value.strip())
+    if result:
+        return int(result.group(4))
+    return None
+
+
+def extract_volume_info(value):
+    """Extract ISBN, volume number and physical description from 020__u."""
+    result = RE_VOLUME_INFO.search(value.strip())
+    if result:
+        return dict(
+            description=result.group(1).strip(),
+            volume=int(result.group(5)),
+        )
+    return None

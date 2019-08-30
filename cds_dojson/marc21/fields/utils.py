@@ -308,7 +308,7 @@ def _get_correct_video_contributor_role(role):
     return translations[role.lower()]
 
 
-def _get_correct_books_contributor_role(role):
+def _get_correct_books_contributor_role(subfield, role):
     """Clean up roles."""
     translations = {
         'author': 'Author',
@@ -319,7 +319,10 @@ def _get_correct_books_contributor_role(role):
         'ill.': 'Ilustrator',
         'ill': 'Ilustrator',
     }
-    return translations[role.lower()]
+    clean_role = role.lower()
+    if clean_role not in translations:
+        raise UnexpectedValue(subfield=subfield, message=' unknown role')
+    return translations[clean_role]
 
 
 def _extract_json_ids(info, provenence='source'):
@@ -368,7 +371,8 @@ def build_contributor_books(value):
         'ids': _extract_json_ids(value, 'schema') or None,
         'full_name': value.get('name') or clean_val('a', value, str),
         'email': clean_email(value.get('email')),
-        'role': _get_correct_books_contributor_role(value.get('e', 'author')),
+        'role': _get_correct_books_contributor_role(
+            'e', value.get('e', 'author')),
         'curated_relation': True if value_9 == '#BEARD#' else None
     }
 
@@ -378,11 +382,9 @@ def build_contributor_books(value):
         other = ['et al.', 'et al']
         found_other = [i for i in other if i in contributor['affiliations']]
         if found_other:
-            try:
-                for x in found_other:
+            for x in found_other:
+                if x in contributor['affiliations']:
                     contributor['affiliations'].remove(x)
-            except ValueError:
-                pass
     contributor = dict(
         (k, v) for k, v in iteritems(contributor) if v is not None
     )

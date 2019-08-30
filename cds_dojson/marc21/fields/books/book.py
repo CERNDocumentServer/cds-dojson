@@ -46,6 +46,7 @@ def alternative_titles(self, key, value):
             ) if val_p else None
         else:
             self['volumes_titles'] = []
+        return {}
     else:
         return {
             'title': clean_val('a', value, str, req=True),
@@ -56,7 +57,6 @@ def alternative_titles(self, key, value):
 
 @model.over('volume', '^246__')
 @for_each_value
-@filter_values
 def volume(self, key, value):
     """Translates volumes index in series."""
     _volume = self.get('volume', None)

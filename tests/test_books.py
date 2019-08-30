@@ -580,6 +580,20 @@ def test_authors(app):
             }
         )
 
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="700" ind1=" " ind2=" ">
+                    <subfield code="a">Langrognat, B</subfield>
+                </datafield>
+                <datafield tag="700" ind1=" " ind2=" ">
+                    <subfield code="a">Sauniere, J</subfield>
+                    <subfield code="e">et al.</subfield>
+                </datafield>
+                """,
+                {}
+            )
+
 
 # better example to be provided
 def test_corporate_author(app):

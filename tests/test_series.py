@@ -411,3 +411,38 @@ def test_monograph_migration(app):
                 'isbns': ['9781108052825'],
                 'physical_description': 'print version, paperback',
             }, multipart_model)
+
+
+def test_monograph_invalid_volume_migration(app):
+    with app.app_context():
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9788808175366</subfield>
+                <subfield code="u">print version, paperback (v.1)</subfield>
+                </datafield>
+                <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9788808247049</subfield>
+                <subfield code="u">print version, paperback (v.2)</subfield>
+                </datafield>
+                <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9788808047038</subfield>
+                <subfield code="u">print version, paperback (v.2, CD-ROM)</subfield>
+                </datafield>
+                """,
+                {}, multipart_model)
+
+
+def test_monograph_invalid_volume_migration_no_description(app):
+    """Test invalid multipart volume (https://cds.cern.ch/record/287517)."""
+    with app.app_context():
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">1560810726</subfield>
+                <subfield code="u">v.13</subfield>
+                </datafield>
+                """,
+                {}, multipart_model)

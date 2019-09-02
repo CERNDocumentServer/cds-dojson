@@ -21,11 +21,14 @@ from __future__ import absolute_import
 
 import json
 import os
+import pytest
 
 from dojson.utils import filter_values
 
 from cds_dojson.utils import MementoDict, convert_date_to_iso_8601, \
     for_each_squash, not_accessed_keys, yaml2json
+from cds_dojson.marc21.fields.books.utils import extract_volume_info, \
+    extract_volume_number
 
 
 def test_for_each_squash():
@@ -150,3 +153,47 @@ def test_yaml2json():
         json_converted = json.load(s)
 
     assert json_mock == json_converted
+
+
+volume_params = [
+    ('v1', 1),
+    ('v 1', 1),
+    ('v.1', 1),
+    ('v. 1', 1),
+    ('v . 1', 1),
+    ('vol.1', 1),
+    ('Vol. 2', 2),
+    ('voL . 1', 1),
+    ('volume.1', 1),
+    ('Volume. 1', 1),
+    ('volume . 3', 3),
+    ('pt 5', 5),
+    ('part 5', 5),
+    ('par 5', None),
+    ('v. A', None),
+    ('val. 5', None),
+    ('part III', None),
+    ('March 1996', None),
+]
+
+
+@pytest.mark.parametrize('value, expected', volume_params)
+def test_extract_volume_number(value, expected):
+    """Test extracting volume number."""
+    assert extract_volume_number(value) == expected
+
+
+volume_info_params = [
+    (
+        'print version, paperback ({})'.format(vol_str),
+        dict(volume=expected, description='print version, paperback') if expected else None
+    )
+    for vol_str, expected in volume_params
+]
+volume_info_params.append(('print version, paperback v.5', None))
+
+
+@pytest.mark.parametrize('value, expected', volume_info_params)
+def test_extract_volume_info(value, expected):
+    """Test extracting volume info."""
+    assert extract_volume_info(value) == expected

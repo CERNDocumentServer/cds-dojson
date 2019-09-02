@@ -55,6 +55,7 @@ def isbns(self, key, value):
 
     val_u = clean_val('u', value, str)
     val_a = clean_val('a', value, str)
+    val_b = clean_val('b', value, str)
 
     if val_u:
         volume_info = extract_volume_info(val_u)
@@ -64,7 +65,8 @@ def isbns(self, key, value):
             volume_obj = {
                 'volume': volume_info['volume'],
                 'isbn': clean_val('a', value, str),
-                'physical_description': volume_info['description'].strip()
+                'physical_description': volume_info['description'].strip(),
+                'is_electronic': val_b is not None,
             }
             _migration['volumes'].append(volume_obj)
             self['_migration'] = _migration

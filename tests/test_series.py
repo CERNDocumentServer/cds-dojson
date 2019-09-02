@@ -357,38 +357,43 @@ def test_monograph_migration(app):
                     {
                         'volume': 3,
                         'isbn': '1108052819',
-                        'physical_description':
-                            'print version, paperback',
+                        'physical_description': 'print version, paperback',
+                        'is_electronic': False,
                     },
                     {
                         'volume': 3,
                         'isbn': '9781108052818',
                         'physical_description':
                             'print version, paperback',
+                        'is_electronic': False,
                     },
                     {
                         'volume': 2,
                         'isbn': '9781108052801',
                         'physical_description':
                             'print version, paperback',
+                        'is_electronic': False,
                     },
                     {
                         'volume': 2,
                         'isbn': '1108052800',
                         'physical_description':
                             'print version, paperback',
+                        'is_electronic': False,
                     },
                     {
                         'volume': 1,
                         'isbn': '9781108052795',
                         'physical_description':
                             'print version, paperback',
+                        'is_electronic': False,
                     },
                     {
                         'volume': 1,
                         'isbn': '1108052797',
                         'physical_description':
                             'print version, paperback',
+                        'is_electronic': False,
                     },
                     {
                         'title': '1865-1874',
@@ -446,3 +451,75 @@ def test_monograph_invalid_volume_migration_no_description(app):
                 </datafield>
                 """,
                 {}, multipart_model)
+
+
+def test_monograph_with_electronic_isbns(app):
+    """Test multipart monographs with electronic isbns."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">0817631852</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">0817631852</subfield>
+                <subfield code="u">print version (v.2)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">0817631879</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9780817631857</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9780817631871</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781461239406</subfield>
+                <subfield code="b">electronic version (v.2)</subfield>
+                <subfield code="u">electronic version (v.2)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781461251545</subfield>
+                <subfield code="b">electronic version (v.1)</subfield>
+                <subfield code="u">electronic version (v.1)</subfield>
+            </datafield>
+            <datafield tag="020" ind1=" " ind2=" ">
+                <subfield code="a">9781461295891</subfield>
+                <subfield code="u">print version (v.1)</subfield>
+            </datafield>
+            """,
+            {
+                'isbns': ['9780817631871'],
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
+                '_migration': {
+                    'record_type': 'multipart',
+                    'volumes': [
+                        {
+                            'is_electronic': False,
+                            'physical_description': 'print version',
+                            'volume': 2,
+                            'isbn': '0817631852'
+                        },
+                        {
+                            'is_electronic': True,
+                            'physical_description': 'electronic version',
+                            'volume': 2,
+                            'isbn': '9781461239406'
+                        },
+                        {
+                            'is_electronic': True,
+                            'physical_description': 'electronic version',
+                            'volume': 1,
+                            'isbn': '9781461251545'
+                        },
+                        {
+                            'is_electronic': False,
+                            'physical_description': 'print version',
+                            'volume': 1,
+                            'isbn': '9781461295891'
+                        },
+                    ],
+                },
+            }, multipart_model
+        )

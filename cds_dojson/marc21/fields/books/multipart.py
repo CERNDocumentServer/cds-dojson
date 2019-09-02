@@ -30,15 +30,6 @@ from cds_dojson.marc21.fields.utils import clean_val, out_strip
 from cds_dojson.marc21.models.books.multipart import model
 
 
-def get_volume_number(subfield, value, raise_exception=False, search=False):
-    """Try to get volume number from value."""
-    volume_number = extract_volume_number(value, search=search)
-    if volume_number is None and raise_exception:
-        raise MissingRequiredField(
-            subfield=subfield, message=' failed to parse volume number')
-    return volume_number
-
-
 @model.over('legacy_recid', '^001')
 def recid(self, key, value):
     """Record Identifier."""
@@ -73,10 +64,10 @@ def isbns(self, key, value):
             return val_a if val_a not in _isbns else None  # monograph isbn
         if not volume_info:
             # Try to find a volume number
-            if get_volume_number('u', val_u, search=True):
+            if extract_volume_number(val_u, search=True):
                 raise UnexpectedValue(
                     subfield='u',
-                    message=' found volume but failed to parse subfield'
+                    message=' found volume but failed to parse description'
                 )
             else:
                 self['physical_description'] = val_u
@@ -121,7 +112,7 @@ def migration(self, key, value):
                 subfield='n', message=' volume title exists but no volume number'
             )
 
-        if val_p and get_volume_number('p', val_p):
+        if val_p and extract_volume_number(val_p, search=True):
             # Some records have the volume number in p
             raise UnexpectedValue(
                 subfield='p', message=' found volume number in the title'
@@ -132,7 +123,11 @@ def migration(self, key, value):
             raise UnexpectedValue(subfield='n',
                                   message=' volume has more than one digit ')
         else:
-            volume_number = get_volume_number('n', val_n, raise_exception=True)
+            volume_number = extract_volume_number(
+                val_n,
+                raise_exception=True,
+                subfield='n'
+            )
             volume_obj = {'title': val_p,
                           'volume': volume_number,
                           }

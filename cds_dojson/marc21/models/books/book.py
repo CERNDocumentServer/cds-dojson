@@ -42,14 +42,23 @@ class CDSBook(CDSOverdoBookBase):
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
         json['$schema'] = self.__class__.__schema__
-        json['_migration'] = {
-            'record_type': 'document',
-            'has_serial': False,
-            'has_multipart': False,
-            'has_keywords': False,
-            'has_related': False,
-            'volumes': []
-        }
+
+        if '_migration' in json:
+            json['_migration'].update({'record_type': 'document'})
+            json['_migration'].setdefault('has_serial', False)
+            json['_migration'].setdefault('has_multipart', False)
+            json['_migration'].setdefault('has_keywords', False)
+            json['_migration'].setdefault('has_related', False)
+        else:
+            json['_migration'] = {
+                'record_type': 'document',
+                'has_serial': False,
+                'has_multipart': False,
+                'has_keywords': False,
+                'has_related': False,
+                'volumes': []
+            }
+
         return json
 
 

@@ -27,6 +27,7 @@ from dojson.utils import filter_values
 
 from cds_dojson.utils import MementoDict, convert_date_to_iso_8601, \
     for_each_squash, not_accessed_keys, yaml2json
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField
 from cds_dojson.marc21.fields.books.utils import extract_volume_info, \
     extract_volume_number
 
@@ -156,31 +157,38 @@ def test_yaml2json():
 
 
 volume_params = [
-    ('v1', 1),
-    ('v 1', 1),
-    ('v.1', 1),
-    ('v. 1', 1),
-    ('v . 1', 1),
-    ('vol.1', 1),
-    ('Vol. 2', 2),
-    ('voL . 1', 1),
-    ('volume.1', 1),
-    ('Volume. 1', 1),
-    ('volume . 3', 3),
-    ('pt 5', 5),
-    ('part 5', 5),
-    ('par 5', None),
-    ('v. A', None),
-    ('val. 5', None),
-    ('part III', None),
-    ('March 1996', None),
+    ('v1', 1, False),
+    ('v 1', 1, False),
+    ('v.1', 1, False),
+    ('v. 1', 1, False),
+    ('v . 1', 1, False),
+    ('vol.1', 1, False),
+    ('Vol. 2', 2, False),
+    ('voL . 1', 1, False),
+    ('volume.1', 1, False),
+    ('Volume. 1', 1, False),
+    ('volume . 3', 3, False),
+    ('pt 5', 5, False),
+    ('part 5', 5, False),
+    ('par 5', None, False),
+    ('v. A', None, True),
+    ('val. 5', None, False),
+    ('part III', None, False),
+    ('March 1996', None, False),
 ]
 
 
-@pytest.mark.parametrize('value, expected', volume_params)
-def test_extract_volume_number(value, expected):
+@pytest.mark.parametrize('value, expected, raise_exception', volume_params)
+def test_extract_volume_number(value, expected, raise_exception):
     """Test extracting volume number."""
-    assert extract_volume_number(value) == expected
+    if raise_exception:
+        with pytest.raises(MissingRequiredField):
+            assert extract_volume_number(
+                value,
+                raise_exception=raise_exception
+            ) == expected
+    else:
+        assert extract_volume_number(value) == expected
 
 
 volume_info_params = [
@@ -188,7 +196,7 @@ volume_info_params = [
         'print version, paperback ({})'.format(vol_str),
         dict(volume=expected, description='print version, paperback') if expected else None
     )
-    for vol_str, expected in volume_params
+    for vol_str, expected, raise_exception in volume_params
 ]
 volume_info_params.append(('print version, paperback v.5', None))
 

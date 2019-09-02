@@ -23,10 +23,20 @@ from dojson.errors import IgnoreKey
 from dojson.utils import for_each_value, filter_values, force_list
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
-    MissingRequiredField
-from cds_dojson.marc21.fields.books.utils import extract_parts
+    ManualMigrationRequired, MissingRequiredField
+from cds_dojson.marc21.fields.books.utils import extract_parts, \
+    extract_volume_number, extract_volume_info
 from cds_dojson.marc21.fields.utils import clean_val, out_strip
 from cds_dojson.marc21.models.books.multipart import model
+
+
+def get_volume_number(subfield, value, raise_exception=False, search=False):
+    """Try to get volume number from value."""
+    volume_number = extract_volume_number(value, search=search)
+    if volume_number is None and raise_exception:
+        raise MissingRequiredField(
+            subfield=subfield, message=' failed to parse volume number')
+    return volume_number
 
 
 @model.over('legacy_recid', '^001')
@@ -47,31 +57,31 @@ def isbns(self, key, value):
     val_a = clean_val('a', value, str)
 
     if val_u:
-        volume_search = \
-            re.search('(.*?)\(((v\.*|vol\.*|volume\.*|part)(\d+))\)', val_u)
+        volume_info = extract_volume_info(val_u)
         # if set found it means that the isbn is for the whole multipart
         set_search = re.search('(.*?)\(set\.*\)', val_u)
-        if volume_search:
-            print('FOUND volumes...')
-            try:
-                volume_obj = {'volume': int(volume_search.group(4)),
-                              'isbn': clean_val('a', value, str),
-                              'physical_description':
-                                  volume_search.group(1).strip()
-                              }
-
-                _migration['volumes'].append(volume_obj)
-                self['_migration'] = _migration
-            except ValueError:
-                raise UnexpectedValue(subfield='u',
-                                      message=' volume index not a number')
+        if volume_info:
+            volume_obj = {
+                'volume': volume_info['volume'],
+                'isbn': clean_val('a', value, str),
+                'physical_description': volume_info['description'].strip()
+            }
+            _migration['volumes'].append(volume_obj)
+            self['_migration'] = _migration
         if set_search:
             self['physical_description'] = set_search.group(1).strip()
             return val_a if val_a not in _isbns else None  # monograph isbn
-        if not volume_search:
-            self['physical_description'] = val_u
-            return val_a if val_a not in _isbns else None
-        if not set_search and not volume_search:
+        if not volume_info:
+            # Try to find a volume number
+            if get_volume_number('u', val_u, search=True):
+                raise UnexpectedValue(
+                    subfield='u',
+                    message=' found volume but failed to parse subfield'
+                )
+            else:
+                self['physical_description'] = val_u
+                return val_a if val_a not in _isbns else None
+        if not set_search and not volume_info:
             self['physical_description'] = val_u
             return val_a if val_a not in _isbns else None
     elif not val_u and val_a:
@@ -106,14 +116,25 @@ def migration(self, key, value):
         if not val_n and not val_p:
             raise UnexpectedValue(
                 subfield='n', message=' this record is probably not a series')
+        if val_p and not val_n:
+            raise UnexpectedValue(
+                subfield='n', message=' volume title exists but no volume number'
+            )
+
+        if val_p and get_volume_number('p', val_p):
+            # Some records have the volume number in p
+            raise UnexpectedValue(
+                subfield='p', message=' found volume number in the title'
+            )
 
         volume_index = re.findall(r'\d+', val_n) if val_n else None
         if volume_index and len(volume_index) > 1:
             raise UnexpectedValue(subfield='n',
                                   message=' volume has more than one digit ')
         else:
+            volume_number = get_volume_number('n', val_n, raise_exception=True)
             volume_obj = {'title': val_p,
-                          'volume': int(volume_index[0]) if volume_index else None,
+                          'volume': volume_number,
                           }
             _migration['volumes'].append(volume_obj)
     if not _series_title:

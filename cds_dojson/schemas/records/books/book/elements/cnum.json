@@ -1,7 +1,0 @@
-{
-  "description": "The CNUM is based on the starting day of the conference, with an extra\nnumber appended to distinguish conferences starting on the first day.\n:example: The first conference (in order of creation on Inspire) starting\n    on December 25, 1987 has CNUM ``C87-12-25`` whereas, say, the third\n    one, has CNUM ``C87-12-25.2``",
-  "minLength": 1,
-  "pattern": "^C\\d\\d-\\d\\d-\\d\\d(\\.\\d+)?$",
-  "title": "CNUM identifier of the conference",
-  "type": "string"
-}

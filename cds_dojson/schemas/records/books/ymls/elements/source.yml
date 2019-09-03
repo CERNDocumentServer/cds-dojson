@@ -1,5 +1,0 @@
-description: |-
-  Decision making factor, keeps provenance of fields.
-  :MARC: Often not present.
-minLength: 1
-type: string

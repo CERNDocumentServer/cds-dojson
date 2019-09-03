@@ -143,9 +143,5 @@ setup(
         'dojson.cli.load': [
             'cds_marcxml = cds_dojson.marc21.utils:load',
         ],
-        'invenio_jsonschemas.schemas': [
-            'cds = cds_dojson.schemas',
-        ],
-
     }
 )

@@ -18,6 +18,8 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Video rules tests."""
 
+import pytest
+
 from helpers import load_fixture_file, validate
 
 from cds_dojson.marc21.fields.videos.utils import language_to_isocode
@@ -25,6 +27,7 @@ from cds_dojson.marc21.models.videos.video import model
 from cds_dojson.marc21.utils import create_record
 
 
+@pytest.mark.skip(reason="removed videos schemas")
 def test_required_fields(app):
     """Test required fields."""
     marcxml = load_fixture_file('videos_video.xml')
@@ -259,6 +262,7 @@ def test_required_fields(app):
         validate(record)
 
 
+@pytest.mark.skip(reason="removed videos schemas")
 def test_fields(app):
     """Test fields."""
     marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""

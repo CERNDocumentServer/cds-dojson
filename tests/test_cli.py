@@ -36,6 +36,7 @@ from click.testing import CliRunner
 from cds_dojson.cli import compile_schema, convert_yaml2json
 
 
+@pytest.mark.skip(reason="removed videos schemas")
 @pytest.mark.parametrize('src, compiled', [
     ('records/videos/video/video_src-v1.0.0.json',
      'records/videos/video/video-v1.0.0.json'),

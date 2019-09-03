@@ -45,9 +45,6 @@ from cds_dojson.cli import compile_schema, convert_yaml2json
      'deposits/records/videos/video/video-v1.0.0.json'),
     ('deposits/records/videos/project/project_src-v1.0.0.json',
      'deposits/records/videos/project/project-v1.0.0.json'),
-    ('records/books/book/document_src-v0.0.1.json',
-     'records/books/book/document-v0.0.1.json'),
-
 ])
 def test_cli(src, compiled):
     """Test cds-dojson CLI."""

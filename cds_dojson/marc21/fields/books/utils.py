@@ -20,6 +20,8 @@
 
 import re
 
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField
+
 
 MAX_PAGES_NUMBER = 8192
 
@@ -95,7 +97,8 @@ def extract_parts(value):
     }
 
 
-def extract_volume_number(value, search=False):
+def extract_volume_number(value, search=False, raise_exception=False,
+                          subfield=None):
     """Extract the volume number from a string, returns None if not matched."""
     if search:
         func = RE_VOLUME_NUMBER.search
@@ -105,6 +108,11 @@ def extract_volume_number(value, search=False):
     result = func(value.strip())
     if result:
         return int(result.group(4))
+
+    if raise_exception:
+        raise MissingRequiredField(
+            subfield=subfield, message=' failed to parse volume number')
+
     return None
 
 

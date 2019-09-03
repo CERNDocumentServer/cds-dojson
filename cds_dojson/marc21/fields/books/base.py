@@ -38,6 +38,7 @@ from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
     build_contributor_books, clean_email, clean_pages_range, clean_val, \
     filter_list_values, get_week_start, out_strip, related_url, \
     replace_in_result
+from cds_dojson.marc21.fields.books.utils import extract_volume_number
 from cds_dojson.marc21.models.books.base import model
 
 from .utils import extract_parts, is_excluded
@@ -432,10 +433,12 @@ def report_numbers(self, key, value):
     sub_a = clean_val('a', value, str)
     sub_z = clean_val('z', value, str)
 
-    if not (sub_z or sub_a or sub_9):
-        raise MissingRequiredField(subfield='9 or a or z')
+    all_empty = not (sub_z or sub_a or sub_9)
 
     if key == '037__':
+        if all_empty:
+            raise MissingRequiredField(subfield='9 or a or z')
+
         if sub_9 == 'arXiv':
             self['arxiv_eprints'] = arxiv_eprints(self, key, value)
             raise IgnoreKey('report_numbers')
@@ -443,9 +446,35 @@ def report_numbers(self, key, value):
             get_value_rn(sub_a, sub_z, sub_9, f)
 
     if key == '088__':
+        if 'n' in value or 'x' in value:
+            barcodes(self, key, value)
+
+        if all_empty and 'n' not in value and 'x' not in value:
+            raise MissingRequiredField(subfield='9 or a or z or n or x')
+
         get_value_rn(sub_a, sub_z, sub_9, f)
 
     return f
+
+
+@model.over('barcodes', '^088__')
+@for_each_value
+def barcodes(self, key, value):
+    """Match barcodes to volumes."""
+    val_n = clean_val('n', value, str)
+    val_x = clean_val('x', value, str)
+
+    _migration = self.get('_migration', {'volumes': []})
+    _migration['volumes'].append(dict(
+        volume=extract_volume_number(
+            val_n,
+            raise_exception=True,
+            subfield='n'
+        ),
+        barcode=val_x
+    ))
+    self['_migration'] = _migration
+    raise IgnoreKey('barcodes')
 
 
 @model.over('arxiv_eprints', '(^037__)|(^695__)')
@@ -572,13 +601,18 @@ def conference_info(self, key, value):
                 except (KeyError, AttributeError):
                     raise UnexpectedValue(subfield='w')
 
+            try:
+                series_number = clean_val('n', v, int)
+            except TypeError:
+                raise UnexpectedValue('n', message=' series number not an int')
+
             _conference_info.update({
                 'title': clean_val('a', v, str, req=True),
                 'place': clean_val('c', v, str, req=True),
                 'opening_date': opening_date.date().isoformat(),
                 'closing_date': closing_date.date().isoformat(),
                 'cern_conference_code': clean_val('g', v, str),
-                'series': {'number': clean_val('n', v, int)},
+                'series': {'number': series_number},
                 'country_code': country_code,
             })
         elif key == '270__':

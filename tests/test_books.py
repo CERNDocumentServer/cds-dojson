@@ -2329,3 +2329,62 @@ def test_keywords(app):
                 ]
             }
         )
+
+
+def test_volume_barcodes(app):
+    """Test volume barcodes (088__)."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="245" ind1=" " ind2=" ">
+                <subfield code="a">Mathematische Methoden der Physik</subfield>
+            </datafield>
+            <datafield tag="088" ind1=" " ind2=" ">
+                <subfield code="n">v.1</subfield>
+                <subfield code="x">80-1209-8</subfield>
+            </datafield>
+            <datafield tag="088" ind1=" " ind2=" ">
+                <subfield code="n">v.1</subfield>
+                <subfield code="x">B00004172</subfield>
+            </datafield>
+            """,
+            dict(
+                title=dict(title='Mathematische Methoden der Physik'),
+                _migration=dict(
+                    record_type='document',
+                    has_serial=False,
+                    has_multipart=False,
+                    has_keywords=False,
+                    has_related=False,
+                    volumes=[
+                        dict(barcode='80-1209-8', volume=1),
+                        dict(barcode='B00004172', volume=1),
+                    ]
+                ),
+            )
+        )
+
+
+def test_conference_info_multiple_series_number(app):
+    """Test conference info with multiple series numbers."""
+    with app.app_context():
+        with pytest.raises(UnexpectedValue):
+            check_transformation(
+                """
+                <datafield tag="111" ind1=" " ind2=" ">
+                    <subfield code="9">20150708</subfield>
+                    <subfield code="a">
+                    3rd Singularity Theory Meeting of Northeast region & the Brazil-Mexico 2nd Meeting on Singularities
+                    </subfield>
+                    <subfield code="c">Salvador, Brazil</subfield>
+                    <subfield code="d">8 - 11 & 13 - 17 Jul 2015</subfield>
+                    <subfield code="f">2015</subfield>
+                    <subfield code="g">salvador20150708</subfield>
+                    <subfield code="n">3</subfield>
+                    <subfield code="n">2</subfield>
+                    <subfield code="w">BR</subfield>
+                    <subfield code="z">20150717</subfield>
+                </datafield>
+                """,
+                dict()
+            )

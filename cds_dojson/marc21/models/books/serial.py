@@ -36,6 +36,7 @@ class CDSSerial(CDSOverdoBookBase):
 
     __model_ignore_keys__ = {
         '020__a',
+        '020__b',
         '020__c',
         '020__u',
         '022__a',

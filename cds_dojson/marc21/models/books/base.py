@@ -164,5 +164,5 @@ class BooksBase(OverdoJSONSchema):
     """Base model conversion MARC21 to JSON."""
 
 
-model = BooksBase(bases=(cds_base, ),
+model = BooksBase(bases=(),
                   entry_point_group='cds_dojson.marc21.books')

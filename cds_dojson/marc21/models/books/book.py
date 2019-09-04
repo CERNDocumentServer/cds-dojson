@@ -31,7 +31,7 @@ class CDSBook(CDSOverdoBookBase):
                 '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
                 '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED'
 
-    __schema__ = 'records/books/book/book-v.0.0.1.json'
+    __schema__ = 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json'
 
     __ignore_keys__ = COMMON_IGNORE_FIELDS
 
@@ -44,24 +44,28 @@ class CDSBook(CDSOverdoBookBase):
         json['$schema'] = self.__class__.__schema__
 
         if '_migration' in json:
-            json['_migration'].update({'record_type': 'document'})
+            json['_migration'].setdefault('record_type', 'document')
+            json['_migration'].setdefault('volumes', [])
+            json['_migration'].setdefault('serials', [])
             json['_migration'].setdefault('has_serial', False)
-            json['_migration'].setdefault('has_multipart', False)
+            json['_migration'].setdefault('is_multipart', False)
             json['_migration'].setdefault('has_keywords', False)
             json['_migration'].setdefault('has_related', False)
+
         else:
             json['_migration'] = {
                 'record_type': 'document',
                 'has_serial': False,
-                'has_multipart': False,
+                'is_multipart': False,
                 'has_keywords': False,
                 'has_related': False,
-                'volumes': []
+                'volumes': [],
+                'serials': [],
             }
 
         return json
 
 
 model = CDSBook(
-    bases=(books_base, cds_base, ),
+    bases=(books_base, ),
     entry_point_group='cds_dojson.marc21.book')

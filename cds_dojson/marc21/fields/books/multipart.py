@@ -22,6 +22,7 @@ import re
 from dojson.errors import IgnoreKey
 from dojson.utils import for_each_value, filter_values, force_list
 
+from cds_dojson.marc21.fields.books.base import book_series as base_book_series
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     ManualMigrationRequired, MissingRequiredField
 from cds_dojson.marc21.fields.books.utils import extract_parts, \
@@ -100,7 +101,9 @@ def migration(self, key, value):
     _series_title = self.get('title', None)
 
     # I added this in the model, I'm sure it's there
-    _migration = self.get('_migration', {'volumes': []})
+    _migration = self.get('_migration', {})
+    if 'volumes' not in _migration:
+        _migration['volumes'] = []
 
     for v in force_list(value):
         # check if it is a multipart monograph
@@ -158,3 +161,10 @@ def number_of_volumes(self, key, value):
         if _volumes:
             return _volumes[0]
     raise IgnoreKey('number_of_volumes')
+
+
+@model.over('book_series', '^490__')
+@for_each_value
+def book_series(self, key, value):
+    """Match barcodes to volumes."""
+    base_book_series(self, key, value)

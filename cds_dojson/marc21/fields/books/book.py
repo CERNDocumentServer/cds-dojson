@@ -24,8 +24,9 @@ from dojson.errors import IgnoreKey
 from dojson.utils import filter_values, for_each_value
 
 from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
-    UnexpectedValue
-from cds_dojson.marc21.fields.books.utils import is_excluded, extract_parts
+    MissingRequiredField, UnexpectedValue
+from cds_dojson.marc21.fields.books.utils import is_excluded, extract_parts, \
+    extract_volume_number
 from cds_dojson.marc21.fields.utils import clean_val
 from cds_dojson.marc21.models.books.book import model
 
@@ -35,35 +36,30 @@ from cds_dojson.marc21.models.books.book import model
 @filter_values
 def alternative_titles(self, key, value):
     """Alternative titles."""
-    if 'n' in value:
-        self['volume'] = volume(self, key, value)
+    if ('n' in value and 'p' not in value) or \
+       ('n' not in value and 'p' in value):
+        raise MissingRequiredField(subfield='n or p')
+
     if 'p' in value:
-        # if series detected
-        if self.get('volumes', None):
-            val_p = clean_val('p', value, str)
-            self['volumes_titles'].append(
-                {'title': val_p, 'volume': volume(self, key, value)}
-            ) if val_p else None
-        else:
-            self['volumes_titles'] = []
-        return {}
+        _migration = self.get('_migration', {})
+        if 'volumes' not in _migration:
+            _migration['volumes'] = []
+
+        val_n = clean_val('n', value, str)
+        _migration['volumes'].append({
+            'volume': extract_volume_number(val_n, raise_exception=True),
+            'title': clean_val('p', value, str),
+        })
+        _migration['is_multipart'] = True
+        _migration['record_type'] = 'multipart'
+        self['_migration'] = _migration
+        raise IgnoreKey('alternative_titles')
     else:
         return {
             'title': clean_val('a', value, str, req=True),
             'subtitle': clean_val('b', value, str),
             'source': clean_val('i', value, str),
         }
-
-
-@model.over('volume', '^246__')
-@for_each_value
-def volume(self, key, value):
-    """Translates volumes index in series."""
-    _volume = self.get('volume', None)
-    val_n = clean_val('n', value, str, req=True)
-    if _volume and _volume != val_n:
-        raise ManualMigrationRequired(subfield='n')
-    return val_n
 
 
 @model.over('number_of_pages', '^300__')   # item

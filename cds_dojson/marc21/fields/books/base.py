@@ -44,6 +44,18 @@ from cds_dojson.marc21.models.books.base import model
 from .utils import extract_parts, is_excluded
 
 
+@model.over('legacy_recid', '^001')
+def recid(self, key, value):
+    """Record Identifier."""
+    return int(value)
+
+
+@model.over('agency_code', '^003')
+def agency_code(self, key, value):
+    """Control number identifier."""
+    return 'SzGeCERN'
+
+
 @model.over('acquisition_source', '(^916__)|(^859__)|(^595__)')
 @filter_values
 def acquisition_source(self, key, value):
@@ -547,7 +559,7 @@ def subject_classification(self, key, value):
     elif key == '084__':
         sub_2 = clean_val('2', value, str)
         if sub_2 and sub_2.upper() in SUBJECT_CLASSIFICATION_EXCEPTIONS:
-            self['keywords'] = keywords(self, key, value)
+            keywords(self, key, value)
             raise IgnoreKey('subject_classification')
         else:
             _subject_classification.update({'schema': 'ICS'})
@@ -560,25 +572,28 @@ def subject_classification(self, key, value):
 @filter_list_values
 def keywords(self, key, value):
     """Keywords."""
-    _keywords = self.get('keywords', [])
+    _migration = self.get('_migration', {})
+    if 'keywords' not in _migration:
+        _migration['keywords'] = []
     for v in force_list(value):
         if key == '084__':
             sub_2 = clean_val('2', value, str)
             if sub_2 and sub_2 == 'PACS':
-                _keywords.append({
+                _migration['keywords'].append({
                     'name': clean_val('a', v, str, req=True),
                     'provenance': 'PACS',
                 })
             else:
                 raise IgnoreKey('keywords')
         elif key == '6531_':
-            _keywords.append({
+            _migration['keywords'].append({
                 'name': clean_val('a', value, str),
                 'provenance': value.get('9') or value.get('g'),
                 # Easier to solve here
             })
-
-    return _keywords
+    _migration['has_keywords'] = True
+    self['_migration'] = _migration
+    raise IgnoreKey('keywords')
 
 
 @model.over('conference_info', '(^111__)|(^270__)|(^711__)')
@@ -666,14 +681,22 @@ def imprints(self, key, value):
 
 @model.over('book_series', '^490__')
 @for_each_value
-@filter_values
 def book_series(self, key, value):
-    """Translates book series field."""
-    return {
+    """Match barcodes to volumes."""
+    val_n = clean_val('n', value, str)
+    val_x = clean_val('x', value, str)
+
+    _migration = self.get('_migration', {})
+    if 'serials' not in _migration:
+        _migration['serials'] = []
+    _migration['serials'].append({
         'title': clean_val('a', value, str),
         'volume': clean_val('v', value, str),
         'issn': clean_val('x', value, str),
-    }
+    })
+    _migration['has_serial'] = True
+    self['_migration'] = _migration
+    raise IgnoreKey('book_series')
 
 
 @model.over('public_notes', '^500__')

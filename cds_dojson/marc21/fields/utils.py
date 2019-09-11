@@ -371,8 +371,10 @@ def build_contributor_books(value):
         'ids': _extract_json_ids(value, 'schema') or None,
         'full_name': value.get('name') or clean_val('a', value, str),
         'email': clean_email(value.get('email')),
-        'role': _get_correct_books_contributor_role(
-            'e', value.get('e', 'author')),
+        'roles': [
+            _get_correct_books_contributor_role(
+                'e', value.get('e', 'author')).lower()
+        ],
         'curated_relation': True if value_9 == '#BEARD#' else None
     }
 

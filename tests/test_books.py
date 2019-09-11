@@ -38,14 +38,16 @@ def check_transformation(marcxml_body, json_body):
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
-        '$schema': 'records/books/book/book-v.0.0.1.json',
-        '_migration': {'has_keywords': False,
-                       'has_multipart': False,
-                       'has_related': False,
-                       'has_serial': False,
-                       'record_type': 'document',
-                       'volumes': []
-                       }
+        '$schema': 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json',
+        '_migration': {
+            'has_keywords': False,
+            'is_multipart': False,
+            'has_related': False,
+            'has_serial': False,
+            'record_type': 'document',
+            'volumes': [],
+            'serials': [],
+        }
     }
     expected.update(**json_body)
     assert record == expected
@@ -154,12 +156,21 @@ def test_subject_classification(app):
                 <subfield code="a">25.80.Nv</subfield>
             </datafield>
             """, {
-                'keywords': [
-                    {'name': '13.75.Jz', 'provenance': 'PACS'},
-                    {'name': '13.60.Rj', 'provenance': 'PACS'},
-                    {'name': '14.20.Jn', 'provenance': 'PACS'},
-                    {'name': '25.80.Nv', 'provenance': 'PACS'},
-                ]
+                '_migration': {
+                    'has_keywords': True,
+                    'is_multipart': False,
+                    'has_related': False,
+                    'has_serial': False,
+                    'record_type': 'document',
+                    'volumes': [],
+                    'serials': [],
+                    'keywords': [
+                        {'name': '13.75.Jz', 'provenance': 'PACS'},
+                        {'name': '13.60.Rj', 'provenance': 'PACS'},
+                        {'name': '14.20.Jn', 'provenance': 'PACS'},
+                        {'name': '25.80.Nv', 'provenance': 'PACS'},
+                    ]
+                }
             }
         )
         check_transformation(
@@ -514,20 +525,20 @@ def test_authors(app):
                 'authors': [
                     {
                         'full_name': 'Frampton, Paul H',
-                        'role': 'Editor',
+                        'roles': ['editor'],
                         'alternative_names': 'Neubert, Matthias'
                     },
                     {
                         'full_name': 'Glashow, Sheldon Lee',
-                        'role': 'Editor'
+                        'roles': ['editor']
                     },
                     {
                         'full_name': 'Van Dam, Hendrik',
-                        'role': 'Editor'
+                        'roles': ['editor']
                     },
                     {
                         'full_name': 'Seyfert, Paul',
-                        'role': 'Author',
+                        'roles': ['author'],
                         'affiliations': ['CERN'],
                         'ids': [
                             {'schema': 'INSPIRE ID',
@@ -542,12 +553,12 @@ def test_authors(app):
                     },
                     {
                         'full_name': 'John Doe',
-                        'role': 'Author',
+                        'roles': ['author'],
                         'affiliations': ['CERN', 'Univ. Gent'],
                     },
                     {
                         'full_name': 'Jane Doe',
-                        'role': 'Author',
+                        'roles': ['author'],
                         'affiliations': ['CERN', 'Univ. Gent'],
                     }
                 ],
@@ -569,12 +580,12 @@ def test_authors(app):
                 'authors': [
                     {
                         'full_name': 'Frampton, Paul H',
-                        'role': 'Editor',
+                        'roles': ['editor'],
                     },
                     {'others': True},
                     {
                         'full_name': 'Glashow, Sheldon Lee',
-                        'role': 'Editor'
+                        'roles': ['editor']
                     },
                 ]
             }
@@ -2110,10 +2121,21 @@ def test_book_series(app):
                 <subfield code="a">Minutes</subfield>
             </datafield>
             """, {
-                'book_series':
-                    [
-                        {'title': 'Minutes'},
-                    ]
+                '_migration': {
+                    'serials': [
+                        {
+                            'title': 'Minutes',
+                            'issn': None,
+                            'volume': None
+                        }
+                    ],
+                    'has_keywords': False,
+                    'is_multipart': False,
+                    'has_related': False,
+                    'has_serial': True,
+                    'record_type': 'document',
+                    'volumes': [],
+                }
             }
         )
         check_transformation(
@@ -2125,12 +2147,21 @@ def test_book_series(app):
                 <subfield code="v">16</subfield>
             </datafield>
             """, {
-                'book_series':
-                    [
-                        {'title': 'De Gruyter studies in mathematical physics',
-                         'volume': '16',
-                         },
-                    ]
+                '_migration': {
+                    'serials': [
+                        {
+                            'title': 'De Gruyter studies in mathematical physics',
+                            'issn': None,
+                            'volume': '16'
+                        }
+                    ],
+                    'has_keywords': False,
+                    'is_multipart': False,
+                    'has_related': False,
+                    'has_serial': True,
+                    'record_type': 'document',
+                    'volumes': [],
+                }
             }
         )
         check_transformation(
@@ -2141,13 +2172,21 @@ def test_book_series(app):
                 <subfield code="x">0081-3869</subfield>
             </datafield>
             """, {
-                'book_series':
-                    [
-                        {'title': 'Springer tracts in modern physics',
-                         'volume': '267',
-                         'issn': '0081-3869',
-                         },
-                    ]
+                '_migration': {
+                    'serials': [
+                        {
+                            'title': 'Springer tracts in modern physics',
+                            'issn': '0081-3869',
+                            'volume': '267'
+                        }
+                    ],
+                    'has_keywords': False,
+                    'is_multipart': False,
+                    'has_related': False,
+                    'has_serial': True,
+                    'record_type': 'document',
+                    'volumes': [],
+                }
             }
         )
 
@@ -2267,27 +2306,27 @@ def test_541(app):
                     ],
                     'authors': [
                         {
-                            'role': "Editor",
+                            'role': "editor",
                             'full_name': "Cai, Baoping"
                         },
                         {
-                            'role': "Editor",
+                            'role': "editor",
                             'full_name': "Liu, Yonghong"
                         },
                         {
-                            'role': "Editor",
+                            'role': "editor",
                             'full_name': "Hu, Jinqiu"
                         },
                         {
-                            'role': "Editor",
+                            'role': "editor",
                             'full_name': "Liu, Zengkai"
                         },
                         {
-                            'role': "Editor",
+                            'role': "editor",
                             'full_name': "Wu, Shengnan"
                         },
                         {
-                            'role': "Editor",
+                            'role': "editor",
                             'full_name': "Ji, Renjie"
                         }
                     ],
@@ -2324,9 +2363,18 @@ def test_keywords(app):
             </datafield>
             """,
             {
-                'keywords': [
-                    {'name': 'Keyword Name 1', 'provenance': 'PACS'},
-                ]
+                '_migration': {
+                    'has_keywords': True,
+                    'is_multipart': False,
+                    'has_related': False,
+                    'has_serial': False,
+                    'record_type': 'document',
+                    'volumes': [],
+                    'serials': [],
+                    'keywords': [
+                        {'name': 'Keyword Name 1', 'provenance': 'PACS'},
+                    ],
+                }
             }
         )
 
@@ -2353,13 +2401,14 @@ def test_volume_barcodes(app):
                 _migration=dict(
                     record_type='document',
                     has_serial=False,
-                    has_multipart=False,
+                    is_multipart=False,
                     has_keywords=False,
                     has_related=False,
                     volumes=[
                         dict(barcode='80-1209-8', volume=1),
                         dict(barcode='B00004172', volume=1),
-                    ]
+                    ],
+                    serials=[]
                 ),
             )
         )

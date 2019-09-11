@@ -44,7 +44,7 @@ class CDSStandard(CDSOverdoBookBase):
         json['_migration'] = {
             'record_type': 'document',
             'has_serial': False,
-            'has_multipart': False,
+            'is_multipart': False,
             'has_keywords': False,
             'has_related': False,
             'volumes': []

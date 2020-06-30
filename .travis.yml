@@ -9,8 +9,7 @@ env:
   - REQUIREMENTS=release
   - REQUIREMENTS=devel
 python:
-- '2.7'
-- '3.5'
+- '3.6'
 before_install:
 - travis_retry pip install --upgrade pip setuptools py
 - travis_retry pip install twine wheel coveralls requirements-builder
@@ -33,5 +32,5 @@ deploy:
   on:
     tags: true
     repo: CERNDocumentServer/cds-dojson
-    python: '2.7'
+    python: '3.6'
     condition: "$REQUIREMENTS = release"

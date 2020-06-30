@@ -79,7 +79,7 @@ def test_serial(app):
                                  ' of science and technology'
                     }],
                 'mode_of_issuance': 'SERIAL',
-                'issn': '2211-4564',
+                'identifiers': [{'scheme': 'ISSN', 'value': '2211-4564'}],
                 '_migration': {'record_type': 'serial', 'children': []}
             },
             serial_model
@@ -99,7 +99,7 @@ def test_serial(app):
                                  ' of science and technology'
                     }],
                 'mode_of_issuance': 'SERIAL',
-                'issn': '2211-4564',
+                'identifiers': [{'scheme': 'ISSN', 'value': '2211-4564'}],
                 '_migration': {'record_type': 'serial', 'children': []}
             },
             serial_model
@@ -413,7 +413,7 @@ def test_monograph_migration(app):
                 "title": {'title': 'Wissenschaftliche Abhandlungen'},
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '3',
-                'isbns': ['9781108052825'],
+                'identifiers': [{'scheme': 'ISBN', 'value': '9781108052825'}],
                 'physical_description': 'print version, paperback',
             }, multipart_model)
 
@@ -490,7 +490,13 @@ def test_monograph_with_electronic_isbns(app):
             </datafield>
             """,
             {
-                'isbns': ['9780817631871'],
+                'identifiers': [
+                    {'scheme': 'ISBN', 'value': '0817631852'},
+                    {'scheme': 'ISBN', 'value': '0817631879'},
+                    {'scheme': 'ISBN', 'value': '9780817631857'},
+                    {'scheme': 'ISBN', 'value': '9780817631871'},
+
+                ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 '_migration': {
                     'record_type': 'multipart',

@@ -56,71 +56,84 @@ def agency_code(self, key, value):
     return 'SzGeCERN'
 
 
-@model.over('acquisition_source', '(^916__)|(^859__)|(^595__)')
+@model.over('created_by', '^859__')
 @filter_values
-def acquisition_source(self, key, value):
-    """Translates acquisition source field."""
-    _acquisition_source = self.get('acquisition_source', {})
+def created_by(self, key, value):
+    """Translates created_by to find submitter."""
+    return {'_email': clean_email(clean_val('f', value, str)), 'type': "user"}
+
+
+@model.over('_created', '(^916__)|(^595__)')
+@out_strip
+def created(self, key, value):
+    """Translates created information to fields."""
+    _created_by = self.get('created_by', {})
+
     if key == '916__':
-        _acquisition_source.update(
-            {'method': mapping(ACQUISITION_METHOD,
-                               clean_val('s', value, str))})
+        if 's' in value:
+            _created_by.update(
+                {'type': mapping(ACQUISITION_METHOD,
+                                 clean_val('s', value, str))})
+            self['created_by'] = _created_by
         date = clean_val('w', value, int, regex_format=r'\d{4}$')
         if date:
             year, week = str(date)[:4], str(date)[4:]
             date = get_week_start(int(year), int(week))
-            self['creation_date'] = date.isoformat()
-    elif key == '859__' and 'f' in value:
-        _acquisition_source.update(
-            {'email': clean_email(clean_val('f', value, str))})
+            return date.isoformat()
     elif key == '595__':
         try:
             sub_a = clean_val('a', value, str,
                               regex_format=r'[A-Z]{3}[0-9]{6}$')
             if sub_a:
                 source = sub_a[:3]
-                _acquisition_source.update({'source': source})
+                self["source"] = source
                 year, month = int(sub_a[3:7]), int(sub_a[7:])
-                self['creation_date'] = \
-                    datetime.date(year, month, 1).isoformat()
+                return datetime.date(year, month, 1).isoformat()
         except UnexpectedValue as e:
             e.subfield = 'a'
-            self['_private_notes'] = private_notes(self, key, value)
-            raise IgnoreKey('acquisition_source')
+            self['internal_notes'] = internal_notes(self, key, value)
+            raise IgnoreKey('_created')
 
-    return _acquisition_source
+    raise IgnoreKey('_created')
 
 
-@model.over('_private_notes', '^595__')
+@model.over('internal_notes', '^595__')
 @filter_list_values
-def private_notes(self, key, value):
+def internal_notes(self, key, value):
     """Translates private notes field."""
-    _priv_notes = self.get('_private_notes', [])
+    _internal_notes = self.get('internal_notes', [])
 
     for v in force_list(value):
         note = {'value': clean_val('a', v, str, req=True),
+                # TODO, waiting for an answer
                 'source': clean_val('9', v, str),
                 }
-        _priv_notes.append(note)
-    return _priv_notes
+        _internal_notes.append(note)
+    return _internal_notes
 
 
-@model.over('_collections', '(^980__)|(^690C_)|(^697C_)')
+# TODO convert to tags
+@model.over('_migration', '(^980__)|(^690C_)|(^697C_)')
 @out_strip
 def collection(self, key, value):
     """Translates collection field - WARNING - also document type field."""
-    _collections = self.get('_collections', [])
+    _migration = self.get('_migration', {})
+    _tags = _migration.get('tags', [])
 
     for v in force_list(value):
         result_a = mapping(COLLECTION, clean_val('a', v, str))
         result_b = mapping(COLLECTION, clean_val('b', v, str))
-        if result_a or result_b:
-            _collections.append(result_a)
-            _collections.append(result_b)
-        else:
+        if result_a:
+            _tags.append(result_a)
+            _migration['has_tags'] = True
+        if result_b:
+            _tags.append(result_b)
+            _migration['has_tags'] = True
+        if not result_a and not result_b:
             self['document_type'] = document_type(self, key, value)
-            raise IgnoreKey('_collections')
-    return _collections
+            raise IgnoreKey('_migration')
+    _migration['tags'] = _tags
+    return _migration
 
 
 @model.over('document_type', '(^980__)|(^960__)|(^690C_)')
@@ -169,7 +182,7 @@ def authors(self, key, value):
             other = ['et al.', 'et al']
             val_u = list(force_list(value.get('u')))
             if [i for i in other if i in val_u]:
-                _authors.append({'others': True})
+                self['other_authors'] = True
     except UnexpectedValue:
         pass
     return _authors
@@ -190,20 +203,24 @@ def alt_authors(self, key, value):
 @out_strip
 def corporate_authors(self, key, value):
     """Translates the corporate authors field."""
-    _corporate_authors = self.get('corporate_authors', [])
+    _corporate_authors = self.get('authors', [])
 
     for v in force_list(value):
         if key == '710__':
             if 'a' in v:
-                _corporate_authors.append(clean_val('a', v, str))
+                _corporate_authors.append({'full_name': clean_val('a', v, str),
+                                           'type': 'ORGANISATION'})
             else:
                 self['collaborations'] = collaborations(self, key, value)
                 raise IgnoreKey('corporate_authors')
         else:
-            _corporate_authors.append(clean_val('a', v, str))
-    return _corporate_authors
+            _corporate_authors.append({'full_name': clean_val('a', v, str),
+                                       'type': 'ORGANISATION'})
+    self['authors'] = _corporate_authors
+    raise IgnoreKey('corporate_authors')
 
 
+# TODO waiting for verification
 @model.over('collaborations', '^710__')
 @replace_in_result('Collaboration', '', key='value')
 @filter_list_values
@@ -236,10 +253,18 @@ def publication_info(self, key, value):
             'journal_issue': clean_val('n', v, str),
             'journal_title': clean_val('p', v, str),
             'journal_volume': clean_val('v', v, str),
-            'cnum': clean_val('w', v, str,
-                              regex_format=r'^C\d\d-\d\d-\d\d(\.\d+)?$'),
             'year': clean_val('y', v, int),
         })
+        if 'w' in value:
+            temp_info.update(
+                {'identifiers': [{
+                    "scheme": "INSPIRE_CNUM",
+                    "value":
+                        clean_val('w', v, str,
+                                  regex_format=r'^C\d\d-\d\d-\d\d(\.\d+)?$'),
+                }
+                ]}
+            )
 
         text = '{0} {1}'.format(
             clean_val('o', v, str) or '',
@@ -255,6 +280,7 @@ def publication_info(self, key, value):
 def publication_additional(self, key, value):
     """Translates additional publication info."""
     _publication_info = self.get('publication_info', [])
+    _migration = self.get("_migration", {})
     empty = not bool(_publication_info)
     for i, v in enumerate(force_list(value)):
         temp_info = {}
@@ -263,13 +289,24 @@ def publication_additional(self, key, value):
             temp_info.update(pages)
         rel_recid = clean_val('b', v, str)
         if rel_recid:
-            temp_info.update(
-                {'parent_record': {'$ref': related_url(rel_recid)}})
+            # temp_info.update(
+            #     {'parent_record': {'$ref': related_url(rel_recid)}})
+            _migration["journal_record_legacy_recid"] = rel_recid
+            _migration["has_journal"] = True
+            # assume that if we have a parent journal
+            # then the doc is a periodical issue
+            self['document_type'] = 'PERIODICAL_ISSUE'
+            self['_migration'] = _migration
         n_subfield = clean_val('n', v, str)
         if n_subfield.upper() == 'BOOK':
             temp_info.update({'material': 'BOOK'})
         else:
-            temp_info.update({'cern_conference_code': n_subfield})
+            _conference_info = self.get('conference_info', {})
+            _identifiers = _conference_info.get('identifiers', [])
+            conf_id = {"scheme": "CERN_CODE", "value": n_subfield}
+            _identifiers.append(conf_id)
+            _conference_info["identifiers"] = _identifiers
+            self["conference_info"] = _conference_info
         if not empty and i < len(_publication_info):
             _publication_info[i].update(temp_info)
         else:
@@ -278,34 +315,41 @@ def publication_additional(self, key, value):
     return _publication_info
 
 
-@model.over('related_records', '(^775__)|(^787__)')
-@filter_list_values
-@for_each_value
+# cleaning data, later
+@model.over('_migration', '(^775__)|(^787__)')
+@out_strip
 def related_records(self, key, value):
-    """Translates related_records field."""
+    """Translates related_records field.
+
+    RELATED records
+    """
+    _migration = self.get('_migration', {})
+    _related = _migration.get('related', [])
     try:
         if key == '775__':
             clean_val('b', value, str, manual=True)
             clean_val('c', value, str, manual=True)
         if key == '787__':
             clean_val('i', value, str, manual=True)
+        _related.append(clean_val('w', value, str, req=True))
+        _migration.update({'related': _related, 'has_related': True})
+        return _migration
     except ManualMigrationRequired as e:
         if key == '775__':
             e.subfield = 'b or c'
         else:
             e.subfield = 'i'
         raise e
-    return {'record': {
-        '$ref': related_url(clean_val('w', value, str, req=True))}}
 
 
-@model.over('accelerator_experiments', '^693__')
+@model.over('extensions', '^693__')
 @filter_list_values
 @for_each_value
 def accelerator_experiments(self, key, value):
     """Translates accelerator_experiments field."""
-    return {'accelerator': clean_val('a', value, str),
-            'experiment': clean_val('e', value, str),
+    return {'unit:accelerator': clean_val('a', value, str),
+            'unit:experiment': clean_val('e', value, str),
+            'unit:project': clean_val('p', value, str)
             }
 
 
@@ -328,14 +372,16 @@ def urls(self, key, value):
     raise IgnoreKey('urls')
 
 
-@model.over('isbns', '^020__')
+@model.over('identifiers', '^020__', )
 @filter_list_values
 def isbns(self, key, value):
     """Translates isbns fields."""
-    _isbns = self.get('isbns', [])
+    _isbns = self.get('identifiers', [])
     for v in force_list(value):
         subfield_u = clean_val('u', v, str)
-        isbn = {'value': clean_val('a', v, str) or clean_val('z', v, str)}
+        isbn = {'value': clean_val('a', v, str) or clean_val('z', v, str),
+                'scheme': 'ISBN',
+                }
         if not isbn['value']:
             raise ManualMigrationRequired(subfield='a or z')
         if subfield_u:
@@ -347,6 +393,7 @@ def isbns(self, key, value):
                 existing_volume = self.get('volume')
                 if existing_volume:
                     raise ManualMigrationRequired(subfield='u')
+                # TODO volume --> when splitting to series
                 self['volume'] = volume
             if subfield_u.upper() in MEDIUM_TYPES:
                 isbn.update({'medium': subfield_u})
@@ -358,89 +405,101 @@ def isbns(self, key, value):
     return _isbns
 
 
-@model.over('standard_numbers', '^021__')
-@for_each_value
-@filter_values
+@model.over('identifiers', '^021__')
+@filter_list_values
 def standard_numbers(self, key, value):
     """Translates standard numbers values."""
+    _identifiers = self.get('identifiers', [])
     a = clean_val('a', value, str)
     b = clean_val('b', value, str)
     sn = a or b
     if sn:
-        return {'value': sn,
-                'hidden': True if b else False}
+        _identifiers.append({'value': sn,
+                             'scheme': 'STANDARD_NUMBER',
+                             'hidden': True if b else False})
+        return _identifiers
     raise MissingRequiredField(subfield='a or b')
 
 
-@model.over('external_system_identifiers', '(^0247_)|(^035__)|(^036__)')
+@model.over('alternative_identifiers', '(^0247_)|(^035__)|(^036__)')
 @for_each_value
 @filter_values
-def external_system_identifiers(self, key, value):
+def alternative_identifiers(self, key, value):
     """Translates external_system_identifiers fields."""
     field_type = clean_val('2', value, str)
     sub_a = clean_val('a', value, str, req=True)
-    system_id = {}
-
+    indentifier_entry = {}
     if key == '0247_':
         if field_type and field_type.lower() == 'doi':
-            self['dois'] = dois(self, key, value)
+            # if 0247__2 == doi it is a DOI identifier
+            self['identifiers'] = dois(self, key, value)
             raise IgnoreKey('external_system_identifiers')
         elif field_type and field_type.lower() == 'asin':
-            system_id.update({'value': sub_a,
-                              'schema': 'ASIN'})
+            indentifier_entry.update({'value': sub_a,
+                                      'scheme': 'ASIN'})
         else:
             raise UnexpectedValue(subfield='2')
     if key == '035__':
         sub_9 = clean_val('9', value, str, req=True)
+
+        # conference_info.identifiers mixed data
         if sub_9.upper() == 'INSPIRE-CNUM':
             _conference_info = self.get('conference_info', {})
-            _conference_info.update({'inspire_cnum': sub_a})
+            _prev_identifiers = _conference_info.get('identifiers', [])
+            _prev_identifiers.append(
+                {'scheme': 'INSPIRE_CNUM', 'value': sub_a})
+            _conference_info.update({'identifiers': _prev_identifiers})
             self['conference_info'] = _conference_info
             raise IgnoreKey('external_system_identifiers')
+
         elif sub_9.upper() in EXTERNAL_SYSTEM_IDENTIFIERS:
-            system_id.update({'value': sub_a,
-                              'schema': sub_9})
+            indentifier_entry.update({'value': sub_a,
+                                      'scheme': sub_9})
         elif sub_9.upper() in EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE:
             raise IgnoreKey('external_system_identifiers')
         else:
             raise UnexpectedValue(subfield='9')
     if key == '036__':
-        system_id.update({'value': sub_a,
-                          'schema': clean_val('9', value, str, req=True)})
-    return system_id
+        indentifier_entry.update({
+            'value': sub_a, 'scheme': clean_val('9', value, str, req=True)})
+    return indentifier_entry
 
 
-@model.over('dois', '^0247_')
+@model.over('identifiers', '^0247_')
 @filter_list_values
 def dois(self, key, value):
-    """Translates dois fields.
-
-    This is holding specific. To move to holding.py
-    """
-    _dois = self.get('dois', [])
+    """Translates dois fields."""
+    # TODO might be moved to item level or prefixed _migration,
+    # decision pending
+    _identifiers = self.get('identifiers', [])
     for v in force_list(value):
         material = mapping(MATERIALS,
                            clean_val('q', v, str, transform='lower'),
                            raise_exception=True)
 
-        _dois.append({'value': clean_val('a', v, str, req=True),
-                      'material': material,
-                      'source': clean_val('9', v, str),
-                      })
-    return _dois
+        _identifiers.append(
+            {
+                'value': clean_val('a', v, str, req=True),
+                'material': material,
+                'source': clean_val('9', v, str),  # TODO sources
+                'scheme': 'DOI',
+            }
+        )
+    return _identifiers
 
 
-@model.over('report_numbers', '(^037__)|(^088__)')
-@for_each_value
-@filter_values
+@model.over('identifiers', '(^037__)|(^088__)')
+@filter_list_values
 def report_numbers(self, key, value):
     """Translates report_numbers fields."""
+
     def get_value_rn(f_a, f_z, f_9, rn_obj):
-        f.update({'value': f_a or f_z or f_9})
+        rn_obj.update({'value': f_a or f_z or f_9, 'scheme': 'REPORT_NUMBER'})
         if f_z or f_9:
             rn_obj.update({'hidden': True})
 
-    f = {}
+    _identifiers = self.get('identifiers', [])
+
     sub_9 = clean_val('9', value, str)
     sub_a = clean_val('a', value, str)
     sub_z = clean_val('z', value, str)
@@ -448,31 +507,35 @@ def report_numbers(self, key, value):
     all_empty = not (sub_z or sub_a or sub_9)
 
     if key == '037__':
+        entry = {}
         if all_empty:
             raise MissingRequiredField(subfield='9 or a or z')
 
         if sub_9 == 'arXiv':
+            # Todo arxiv under verification
             self['arxiv_eprints'] = arxiv_eprints(self, key, value)
             raise IgnoreKey('report_numbers')
         else:
-            get_value_rn(sub_a, sub_z, sub_9, f)
+            get_value_rn(sub_a, sub_z, sub_9, entry)
+        _identifiers.append(entry)
 
     if key == '088__':
+        entry = {}
         if 'n' in value or 'x' in value:
             barcodes(self, key, value)
 
         if all_empty and 'n' not in value and 'x' not in value:
             raise MissingRequiredField(subfield='9 or a or z or n or x')
 
-        get_value_rn(sub_a, sub_z, sub_9, f)
-
-    return f
+        get_value_rn(sub_a, sub_z, sub_9, entry)
+        _identifiers.append(entry)
+    return _identifiers
 
 
 @model.over('barcodes', '^088__')
 @for_each_value
 def barcodes(self, key, value):
-    """Match barcodes to volumes."""
+    """Match barcodes of items to volumes."""
     val_n = clean_val('n', value, str)
     val_x = clean_val('x', value, str)
 
@@ -489,10 +552,12 @@ def barcodes(self, key, value):
     raise IgnoreKey('barcodes')
 
 
+# TODO verify if needed
 @model.over('arxiv_eprints', '(^037__)|(^695__)')
 @filter_list_values
 def arxiv_eprints(self, key, value):
     """Translates arxiv_eprints fields."""
+
     def check_category(field, val):
         category = clean_val(field, val, str)
         if category:
@@ -545,58 +610,55 @@ def languages(self, key, value):
         raise UnexpectedValue(subfield='a')
 
 
-@model.over('subject_classification',
-            '(^050)|(^080__)|(^08204)|(^084__)|(^082)')
+@model.over('subjects',
+            '(^050)|(^080__)|(^08204)|(^084__)|(^082__)')
 @for_each_value
 @out_strip
 def subject_classification(self, key, value):
     """Translates subject classification field."""
     _subject_classification = {'value': clean_val('a', value, str, req=True)}
     if key == '080__':
-        _subject_classification.update({'schema': 'UDC'})
+        _subject_classification.update({'scheme': 'UDC'})
     elif key.startswith('082'):
-        _subject_classification.update({'schema': 'Dewey'})
+        _subject_classification.update({'scheme': 'Dewey'})
     elif key == '084__':
         sub_2 = clean_val('2', value, str)
         if sub_2 and sub_2.upper() in SUBJECT_CLASSIFICATION_EXCEPTIONS:
             keywords(self, key, value)
             raise IgnoreKey('subject_classification')
         else:
-            _subject_classification.update({'schema': 'ICS'})
+            _subject_classification.update({'scheme': 'ICS'})
     elif key.startswith('050'):
-        _subject_classification.update({'schema': 'LoC'})
+        _subject_classification.update({'scheme': 'LoC'})
     return _subject_classification
 
 
 @model.over('keywords', '(^084__)|(^6531_)')
+@for_each_value
 @filter_list_values
 def keywords(self, key, value):
     """Keywords."""
-    _migration = self.get('_migration', {})
-    if 'keywords' not in _migration:
-        _migration['keywords'] = []
-    for v in force_list(value):
-        if key == '084__':
-            sub_2 = clean_val('2', value, str)
-            if sub_2 and sub_2 == 'PACS':
-                _migration['keywords'].append({
-                    'name': clean_val('a', v, str, req=True),
-                    'provenance': 'PACS',
-                })
-            else:
-                raise IgnoreKey('keywords')
-        elif key == '6531_':
-            _migration['keywords'].append({
-                'name': clean_val('a', value, str),
-                'provenance': value.get('9') or value.get('g'),
-                # Easier to solve here
+    _keywords = self.get('keywords', [])
+    # for v in force_list(value):
+    if key == '084__':
+        sub_2 = clean_val('2', value, str)
+        if sub_2 and sub_2 == 'PACS':
+            _keywords.append({
+                'name': clean_val('a', value, str, req=True),
+                'source': 'PACS',
             })
-    _migration['has_keywords'] = True
-    self['_migration'] = _migration
-    raise IgnoreKey('keywords')
+        else:
+            raise IgnoreKey('keywords')
+    elif key == '6531_':
+        _keywords.append({
+            'name': clean_val('a', value, str),
+            'source': value.get('9') or value.get('g'),
+            # Easier to solve here
+        })
+    self['keywords'] = _keywords
 
 
-@model.over('conference_info', '(^111__)|(^270__)|(^711__)')
+@model.over('conference_info', '(^111__)|(^711__)')
 @filter_values
 def conference_info(self, key, value):
     """Translates conference info."""
@@ -606,6 +668,8 @@ def conference_info(self, key, value):
             try:
                 opening_date = parser.parse(clean_val('9', v, str, req=True))
                 closing_date = parser.parse(clean_val('z', v, str, req=True))
+                dates = "{0} - {1}".format(opening_date.date().isoformat(),
+                                           closing_date.date().isoformat())
             except ValueError:
                 raise UnexpectedValue(subfield='9 or z')
             country_code = clean_val('w', v, str)
@@ -621,58 +685,62 @@ def conference_info(self, key, value):
             except TypeError:
                 raise UnexpectedValue('n', message=' series number not an int')
 
+            _prev_identifiers = _conference_info.get('identifiers', [])
+            _prev_identifiers.append(
+                {'scheme': 'CERN_CODE', 'value': clean_val('g', v, str)})
+
             _conference_info.update({
                 'title': clean_val('a', v, str, req=True),
                 'place': clean_val('c', v, str, req=True),
-                'opening_date': opening_date.date().isoformat(),
-                'closing_date': closing_date.date().isoformat(),
-                'cern_conference_code': clean_val('g', v, str),
+                'dates': dates,
+                'identifiers': _prev_identifiers,
                 'series': {'number': series_number},
-                'country_code': country_code,
+                'country': country_code,
             })
-        elif key == '270__':
-            contact = clean_email(clean_val('m', v, str))
-            if contact and _conference_info:
-                _conference_info.update({'contact': contact})
-            else:
-                raise MissingRequiredField(subfield='m')
         else:
             _conference_info.update({
                 'acronym': clean_val('a', v, str)})
     return _conference_info
 
 
-@model.over('title_translations', '^242__')
-@for_each_value
-@filter_values
-def title_translations(self, key, value):
+@model.over('alternative_titles', '^242__')
+@filter_list_values
+def alternative_titles(self, key, value):
     """Translates title translations."""
-    return {
-        'title': clean_val('a', value, str, req=True),
-        'language': 'en',
-        'subtitle': clean_val('b', value, str),
-    }
+    _alternative_titles = self.get('alternative_titles', [])
+    if 'a' in value:
+        _alternative_titles.append({
+            'value': clean_val('a', value, str, req=True),
+            'type': 'TRANSLATED_TITLE',
+            'language': 'en',
+        })
+    if 'b' in value:
+        _alternative_titles.append({
+            'value': clean_val('b', value, str, req=True),
+            'type': 'TRANSLATED_SUBTITLE',
+            'language': 'en',
+        })
+    return _alternative_titles
 
 
 @model.over('edition', '^250__')
 @out_strip
-@for_each_value
 def edition(self, key, value):
     """Translates edition indicator field."""
     return clean_val('a', value, str)
 
 
-@model.over('imprints', '^260__')
-@for_each_value
+@model.over('imprint', '^260__')
 @filter_values
-def imprints(self, key, value):
+def imprint(self, key, value):
     """Translates imprints fields."""
     reprint = clean_val('g', value, str)
     if reprint:
         reprint = reprint.lower().replace('repr.', '').strip()
-
+    date = parser.parse(clean_val('c', value, str, req=True))
+    self['publication_year'] = date.date().year
     return {
-        'date': clean_val('c', value, str),
+        'date': clean_val('c', value, str, req=True),
         'place': clean_val('a', value, str),
         'publisher': clean_val('b', value, str),
         'reprint': reprint,
@@ -699,46 +767,37 @@ def book_series(self, key, value):
     raise IgnoreKey('book_series')
 
 
-@model.over('public_notes', '^500__')
-@for_each_value
+@model.over('note', '^500__')
 @filter_values
-def public_notes(self, key, value):
+def note(self, key, value):
     """Translates public notes."""
-    return {
-        'value': clean_val('a', value, str, req=True),
-        'source': clean_val('9', value, str)
-    }
-
-
-@model.over('abstracts', '^520__')
-@for_each_value
-@filter_values
-def abstracts(self, key, value):
-    """Translates abstracts fields."""
-    return {
-        'value': clean_val('a', value, str, req=True),
-        'source': clean_val('9', value, str)
-    }
-
-
-@model.over('funding_info', '^536__')
-@for_each_value
-@filter_values
-def funding_info(self, key, value):
-    """Translates funding_info fields."""
-    openaccess = clean_val('r', value, str)
-    if openaccess and openaccess.lower() == 'openaccess':
-        openaccess = True
-    elif openaccess and openaccess.lower() != 'openaccess':
-        raise UnexpectedValue(subfield='r')
+    # merge all found notes
+    _note = self.get('note', {})
+    _value = _note.get('value', '')
+    if _value:
+        _value = \
+            "{0} / {1}".format(_value, clean_val('a', value, str, req=True))
     else:
-        openaccess = None
+        _value = clean_val('a', value, str, req=True)
 
-    return {'agency': clean_val('a', value, str),
-            'grant_number': clean_val('c', value, str),
-            'project_number': clean_val('f', value, str),
-            'openaccess': openaccess,
-            }
+    return {
+        'value': _value,
+        'source': clean_val('9', value, str)
+    }
+
+
+@model.over('alternative_abstracts', '^520__')
+@for_each_value
+@out_strip
+def alternative_abstracts(self, key, value):
+    """Translates abstracts fields."""
+    abstract = self.get('abstract', None)
+    if not abstract:
+        # takes first abstract as main
+        self["abstract"] = clean_val('a', value, str, req=True)
+        raise IgnoreKey('alternative_abstracts')
+    return clean_val('a', value, str, req=True)
+    # 'source': clean_val('9', value, str) # TODO until the answer comes
 
 
 @model.over('licenses', '^540__')

@@ -24,24 +24,34 @@ from dojson.utils import filter_values, for_each_value
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue
 from cds_dojson.marc21.fields.books.utils import is_excluded, extract_parts
-from cds_dojson.marc21.fields.utils import clean_val
+from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
+    out_strip
 from cds_dojson.marc21.models.books.standard import model
 
 
-@model.over('title_translations', '^246__')
-@for_each_value
-@filter_values
+@model.over('alternative_titles', '^246__')
+@filter_list_values
 def title_translations(self, key, value):
     """Translates title translations."""
-    return {
-        'title': clean_val('a', value, str, req=True),
-        'language': 'fr',
-        'subtitle': clean_val('b', value, str),
-        'source': clean_val('i', value, str),
-    }
+    _alternative_titles = self.get('alternative_titles', [])
+
+    if 'a' in value:
+        _alternative_titles.append({
+            'value': clean_val('a', value, str, req=True),
+            'type': 'TRANSLATED_TITLE',
+            'language': 'fr',
+        })
+    if 'b' in value:
+        _alternative_titles.append({
+            'value': clean_val('b', value, str, req=True),
+            'type': 'TRANSLATED_SUBTITLE',
+            'language': 'fr',
+        })
+    return _alternative_titles
+    # 'source': clean_val('i', value, str),
 
 
-@model.over('number_of_pages', '^300__')   # item
+@model.over('number_of_pages', '^300__')  # item
 def number_of_pages(self, key, value):
     """Translates number_of_pages fields."""
     val = clean_val('a', value, str)
@@ -51,21 +61,23 @@ def number_of_pages(self, key, value):
     parts = extract_parts(val)
     if parts['has_extra']:
         raise UnexpectedValue(subfield='a')
-    if parts['physical_description']:
-        self['physical_description'] = parts['physical_description']
+    if parts['physical_copy_description']:
+        self['physical_copy_description'] = parts['physical_copy_description']
     if parts['number_of_pages']:
         return parts['number_of_pages']
     raise UnexpectedValue(subfield='a')
 
 
 @model.over('title', '^245__')
-@filter_values
+@out_strip
 def title(self, key, value):
     """Translates title."""
     if 'title' in self:
         raise UnexpectedValue()
 
-    return {
-        'title': clean_val('a', value, str, req=True),
-        'subtitle': clean_val('b', value, str),
-    }
+    if 'b' in value:
+        _alternative_titles = self.get('alternative_titles', [])
+        _alternative_titles.append(
+            {'value': clean_val('b', value, str), 'type': 'SUBTITLE'})
+        self['alternative_titles'] = _alternative_titles
+    return clean_val('a', value, str, req=True)

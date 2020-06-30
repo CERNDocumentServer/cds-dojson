@@ -35,8 +35,10 @@ def recid(self, key, value):
 @filter_values
 def title(self, key, value):
     """Translates book series title."""
+    _identifiers = self.get('identifiers', [])
     issn = clean_val('x', value, str)
     if issn:
-        self['issn'] = issn
+        _identifiers.append({'scheme': 'ISSN', 'value': issn})
+        self['identifiers'] = _identifiers
     self['mode_of_issuance'] = 'SERIAL'
     return {'title': clean_val('a', value, str, req=True)}

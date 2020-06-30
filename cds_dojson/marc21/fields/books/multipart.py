@@ -27,7 +27,8 @@ from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
     ManualMigrationRequired, MissingRequiredField
 from cds_dojson.marc21.fields.books.utils import extract_parts, \
     extract_volume_number, extract_volume_info
-from cds_dojson.marc21.fields.utils import clean_val, out_strip
+from cds_dojson.marc21.fields.utils import clean_val, out_strip, \
+    filter_list_values
 from cds_dojson.marc21.models.books.multipart import model
 
 
@@ -37,13 +38,13 @@ def recid(self, key, value):
     return int(value)
 
 
-@model.over('isbns', '^020__')
-@out_strip
+@model.over('identifiers', '^020__')
+@filter_list_values
 @for_each_value
 def isbns(self, key, value):
     """Translates isbns stored in the record."""
     _migration = self.get('_migration', {'volumes': []})
-    _isbns = self.get('isbns', [])
+    _identifiers = self.get('identifiers', [])
 
     val_u = clean_val('u', value, str)
     val_a = clean_val('a', value, str)
@@ -54,6 +55,7 @@ def isbns(self, key, value):
         # if set found it means that the isbn is for the whole multipart
         set_search = re.search('(.*?)\(set\.*\)', val_u)
         if volume_info:
+            # if we have volume there it means that the ISBN is of the volume
             volume_obj = {
                 'volume': volume_info['volume'],
                 'isbn': clean_val('a', value, str),
@@ -62,9 +64,11 @@ def isbns(self, key, value):
             }
             _migration['volumes'].append(volume_obj)
             self['_migration'] = _migration
+            raise IgnoreKey('identifiers')
         if set_search:
             self['physical_description'] = set_search.group(1).strip()
-            return val_a if val_a not in _isbns else None  # monograph isbn
+            isbn = {'scheme': 'ISBN', 'value': val_a}
+            return isbn if isbn not in _identifiers else None
         if not volume_info:
             # Try to find a volume number
             if extract_volume_number(val_u, search=True):
@@ -74,13 +78,16 @@ def isbns(self, key, value):
                 )
             else:
                 self['physical_description'] = val_u
-                return val_a if val_a not in _isbns else None
+                isbn = {'scheme': 'ISBN', 'value': val_a}
+                return isbn if isbn not in _identifiers else None
         if not set_search and not volume_info:
             self['physical_description'] = val_u
-            return val_a if val_a not in _isbns else None
+            isbn = {'scheme': 'ISBN', 'value': val_a}
+            return isbn if isbn not in _identifiers else None
     elif not val_u and val_a:
         # if I dont have volume info but only isbn
-        return val_a if val_a not in _isbns else None
+        isbn = {'scheme': 'ISBN', 'value': val_a}
+        return isbn if isbn not in _identifiers else None
     else:
         raise UnexpectedValue(subfield='a', message=' isbn not provided')
 

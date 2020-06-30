@@ -46,6 +46,7 @@ COMMON_IGNORE_FIELDS = {
     '269__a',  # preprint info
     '269__b',  # preprint info
     '269__c',  # preprint date
+    '270__m',  # conference email
     '300__b',  # 206 cds-dojson
     '340__a',
     '440_3a',  # 206 cds-dojson
@@ -56,6 +57,10 @@ COMMON_IGNORE_FIELDS = {
     '502__c',  # thesis_info/institutions
     '502__d',  # thesis_info/date (publication)
     '5208_a',  # 206 cds-dojson
+    '536__a',  # founding info, dropped
+    '536__c',
+    '536__f',
+    '536__r',
     '650172',
     '65017a',
     '650272',

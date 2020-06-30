@@ -111,7 +111,7 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
 def clean_email(value):
     """Cleans the email field."""
     if value:
-        email = value.strip().replace(' [CERN]', '@cern.ch').\
+        email = value.strip().replace(' [CERN]', '@cern.ch'). \
             replace('[CERN]', '@cern.ch')
         return email
 
@@ -129,6 +129,7 @@ def get_week_start(year, week):
 
 def replace_in_result(phrase, replace_with, key=None):
     """Replaces string values in list with given string."""
+
     def the_decorator(fn_decorated):
         def proxy(*args, **kwargs):
             res = fn_decorated(*args, **kwargs)
@@ -140,12 +141,15 @@ def replace_in_result(phrase, replace_with, key=None):
                     return [dict((k, v.replace(phrase, replace_with).strip())
                                  for k, v in elem.items()) for elem in res]
             return res
+
         return proxy
+
     return the_decorator
 
 
 def filter_list_values(f):
     """Remove None and blank string values from list of dictionaries."""
+
     @functools.wraps(f)
     def wrapper(self, key, value, **kwargs):
         out = f(self, key, value)
@@ -158,11 +162,13 @@ def filter_list_values(f):
             return clean_list
         else:
             raise IgnoreKey(key)
+
     return wrapper
 
 
 def out_strip(fn_decorated):
     """Decorator cleaning output values of trailing and following spaces."""
+
     def proxy(self, key, value, **kwargs):
         res = fn_decorated(self, key, value, **kwargs)
         if not res:
@@ -178,6 +184,7 @@ def out_strip(fn_decorated):
             return cleaned
         else:
             return res
+
     return proxy
 
 
@@ -365,28 +372,24 @@ def build_contributor_books(value):
     if not value.get('a'):
         return []
 
-    value_9 = clean_val('9', value, str)
-
     contributor = {
-        'ids': _extract_json_ids(value, 'schema') or None,
+        'identifiers': _extract_json_ids(value, 'scheme') or None,
         'full_name': value.get('name') or clean_val('a', value, str),
-        'email': clean_email(value.get('email')),
         'roles': [
             _get_correct_books_contributor_role(
                 'e', value.get('e', 'author')).lower()
         ],
-        'curated_relation': True if value_9 == '#BEARD#' else None
     }
 
     value_u = value.get('u')
     if value_u:
-        contributor['affiliations'] = list(force_list(value_u))
+        values_u_list = list(force_list(value_u))
         other = ['et al.', 'et al']
-        found_other = [i for i in other if i in contributor['affiliations']]
-        if found_other:
-            for x in found_other:
-                if x in contributor['affiliations']:
-                    contributor['affiliations'].remove(x)
+        for x in other:
+            if x in values_u_list:
+                values_u_list.remove(x)
+        contributor['affiliations'] = [{'name': x} for x in
+                                       values_u_list]
     contributor = dict(
         (k, v) for k, v in iteritems(contributor) if v is not None
     )

@@ -49,18 +49,24 @@ class CDSBook(CDSOverdoBookBase):
             json['_migration'].setdefault('serials', [])
             json['_migration'].setdefault('has_serial', False)
             json['_migration'].setdefault('is_multipart', False)
-            json['_migration'].setdefault('has_keywords', False)
+            json['_migration'].setdefault('has_tags', False)
             json['_migration'].setdefault('has_related', False)
+            json['_migration'].setdefault('has_journal', False)
+            json['_migration'].setdefault('tags', [])
+            json['_migration'].setdefault('journal_record_legacy_recid', '')
 
         else:
             json['_migration'] = {
                 'record_type': 'document',
                 'has_serial': False,
                 'is_multipart': False,
-                'has_keywords': False,
+                'has_tags': False,
                 'has_related': False,
+                'has_journal': False,
+                'journal_record_legacy_recid': '',
                 'volumes': [],
                 'serials': [],
+                'tags': [],
             }
 
         return json

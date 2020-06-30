@@ -54,10 +54,11 @@ def test_title(app):
             </datafield>
             """,
             {
-                'title': {
-                    'title': 'Incoterms 2010',
-                    'subtitle': u"""les règles de l'ICC"""
-                }
+
+                'title': 'Incoterms 2010',
+                'alternative_titles': [
+                    {'value': "les règles de l'ICC", 'type': 'SUBTITLE'},
+                ]
             }
         )
         check_transformation(
@@ -78,16 +79,19 @@ def test_title(app):
             """,
             {
                 'document_type': 'STANDARD',
-                'title': {
-                    'title': 'Test',
-                    'subtitle': 'Subtitle'
-                },
-                'title_translations': [
-                    {'title': 'Water quality — sampling',
-                     'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
+                'title': 'Test',
+                'alternative_titles': [
+                    {'value': 'Subtitle', 'type': 'SUBTITLE'},
+                    {'value': 'Water quality — sampling',
+                     'type': 'TRANSLATED_TITLE',
                      'language': 'fr',
-                     }
-                ]
+                     },
+                    {
+                        'type': 'TRANSLATED_SUBTITLE',
+                        'value': u"""part 15: guidance on the preservation and handling of sludge""",
+                        'language': 'fr',
+                    }
+                ],
             }
         )
         check_transformation(
@@ -110,15 +114,18 @@ def test_title(app):
             </datafield>
             """, {
                 'document_type': 'STANDARD',
-                'title': {
-                    'title': 'Test',
-                    'subtitle': 'Subtitle'
-                },
-                'title_translations': [
-                    {'title': 'Water quality — sampling',
-                     'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
+                'title': 'Test',
+                'alternative_titles': [
+                    {'value': 'Subtitle', 'type': 'SUBTITLE'},
+                    {'value': 'Water quality — sampling',
+                     'type': 'TRANSLATED_TITLE',
                      'language': 'fr',
-                     }
+                     },
+                    {
+                        'type': 'TRANSLATED_SUBTITLE',
+                        'value': u"""part 15: guidance on the preservation and handling of sludge""",
+                        'language': 'fr',
+                    }
                 ],
                 'number_of_pages': 373,
             })
@@ -142,14 +149,18 @@ def test_title(app):
             </datafield>
             """, {
                 'document_type': 'STANDARD',
-                'title': {
-                    'title': 'Test',
-                    'subtitle': 'Subtitle'
-                },
-                'title_translations': [
-                    {'title': 'Water quality — sampling',
-                     'subtitle': u"""part 15: guidance on the preservation and handling of sludge""",
+                'title': 'Test',
+
+                'alternative_titles': [
+                    {'value': 'Subtitle', 'type': 'SUBTITLE'},
+                    {'value': 'Water quality — sampling',
+                     'type': 'TRANSLATED_TITLE',
                      'language': 'fr',
-                     }
+                     },
+                    {
+                        'type': 'TRANSLATED_SUBTITLE',
+                        'value': u"""part 15: guidance on the preservation and handling of sludge""",
+                        'language': 'fr',
+                    }
                 ],
             })

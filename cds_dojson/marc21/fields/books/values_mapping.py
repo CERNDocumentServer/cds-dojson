@@ -40,8 +40,8 @@ COLLECTION = {
 }
 
 ACQUISITION_METHOD = {
-    'submitter': ['h'],
-    'batchuploader': ['n', 'm'],
+    'user': ['H'],
+    'batchuploader': ['N', 'M'],
 }
 
 MEDIUM_TYPES = [

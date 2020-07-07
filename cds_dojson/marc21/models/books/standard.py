@@ -28,7 +28,7 @@ from .base import model as books_base
 class CDSStandard(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
-    __query__ = '690C_:STANDARD -980__:DELETED'
+    __query__ = '690C_:STANDARD OR 980__:STANDARD -980__:DELETED -980__:MIGRATED'
 
     __schema__ = 'records/books/book/book-v.0.0.1.json'
 

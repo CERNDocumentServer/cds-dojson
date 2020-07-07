@@ -87,7 +87,7 @@ def number_of_pages(self, key, value):
     if parts['physical_copy_description']:
         self['physical_copy_description'] = parts['physical_copy_description']
     if parts['number_of_pages']:
-        return parts['number_of_pages']
+        return str(parts['number_of_pages'])
     raise UnexpectedValue(subfield='a')
 
 

@@ -20,7 +20,7 @@
 from dojson.utils import filter_values, for_each_value
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue
-from cds_dojson.marc21.fields.utils import clean_val
+from cds_dojson.marc21.fields.utils import clean_val, out_strip
 from cds_dojson.marc21.models.books.serial import model
 
 
@@ -32,7 +32,7 @@ def recid(self, key, value):
 
 @model.over('title', '^490__')
 @for_each_value
-@filter_values
+@out_strip
 def title(self, key, value):
     """Translates book series title."""
     _identifiers = self.get('identifiers', [])
@@ -41,4 +41,4 @@ def title(self, key, value):
         _identifiers.append({'scheme': 'ISSN', 'value': issn})
         self['identifiers'] = _identifiers
     self['mode_of_issuance'] = 'SERIAL'
-    return {'title': clean_val('a', value, str, req=True)}
+    return clean_val('a', value, str, req=True)

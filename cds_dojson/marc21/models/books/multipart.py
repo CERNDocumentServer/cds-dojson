@@ -29,7 +29,7 @@ class CDSMultipart(CDSOverdoBookBase):
 
     __query__ = '(690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
                 '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
-                '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED)'\
+                '697C_:LEGSERLIB -980__:DELETED -980__:MIGRATED)'\
                 'AND 246__:/[a-zA-Z0-9]+/ '
 
     __schema__ = 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json'
@@ -67,6 +67,7 @@ class CDSMultipart(CDSOverdoBookBase):
         '082__a',
         '084__2',
         '084__a',
+        '084__c',
         '088__9',
         '088__a',
         '100__a',

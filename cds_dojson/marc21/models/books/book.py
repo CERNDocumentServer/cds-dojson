@@ -29,7 +29,9 @@ class CDSBook(CDSOverdoBookBase):
 
     __query__ = '690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
                 '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
-                '697C_:LEGSERLIB OR 697C_:"ENGLISH BOOK CLUB" -980__:DELETED'
+                '(-980:STANDARD 980:BOOK) OR ' \
+                '697C_:LEGSERLIB ' \
+                '-980__:DELETED -980__:MIGRATED -980:__STANDARD' \
 
     __schema__ = 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json'
 

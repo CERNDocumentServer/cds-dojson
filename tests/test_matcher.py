@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
-
+import pytest
 from dojson.contrib import marc21 as default
 
 from cds_dojson.marc21.models.books import book, standard, serial, multipart
@@ -70,7 +70,10 @@ def test_marc21_matcher_books():
 
     assert book.model == matcher(book_blob1, 'cds_dojson.marc21.models')
     assert book.model == matcher(book_blob2, 'cds_dojson.marc21.models')
-    assert book.model == matcher(book_blob3, 'cds_dojson.marc21.models')
+
+    with pytest.raises(AssertionError):
+        # English book club should not be matched
+        assert book.model == matcher(book_blob3, 'cds_dojson.marc21.models')
     assert standard.model == matcher(standard_blob1,
                                      'cds_dojson.marc21.models')
     assert serial.model == matcher(serial_blob1,

@@ -161,10 +161,10 @@ def test_subject_classification(app):
             </datafield>
             """, {
                 'keywords': [
-                    {'name': '13.75.Jz', 'source': 'PACS'},
-                    {'name': '13.60.Rj', 'source': 'PACS'},
-                    {'name': '14.20.Jn', 'source': 'PACS'},
-                    {'name': '25.80.Nv', 'source': 'PACS'},
+                    {'value': '13.75.Jz', 'source': 'PACS'},
+                    {'value': '13.60.Rj', 'source': 'PACS'},
+                    {'value': '14.20.Jn', 'source': 'PACS'},
+                    {'value': '25.80.Nv', 'source': 'PACS'},
                 ]
             }
         )
@@ -1626,7 +1626,7 @@ def test_imprint(app):
                 <subfield code="g">2015</subfield>
             </datafield>
             """, {
-                'publication_year': 2013,
+                'publication_year': "2013",
                 'imprint': {
                     'place': 'Sydney',
                     'publisher': 'Allen & Unwin',
@@ -1681,7 +1681,7 @@ def test_number_of_pages(app):
                 <subfield code="a">373 p</subfield>
             </datafield>
             """, {
-                'number_of_pages': 373,
+                'number_of_pages': "373",
             })
         check_transformation(
             """
@@ -1689,7 +1689,7 @@ def test_number_of_pages(app):
                 <subfield code="a">480 p. ; 1 CD-ROM suppl</subfield>
             </datafield>
             """, {
-                'number_of_pages': 480,
+                'number_of_pages': "480",
                 'physical_copy_description': '1 CD-ROM'
             })
         check_transformation(
@@ -1698,7 +1698,7 @@ def test_number_of_pages(app):
                 <subfield code="a">42 p. ; 2 CD-ROM ; 1 DVD, 1 vhs</subfield>
             </datafield>
             """, {
-                'number_of_pages': 42,
+                'number_of_pages': "42",
                 'physical_copy_description': '2 CD-ROM, 1 DVD, 1 VHS'
             })
         check_transformation(
@@ -2209,10 +2209,7 @@ def test_note(app):
             </datafield>
             """,
             {
-                'note':
-                    {
-                        'value': """Translated from ... / No CD-ROM"""
-                    },
+                'note': """Translated from ... / No CD-ROM"""
             }
         )
         check_transformation(
@@ -2224,11 +2221,7 @@ def test_note(app):
                 </subfield>
             </datafield>
             """, {
-                'note':
-                    {
-                        'value': """Comments: Book, 380 p.,""",
-                        'source': 'arXiv',
-                    },
+                'note': """Comments: Book, 380 p.,"""
 
             }
         )
@@ -2504,7 +2497,7 @@ def test_541(app):
                         {'value': "practice and application",
                          'type': 'SUBTITLE'}
                     ],
-                    'recid': 2654497,
+                    'legacy_recid': 2654497,
                     'isbns': [
                         {
                             'medium': "print version, hardback",
@@ -2571,7 +2564,7 @@ def test_keywords(app):
             """,
             {
                 'keywords': [
-                    {'name': 'Keyword Name 1', 'source': 'PACS'},
+                    {'value': 'Keyword Name 1', 'source': 'PACS'},
                 ],
             }
         )

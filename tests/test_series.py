@@ -56,9 +56,9 @@ def test_serial(app):
             """,
             {
                 'title':
-                    [{
-                        'title': 'Esl and applied linguistics professional'
-                    }],
+                    [
+                        'Esl and applied linguistics professional'
+                    ],
                 'mode_of_issuance': 'SERIAL',
                 '_migration': {'record_type': 'serial', 'children': []}
             },
@@ -74,10 +74,10 @@ def test_serial(app):
             """,
             {
                 'title':
-                    [{
-                        'title': 'Springerbriefs in history'
-                                 ' of science and technology'
-                    }],
+                    [
+                        'Springerbriefs in history'
+                        ' of science and technology'
+                    ],
                 'mode_of_issuance': 'SERIAL',
                 'identifiers': [{'scheme': 'ISSN', 'value': '2211-4564'}],
                 '_migration': {'record_type': 'serial', 'children': []}
@@ -94,10 +94,10 @@ def test_serial(app):
             """,
             {
                 'title':
-                    [{
-                        'title': 'Springerbriefs in history'
-                                 ' of science and technology'
-                    }],
+                    [
+                        'Springerbriefs in history'
+                        ' of science and technology'
+                    ],
                 'mode_of_issuance': 'SERIAL',
                 'identifiers': [{'scheme': 'ISSN', 'value': '2211-4564'}],
                 '_migration': {'record_type': 'serial', 'children': []}
@@ -114,10 +114,10 @@ def test_serial(app):
                 """,
                 {
                     'title':
-                        [{
-                            'title': 'Springerbriefs in history'
-                                     ' of science and technology'
-                        }],
+                        [
+                            'Springerbriefs in history'
+                            ' of science and technology'
+                        ],
                     '_migration': {'record_type': 'serial', 'children': []}
                 },
                 serial_model
@@ -147,9 +147,13 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': {'title': 'La fisica di Amaldi',
-                          'subtitle': 'idee ed esperimenti : con CD-ROM'
-                          },
+                'title': 'La fisica di Amaldi',
+                'alternative_titles': [
+                    {
+                        'value': 'idee ed esperimenti : con CD-ROM',
+                        'type': 'SUBTITLE'
+                    }
+                ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '2',
                 '_migration': {'record_type': 'multipart', 'volumes': [
@@ -178,9 +182,13 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': {'title': 'La fisica di Amaldi',
-                          'subtitle': 'idee ed esperimenti : con CD-ROM'
-                          },
+                'title': 'La fisica di Amaldi',
+                'alternative_titles': [
+                    {
+                        'value': 'idee ed esperimenti : con CD-ROM',
+                        'type': 'SUBTITLE'
+                    }
+                ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '2',
                 '_migration': {'record_type': 'multipart', 'volumes': [
@@ -207,9 +215,13 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': {'title': 'La fisica di Amaldi',
-                          'subtitle': 'idee ed esperimenti : con CD-ROM'
-                          },
+                'title': 'La fisica di Amaldi',
+                'alternative_titles': [
+                    {
+                        'value': 'idee ed esperimenti : con CD-ROM',
+                        'type': 'SUBTITLE'
+                    }
+                ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 '_migration': {'record_type': 'multipart', 'volumes': [
                     {'title': 'Termologia, onde, relatività',
@@ -236,9 +248,13 @@ def test_monograph(app):
 
             """,
             {
-                'title': {'title': 'La fisica di Amaldi',
-                          'subtitle': 'idee ed esperimenti : con CD-ROM'
-                          },
+                'title': 'La fisica di Amaldi',
+                'alternative_titles': [
+                    {
+                        'value': 'idee ed esperimenti : con CD-ROM',
+                        'type': 'SUBTITLE'
+                    }
+                ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 '_migration': {'record_type': 'multipart', 'volumes': [
                     {'title': 'Termologia, onde, relatività',
@@ -265,9 +281,11 @@ def test_monograph(app):
                 </datafield>
                 """,
                 {
-                    'title': {'title': 'La fisica di Amaldi',
-                              'subtitle': 'idee ed esperimenti : con CD-ROM'
-                              },
+                    'title': 'La fisica di Amaldi',
+                    'alternative_titles': [
+                        {'value': 'idee ed esperimenti : con CD-ROM',
+                         'type': 'SUBTITLE'}
+                    ],
                     'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                     'number_of_volumes': '2',
                     '_migration': {'record_type': 'multipart', 'volumes': [
@@ -290,9 +308,11 @@ def test_monograph(app):
                 </datafield>
                 """,
                 {
-                    'title': {'title': 'La fisica di Amaldi',
-                              'subtitle': 'idee ed esperimenti : con CD-ROM'
-                              },
+                    'title': 'La fisica di Amaldi',
+                    'alternative_titles': [
+                        {'value': 'idee ed esperimenti : con CD-ROM',
+                         'type': 'SUBTITLE'}
+                    ],
                     'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                     'number_of_volumes': '2',
                     '_migration': {'record_type': 'multipart', 'volumes': []}
@@ -410,7 +430,7 @@ def test_monograph_migration(app):
                 ],
                     'record_type': 'multipart',
                 },
-                "title": {'title': 'Wissenschaftliche Abhandlungen'},
+                'title': 'Wissenschaftliche Abhandlungen',
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '3',
                 'identifiers': [{'scheme': 'ISBN', 'value': '9781108052825'}],

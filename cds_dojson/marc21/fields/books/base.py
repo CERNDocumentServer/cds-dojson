@@ -25,6 +25,7 @@ import re
 
 import pycountry
 from dateutil import parser
+from dateutil.parser import ParserError
 from dojson.errors import IgnoreKey
 from dojson.utils import filter_values, flatten, for_each_value, force_list
 
@@ -433,7 +434,7 @@ def alternative_identifiers(self, key, value):
         if field_type and field_type.lower() == 'doi':
             # if 0247__2 == doi it is a DOI identifier
             self['identifiers'] = dois(self, key, value)
-            raise IgnoreKey('external_system_identifiers')
+            raise IgnoreKey('alternative_identifiers')
         elif field_type and field_type.lower() == 'asin':
             indentifier_entry.update({'value': sub_a,
                                       'scheme': 'ASIN'})
@@ -616,6 +617,7 @@ def languages(self, key, value):
 @out_strip
 def subject_classification(self, key, value):
     """Translates subject classification field."""
+    prev_subjects = self.get('subjects', [])
     _subject_classification = {'value': clean_val('a', value, str, req=True)}
     if key == '080__':
         _subject_classification.update({'scheme': 'UDC'})
@@ -630,7 +632,10 @@ def subject_classification(self, key, value):
             _subject_classification.update({'scheme': 'ICS'})
     elif key.startswith('050'):
         _subject_classification.update({'scheme': 'LoC'})
-    return _subject_classification
+    if _subject_classification not in prev_subjects:
+        return _subject_classification
+    else:
+        raise IgnoreKey('subjects')
 
 
 @model.over('keywords', '(^084__)|(^6531_)')
@@ -644,14 +649,14 @@ def keywords(self, key, value):
         sub_2 = clean_val('2', value, str)
         if sub_2 and sub_2 == 'PACS':
             _keywords.append({
-                'name': clean_val('a', value, str, req=True),
+                'value': clean_val('a', value, str, req=True),
                 'source': 'PACS',
             })
         else:
             raise IgnoreKey('keywords')
     elif key == '6531_':
         _keywords.append({
-            'name': clean_val('a', value, str),
+            'value': clean_val('a', value, str),
             'source': value.get('9') or value.get('g'),
             # Easier to solve here
         })
@@ -737,8 +742,11 @@ def imprint(self, key, value):
     reprint = clean_val('g', value, str)
     if reprint:
         reprint = reprint.lower().replace('repr.', '').strip()
-    date = parser.parse(clean_val('c', value, str, req=True))
-    self['publication_year'] = date.date().year
+    try:
+        date = parser.parse(clean_val('c', value, str, req=True))
+    except ParserError:
+        raise UnexpectedValue(subfield='c')
+    self['publication_year'] = str(date.date().year)
     return {
         'date': clean_val('c', value, str, req=True),
         'place': clean_val('a', value, str),
@@ -768,22 +776,18 @@ def book_series(self, key, value):
 
 
 @model.over('note', '^500__')
-@filter_values
+@out_strip
 def note(self, key, value):
     """Translates public notes."""
     # merge all found notes
-    _note = self.get('note', {})
-    _value = _note.get('value', '')
-    if _value:
-        _value = \
-            "{0} / {1}".format(_value, clean_val('a', value, str, req=True))
+    _note = self.get('note', "")
+    if _note:
+        _note = \
+            "{0} / {1}".format(_note, clean_val('a', value, str, req=True))
     else:
-        _value = clean_val('a', value, str, req=True)
+        _note = clean_val('a', value, str, req=True)
 
-    return {
-        'value': _value,
-        'source': clean_val('9', value, str)
-    }
+    return _note
 
 
 @model.over('alternative_abstracts', '^520__')

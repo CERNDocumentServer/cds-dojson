@@ -93,13 +93,16 @@ def isbns(self, key, value):
 
 
 @model.over('title', '^245__')
-@filter_values
+@out_strip
 def title(self, key, value):
     """Translates book series title."""
     # assume that is goes by order of fields and check 245 first
-    return {'title': clean_val('a', value, str),
-            'subtitle': clean_val('b', value, str),
-            }
+    if 'b' in value:
+        _alternative_titles = self.get('alternative_titles', [])
+        _alternative_titles.append({'type': 'SUBTITLE',
+                                    'value': clean_val('b', value, str)})
+        self['alternative_titles'] = _alternative_titles
+    return clean_val('a', value, str)
 
 
 @model.over('_migration', '^246__')

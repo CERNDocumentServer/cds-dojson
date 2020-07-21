@@ -26,11 +26,11 @@ from dojson.utils import GroupableOrderedDict
 from ....overdo import OverdoJSONSchema
 from ..base import model as cds_base
 
-
 COMMON_IGNORE_FIELDS = {
     '003',
     '005',
     '020__q',
+    '020__c',
     '0248_a',
     '0248_p',
     '041__h',  # 206 cds-dojson
@@ -41,8 +41,10 @@ COMMON_IGNORE_FIELDS = {
     '082042',
     '0820_2',
     '082__2',
+    '100__9',
     '111__d',
     '111__f',
+    '246__i',
     '269__a',  # preprint info
     '269__b',  # preprint info
     '269__c',  # preprint date
@@ -57,10 +59,12 @@ COMMON_IGNORE_FIELDS = {
     '502__c',  # thesis_info/institutions
     '502__d',  # thesis_info/date (publication)
     '5208_a',  # 206 cds-dojson
+    '520__9',
     '536__a',  # founding info, dropped
     '536__c',
     '536__f',
     '536__r',
+    '595__z',
     '650172',
     '65017a',
     '650272',
@@ -68,15 +72,19 @@ COMMON_IGNORE_FIELDS = {
     '690__c',  # 206 cds-dojson
     '694__9',
     '694__a',
+    '700__9',
     '773__r',  # publication_info/parent_report_number
     '773__z',  # publication_info/parent_isbn
+    '775__c',  # related edition's year (it will be resolved)
     '852__c',
     '852__h',
+    '852__p',
     '900__s',  # 206 cds-dojson
     '900__u',  # 206 cds-dojson
     '900__y',  # 206 cds-dojson
     '901__a',  # record affiliation
     '901__u',
+    '916__a',
     '916__d',
     '916__e',
     '916__y',
@@ -90,6 +98,8 @@ COMMON_IGNORE_FIELDS = {
     '963__a',
     '964__a',
     '970__a',
+    '970__d',
+    '980__c',
     '981__a',
 }
 

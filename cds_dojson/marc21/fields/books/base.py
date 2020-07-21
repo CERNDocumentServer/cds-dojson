@@ -31,6 +31,7 @@ from dojson.utils import filter_values, flatten, for_each_value, force_list
 
 from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
     UnexpectedValue
+from cds_dojson.marc21.fields.books.utils import extract_volume_number
 from cds_dojson.marc21.fields.books.values_mapping import ACQUISITION_METHOD, \
     ARXIV_CATEGORIES, COLLECTION, DOCUMENT_TYPE, EXTERNAL_SYSTEM_IDENTIFIERS, \
     EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE, MATERIALS, MEDIUM_TYPES, \
@@ -39,7 +40,6 @@ from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
     build_contributor_books, clean_email, clean_pages_range, clean_val, \
     filter_list_values, get_week_start, out_strip, related_url, \
     replace_in_result
-from cds_dojson.marc21.fields.books.utils import extract_volume_number
 from cds_dojson.marc21.models.books.base import model
 
 from .utils import extract_parts, is_excluded
@@ -200,8 +200,8 @@ def alt_authors(self, key, value):
     return _authors
 
 
-@model.over('corporate_authors', '(^110)|(^710_[a_]+)')
-@out_strip
+@model.over('authors', '(^110)|(^710_[a_]+)')
+@filter_list_values
 def corporate_authors(self, key, value):
     """Translates the corporate authors field."""
     _corporate_authors = self.get('authors', [])
@@ -212,28 +212,28 @@ def corporate_authors(self, key, value):
                 _corporate_authors.append({'full_name': clean_val('a', v, str),
                                            'type': 'ORGANISATION'})
             else:
-                self['collaborations'] = collaborations(self, key, value)
+                self['authors'] = collaborations(self, key, value)
                 raise IgnoreKey('corporate_authors')
         else:
             _corporate_authors.append({'full_name': clean_val('a', v, str),
                                        'type': 'ORGANISATION'})
-    self['authors'] = _corporate_authors
-    raise IgnoreKey('corporate_authors')
+    return _corporate_authors
 
 
-# TODO waiting for verification
-@model.over('collaborations', '^710__')
-@replace_in_result('Collaboration', '', key='value')
+@model.over('authors', '^710__')
+@replace_in_result('Collaboration', '', key='full_name')
 @filter_list_values
 def collaborations(self, key, value):
     """Translates collaborations."""
-    _collaborations = self.get('collaborations', [])
+    _authors = self.get('authors', [])
     for v in force_list(value):
         if 'g' in v:
-            _collaborations.append({'value': clean_val('g', v, str)})
+            _authors.append({'full_name': clean_val('g', v, str),
+                             'type': 'ORGANISATION'})
         elif '5' in v:
-            _collaborations.append({'value': clean_val('5', v, str)})
-    return _collaborations
+            _authors.append({'full_name': clean_val('5', v, str),
+                             'type': 'ORGANISATION'})
+    return _authors
 
 
 @model.over('publication_info', '(^773__)')
@@ -513,9 +513,8 @@ def report_numbers(self, key, value):
             raise MissingRequiredField(subfield='9 or a or z')
 
         if sub_9 == 'arXiv':
-            # Todo arxiv under verification
-            self['arxiv_eprints'] = arxiv_eprints(self, key, value)
-            raise IgnoreKey('report_numbers')
+            arxiv_eprints(self, key, value)
+            raise IgnoreKey('identifiers')
         else:
             get_value_rn(sub_a, sub_z, sub_9, entry)
         _identifiers.append(entry)
@@ -553,11 +552,17 @@ def barcodes(self, key, value):
     raise IgnoreKey('barcodes')
 
 
-# TODO verify if needed
-@model.over('arxiv_eprints', '(^037__)|(^695__)')
+@model.over('subjects', '(^037__)|(^695__)')
 @filter_list_values
 def arxiv_eprints(self, key, value):
-    """Translates arxiv_eprints fields."""
+    """Translates arxiv_eprints fields.
+
+    output:
+    {
+      'alternative_identifiers': [{'scheme': 'arXiv', 'value': `037__a`}],
+      'subjects': [{'scheme': 'arXiv', 'value': `037__c | 695__a`}]
+    }
+    """
 
     def check_category(field, val):
         category = clean_val(field, val, str)
@@ -567,36 +572,47 @@ def arxiv_eprints(self, key, value):
             raise UnexpectedValue(subfield=field)
 
     if key == '037__':
-        _arxiv_eprints = self.get('arxiv_eprints', [])
+        _alternative_identifiers = self.get('alternative_identifiers', [])
         for v in force_list(value):
             eprint_id = clean_val('a', v, str, req=True)
             duplicated = [
                 elem
-                for i, elem in enumerate(_arxiv_eprints)
-                if elem['value'] == eprint_id
+                for i, elem in enumerate(_alternative_identifiers)
+                if elem['value'] == eprint_id and elem['scheme'] == 'arXiv'
             ]
             category = check_category('c', v)
             if not duplicated:
-                eprint = {'value': eprint_id}
-                if category:
-                    eprint.update({'categories': [category]})
-                _arxiv_eprints.append(eprint)
-            else:
-                duplicated[0]['categories'].append(category)
-        return _arxiv_eprints
+                eprint = {'value': eprint_id, 'scheme': 'arXiv'}
+                _alternative_identifiers.append(eprint)
+                self['alternative_identifiers'] = _alternative_identifiers
+            if category:
+                _subjects = self.get('subjects', [])
+                subject = {'scheme': 'arXiv', 'value': category}
+                _subjects.append(subject) if subject not in _subjects else None
+                self['subjects'] = _subjects
+        raise IgnoreKey('subjects')
 
     if key == '695__':
-        _arxiv_eprints = self.get('arxiv_eprints', [])
+        _alternative_identifiers = self.get('alternative_identifiers', [])
+        has_arxiv_id = False
+        for id_entry in _alternative_identifiers:
+            if id_entry['scheme'] == 'arXiv':
+                has_arxiv_id = True
+                break
         category = check_category('a', value)
-        if not _arxiv_eprints:
-            raise ManualMigrationRequired(message='037__ is missing')
+        if not has_arxiv_id and category:
+            raise ManualMigrationRequired(
+                message='arXiv ID in 037__  missing, '
+                        'but arXiv subject category found')
+
         if clean_val('9', value, str) != 'LANL EDS':
             raise UnexpectedValue(subfield='9')
-        _entry = _arxiv_eprints[0]
-        if category in _entry['categories']:
-            raise IgnoreKey('arxiv_eprints')
-        _entry['categories'].append(category)
-        return _arxiv_eprints
+        _subjects = self.get('subjects', [])
+        entry = {'scheme': 'arXiv', 'value': category}
+        if entry in _subjects:
+            raise IgnoreKey('subjects')
+        _subjects.append(entry)
+        return _subjects
 
 
 @model.over('languages', '^041__')
@@ -796,12 +812,13 @@ def note(self, key, value):
 def alternative_abstracts(self, key, value):
     """Translates abstracts fields."""
     abstract = self.get('abstract', None)
+    _alternative_abstracts = self.get('alternative_abstracts', [])
     if not abstract:
         # takes first abstract as main
         self["abstract"] = clean_val('a', value, str, req=True)
         raise IgnoreKey('alternative_abstracts')
-    return clean_val('a', value, str, req=True)
-    # 'source': clean_val('9', value, str) # TODO until the answer comes
+    new_abstract = clean_val('a', value, str, req=True)
+    return new_abstract if new_abstract not in _alternative_abstracts else None
 
 
 @model.over('licenses', '^540__')

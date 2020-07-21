@@ -744,7 +744,8 @@ def test_collaborations(app):
                 <subfield code="g">ATLAS Collaboration</subfield>
             </datafield>
             """,
-            {'collaborations': [{'value': 'PH-EP'}, {'value': 'ATLAS'}]}
+            {'authors': [{'full_name': 'PH-EP', 'type': 'ORGANISATION'},
+                         {'full_name': 'ATLAS', 'type': 'ORGANISATION'}]}
         )
 
 
@@ -1193,8 +1194,9 @@ def test_report_numbers(app):
                 <subfield code="a">arXiv:1808.02335</subfield>
             </datafield>
             """, {
-                'arxiv_eprints': [{
+                'alternative_identifiers': [{
                     'value': 'arXiv:1808.02335',
+                    'scheme': 'arXiv'
                 }],
             })
         check_transformation(
@@ -1215,9 +1217,13 @@ def test_report_numbers(app):
                 <subfield code="c">hep-ex</subfield>
             </datafield>
             """, {
-                'arxiv_eprints': [{
+                'alternative_identifiers': [{
                     'value': 'arXiv:1808.02335',
-                    'categories': ['hep-ex'],
+                    'scheme': 'arXiv',
+                }],
+                'subjects': [{
+                    'scheme': 'arXiv',
+                    'value': 'hep-ex',
                 }],
             })
         check_transformation(
@@ -1240,10 +1246,22 @@ def test_report_numbers(app):
                 <subfield code="a">hep-ex</subfield>
             </datafield>
             """, {
-                'arxiv_eprints': [{
+                'alternative_identifiers': [{
                     'value': 'arXiv:1808.02335',
-                    'categories': ['hep-ex', 'hep-th', 'math-ph'],
+                    'scheme': 'arXiv',
                 }],
+                'subjects': [{
+                    'scheme': 'arXiv',
+                    'value': 'hep-ex',
+                },
+                    {'scheme': 'arXiv',
+                     'value': 'hep-th',
+                     },
+                    {'scheme': 'arXiv',
+                     'value': 'math-ph',
+                     }
+                ],
+
             })
         check_transformation(
             """
@@ -1455,7 +1473,8 @@ def test_alternative_identifiers(app):
             """, {
                 'identifiers': [
                     {'value': '10.1007/s00269-016-0862-1', 'scheme': 'DOI'},
-                    {'value': '10.1103/PhysRevLett.121.052004', 'scheme': 'DOI'},
+                    {'value': '10.1103/PhysRevLett.121.052004',
+                     'scheme': 'DOI'},
                     {'value': '10.1103/PhysRevLett.121.052004',
                      'scheme': 'DOI',
                      'material': 'publication',
@@ -1508,10 +1527,14 @@ def test_arxiv_eprints(app):
                 <subfield code="c">math-ph</subfield>
             </datafield>
             """, {
-                'arxiv_eprints': [{
-                    'categories': ['math-ph'],
+                'alternative_identifiers': [{
+                    'scheme': 'arXiv',
                     'value': 'arXiv:1209.5665',
                 }],
+                'subjects': [{
+                    'scheme': 'arXiv',
+                    'value': 'math-ph'
+                }]
             })
         check_transformation(
             """
@@ -1526,10 +1549,14 @@ def test_arxiv_eprints(app):
                 <subfield code="c">math.GT</subfield>
             </datafield>
             """, {
-                'arxiv_eprints': [{
-                    'categories': ['math-ph', 'math.GT'],
+                'alternative_identifiers': [{
                     'value': 'arXiv:1209.5665',
+                    'scheme': 'arXiv'
                 }],
+                'subjects': [
+                    {'scheme': 'arXiv', 'value': 'math-ph'},
+                    {'scheme': 'arXiv', 'value': 'math.GT'},
+                ]
             })
         with pytest.raises(UnexpectedValue):
             check_transformation(

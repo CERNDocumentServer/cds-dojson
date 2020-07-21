@@ -21,7 +21,7 @@
 from __future__ import unicode_literals
 
 from ..base import model as cds_base
-from .base import CDSOverdoBookBase, COMMON_IGNORE_FIELDS
+from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase
 from .base import model as books_base
 
 

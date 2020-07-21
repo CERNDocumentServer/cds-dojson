@@ -18,6 +18,6 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
 pydocstyle cds_dojson tests && \
-# isort -rc -c -df && \
+isort --check-only --diff && \
 check-manifest --ignore ".travis-*" && \
 python setup.py test

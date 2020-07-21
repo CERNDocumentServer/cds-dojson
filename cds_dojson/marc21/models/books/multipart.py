@@ -20,21 +20,22 @@
 from __future__ import unicode_literals
 
 from ..base import model as cds_base
+from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase
 from .base import model as books_base
-from .base import CDSOverdoBookBase, COMMON_IGNORE_FIELDS
 
 
 class CDSMultipart(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
     __query__ = '(690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
-                '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
+                '980__:PROCEEDINGS OR ' \
                 '697C_:LEGSERLIB -980__:DELETED -980__:MIGRATED)'\
                 'AND 246__:/[a-zA-Z0-9]+/ '
 
     __schema__ = 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json'
 
     __model_ignore_keys__ = {
+        '020__c',
         '021__a',
         '021__b',
         '022__a',
@@ -73,6 +74,7 @@ class CDSMultipart(CDSOverdoBookBase):
         '100__a',
         '100__e',
         '100__u',
+        '100__9',
         '110__a',
         '111__9',
         '111__a',
@@ -85,6 +87,7 @@ class CDSMultipart(CDSOverdoBookBase):
         '210__a',
         '222__a',
         '242__a',
+        '246__i',
         '250__a',
         '260__a',
         '260__b',
@@ -165,6 +168,7 @@ class CDSMultipart(CDSOverdoBookBase):
         '775__b',
         '775__c',
         '775__w',
+        '852__p'
         '8564_8',
         '8564_s',
         '8564_t',

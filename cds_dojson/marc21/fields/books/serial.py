@@ -51,4 +51,4 @@ def title(self, key, value):
 @for_each_value
 def identifiers(self, key, value):
     """Translates identifiers fields."""
-    multipart_identifiers(self, key, value)
+    return multipart_identifiers(self, key, value)

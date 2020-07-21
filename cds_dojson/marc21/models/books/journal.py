@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2015, 2017 CERN.
+# Copyright (C) 2020 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
-"""Book model."""
+"""Journal model."""
 
 from __future__ import unicode_literals
 
@@ -25,33 +25,48 @@ from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase
 from .base import model as books_base
 
 
-class CDSStandard(CDSOverdoBookBase):
+class CDSJournal(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
-    __query__ = '690C_:STANDARD OR 980__:STANDARD -980__:DELETED -980__:MIGRATED'
+    __query__ = '980__:PERI -980__:DELETED -980__:MIGRATED'
 
-    __schema__ = 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json'
+    __schema__ = 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json'
 
-    __ignore_keys__ = COMMON_IGNORE_FIELDS
+    __model_ignore_keys__ = {
+        '780__i',   # label of relation continues
+        '780__t',   # title of relation continues
+        '785__i',   # label of relation continued by
+        '785__t',   # title of relation continued by
+        '85641y',
+        '933__a',
+        '960__c',
+        '980__a',
+    }
+
+    __ignore_keys__ = COMMON_IGNORE_FIELDS | __model_ignore_keys__
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
-        json = super(CDSStandard, self).do(
+        json = super(CDSJournal, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers)
         json['$schema'] = self.__class__.__schema__
-        json['_migration'] = {
-            'record_type': 'document',
-            'has_serial': False,
-            'is_multipart': False,
-            'has_keywords': False,
-            'has_related': False,
-            'volumes': []
-        }
+        if '_migration' not in json:
+            json['_migration'] = {}
+
+        json['_migration'].setdefault('record_type', 'journal')
+        json['_migration'].setdefault('volumes', [])
+        json['_migration'].setdefault('is_multipart', False)
+        json['_migration'].setdefault('has_related', False)
+        json['_migration'].setdefault('items', [])
+        json['_migration'].setdefault('electronic_items', [])
+        json['_migration'].setdefault('relation_previous', None)
+        json['_migration'].setdefault('relation_next', None)
+
         return json
 
 
-model = CDSStandard(
-    bases=(books_base, cds_base,),
-    entry_point_group='cds_dojson.marc21.book')
+model = CDSJournal(
+    bases=(),
+    entry_point_group='cds_dojson.marc21.series')

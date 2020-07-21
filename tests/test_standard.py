@@ -31,7 +31,7 @@ def check_transformation(marcxml_body, json_body):
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
-        '$schema': 'records/books/book/book-v.0.0.1.json',
+        '$schema': 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json',
         '_migration': {'has_keywords': False,
                        'is_multipart': False,
                        'has_related': False,

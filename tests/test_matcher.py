@@ -19,7 +19,8 @@
 import pytest
 from dojson.contrib import marc21 as default
 
-from cds_dojson.marc21.models.books import book, multipart, serial, standard
+from cds_dojson.marc21.models.books import book, journal, multipart, serial, \
+    standard
 from cds_dojson.marc21.models.videos import project, video
 from cds_dojson.matcher import matcher
 
@@ -66,6 +67,7 @@ def test_marc21_matcher_books():
         '246__': [{'n': '2'}]
     }
     standard_blob1 = {'690C_': [{'a': 'STANDARD'}]}
+    journal_blob = {'980__': [{'a': 'PERI'}]}
     not_match = {'foo': 'bar'}
 
     assert book.model == matcher(book_blob1, 'cds_dojson.marc21.models')
@@ -83,6 +85,8 @@ def test_marc21_matcher_books():
                                       'cds_dojson.marc21.parent_models')
     assert multipart.model == matcher(multipart_blob2,
                                       'cds_dojson.marc21.parent_models')
+    assert journal.model == matcher(journal_blob,
+                                    'cds_dojson.marc21.parent_models')
     # make sure that it won't match if 490 not there
     assert default.model == matcher(serial_blob2,
                                     'cds_dojson.marc21.parent_models'

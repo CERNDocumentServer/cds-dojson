@@ -104,6 +104,7 @@ setup(
         'cds_dojson.marc21.parent_models': [
             'books_serial = cds_dojson.marc21.models.books.serial:model',
             'books_multipart = cds_dojson.marc21.models.books.multipart:model',
+            'journal = cds_dojson.marc21.models.books.journal:model',
         ],
         'cds_dojson.marc21.models': [
             'videos_video = cds_dojson.marc21.models.videos.video:model',
@@ -131,6 +132,7 @@ setup(
         'cds_dojson.marc21.series': [
             'serial = cds_dojson.marc21.fields.books.serial',
             'multipart = cds_dojson.marc21.fields.books.multipart',
+            'journal = cds_dojson.marc21.fields.books.journal',
         ],
         # DoJSON entry points
         'console_scripts': [

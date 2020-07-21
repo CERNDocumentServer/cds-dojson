@@ -19,7 +19,7 @@
 import pytest
 from dojson.contrib import marc21 as default
 
-from cds_dojson.marc21.models.books import book, standard, serial, multipart
+from cds_dojson.marc21.models.books import book, multipart, serial, standard
 from cds_dojson.marc21.models.videos import project, video
 from cds_dojson.matcher import matcher
 

@@ -17,10 +17,12 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Books fields."""
-from dojson.utils import filter_values, for_each_value
+from dojson.utils import for_each_value
 
-from cds_dojson.marc21.fields.books.errors import UnexpectedValue
-from cds_dojson.marc21.fields.utils import clean_val, out_strip
+from cds_dojson.marc21.fields.books.multipart import \
+    isbns as multipart_identifiers
+from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
+    out_strip
 from cds_dojson.marc21.models.books.serial import model
 
 
@@ -42,3 +44,11 @@ def title(self, key, value):
         self['identifiers'] = _identifiers
     self['mode_of_issuance'] = 'SERIAL'
     return clean_val('a', value, str, req=True)
+
+
+@model.over('identifiers', '^020__')
+@filter_list_values
+@for_each_value
+def identifiers(self, key, value):
+    """Translates identifiers fields."""
+    multipart_identifiers(self, key, value)

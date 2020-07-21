@@ -20,7 +20,7 @@
 from __future__ import unicode_literals
 
 from ..base import model as cds_base
-from .base import CDSOverdoBookBase, COMMON_IGNORE_FIELDS
+from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase
 from .base import model as books_base
 
 
@@ -28,7 +28,7 @@ class CDSSerial(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
     __query__ = '(690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
-                '690C_:BOOKSUGGESTION OR 980__:PROCEEDINGS OR 980__:PERI OR ' \
+                '980__:PROCEEDINGS OR ' \
                 '697C_:LEGSERLIB -980__:DELETED -980__:MIGRATED)' \
                 ' AND 490__:/[a-zA-Z0-9]+/'
 
@@ -74,6 +74,7 @@ class CDSSerial(CDSOverdoBookBase):
         '100__a',
         '100__e',
         '100__u',
+        '100__9',
         '110__a',
         '111__9',
         '111__a',
@@ -91,6 +92,7 @@ class CDSSerial(CDSOverdoBookBase):
         '245__b',
         '245__c',
         '246__a',
+        '246__i',
         '246__n',
         '246__p',
         '250__a',
@@ -170,6 +172,7 @@ class CDSSerial(CDSOverdoBookBase):
         '775__b',
         '775__c',
         '775__w',
+        '852__p',
         '8564_8',
         '8564_s',
         '8564_t',

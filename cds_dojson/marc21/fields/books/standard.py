@@ -20,10 +20,9 @@
 from __future__ import unicode_literals
 
 from dojson.errors import IgnoreKey
-from dojson.utils import filter_values, for_each_value
 
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue
-from cds_dojson.marc21.fields.books.utils import is_excluded, extract_parts
+from cds_dojson.marc21.fields.books.utils import extract_parts, is_excluded
 from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
     out_strip
 from cds_dojson.marc21.models.books.standard import model

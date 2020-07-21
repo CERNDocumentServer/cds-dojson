@@ -23,10 +23,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 import pytest
 from dojson.errors import MissingRule
 
-from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
-    MissingRequiredField
-from cds_dojson.marc21.models.books.serial import model as serial_model
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
+    UnexpectedValue
 from cds_dojson.marc21.models.books.multipart import model as multipart_model
+from cds_dojson.marc21.models.books.serial import model as serial_model
 from cds_dojson.marc21.utils import create_record
 
 marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""

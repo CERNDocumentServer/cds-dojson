@@ -21,15 +21,15 @@ from __future__ import absolute_import
 
 import json
 import os
-import pytest
 
+import pytest
 from dojson.utils import filter_values
 
-from cds_dojson.utils import MementoDict, convert_date_to_iso_8601, \
-    for_each_squash, not_accessed_keys, yaml2json
 from cds_dojson.marc21.fields.books.errors import MissingRequiredField
 from cds_dojson.marc21.fields.books.utils import extract_volume_info, \
     extract_volume_number
+from cds_dojson.utils import MementoDict, convert_date_to_iso_8601, \
+    for_each_squash, not_accessed_keys, yaml2json
 
 
 def test_for_each_squash():

@@ -20,15 +20,15 @@
 import re
 
 from dojson.errors import IgnoreKey
-from dojson.utils import for_each_value, filter_values, force_list
+from dojson.utils import for_each_value, force_list
 
 from cds_dojson.marc21.fields.books.base import book_series as base_book_series
-from cds_dojson.marc21.fields.books.errors import UnexpectedValue, \
-    ManualMigrationRequired, MissingRequiredField
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
+    UnexpectedValue
 from cds_dojson.marc21.fields.books.utils import extract_parts, \
-    extract_volume_number, extract_volume_info
-from cds_dojson.marc21.fields.utils import clean_val, out_strip, \
-    filter_list_values
+    extract_volume_info, extract_volume_number
+from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
+    out_strip
 from cds_dojson.marc21.models.books.multipart import model
 
 

@@ -47,7 +47,6 @@ def title_translations(self, key, value):
             'language': 'fr',
         })
     return _alternative_titles
-    # 'source': clean_val('i', value, str),
 
 
 @model.over('number_of_pages', '^300__')  # item

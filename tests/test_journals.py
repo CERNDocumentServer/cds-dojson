@@ -192,10 +192,9 @@ def test_migration(app):
                     'record_type': 'journal',
                     'volumes': [],
                     'electronic_items': [
-                        {'start_volume': 'v 1 (1992) -',
-                         'end_volume': 'v 1 (1992) -',
-                         'year': 'v 1 (1992) -'
-                         }
+                        {
+                            'subscription': 'v 1 (1992) -'
+                        }
                     ],
                     'items': [],
                     'relation_next': None,
@@ -219,13 +218,12 @@ def test_migration(app):
                     'record_type': 'journal',
                     'volumes': [],
                     'electronic_items': [
-                        {'start_volume': 'v 1 (1992) -',
-                         'end_volume': 'v 1 (1992) -',
-                         'year': 'v 1 (1992) -',
-                         'url': 'https://www.radioeng.cz/search.htm',
-                         'access_type': '6',
-                         'note': 'tada',
-                         }
+                        {
+                            'subscription': 'v 1 (1992) -',
+                            'url': 'https://www.radioeng.cz/search.htm',
+                            'access_type': '6',
+                            'note': 'tada',
+                        }
                     ],
                     'items': [],
                     'relation_next': None,
@@ -247,11 +245,9 @@ def test_migration(app):
                     'record_type': 'journal',
                     'volumes': [],
                     'items': [
-                        {'start_volume': 'v 1 (1992) -',
-                         'end_volume': 'v 1 (1992) -',
-                         'year': 'v 1 (1992) -',
-                         'location': 'C'
-                         }
+                        {
+                            'subscription': 'v 1 (1992) -',
+                        }
                     ],
                     'electronic_items': [],
                     'relation_next': None,

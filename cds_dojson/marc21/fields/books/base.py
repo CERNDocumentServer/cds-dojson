@@ -256,16 +256,6 @@ def publication_info(self, key, value):
             'journal_volume': clean_val('v', v, str),
             'year': clean_val('y', v, int),
         })
-        if 'w' in value:
-            temp_info.update(
-                {'identifiers': [{
-                    "scheme": "INSPIRE_CNUM",
-                    "value":
-                        clean_val('w', v, str,
-                                  regex_format=r'^C\d\d-\d\d-\d\d(\.\d+)?$'),
-                }
-                ]}
-            )
 
         text = '{0} {1}'.format(
             clean_val('o', v, str) or '',
@@ -290,8 +280,6 @@ def publication_additional(self, key, value):
             temp_info.update(pages)
         rel_recid = clean_val('b', v, str)
         if rel_recid:
-            # temp_info.update(
-            #     {'parent_record': {'$ref': related_url(rel_recid)}})
             _migration["journal_record_legacy_recid"] = rel_recid
             _migration["has_journal"] = True
             # assume that if we have a parent journal
@@ -326,13 +314,15 @@ def related_records(self, key, value):
     """
     _migration = self.get('_migration', {})
     _related = _migration.get('related', [])
+    relation_type = 'other'
     try:
-        if key == '775__':
-            clean_val('b', value, str, manual=True)
-            clean_val('c', value, str, manual=True)
-        if key == '787__':
+        if key == '775__' and 'b' in value:
+            relation_type = clean_val('b', value, str)
+        if key == '787__' and 'i' in value:
             clean_val('i', value, str, manual=True)
-        _related.append(clean_val('w', value, str, req=True))
+        _related.append({'related_recid': clean_val('w', value, str, req=True),
+                         'relation_type': relation_type
+                         })
         _migration.update({'related': _related, 'has_related': True})
         return _migration
     except ManualMigrationRequired as e:
@@ -552,7 +542,7 @@ def barcodes(self, key, value):
     raise IgnoreKey('barcodes')
 
 
-@model.over('subjects', '(^037__)|(^695__)')
+@model.over('subjects', '(^037__)')
 @filter_list_values
 def arxiv_eprints(self, key, value):
     """Translates arxiv_eprints fields.
@@ -560,7 +550,6 @@ def arxiv_eprints(self, key, value):
     output:
     {
       'alternative_identifiers': [{'scheme': 'arXiv', 'value': `037__a`}],
-      'subjects': [{'scheme': 'arXiv', 'value': `037__c | 695__a`}]
     }
     """
 
@@ -592,28 +581,6 @@ def arxiv_eprints(self, key, value):
                 self['subjects'] = _subjects
         raise IgnoreKey('subjects')
 
-    if key == '695__':
-        _alternative_identifiers = self.get('alternative_identifiers', [])
-        has_arxiv_id = False
-        for id_entry in _alternative_identifiers:
-            if id_entry['scheme'] == 'arXiv':
-                has_arxiv_id = True
-                break
-        category = check_category('a', value)
-        if not has_arxiv_id and category:
-            raise ManualMigrationRequired(
-                message='arXiv ID in 037__  missing, '
-                        'but arXiv subject category found')
-
-        if clean_val('9', value, str) != 'LANL EDS':
-            raise UnexpectedValue(subfield='9')
-        _subjects = self.get('subjects', [])
-        entry = {'scheme': 'arXiv', 'value': category}
-        if entry in _subjects:
-            raise IgnoreKey('subjects')
-        _subjects.append(entry)
-        return _subjects
-
 
 @model.over('languages', '^041__')
 @for_each_value
@@ -643,7 +610,7 @@ def subject_classification(self, key, value):
         sub_2 = clean_val('2', value, str)
         if sub_2 and sub_2.upper() in SUBJECT_CLASSIFICATION_EXCEPTIONS:
             keywords(self, key, value)
-            raise IgnoreKey('subject_classification')
+            raise IgnoreKey('subjects')
         else:
             _subject_classification.update({'scheme': 'ICS'})
     elif key.startswith('050'):
@@ -654,29 +621,15 @@ def subject_classification(self, key, value):
         raise IgnoreKey('subjects')
 
 
-@model.over('keywords', '(^084__)|(^6531_)')
+@model.over('keywords', '(^6531_)')
 @for_each_value
-@filter_list_values
+@filter_values
 def keywords(self, key, value):
     """Keywords."""
-    _keywords = self.get('keywords', [])
-    # for v in force_list(value):
-    if key == '084__':
-        sub_2 = clean_val('2', value, str)
-        if sub_2 and sub_2 == 'PACS':
-            _keywords.append({
-                'value': clean_val('a', value, str, req=True),
-                'source': 'PACS',
-            })
-        else:
-            raise IgnoreKey('keywords')
-    elif key == '6531_':
-        _keywords.append({
-            'value': clean_val('a', value, str),
-            'source': value.get('9') or value.get('g'),
-            # Easier to solve here
-        })
-    self['keywords'] = _keywords
+    return {
+        'value': clean_val('a', value, str),
+        'source': value.get('9') or value.get('g'),
+    }
 
 
 @model.over('conference_info', '(^111__)|(^711__)')

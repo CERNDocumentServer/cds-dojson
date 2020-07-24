@@ -138,7 +138,9 @@ def replace_in_result(phrase, replace_with, key=None):
                     return [k.replace(phrase, replace_with).strip()
                             for k in res]
                 else:
-                    return [dict((k, v.replace(phrase, replace_with).strip())
+                    return [dict((k, v.replace(phrase, replace_with).strip()
+                                  if k == key else v
+                                  )
                                  for k, v in elem.items()) for elem in res]
             return res
 

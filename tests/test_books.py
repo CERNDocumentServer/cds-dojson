@@ -160,12 +160,6 @@ def test_subject_classification(app):
                 <subfield code="a">25.80.Nv</subfield>
             </datafield>
             """, {
-                'keywords': [
-                    {'value': '13.75.Jz', 'source': 'PACS'},
-                    {'value': '13.60.Rj', 'source': 'PACS'},
-                    {'value': '14.20.Jn', 'source': 'PACS'},
-                    {'value': '25.80.Nv', 'source': 'PACS'},
-                ]
             }
         )
         check_transformation(
@@ -775,8 +769,6 @@ def test_publication_info(app):
                     'journal_issue': '10',
                     'journal_volume': '42',
                     'material': 'BOOK',
-                    'identifiers': [{'scheme': 'INSPIRE_CNUM',
-                                     'value': 'C19-01-08.1'}]
                 }],
             }
         )
@@ -927,31 +919,33 @@ def test_publication_info(app):
 def test_related_record(app):
     """Test related record."""
     with app.app_context():
-        with pytest.raises(ManualMigrationRequired):
-            check_transformation(
-                """
-                <datafield tag="775" ind1=" " ind2=" ">
-                    <subfield code="b">Test text</subfield>
-                    <subfield code="c">Random text</subfield>
-                    <subfield code="w">748392</subfield>
-                </datafield>
-                """,
-                {
-                    '_migration': {
-                        'serials': [],
-                        'has_tags': False,
-                        'is_multipart': False,
-                        'has_related': True,
-                        'has_serial': False,
-                        'has_journal': False,
-                        'journal_record_legacy_recid': '',
-                        'record_type': 'document',
-                        'volumes': [],
-                        'tags': [],
-                        'related': ['748392'],
-                    },
-                }
-            )
+        check_transformation(
+            """
+            <datafield tag="775" ind1=" " ind2=" ">
+                <subfield code="b">Test text</subfield>
+                <subfield code="c">Random text</subfield>
+                <subfield code="w">748392</subfield>
+            </datafield>
+            """,
+            {
+                '_migration': {
+                    'serials': [],
+                    'has_tags': False,
+                    'is_multipart': False,
+                    'has_related': True,
+                    'has_serial': False,
+                    'has_journal': False,
+                    'journal_record_legacy_recid': '',
+                    'record_type': 'document',
+                    'volumes': [],
+                    'tags': [],
+                    'related': [{
+                        'related_recid': '748392',
+                        "relation_type": "Test text"
+                    }],
+                },
+            }
+        )
         with pytest.raises(ManualMigrationRequired):
             check_transformation(
                 """
@@ -972,7 +966,8 @@ def test_related_record(app):
                         'record_type': 'document',
                         'volumes': [],
                         'tags': [],
-                        'related': ['7483924'],
+                        'related': [{'related_recid': '7483924',
+                                     'relation_type': "other"}],
                     },
                 }
             )
@@ -997,7 +992,9 @@ def test_related_record(app):
                     'record_type': 'document',
                     'volumes': [],
                     'tags': [],
-                    'related': ['7483924', '748'],
+                    'related': [
+                        {'related_recid': '7483924', 'relation_type': 'other'},
+                        {'related_recid': '748', 'relation_type': 'other'}],
                 },
             }
         )
@@ -1231,37 +1228,12 @@ def test_report_numbers(app):
             <datafield tag="037" ind1=" " ind2=" ">
                 <subfield code="9">arXiv</subfield>
                 <subfield code="a">arXiv:1808.02335</subfield>
-                <subfield code="c">hep-ex</subfield>
-            </datafield>
-            <datafield tag="695" ind1=" " ind2=" ">
-                <subfield code="9">LANL EDS</subfield>
-                <subfield code="a">hep-th</subfield>
-            </datafield>
-            <datafield tag="695" ind1=" " ind2=" ">
-                <subfield code="9">LANL EDS</subfield>
-                <subfield code="a">math-ph</subfield>
-            </datafield>
-            <datafield tag="695" ind1=" " ind2=" ">
-                <subfield code="9">LANL EDS</subfield>
-                <subfield code="a">hep-ex</subfield>
             </datafield>
             """, {
                 'alternative_identifiers': [{
                     'value': 'arXiv:1808.02335',
                     'scheme': 'arXiv',
                 }],
-                'subjects': [{
-                    'scheme': 'arXiv',
-                    'value': 'hep-ex',
-                },
-                    {'scheme': 'arXiv',
-                     'value': 'hep-th',
-                     },
-                    {'scheme': 'arXiv',
-                     'value': 'math-ph',
-                     }
-                ],
-
             })
         check_transformation(
             """
@@ -1318,26 +1290,12 @@ def test_report_numbers(app):
                         'scheme': 'REPORT_NUMBER'
                     }],
                 })
-        with pytest.raises(ManualMigrationRequired):
+        with pytest.raises(MissingRule):
             check_transformation(
                 """
                 <datafield tag="695" ind1=" " ind2=" ">
                     <subfield code="9">LANL EDS</subfield>
                     <subfield code="a">math-ph</subfield>
-                </datafield>
-                """, {
-                })
-        with pytest.raises(UnexpectedValue):
-            check_transformation(
-                """
-                <datafield tag="037" ind1=" " ind2=" ">
-                    <subfield code="9">arXiv</subfield>
-                    <subfield code="a">arXiv:1808.02335</subfield>
-                    <subfield code="c">hep-ex</subfield>
-                </datafield>
-                <datafield tag="695" ind1=" " ind2=" ">
-                    <subfield code="9">Something else thanLANL EDS</subfield>
-                    <subfield code="a">hep-th</subfield>
                 </datafield>
                 """, {
                 })

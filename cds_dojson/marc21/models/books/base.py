@@ -31,16 +31,20 @@ COMMON_IGNORE_FIELDS = {
     '005',
     '020__q',
     '020__c',
+    '020__C',
     '0248_a',
     '0248_p',
     '041__h',  # 206 cds-dojson
     '035__z',
+    '037__c',  # arXiv subject category
     '050__b',
     '050_4b',
     '082002',
     '082042',
     '0820_2',
-    '082__2',
+    '082__2',  # INSPIRE keywords
+    '084__a',  # INSPIRE keywords
+    '084__2',
     '100__9',
     '111__d',
     '111__f',
@@ -72,8 +76,12 @@ COMMON_IGNORE_FIELDS = {
     '690__c',  # 206 cds-dojson
     '694__9',
     '694__a',
+    '695__2',
+    '695__a',
     '700__9',
+    '710__5',
     '773__r',  # publication_info/parent_report_number
+    '773__w',  # inspire cnum (duplicated field with 035__9)
     '773__z',  # publication_info/parent_isbn
     '775__c',  # related edition's year (it will be resolved)
     '852__c',
@@ -94,7 +102,7 @@ COMMON_IGNORE_FIELDS = {
     '961__l',
     '961__x',
     '962__b',
-    '962__n',
+    '962__n',  # books connected by conference
     '963__a',
     '964__a',
     '970__a',

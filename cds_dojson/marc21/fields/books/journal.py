@@ -24,8 +24,6 @@ from dojson.utils import for_each_value
 
 from cds_dojson.marc21.fields.books.book import title as base_title
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue
-from cds_dojson.marc21.fields.books.multipart import \
-    number_of_volumes as multipart_number_of_volumes
 from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
     out_strip
 from cds_dojson.marc21.models.books.journal import model
@@ -127,18 +125,11 @@ def migration(self, key, value):
     _relation_next = _migration.get('relation_next')
     if key == '362__':
         _electronic_items.append(
-            # TODO fix - the values cant come from the same subfield
-            {'start_volume': clean_val('a', value, str),
-             'end_volume': clean_val('a', value, str),
-             'year': clean_val('a', value, str),
-             }
+            {'subscription': clean_val('a', value, str)}
         )
     if key == '85641':
         _electronic_items.append(
-            # TODO fix - the values cant come from the same subfield
-            {'start_volume': clean_val('3', value, str),
-             'end_volume': clean_val('3', value, str),
-             'year': clean_val('3', value, str),
+            {'subscription': clean_val('3', value, str),
              'url': clean_val('u', value, str),
              'access_type': clean_val('x', value, str),
              'note': clean_val('z', value, str),
@@ -146,10 +137,7 @@ def migration(self, key, value):
         )
     if key == '866__':
         _items.append({
-            'start_volume': clean_val('a', value, str),
-            'end_volume': clean_val('a', value, str),
-            'year': clean_val('a', value, str),
-            'location': clean_val('b', value, str)
+            'subscription': clean_val('a', value, str),
         })
     if key == '780__':
         _relation_previous = clean_val('w', value, str, req=True)

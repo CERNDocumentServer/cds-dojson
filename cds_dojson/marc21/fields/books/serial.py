@@ -48,7 +48,6 @@ def title(self, key, value):
 
 @model.over('identifiers', '^020__')
 @filter_list_values
-@for_each_value
 def identifiers(self, key, value):
     """Translates identifiers fields."""
     return multipart_identifiers(self, key, value)

@@ -916,6 +916,79 @@ def test_publication_info(app):
             )
 
 
+def test_extensions(app):
+    """Test extensions"""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="925" ind1=" " ind2=" ">
+                <subfield code="i">applicable at CERN</subfield>
+                <subfield code="p">Expert ICS-25.160</subfield>
+                <subfield code="z">Reviewed in December 2019</subfield>
+            </datafield>
+            """,
+            {
+                'extensions': [{
+                    'standard_review:applicability': 'applicable at CERN',
+                    'standard_review:checkdate': 'Reviewed in December 2019',
+                    'standard_review:expert': 'Expert ICS-25.160',
+                }],
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="925" ind1=" " ind2=" ">
+                <subfield code="i">no longer applicable</subfield>
+                <subfield code="p">Expert ICS-25.160</subfield>
+                <subfield code="v">withdrawn</subfield>
+                <subfield code="z">Reviewed in December 2019</subfield>
+            </datafield>
+            """,
+            {
+                'extensions': [{
+                    'standard_review:applicability': 'no longer applicable',
+                    'standard_review:validity': 'withdrawn',
+                    'standard_review:checkdate': 'Reviewed in December 2019',
+                    'standard_review:expert': 'Expert ICS-25.160',
+                }],
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="693" ind1=" " ind2=" ">
+                <subfield code="a">CERN LHC</subfield>
+                <subfield code="e">ATLAS</subfield>
+            </datafield>
+            <datafield tag="693" ind1=" " ind2=" ">
+                <subfield code="a">CERN LHC</subfield>
+                <subfield code="e">CMS</subfield>
+                <subfield code="p">FCC</subfield>
+            </datafield>
+            <datafield tag="925" ind1=" " ind2=" ">
+                <subfield code="i">no longer applicable</subfield>
+                <subfield code="p">Expert ICS-25.160</subfield>
+                <subfield code="v">withdrawn</subfield>
+                <subfield code="z">Reviewed in December 2019</subfield>
+            </datafield>
+            """,
+            {
+                'extensions': [
+                    {'unit:accelerator': 'CERN LHC',
+                     'unit:experiment': 'ATLAS'},
+                    {'unit:accelerator': 'CERN LHC',
+                     'unit:experiment': 'CMS',
+                     'unit:project': 'FCC',
+                     },
+                    {'standard_review:applicability': 'no longer applicable',
+                     'standard_review:validity': 'withdrawn',
+                     'standard_review:checkdate': 'Reviewed in December 2019',
+                     'standard_review:expert': 'Expert ICS-25.160',
+                     },
+                ],
+            }
+        )
+
+
 def test_related_record(app):
     """Test related record."""
     with app.app_context():

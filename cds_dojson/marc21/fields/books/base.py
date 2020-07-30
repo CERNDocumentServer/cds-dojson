@@ -267,6 +267,18 @@ def publication_info(self, key, value):
     return _publication_info
 
 
+@model.over('extensions', '(^925__)')
+@filter_list_values
+@for_each_value
+def standard_review(self, key, value):
+    """Translates standard_status field."""
+    return{'standard_review:applicability': clean_val('i', value, str),
+           'standard_review:validity': clean_val('v', value, str),
+           'standard_review:checkdate': clean_val('z', value, str),
+           'standard_review:expert': clean_val('p', value, str)
+           }
+
+
 @model.over('publication_info', '^962__')
 def publication_additional(self, key, value):
     """Translates additional publication info."""

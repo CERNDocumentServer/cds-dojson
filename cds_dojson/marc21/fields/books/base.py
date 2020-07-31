@@ -784,12 +784,12 @@ def licenses(self, key, value):
                        raise_exception=True)
 
     return {
+        'license': {
+            'url': clean_val('u', value, str),
+            'name': clean_val('a', value, str),
+        },
         'material': material,
-        'license': clean_val('a', value, str),
-        'imposing': clean_val('b', value, str),
-        'url': clean_val('u', value, str),
-        'funder': clean_val('f', value, str),
-        'admin_info': clean_val('g', value, str),
+        'internal_note': clean_val('g', value, str),
     }
 
 

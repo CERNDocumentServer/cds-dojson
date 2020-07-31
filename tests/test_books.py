@@ -1849,9 +1849,9 @@ def test_license(app):
             """
             <datafield tag="540" ind1=" " ind2=" ">
                 <subfield code="b">arXiv</subfield>
-            <subfield code="u">
-                http://arxiv.org/licenses/nonexclusive-distrib/1.0/
-            </subfield>
+                <subfield code="u">
+                    http://arxiv.org/licenses/nonexclusive-distrib/1.0/
+                </subfield>
             </datafield>
             <datafield tag="540" ind1=" " ind2=" ">
                 <subfield code="3">Preprint</subfield>
@@ -1866,18 +1866,25 @@ def test_license(app):
             """, {
                 'licenses': [
                     {
-                        'imposing': 'arXiv',
-                        'url': 'http://arxiv.org/licenses/nonexclusive-distrib/1.0/',
+                        'license': {
+                            'url': 'http://arxiv.org/licenses/nonexclusive-distrib/1.0/',
+                            'name': None,
+                        }
                     },
                     {
-                        'license': 'CC-BY-4.0',
+                        'license': {
+                            'name': 'CC-BY-4.0',
+                            'url': None,
+                        },
                         'material': 'preprint',
                     },
                     {
-                        'license': 'CC-BY-4.0',
+                        'license': {
+                            'name': 'CC-BY-4.0',
+                            'url': None,
+                        },
                         'material': 'publication',
-                        'funder': 'SCOAP3',
-                        'admin_info': 'DAI/7161287',
+                        'internal_note': 'DAI/7161287',
                     }
                 ]
             })

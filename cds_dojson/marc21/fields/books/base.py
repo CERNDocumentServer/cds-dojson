@@ -72,15 +72,17 @@ def created(self, key, value):
 
     if key == '916__':
         if 's' in value:
-            _created_by.update(
-                {'type': mapping(ACQUISITION_METHOD,
-                                 clean_val('s', value, str))})
+            _created_by.update({'type': mapping(ACQUISITION_METHOD,
+                                                clean_val('s', value, str,
+                                                          default="migration"),
+                                                raise_exception=True
+                                                )})
             self['created_by'] = _created_by
-        date = clean_val('w', value, int, regex_format=r'\d{4}$')
-        if date:
-            year, week = str(date)[:4], str(date)[4:]
-            date = get_week_start(int(year), int(week))
-            return date.isoformat()
+            date = clean_val('w', value, int, regex_format=r'\d{4}$')
+            if date:
+                year, week = str(date)[:4], str(date)[4:]
+                date = get_week_start(int(year), int(week))
+                return date.isoformat()
     elif key == '595__':
         try:
             sub_a = clean_val('a', value, str,
@@ -89,7 +91,8 @@ def created(self, key, value):
                 source = sub_a[:3]
                 self["source"] = source
                 year, month = int(sub_a[3:7]), int(sub_a[7:])
-                return datetime.date(year, month, 1).isoformat()
+                self['_created'] = datetime.date(year, month, 1).isoformat()
+                raise IgnoreKey('_created')
         except UnexpectedValue as e:
             e.subfield = 'a'
             self['internal_notes'] = internal_notes(self, key, value)
@@ -99,17 +102,13 @@ def created(self, key, value):
 
 
 @model.over('internal_notes', '^595__')
-@filter_list_values
 def internal_notes(self, key, value):
     """Translates private notes field."""
     _internal_notes = self.get('internal_notes', [])
-
     for v in force_list(value):
-        note = {'value': clean_val('a', v, str, req=True),
-                # TODO, waiting for an answer
-                'source': clean_val('9', v, str),
-                }
-        _internal_notes.append(note)
+        internal_note = {'value': clean_val('a', v, str, req=True)}
+        if internal_note not in _internal_notes:
+            _internal_notes.append(internal_note)
     return _internal_notes
 
 
@@ -118,22 +117,20 @@ def internal_notes(self, key, value):
 @out_strip
 def collection(self, key, value):
     """Translates collection field - WARNING - also document type field."""
-    _migration = self.get('_migration', {})
-    _tags = _migration.get('tags', [])
-
+    _migration = self['_migration']
+    _tags = _migration['tags']
     for v in force_list(value):
         result_a = mapping(COLLECTION, clean_val('a', v, str))
         result_b = mapping(COLLECTION, clean_val('b', v, str))
         if result_a:
-            _tags.append(result_a)
+            _tags.append(result_a) if result_a not in _tags else None
             _migration['has_tags'] = True
         if result_b:
-            _tags.append(result_b)
+            _tags.append(result_b) if result_b not in _tags else None
             _migration['has_tags'] = True
         if not result_a and not result_b:
             self['document_type'] = document_type(self, key, value)
             raise IgnoreKey('_migration')
-    _migration['tags'] = _tags
     return _migration
 
 
@@ -268,22 +265,24 @@ def publication_info(self, key, value):
 
 
 @model.over('extensions', '(^925__)')
-@filter_list_values
-@for_each_value
+@filter_values
 def standard_review(self, key, value):
     """Translates standard_status field."""
-    return{'standard_review:applicability': clean_val('i', value, str),
-           'standard_review:validity': clean_val('v', value, str),
-           'standard_review:checkdate': clean_val('z', value, str),
-           'standard_review:expert': clean_val('p', value, str)
-           }
+    _extensions = self.get('extensions', {})
+    _extensions.update(
+        {'standard_review:applicability': clean_val('i', value, str),
+         'standard_review:validity': clean_val('v', value, str),
+         'standard_review:checkdate': clean_val('z', value, str),
+         'standard_review:expert': clean_val('p', value, str)
+         })
+    return _extensions
 
 
 @model.over('publication_info', '^962__')
 def publication_additional(self, key, value):
     """Translates additional publication info."""
     _publication_info = self.get('publication_info', [])
-    _migration = self.get("_migration", {})
+    _migration = self["_migration"]
     empty = not bool(_publication_info)
     for i, v in enumerate(force_list(value)):
         temp_info = {}
@@ -297,7 +296,6 @@ def publication_additional(self, key, value):
             # assume that if we have a parent journal
             # then the doc is a periodical issue
             self['document_type'] = 'PERIODICAL_ISSUE'
-            self['_migration'] = _migration
         n_subfield = clean_val('n', v, str)
         if n_subfield.upper() == 'BOOK':
             temp_info.update({'material': 'BOOK'})
@@ -324,8 +322,8 @@ def related_records(self, key, value):
 
     RELATED records
     """
-    _migration = self.get('_migration', {})
-    _related = _migration.get('related', [])
+    _migration = self['_migration']
+    _related = _migration['related']
     relation_type = 'other'
     try:
         if key == '775__' and 'b' in value:
@@ -346,33 +344,73 @@ def related_records(self, key, value):
 
 
 @model.over('extensions', '^693__')
-@filter_list_values
-@for_each_value
+@filter_values
 def accelerator_experiments(self, key, value):
     """Translates accelerator_experiments field."""
-    return {'unit:accelerator': clean_val('a', value, str),
-            'unit:experiment': clean_val('e', value, str),
-            'unit:project': clean_val('p', value, str)
-            }
+    _extensions = self.get('extensions', {})
+
+    sub_a = clean_val('a', value, str)
+    sub_e = clean_val('e', value, str)
+    sub_p = clean_val('p', value, str)
+
+    accelerators = _extensions.get('unit:accelerator', [])
+    experiment = _extensions.get('unit:experiment', [])
+    project = _extensions.get('unit:project', [])
+
+    if sub_a and sub_a not in accelerators:
+        accelerators.append(sub_a)
+    if sub_e and sub_e not in experiment:
+        experiment.append(sub_e)
+    if sub_p and sub_p not in project:
+        project.append(sub_p)
+
+    _extensions.update({
+        "unit:accelerator": accelerators,
+        "unit:experiment": experiment,
+        "unit:project": project
+    })
+    return _extensions
 
 
-# TODO - discuss how we would like to keep links to holdings (files and ebooks)
 @model.over('urls', '^8564_')
+@filter_list_values
 @for_each_value
-@filter_values
 def urls(self, key, value):
     """Translates urls field."""
-    try:
-        clean_val('y', value, str, manual=True)
-    except ManualMigrationRequired as e:
-        e.subfield = 't'
-        raise e
-    url = clean_val('u', value, str, req=True)
-    if 'cds.cern.ch' not in url:
-        return {'value': url}
-    # TODO: instead of IgnoreKey if link starts with cds.cern.ch it should be
-    # linked as files to the record, issue #200
-    raise IgnoreKey('urls')
+    sub_y = clean_val('y', value, str, default='')
+    sub_u = clean_val('u', value, str, req=True)
+
+    eitems_ebl = self['_migration']['eitems_ebl']
+    eitems_external = self['_migration']['eitems_external']
+    eitems_proxy = self['_migration']['eitems_proxy']
+    eitems_files = self['_migration']['eitems_file_links']
+
+    url = {'value': sub_u}
+    if sub_y and sub_y != 'ebook':
+        url['description'] = sub_y
+
+    # EBL publisher login required
+    if all([elem in sub_u for elem in ['cds', '.cern.ch' '/auth.py']]):
+        eitems_ebl.append(url)
+        self['_migration']['eitems_has_ebl'] = True
+    # EzProxy links
+    elif 'ezproxy.cern.ch' in sub_u:
+        url['value'] = url['value'].replace(
+            'https://ezproxy.cern.ch/login?url=', '')
+        eitems_proxy.append(url)
+        self['_migration']['eitems_has_proxy'] = True
+    # local files
+    elif all([elem in sub_u for elem in
+              ['cds', '.cern.ch/record/', '/files']]):
+        eitems_files.append(url)
+        self['_migration']['eitems_has_files'] = True
+    elif sub_y == 'ebook':
+        eitems_external.append(url)
+        self['_migration']['eitems_has_external'] = True
+    else:
+        # if none of the above, it is just external url
+        # attached to the document
+        return url
 
 
 @model.over('identifiers', '^020__', )
@@ -443,8 +481,11 @@ def alternative_identifiers(self, key, value):
         else:
             raise UnexpectedValue(subfield='2')
     if key == '035__':
+        if 'CERCER' in sub_a:
+            raise IgnoreKey('alternative_identifiers')
         sub_9 = clean_val('9', value, str, req=True)
-
+        if 'CERCER' in sub_9:
+            raise IgnoreKey('alternative_identifiers')
         # conference_info.identifiers mixed data
         if sub_9.upper() == 'INSPIRE-CNUM':
             _conference_info = self.get('conference_info', {})
@@ -453,7 +494,7 @@ def alternative_identifiers(self, key, value):
                 {'scheme': 'INSPIRE_CNUM', 'value': sub_a})
             _conference_info.update({'identifiers': _prev_identifiers})
             self['conference_info'] = _conference_info
-            raise IgnoreKey('external_system_identifiers')
+            raise IgnoreKey('alternative_identifiers')
 
         elif sub_9.upper() in EXTERNAL_SYSTEM_IDENTIFIERS:
             indentifier_entry.update({'value': sub_a,
@@ -472,22 +513,19 @@ def alternative_identifiers(self, key, value):
 @filter_list_values
 def dois(self, key, value):
     """Translates dois fields."""
-    # TODO might be moved to item level or prefixed _migration,
-    # decision pending
     _identifiers = self.get('identifiers', [])
     for v in force_list(value):
         material = mapping(MATERIALS,
                            clean_val('q', v, str, transform='lower'),
                            raise_exception=True)
-
-        _identifiers.append(
-            {
-                'value': clean_val('a', v, str, req=True),
-                'material': material,
-                'source': clean_val('9', v, str),  # TODO sources
-                'scheme': 'DOI',
-            }
-        )
+        doi = {
+            'value': clean_val('a', v, str, req=True),
+            'material': material,
+            'source': clean_val('9', v, str),
+            'scheme': 'DOI',
+        }
+        if doi not in _identifiers:
+            _identifiers.append(doi)
     return _identifiers
 
 
@@ -541,7 +579,7 @@ def barcodes(self, key, value):
     val_n = clean_val('n', value, str)
     val_x = clean_val('x', value, str)
 
-    _migration = self.get('_migration', {'volumes': []})
+    _migration = self['_migration']
     _migration['volumes'].append(dict(
         volume=extract_volume_number(
             val_n,
@@ -550,7 +588,6 @@ def barcodes(self, key, value):
         ),
         barcode=val_x
     ))
-    self['_migration'] = _migration
     raise IgnoreKey('barcodes')
 
 
@@ -633,7 +670,7 @@ def subject_classification(self, key, value):
         raise IgnoreKey('subjects')
 
 
-@model.over('keywords', '(^6531_)')
+@model.over('keywords', '^6531_')
 @for_each_value
 @filter_values
 def keywords(self, key, value):
@@ -727,12 +764,14 @@ def imprint(self, key, value):
         date = parser.parse(clean_val('c', value, str, req=True))
     except ParserError:
         raise UnexpectedValue(subfield='c')
+    except Exception:
+        raise UnexpectedValue(subfield='c')
     self['publication_year'] = str(date.date().year)
     return {
         'date': clean_val('c', value, str, req=True),
         'place': clean_val('a', value, str),
         'publisher': clean_val('b', value, str),
-        'reprint': reprint,
+        'reprint_date': reprint,
     }
 
 
@@ -743,16 +782,13 @@ def book_series(self, key, value):
     val_n = clean_val('n', value, str)
     val_x = clean_val('x', value, str)
 
-    _migration = self.get('_migration', {})
-    if 'serials' not in _migration:
-        _migration['serials'] = []
+    _migration = self['_migration']
     _migration['serials'].append({
         'title': clean_val('a', value, str),
         'volume': clean_val('v', value, str),
-        'issn': clean_val('x', value, str),
+        'issn': val_x
     })
     _migration['has_serial'] = True
-    self['_migration'] = _migration
     raise IgnoreKey('book_series')
 
 

@@ -42,6 +42,8 @@ COLLECTION = {
 ACQUISITION_METHOD = {
     'user': ['H'],
     'batchuploader': ['N', 'M'],
+    'migration': ['migration'],
+    'r': 'user'
 }
 
 MEDIUM_TYPES = [
@@ -142,7 +144,7 @@ EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE = [
 ]
 
 
-def mapping(field_map, val, raise_exception=False):
+def mapping(field_map, val, raise_exception=False, default_val=None):
     """
     Maps the old value to a new one according to the map.
 
@@ -165,5 +167,7 @@ def mapping(field_map, val, raise_exception=False):
         elif isinstance(field_map, list):
             if val in field_map:
                 return val
+        elif default_val:
+            return default_val
         if raise_exception:
             raise UnexpectedValue

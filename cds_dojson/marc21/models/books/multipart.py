@@ -27,10 +27,9 @@ from .base import model as books_base
 class CDSMultipart(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
-    __query__ = '(690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
+    __query__ = '(596__:MULTIVOLUMES AND 690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
                 '980__:PROCEEDINGS OR ' \
-                '697C_:LEGSERLIB -980__:DELETED -980__:MIGRATED)'\
-                'AND 246__:/[a-zA-Z0-9]+/ '
+                '697C_:LEGSERLIB -980__:DELETED -980__:MIGRATED)'
 
     __schema__ = 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json'
 

@@ -59,12 +59,14 @@ def test_marc21_matcher_books():
     multipart_blob1 = {
         '690C_': [{'a': 'BOOK'}],
         '245__': [{'a': 'Test '}],
+        '596__': [{'a': 'MULTIVOLUMES'}],
         '246__': [{'p': 'Volume Title', 'n': '2'}]
     }
     multipart_blob2 = {
         '690C_': [{'a': 'BOOK'}],
         '245__': [{'a': 'Test '}],
-        '246__': [{'n': '2'}]
+        '246__': [{'n': '2'}],
+        '596__': [{'a': 'MULTIVOLUMES'}],
     }
     standard_blob1 = {'690C_': [{'a': 'STANDARD'}]}
     journal_blob = {'980__': [{'a': 'PERI'}]}

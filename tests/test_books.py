@@ -20,12 +20,15 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 
+from copy import deepcopy
+
 import pytest
 from dojson.errors import MissingRule
 
 from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
     MissingRequiredField, UnexpectedValue
 from cds_dojson.marc21.fields.books.values_mapping import MATERIALS, mapping
+from cds_dojson.marc21.models.books.base import get_migration_dict
 from cds_dojson.marc21.models.books.book import model
 from cds_dojson.marc21.utils import create_record
 
@@ -36,21 +39,14 @@ marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
 def check_transformation(marcxml_body, json_body):
     """Check transformation."""
     blob = create_record(marcxml.format(marcxml_body))
-    record = model.do(blob, ignore_missing=False)
+
+    record = {'_migration': {**get_migration_dict()}}
+
+    record.update(**model.do(blob, ignore_missing=False))
+
     expected = {
         '$schema': 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json',
-        '_migration': {
-            'has_tags': False,
-            'is_multipart': False,
-            'has_related': False,
-            'has_serial': False,
-            'has_journal': False,
-            'journal_record_legacy_recid': '',
-            'record_type': 'document',
-            'volumes': [],
-            'serials': [],
-            'tags': [],
-        }
+        '_migration': {**get_migration_dict()}
     }
 
     expected.update(**json_body)
@@ -218,6 +214,9 @@ def test_created(app):
             <datafield tag="595" ind1=" " ind2=" ">
                 <subfield code="a">random text</subfield>
             </datafield>
+            <datafield tag="595" ind1=" " ind2=" ">
+                <subfield code="a">random text</subfield>
+            </datafield>
             """, {
                 'internal_notes': [
                     {'value': 'random text'},
@@ -253,16 +252,9 @@ def test_collections(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['LEGSERLIB'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
             })
         check_transformation(
@@ -272,16 +264,9 @@ def test_collections(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['LEGSERLIB'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
             })
         check_transformation(
@@ -291,16 +276,9 @@ def test_collections(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['LEGSERLIB'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
             })
         check_transformation(
@@ -311,16 +289,9 @@ def test_collections(app):
             """,
             {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['LEGSERLIBINTLAW'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
             }
         )
@@ -332,16 +303,9 @@ def test_collections(app):
             """,
             {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['BOOKSHOP'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
             }
         )
@@ -353,16 +317,9 @@ def test_collections(app):
             """,
             {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['BOOKSHOP'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
             }
         )
@@ -374,16 +331,9 @@ def test_collections(app):
             """,
             {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['LEGSERLIBLEGRES'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
             }
         )
@@ -471,16 +421,9 @@ def test_document_type_collection(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['LEGSERLIB'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
                 'document_type': 'BOOK',
             })
@@ -494,16 +437,9 @@ def test_document_type_collection(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'tags': ['LEGSERLIB'],
                     'has_tags': True,
-                    'is_multipart': False,
-                    'has_related': False,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'serials': [],
                 },
                 'document_type': 'BOOK',
             })
@@ -514,43 +450,48 @@ def test_urls(app):
     with app.app_context():
         check_transformation(
             """
-            <datafield tag="960" ind1=" " ind2=" ">
-                <subfield code="a">42</subfield>
-            </datafield>
-            <datafield tag="8564" ind1=" " ind2=" ">
-                <subfield code="u">cds.cern.ch</subfield>
-            </datafield>
-            """, {
-                'document_type': 'PROCEEDINGS',
-            })
-        check_transformation(
-            """
-            <datafield tag="8564" ind1=" " ind2=" ">
-                <subfield code="u">cds.cern.ch</subfield>
-            </datafield>
-            """, {
-            })
-        check_transformation(
-            """
-            <datafield tag="856" ind1="4" ind2=" ">
-                <subfield code="8">1336158</subfield>
-                <subfield code="s">3334918</subfield>
-                <subfield code="u">
-                http://cds.cern.ch/record/1393420/files/NF-EN-13480-2-A2.pdf?subformat=pdfa
-                </subfield>
-                <subfield code="x">pdfa</subfield>
-            </datafield>
-            <datafield tag="856" ind1="4" ind2=" ">
-                <subfield code="8">1336158</subfield>
-                <subfield code="s">2445021</subfield>
-                <subfield code="u">http://awesome.domain/with/a/path</subfield>
-            </datafield>
             <datafield tag="856" ind1="4" ind2=" ">
                 <subfield code="8">1336159</subfield>
                 <subfield code="s">726479</subfield>
                 <subfield code="u">
-                http://cds.cern.ch/record/1393420/files/NF-EN-13480-2-AC6.pdf
+                    http://cds.cern.ch/record/1393420/files/NF-EN-13480-2-AC6.pdf
                 </subfield>
+                <subfield code="y">
+                Description
+                </subfield>
+            </datafield>
+        """, {
+                "_migration":
+                    {
+                        **get_migration_dict(),
+                        'eitems_has_files': True,
+                        'eitems_file_links': [
+                            {'description': 'Description',
+                             'value': 'http://cds.cern.ch/record/1393420/files/NF-EN-13480-2-AC6.pdf'}]
+                    }
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="8564" ind1=" " ind2=" ">
+                <subfield code="u">https://cds.cern.ch/record/12345/files/abc.pdf</subfield>
+            </datafield>
+            """, {
+                "_migration":
+                    {
+                        **get_migration_dict(),
+                        'eitems_has_files': True,
+                        'eitems_file_links': [
+                            {
+                                'value': 'https://cds.cern.ch/record/12345/files/abc.pdf'}]
+                    }
+            })
+        check_transformation(
+            """
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="8">1336158</subfield>
+                <subfield code="s">2445021</subfield>
+                <subfield code="u">http://awesome.domain/with/a/path</subfield>
             </datafield>
             <datafield tag="856" ind1="4" ind2=" ">
                 <subfield code="8">1336157</subfield>
@@ -564,17 +505,98 @@ def test_urls(app):
                     {'value': 'http://another.domain/with/a/path'},
                 ],
             })
-        with pytest.raises(ManualMigrationRequired):
-            check_transformation(
-                """
-                <datafield tag="8564" ind1=" " ind2=" ">
-                    <subfield code="u">cds.cern.ch</subfield>
-                    <subfield code="y">description</subfield>
-                </datafield>
-                """, {
-                    'urls': [{'value': 'cds.cern.ch',
-                              'description': 'description'}],
-                })
+        check_transformation(
+            """
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="u">https://cdsweb.cern.ch/auth.py?r=EBLIB_P_1139560</subfield>
+                <subfield code="y">ebook</subfield>
+            </datafield>
+            """,
+            {
+                "_migration":
+                    {
+                        **get_migration_dict(),
+                        'eitems_has_ebl': True,
+                        'eitems_ebl': [
+                            {
+                                'value': 'https://cdsweb.cern.ch/auth.py?r=EBLIB_P_1139560'}]
+                    }
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="u">https://learning.oreilly.com/library/view/-/9781118491300/?ar</subfield>
+                <subfield code="y">ebook</subfield>
+            </datafield>
+            """,
+            {
+                "_migration":
+                    {
+                        **get_migration_dict(),
+                        'eitems_has_external': True,
+                        'eitems_external': [
+                            {
+                                'value': 'https://learning.oreilly.com/library/view/-/9781118491300/?ar'}]
+                    }
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="u">https://ezproxy.cern.ch/login?url=https://www.worldscientific.com/toc/rast/10</subfield>
+                <subfield code="y">ebook</subfield>
+            </datafield>
+            """,
+            {
+                "_migration":
+                    {
+                        **get_migration_dict(),
+                        'eitems_has_proxy': True,
+                        'eitems_proxy': [
+                            {
+                                'value': 'https://www.worldscientific.com/toc/rast/10'}]
+                    }
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="u">https://cdsweb.cern.ch/auth.py?r=EBLIB_P_1139560</subfield>
+                <subfield code="y">ebook</subfield>
+            </datafield>
+            <datafield tag="856" ind1="4" ind2=" ">
+                <subfield code="u">https://learning.oreilly.com/library/view/-/9781118491300/?ar</subfield>
+                <subfield code="y">ebook</subfield>
+            </datafield>
+            """,
+            {
+                "_migration":
+                    {
+                        **get_migration_dict(),
+                        'eitems_has_ebl': True,
+                        'eitems_ebl': [
+                            {
+                                'value': 'https://cdsweb.cern.ch/auth.py?r=EBLIB_P_1139560'},
+                        ],
+                        'eitems_external': [
+                            {
+                                'value': 'https://learning.oreilly.com/library/view/-/9781118491300/?ar'},
+                        ],
+                        'eitems_has_external': True,
+                    }
+            }
+        )
+        check_transformation(
+            """
+            <datafield tag="8564" ind1=" " ind2=" ">
+                <subfield code="u">google.com</subfield>
+                <subfield code="y">description</subfield>
+            </datafield>
+            """, {
+                'urls': [{'value': 'google.com',
+                          'description': 'description'}],
+            })
 
 
 def test_authors(app):
@@ -846,16 +868,9 @@ def test_publication_info(app):
             """,
             {'document_type': 'PERIODICAL_ISSUE',
              '_migration': {
-                 'serials': [],
+                 **get_migration_dict(),
                  'journal_record_legacy_recid': "2155631",
-                 'has_tags': False,
-                 'is_multipart': False,
-                 'has_related': False,
-                 'has_serial': False,
                  'has_journal': True,
-                 'record_type': 'document',
-                 'volumes': [],
-                 'tags': [],
              },
              'conference_info': {
                  'identifiers': [
@@ -928,11 +943,11 @@ def test_extensions(app):
             </datafield>
             """,
             {
-                'extensions': [{
+                'extensions': {
                     'standard_review:applicability': 'applicable at CERN',
                     'standard_review:checkdate': 'Reviewed in December 2019',
                     'standard_review:expert': 'Expert ICS-25.160',
-                }],
+                },
             }
         )
         check_transformation(
@@ -945,12 +960,12 @@ def test_extensions(app):
             </datafield>
             """,
             {
-                'extensions': [{
+                'extensions': {
                     'standard_review:applicability': 'no longer applicable',
                     'standard_review:validity': 'withdrawn',
                     'standard_review:checkdate': 'Reviewed in December 2019',
                     'standard_review:expert': 'Expert ICS-25.160',
-                }],
+                },
             }
         )
         check_transformation(
@@ -972,19 +987,16 @@ def test_extensions(app):
             </datafield>
             """,
             {
-                'extensions': [
-                    {'unit:accelerator': 'CERN LHC',
-                     'unit:experiment': 'ATLAS'},
-                    {'unit:accelerator': 'CERN LHC',
-                     'unit:experiment': 'CMS',
-                     'unit:project': 'FCC',
-                     },
-                    {'standard_review:applicability': 'no longer applicable',
+                'extensions':
+                    {'unit:accelerator': ['CERN LHC'],
+                     'unit:experiment': ['ATLAS', 'CMS'],
+                     'unit:project': ['FCC'],
+                     'standard_review:applicability': 'no longer applicable',
                      'standard_review:validity': 'withdrawn',
                      'standard_review:checkdate': 'Reviewed in December 2019',
                      'standard_review:expert': 'Expert ICS-25.160',
-                     },
-                ],
+                     }
+
             }
         )
 
@@ -1002,16 +1014,8 @@ def test_related_record(app):
             """,
             {
                 '_migration': {
-                    'serials': [],
-                    'has_tags': False,
-                    'is_multipart': False,
+                    **get_migration_dict(),
                     'has_related': True,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'tags': [],
                     'related': [{
                         'related_recid': '748392',
                         "relation_type": "Test text"
@@ -1029,16 +1033,8 @@ def test_related_record(app):
                 """,
                 {
                     '_migration': {
-                        'serials': [],
-                        'has_tags': False,
-                        'is_multipart': False,
+                        **get_migration_dict(),
                         'has_related': True,
-                        'has_serial': False,
-                        'has_journal': False,
-                        'journal_record_legacy_recid': '',
-                        'record_type': 'document',
-                        'volumes': [],
-                        'tags': [],
                         'related': [{'related_recid': '7483924',
                                      'relation_type': "other"}],
                     },
@@ -1055,16 +1051,8 @@ def test_related_record(app):
             """,
             {
                 '_migration': {
-                    'serials': [],
-                    'has_tags': False,
-                    'is_multipart': False,
+                    **get_migration_dict(),
                     'has_related': True,
-                    'has_serial': False,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'tags': [],
                     'related': [
                         {'related_recid': '7483924', 'relation_type': 'other'},
                         {'related_recid': '748', 'relation_type': 'other'}],
@@ -1089,14 +1077,12 @@ def test_accelerator_experiments(app):
             </datafield>
             """,
             {
-                'extensions': [
-                    {'unit:accelerator': 'CERN LHC',
-                     'unit:experiment': 'ATLAS'},
-                    {'unit:accelerator': 'CERN LHC',
-                     'unit:experiment': 'CMS',
-                     'unit:project': 'FCC',
+                'extensions':
+                    {'unit:accelerator': ['CERN LHC'],
+                     'unit:experiment': ['ATLAS', 'CMS'],
+                     'unit:project': ['FCC'],
                      }
-                ]
+
             }
         )
 
@@ -1442,15 +1428,14 @@ def test_alternative_identifiers(app):
                 """, {
                 })
 
-        with pytest.raises(UnexpectedValue):
-            check_transformation(
-                """
-                <datafield tag="035" ind1=" " ind2=" ">
-                    <subfield code="9">CERCER</subfield>
-                    <subfield code="a">2365039</subfield>
-                </datafield>
-                """, {
-                })
+        check_transformation(
+            """
+            <datafield tag="035" ind1=" " ind2=" ">
+                <subfield code="9">CERCER</subfield>
+                <subfield code="a">2365039</subfield>
+            </datafield>
+            """, {
+            })
 
         check_transformation(
             """
@@ -1689,7 +1674,7 @@ def test_imprint(app):
                     'place': 'Sydney',
                     'publisher': 'Allen & Unwin',
                     'date': '2013',
-                    'reprint': '2015',
+                    'reprint_date': '2015',
                 },
             })
 
@@ -2377,6 +2362,7 @@ def test_book_series(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'serials': [
                         {
                             'title': 'Minutes',
@@ -2384,15 +2370,7 @@ def test_book_series(app):
                             'volume': None
                         }
                     ],
-                    'has_tags': False,
-                    'is_multipart': False,
-                    'has_related': False,
                     'has_serial': True,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'tags': [],
                 }
             }
         )
@@ -2406,6 +2384,7 @@ def test_book_series(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'serials': [
                         {
                             'title': 'De Gruyter studies in mathematical physics',
@@ -2413,15 +2392,7 @@ def test_book_series(app):
                             'volume': '16'
                         }
                     ],
-                    'has_tags': False,
-                    'is_multipart': False,
-                    'has_related': False,
                     'has_serial': True,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'tags': [],
                 }
             }
         )
@@ -2434,6 +2405,7 @@ def test_book_series(app):
             </datafield>
             """, {
                 '_migration': {
+                    **get_migration_dict(),
                     'serials': [
                         {
                             'title': 'Springer tracts in modern physics',
@@ -2441,15 +2413,7 @@ def test_book_series(app):
                             'volume': '267'
                         }
                     ],
-                    'has_tags': False,
-                    'is_multipart': False,
-                    'has_related': False,
                     'has_serial': True,
-                    'has_journal': False,
-                    'journal_record_legacy_recid': '',
-                    'record_type': 'document',
-                    'volumes': [],
-                    'tags': [],
                 }
             }
         )
@@ -2654,21 +2618,15 @@ def test_volume_barcodes(app):
             """,
             dict(
                 title='Mathematische Methoden der Physik',
-                _migration=dict(
-                    record_type='document',
-                    has_serial=False,
-                    is_multipart=False,
-                    has_tags=False,
-                    has_related=False,
-                    has_journal=False,
-                    journal_record_legacy_recid='',
-                    volumes=[
-                        dict(barcode='80-1209-8', volume=1),
-                        dict(barcode='B00004172', volume=1),
-                    ],
-                    serials=[],
-                    tags=[],
-                ),
+                _migration={
+                    **get_migration_dict(),
+                    **dict(
+                        volumes=[
+                            dict(barcode='80-1209-8', volume=1),
+                            dict(barcode='B00004172', volume=1),
+                        ],
+                    ), }
+
             )
         )
 

@@ -24,7 +24,7 @@ from cds_dojson.marc21.fields.books.errors import MissingRequiredField
 
 MAX_PAGES_NUMBER = 8192
 
-RE_STR_VOLUME_NUMBER = r'(v(ol(ume)?)?|part|p|pt)[\s\.]*(\d+)'
+RE_STR_VOLUME_NUMBER = r'(v(ol(ume)?)?|part|p|pt|t)[\s\.]*(\d+)'
 
 RE_VOLUME_NUMBER = re.compile(RE_STR_VOLUME_NUMBER, re.IGNORECASE)
 RE_VOLUME_INFO = re.compile(

@@ -20,6 +20,9 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 
+from copy import deepcopy
+
+from cds_dojson.marc21.models.books.base import get_migration_dict
 from cds_dojson.marc21.models.books.standard import model
 from cds_dojson.marc21.utils import create_record
 
@@ -29,16 +32,12 @@ marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
 
 def check_transformation(marcxml_body, json_body):
     blob = create_record(marcxml.format(marcxml_body))
-    record = model.do(blob, ignore_missing=False)
+    record = {'_migration': {**get_migration_dict()}}
+
+    record.update(**model.do(blob, ignore_missing=False))
     expected = {
         '$schema': 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json',
-        '_migration': {'has_keywords': False,
-                       'is_multipart': False,
-                       'has_related': False,
-                       'has_serial': False,
-                       'record_type': 'document',
-                       'volumes': []
-                       }
+        '_migration': {**get_migration_dict()}
     }
     expected.update(**json_body)
     assert record == expected

@@ -19,12 +19,41 @@
 """Base models for common fields."""
 from __future__ import unicode_literals
 
+from copy import deepcopy
+
 from dojson._compat import iteritems
 from dojson.errors import IgnoreKey, MissingRule
 from dojson.utils import GroupableOrderedDict
 
 from ....overdo import OverdoJSONSchema
 from ..base import model as cds_base
+
+
+def get_migration_dict():
+    """Return migration extra data."""
+    __migration_dict__ = dict(
+        record_type='document',
+        volumes=[],
+        serials=[],
+        has_serial=False,
+        is_multipart=False,
+        has_tags=False,
+        has_related=False,
+        has_journal=False,
+        tags=[],
+        journal_record_legacy_id='',
+        eitems_proxy=[],
+        eitems_has_proxy=False,
+        eitems_file_links=[],
+        eitems_has_files=False,
+        eitems_external=[],
+        eitems_has_external=False,
+        eitems_ebl=[],
+        eitems_has_ebl=False,
+        related=[],
+    )
+
+    return deepcopy(__migration_dict__)
 
 COMMON_IGNORE_FIELDS = {
     '003',
@@ -48,6 +77,7 @@ COMMON_IGNORE_FIELDS = {
     '100__9',
     '111__d',
     '111__f',
+    '145__a',
     '246__i',
     '269__a',  # preprint info
     '269__b',  # preprint info
@@ -57,6 +87,7 @@ COMMON_IGNORE_FIELDS = {
     '340__a',
     '440_3a',  # 206 cds-dojson
     '541__9',
+    '541__a',
     '541__h',
     '502__a',  # thesis_info/defense_date
     '502__b',  # thesis_info/degree_type
@@ -71,6 +102,7 @@ COMMON_IGNORE_FIELDS = {
     '540__b',
     '540__f',
     '595__z',
+    '595__9',
     '650172',
     '65017a',
     '650272',
@@ -89,6 +121,9 @@ COMMON_IGNORE_FIELDS = {
     '852__c',
     '852__h',
     '852__p',
+    '8564_8',  # bibdoc id
+    '8564_s',  # file identifier
+    '8564_x',  # subformat identifier
     '900__s',  # 206 cds-dojson
     '900__u',  # 206 cds-dojson
     '900__y',  # 206 cds-dojson
@@ -117,7 +152,7 @@ COMMON_IGNORE_FIELDS = {
 class CDSOverdoBookBase(OverdoJSONSchema):
     """Translation base Index for CDS Books."""
 
-    def do(self, blob, ignore_missing=True, exception_handlers=None):
+    def do(self, blob, ignore_missing=True, exception_handlers=None, init_fields=None):
         """Translate blob values and instantiate new model instance.
 
         Raises ``MissingRule`` when no rule matched and ``ignore_missing``
@@ -154,6 +189,9 @@ class CDSOverdoBookBase(OverdoJSONSchema):
             handlers.setdefault(MissingRule, clean_missing)
 
         output = {}
+
+        if init_fields:
+            output.update(**init_fields)
 
         if self.index is None:
             self.build()

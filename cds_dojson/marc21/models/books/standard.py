@@ -20,8 +20,10 @@
 
 from __future__ import unicode_literals
 
+from copy import deepcopy
+
 from ..base import model as cds_base
-from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase
+from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase, get_migration_dict
 from .base import model as books_base
 
 
@@ -34,21 +36,18 @@ class CDSStandard(CDSOverdoBookBase):
 
     __ignore_keys__ = COMMON_IGNORE_FIELDS
 
+    __json_init_dict__ = {'_migration': {**get_migration_dict()}}
+
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
         json = super(CDSStandard, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
-            exception_handlers=exception_handlers)
+            exception_handlers=exception_handlers,
+            init_fields=deepcopy(self.__json_init_dict__),
+        )
+
         json['$schema'] = self.__class__.__schema__
-        json['_migration'] = {
-            'record_type': 'document',
-            'has_serial': False,
-            'is_multipart': False,
-            'has_keywords': False,
-            'has_related': False,
-            'volumes': []
-        }
         return json
 
 

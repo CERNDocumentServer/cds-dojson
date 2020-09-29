@@ -19,8 +19,10 @@
 """Book model."""
 from __future__ import unicode_literals
 
+from copy import deepcopy
+
 from ..base import model as cds_base
-from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase
+from .base import COMMON_IGNORE_FIELDS, CDSOverdoBookBase, get_migration_dict
 from .base import model as books_base
 
 
@@ -31,33 +33,27 @@ class CDSBook(CDSOverdoBookBase):
                 '980__:PROCEEDINGS OR 980__:PERI OR ' \
                 '(-980:STANDARD 980:BOOK) OR ' \
                 '697C_:LEGSERLIB ' \
-                '-980__:DELETED -980__:MIGRATED -980:__STANDARD' \
+                '-980__:DELETED -980__:MIGRATED -980:__STANDARD -596:MULTIVOLUMES'
 
     __schema__ = 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json'
 
-    __ignore_keys__ = COMMON_IGNORE_FIELDS
+    __model_ignore_keys__ = {
+        '020__b',  # this field is used to match multipart monograph items as volumes
+    }
+
+    __ignore_keys__ = COMMON_IGNORE_FIELDS | __model_ignore_keys__
+
+    __json_init_dict__ = {'_migration': {**get_migration_dict()}}
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
         json = super(CDSBook, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
-            exception_handlers=exception_handlers)
+            exception_handlers=exception_handlers,
+            init_fields=deepcopy(self.__json_init_dict__)
+        )
         json['$schema'] = self.__class__.__schema__
-
-        if '_migration' not in json:
-            json['_migration'] = {}
-        json['_migration'].setdefault('record_type', 'document')
-        json['_migration'].setdefault('volumes', [])
-        json['_migration'].setdefault('serials', [])
-        json['_migration'].setdefault('has_serial', False)
-        json['_migration'].setdefault('is_multipart', False)
-        json['_migration'].setdefault('has_tags', False)
-        json['_migration'].setdefault('has_related', False)
-        json['_migration'].setdefault('has_journal', False)
-        json['_migration'].setdefault('tags', [])
-        json['_migration'].setdefault('journal_record_legacy_recid', '')
-
         return json
 
 

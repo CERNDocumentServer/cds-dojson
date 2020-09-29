@@ -98,14 +98,19 @@ def clean_val(subfield, value, var_type, req=False, regex_format=None,
             return default
         raise MissingRequiredField
     if to_clean is not None:
-        if var_type is str:
-            return clean_str(to_clean, regex_format, req, transform)
-        elif var_type is bool:
-            return bool(to_clean)
-        elif var_type is int:
-            return int(to_clean)
-        else:
-            raise NotImplementedError
+        try:
+            if var_type is str:
+                return clean_str(to_clean, regex_format, req, transform)
+            elif var_type is bool:
+                return bool(to_clean)
+            elif var_type is int:
+                return int(to_clean)
+            else:
+                raise NotImplementedError
+        except ValueError:
+            raise UnexpectedValue(subfield=subfield)
+        except TypeError:
+            raise UnexpectedValue(subfield=subfield)
 
 
 def clean_email(value):
@@ -328,7 +333,10 @@ def _get_correct_books_contributor_role(subfield, role):
         'ill.': 'Ilustrator',
         'ill': 'Ilustrator',
     }
-    clean_role = role.lower()
+    if isinstance(role, str):
+        clean_role = role.lower()
+    else:
+        raise UnexpectedValue(subfield=subfield, message=' unknown role')
     if clean_role not in translations:
         raise UnexpectedValue(subfield=subfield, message=' unknown role')
     return translations[clean_role]

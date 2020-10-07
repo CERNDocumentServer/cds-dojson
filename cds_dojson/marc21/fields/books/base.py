@@ -404,7 +404,7 @@ def urls(self, key, value):
               ['cds', '.cern.ch/record/', '/files']]):
         eitems_files.append(url)
         self['_migration']['eitems_has_files'] = True
-    elif sub_y == 'ebook':
+    elif sub_y == 'ebook' or sub_y == 'e-proceedings':
         eitems_external.append(url)
         self['_migration']['eitems_has_external'] = True
     else:

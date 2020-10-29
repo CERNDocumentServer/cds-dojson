@@ -475,9 +475,9 @@ def alternative_identifiers(self, key, value):
             # if 0247__2 == doi it is a DOI identifier
             self['identifiers'] = dois(self, key, value)
             raise IgnoreKey('alternative_identifiers')
-        elif field_type and field_type.lower() == 'asin':
-            indentifier_entry.update({'value': sub_a,
-                                      'scheme': 'ASIN'})
+        elif field_type and field_type.upper() in \
+                EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE:
+            raise IgnoreKey('alternative_identifiers')
         else:
             raise UnexpectedValue(subfield='2')
     if key == '035__':

@@ -325,13 +325,13 @@ def _get_correct_video_contributor_role(role):
 def _get_correct_books_contributor_role(subfield, role):
     """Clean up roles."""
     translations = {
-        'author': 'Author',
-        'dir.': 'Supervisor',
-        'dir': 'Supervisor',
-        'ed.': 'Editor',
-        'ed': 'Editor',
-        'ill.': 'Ilustrator',
-        'ill': 'Ilustrator',
+        'author': 'AUTHOR',
+        'dir.': 'SUPERVISOR',
+        'dir': 'SUPERVISOR',
+        'ed.': 'EDITOR',
+        'ed': 'EDITOR',
+        'ill.': 'ILLUSTRATOR',
+        'ill': 'ILLUSTRATOR',
     }
     if isinstance(role, str):
         clean_role = role.lower()
@@ -377,13 +377,39 @@ def _extract_json_ids(info, provenence='source'):
     return ids
 
 
+def _extract_json_ils_ids(info, provenence='source'):
+    """Extract author IDs from MARC tags."""
+    SOURCES = {
+        'AUTHOR|(INSPIRE)': 'INSPIRE ID',
+        'AUTHOR|(CDS)': 'CDS',
+        'AUTHOR|(SzGeCERN)': 'CERN'
+    }
+    regex = re.compile(r'(AUTHOR\|\((CDS|INSPIRE|SzGeCERN)\))(.*)')
+    ids = []
+    author_ids = force_list(info.get('0', ''))
+    for author_id in author_ids:
+        match = regex.match(author_id)
+        if match:
+            ids.append(
+                {
+                    'value': match.group(3),
+                    provenence: SOURCES[match.group(1)]
+                })
+    try:
+        ids.append({'value': info['inspireid'], provenence: 'INSPIRE ID'})
+    except KeyError:
+        pass
+
+    return ids
+
+
 def build_contributor_books(value):
     """Create the contributors for books."""
     if not value.get('a'):
         return []
 
     contributor = {
-        'identifiers': _extract_json_ids(value, 'scheme') or None,
+        'identifiers': _extract_json_ils_ids(value, 'scheme') or None,
         'full_name': value.get('name') or clean_val('a', value, str),
         'roles': [
             _get_correct_books_contributor_role(

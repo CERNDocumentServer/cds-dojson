@@ -1460,10 +1460,6 @@ def test_alternative_identifiers(app):
             """, {
                 'alternative_identifiers': [
                     {
-                        'value': '9402409580',
-                        'scheme': 'ASIN',
-                    },
-                    {
                         'value': '5231528',
                         'scheme': 'EBL',
                     }
@@ -1499,18 +1495,6 @@ def test_alternative_identifiers(app):
             })
         check_transformation(
             """
-            <datafield tag="024" ind1="7" ind2=" ">
-                <subfield code="2">ASIN</subfield>
-                <subfield code="a">9402409580</subfield>
-            </datafield>
-            """, {
-                'alternative_identifiers': [{
-                    'value': '9402409580',
-                    'scheme': 'ASIN'
-                }],
-            })
-        check_transformation(
-            """
             <datafield tag="036" ind1=" " ind2=" ">
                 <subfield code="9">DLC</subfield>
                 <subfield code="a">92074207</subfield>
@@ -1529,6 +1513,8 @@ def test_alternative_identifiers(app):
                 <subfield code="a">5231528</subfield>
             </datafield>
             """, {
+                'alternative_identifiers': [
+                    {'scheme': 'arXiv', 'value': '5231528'}]
             })
 
 

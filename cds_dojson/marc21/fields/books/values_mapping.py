@@ -115,32 +115,38 @@ MATERIALS = [
 SUBJECT_CLASSIFICATION_EXCEPTIONS = \
     ['PACS', 'CERN LIBRARY', 'CERN YELLOW REPORT']
 
+AUTHOR_AFFILIATION_SCHEMES = ['ROR', 'GRID']
+
 EXTERNAL_SYSTEM_IDENTIFIERS = [
-    'DCL',
-    'DESY',
-    'DOE',
+    'ARXIV',
     'EBL',
-    'FIZ',
-    'HAL',
-    'IEECONF',
-    'INDICO.CERN.CH',
-    'INIS',
     'INSPIRE',
-    'KEK',
-    'LHCLHC',
     'SAFARI',
     'SCEM',
-    'UDCCERN',
-    'WAI01',
+    'HDL',
 ]
 
 EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE = [
-    'ARXIV',
+    'ASIN',
+    'DCL',
+    'DESY',
+    'DOE',
+    'ASIN'
+    'IEECONF',
     'CERN ANNUAL REPORT',
     'HTTP://INSPIREHEP.NET/OAI2D',
+    'FIZ',
+    'HAL',
+    'KEK',
+    'INIS',
     'SLAC',
+    'LHCLHC',
+    'INDICO.CERN.CH',
+    'UDCCERN',
     'SLACCONF',
     'SPIRES',
+    'WAI01',
+    'URN'
 ]
 
 

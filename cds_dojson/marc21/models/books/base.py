@@ -152,7 +152,8 @@ COMMON_IGNORE_FIELDS = {
 class CDSOverdoBookBase(OverdoJSONSchema):
     """Translation base Index for CDS Books."""
 
-    def do(self, blob, ignore_missing=True, exception_handlers=None, init_fields=None):
+    def do(self, blob, ignore_missing=True, exception_handlers=None,
+           init_fields=None):
         """Translate blob values and instantiate new model instance.
 
         Raises ``MissingRule`` when no rule matched and ``ignore_missing``
@@ -195,10 +196,12 @@ class CDSOverdoBookBase(OverdoJSONSchema):
 
         if self.index is None:
             self.build()
+
         if isinstance(blob, GroupableOrderedDict):
             items = blob.iteritems(repeated=True, with_order=False)
         else:
             items = iteritems(blob)
+
         for key, value in items:
             try:
                 result = self.index.query(key)
@@ -225,7 +228,6 @@ class CDSOverdoBookBase(OverdoJSONSchema):
 
 class BooksBase(OverdoJSONSchema):
     """Base model conversion MARC21 to JSON."""
-
 
 model = BooksBase(bases=(),
                   entry_point_group='cds_dojson.marc21.books')

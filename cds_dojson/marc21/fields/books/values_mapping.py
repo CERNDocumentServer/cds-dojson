@@ -40,10 +40,10 @@ COLLECTION = {
 }
 
 ACQUISITION_METHOD = {
-    'user': ['H'],
+    # mapping for possible value of "created_by.type" field
+    'user': ['H', 'r'],
     'batchuploader': ['N', 'M'],
     'migration': ['migration'],
-    'r': 'user'
 }
 
 MEDIUM_TYPES = [

@@ -161,6 +161,7 @@ def filter_list_values(f):
     def wrapper(self, key, value, **kwargs):
         out = f(self, key, value)
         if out:
+            print(out)
             clean_list = [dict((k, v) for k, v in elem.items()
                                if v) for elem in out if elem]
             clean_list = [elem for elem in clean_list if elem]

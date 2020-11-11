@@ -642,20 +642,20 @@ def test_authors(app):
                 'authors': [
                     {
                         'full_name': 'Frampton, Paul H',
-                        'roles': ['editor'],
+                        'roles': ['EDITOR'],
                         'alternative_names': 'Neubert, Matthias'
                     },
                     {
                         'full_name': 'Glashow, Sheldon Lee',
-                        'roles': ['editor']
+                        'roles': ['EDITOR']
                     },
                     {
                         'full_name': 'Van Dam, Hendrik',
-                        'roles': ['editor']
+                        'roles': ['EDITOR']
                     },
                     {
                         'full_name': 'Seyfert, Paul',
-                        'roles': ['author'],
+                        'roles': ['AUTHOR'],
                         'affiliations': [{'name': 'CERN'}],
                         'identifiers': [
                             {'scheme': 'INSPIRE ID',
@@ -669,13 +669,13 @@ def test_authors(app):
                     },
                     {
                         'full_name': 'John Doe',
-                        'roles': ['author'],
+                        'roles': ['AUTHOR'],
                         'affiliations': [{'name': 'CERN'},
                                          {'name': 'Univ. Gent'}],
                     },
                     {
                         'full_name': 'Jane Doe',
-                        'roles': ['author'],
+                        'roles': ['AUTHOR'],
                         'affiliations': [{'name': 'CERN'},
                                          {'name': 'Univ. Gent'}],
                     }
@@ -698,11 +698,11 @@ def test_authors(app):
                 'authors': [
                     {
                         'full_name': 'Frampton, Paul H',
-                        'roles': ['editor'],
+                        'roles': ['EDITOR'],
                     },
                     {
                         'full_name': 'Glashow, Sheldon Lee',
-                        'roles': ['editor']
+                        'roles': ['EDITOR']
                     },
                 ],
                 'other_authors': True,
@@ -1585,7 +1585,7 @@ def test_languages(app):
                 <subfield code="a">eng</subfield>
             </datafield>
             """, {
-                'languages': ['en'],
+                'languages': ['EN'],
             })
         check_transformation(
             """
@@ -1593,7 +1593,7 @@ def test_languages(app):
                 <subfield code="a">english</subfield>
             </datafield>
             """, {
-                'languages': ['en'],
+                'languages': ['EN'],
             })
         check_transformation(
             """
@@ -1601,7 +1601,7 @@ def test_languages(app):
                 <subfield code="a">fre</subfield>
             </datafield>
             """, {
-                'languages': ['fr'],
+                'languages': ['FR'],
             })
         check_transformation(
             """
@@ -1609,7 +1609,7 @@ def test_languages(app):
                 <subfield code="a">pl</subfield>
             </datafield>
             """, {
-                'languages': ['pl'],
+                'languages': ['PL'],
             })
         check_transformation(
             """
@@ -1617,7 +1617,7 @@ def test_languages(app):
                 <subfield code="a">ger</subfield>
             </datafield>
             """, {
-                'languages': ['de'],
+                'languages': ['DE'],
             })
         with pytest.raises(UnexpectedValue):
             check_transformation(
@@ -1626,7 +1626,7 @@ def test_languages(app):
                     <subfield code="a">xxxxxxxx</subfield>
                 </datafield>
                 """, {
-                    'languages': ['de'],
+                    'languages': ['DE'],
                 })
 
 
@@ -1639,7 +1639,7 @@ def test_editions(app):
                 <subfield code="a">3rd ed.</subfield>
             </datafield>
             """, {
-                'edition': '3rd ed.'
+                'edition': '3rd'
             })
 
 

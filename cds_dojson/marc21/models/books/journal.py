@@ -67,8 +67,8 @@ class CDSJournal(CDSOverdoBookBase):
         '785__i',   # label of relation continued by
         '785__t',   # title of relation continued by
         '85641y',
-        '866__g'
-        '866__x'
+        '866__g',
+        '866__x',
         '933__a',
         '962__n',
         '960__a',

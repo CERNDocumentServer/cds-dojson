@@ -2116,12 +2116,12 @@ def test_alternative_titles_a(app):
             {'alternative_titles': [
                 {'value': """Study of the impact of stacking on simple
                       hard diffraction events in CMS/LHC""",
-                 'language': 'en',
+                 'language': 'EN',
                  'type': 'TRANSLATED_TITLE'
                  },
                 {
                     'value': 'Subtitle/LHC',
-                    'language': 'en',
+                    'language': 'EN',
                     'type': 'TRANSLATED_SUBTITLE'
                 }
             ]
@@ -2608,8 +2608,8 @@ def test_volume_barcodes(app):
                     **get_migration_dict(),
                     **dict(
                         volumes=[
-                            dict(barcode='80-1209-8', volume=1),
-                            dict(barcode='B00004172', volume=1),
+                            dict(barcode='80-1209-8', volume='1'),
+                            dict(barcode='B00004172', volume='1'),
                         ],
                     ), }
 

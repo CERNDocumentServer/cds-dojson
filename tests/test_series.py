@@ -25,6 +25,7 @@ from dojson.errors import MissingRule
 
 from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
     UnexpectedValue
+from cds_dojson.marc21.models.books.base import get_migration_dict
 from cds_dojson.marc21.models.books.multipart import model as multipart_model
 from cds_dojson.marc21.models.books.serial import model as serial_model
 from cds_dojson.marc21.utils import create_record
@@ -156,12 +157,14 @@ def test_monograph(app):
                 ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '2',
-                '_migration': {'record_type': 'multipart', 'volumes': [
-                    {'title': 'Introduzione alla fisica meccanica',
-                     'volume': 1},
-                    {'title': 'Termologia, onde, relatività',
-                     'volume': 2}
-                ]}
+                '_migration': {
+                    **get_migration_dict(),
+                    'record_type': 'multipart', 'volumes': [
+                        {'title': 'Introduzione alla fisica meccanica',
+                         'volume': '1'},
+                        {'title': 'Termologia, onde, relatività',
+                         'volume': '2'}
+                    ]}
 
             },
             multipart_model
@@ -191,10 +194,12 @@ def test_monograph(app):
                 ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 'number_of_volumes': '2',
-                '_migration': {'record_type': 'multipart', 'volumes': [
-                    {'title': 'Termologia, onde, relatività',
-                     'volume': 2}
-                ]}
+                '_migration': {
+                    **get_migration_dict(),
+                    'record_type': 'multipart', 'volumes': [
+                        {'title': 'Termologia, onde, relatività',
+                         'volume': '2'}
+                    ]}
 
             },
             multipart_model,
@@ -223,11 +228,12 @@ def test_monograph(app):
                     }
                 ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                '_migration': {'record_type': 'multipart', 'volumes': [
-                    {'title': 'Termologia, onde, relatività',
-                     'volume': 2}
-                ]}
-
+                '_migration': {
+                    **get_migration_dict(),
+                    'record_type': 'multipart', 'volumes': [
+                        {'title': 'Termologia, onde, relatività',
+                         'volume': '2'}
+                    ]}
             },
             multipart_model,
         )
@@ -256,11 +262,11 @@ def test_monograph(app):
                     }
                 ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                '_migration': {'record_type': 'multipart', 'volumes': [
-                    {'title': 'Termologia, onde, relatività',
-                     'volume': 2}
-                ]}
-
+                '_migration': {
+                    **get_migration_dict(),
+                    'record_type': 'multipart', 'volumes': [
+                        {'title': 'Termologia, onde, relatività', 'volume': '2'}
+                    ]}
             },
             multipart_model,
         )
@@ -288,10 +294,9 @@ def test_monograph(app):
                     ],
                     'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                     'number_of_volumes': '2',
-                    '_migration': {'record_type': 'multipart', 'volumes': [
-
-                    ]}
-
+                    '_migration': {
+                        **get_migration_dict(),
+                        'record_type': 'multipart', 'volumes': []}
                 },
                 multipart_model,
             )
@@ -315,7 +320,7 @@ def test_monograph(app):
                     ],
                     'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                     'number_of_volumes': '2',
-                    '_migration': {'record_type': 'multipart', 'volumes': []}
+                    '_migration': {**get_migration_dict(), 'record_type': 'multipart', 'volumes': []}
                 },
                 multipart_model,
             )
@@ -373,61 +378,63 @@ def test_monograph_migration(app):
             </datafield>
             """,
             {
-                '_migration': {'volumes': [
-                    {
-                        'volume': 3,
-                        'isbn': '1108052819',
-                        'physical_description': 'print version, paperback',
-                        'is_electronic': False,
-                    },
-                    {
-                        'volume': 3,
-                        'isbn': '9781108052818',
-                        'physical_description':
-                            'print version, paperback',
-                        'is_electronic': False,
-                    },
-                    {
-                        'volume': 2,
-                        'isbn': '9781108052801',
-                        'physical_description':
-                            'print version, paperback',
-                        'is_electronic': False,
-                    },
-                    {
-                        'volume': 2,
-                        'isbn': '1108052800',
-                        'physical_description':
-                            'print version, paperback',
-                        'is_electronic': False,
-                    },
-                    {
-                        'volume': 1,
-                        'isbn': '9781108052795',
-                        'physical_description':
-                            'print version, paperback',
-                        'is_electronic': False,
-                    },
-                    {
-                        'volume': 1,
-                        'isbn': '1108052797',
-                        'physical_description':
-                            'print version, paperback',
-                        'is_electronic': False,
-                    },
-                    {
-                        'title': '1865-1874',
-                        'volume': 1
-                    },
-                    {
-                        'title': '1875-1881',
-                        'volume': 2
-                    },
-                    {
-                        'title': '1882-1905',
-                        'volume': 3
-                    },
-                ],
+                '_migration': {
+                    **get_migration_dict(),
+                    'volumes': [
+                        {
+                            'volume': '3',
+                            'isbn': '1108052819',
+                            'physical_description': 'print version, paperback',
+                            'is_electronic': False,
+                        },
+                        {
+                            'volume': '3',
+                            'isbn': '9781108052818',
+                            'physical_description':
+                                'print version, paperback',
+                            'is_electronic': False,
+                        },
+                        {
+                            'volume': '2',
+                            'isbn': '9781108052801',
+                            'physical_description':
+                                'print version, paperback',
+                            'is_electronic': False,
+                        },
+                        {
+                            'volume': '2',
+                            'isbn': '1108052800',
+                            'physical_description':
+                                'print version, paperback',
+                            'is_electronic': False,
+                        },
+                        {
+                            'volume': '1',
+                            'isbn': '9781108052795',
+                            'physical_description':
+                                'print version, paperback',
+                            'is_electronic': False,
+                        },
+                        {
+                            'volume': '1',
+                            'isbn': '1108052797',
+                            'physical_description':
+                                'print version, paperback',
+                            'is_electronic': False,
+                        },
+                        {
+                            'title': '1865-1874',
+                            'volume': '1'
+                        },
+                        {
+                            'title': '1875-1881',
+                            'volume': '2'
+                        },
+                        {
+                            'title': '1882-1905',
+                            'volume': '3'
+                        },
+                    ],
                     'record_type': 'multipart',
                 },
                 'title': 'Wissenschaftliche Abhandlungen',
@@ -459,18 +466,23 @@ def test_monograph_invalid_volume_migration(app):
                 {}, multipart_model)
 
 
-def test_monograph_invalid_volume_migration_no_description(app):
-    """Test invalid multipart volume (https://cds.cern.ch/record/287517)."""
+def test_monograph_volume_migration_no_description(app):
+    """Test multipart volume without description (https://cds.cern.ch/record/287517)."""
     with app.app_context():
-        with pytest.raises(UnexpectedValue):
-            check_transformation(
-                """
-                <datafield tag="020" ind1=" " ind2=" ">
-                <subfield code="a">1560810726</subfield>
-                <subfield code="u">v.13</subfield>
-                </datafield>
-                """,
-                {}, multipart_model)
+        check_transformation(
+            """
+            <datafield tag="020" ind1=" " ind2=" ">
+            <subfield code="a">1560810726</subfield>
+            <subfield code="u">v.13</subfield>
+            </datafield>
+            """,
+            {'_migration': {
+                **get_migration_dict(),
+                'record_type': 'multipart',
+                'volumes': [{'is_electronic': False,
+                             'isbn': '1560810726',
+                             'volume': '13'}]},
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH'}, multipart_model)
 
 
 def test_monograph_with_electronic_isbns(app):
@@ -519,33 +531,188 @@ def test_monograph_with_electronic_isbns(app):
                 ],
                 'mode_of_issuance': 'MULTIPART_MONOGRAPH',
                 '_migration': {
+                    **get_migration_dict(),
                     'record_type': 'multipart',
                     'volumes': [
                         {
                             'is_electronic': False,
                             'physical_description': 'print version',
-                            'volume': 2,
+                            'volume': '2',
                             'isbn': '0817631852'
                         },
                         {
                             'is_electronic': True,
                             'physical_description': 'electronic version',
-                            'volume': 2,
+                            'volume': '2',
                             'isbn': '9781461239406'
                         },
                         {
                             'is_electronic': True,
                             'physical_description': 'electronic version',
-                            'volume': 1,
+                            'volume': '1',
                             'isbn': '9781461251545'
                         },
                         {
                             'is_electronic': False,
                             'physical_description': 'print version',
-                            'volume': 1,
+                            'volume': '1',
                             'isbn': '9781461295891'
                         },
                     ],
                 },
             }, multipart_model
         )
+
+
+def test_monograph_volume_migration_doi(app):
+    """Test multipart volume with DOIs attached to volumes."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="024" ind1="7" ind2=" ">
+            <subfield code="2">DOI</subfield>
+            <subfield code="a">10.1007/978-3-030-49613-5</subfield>
+            <subfield code="q">ebook (v.1)</subfield>
+            </datafield>
+            """,
+            {
+                '_migration':
+                {
+                    **get_migration_dict(),
+                    'record_type': 'multipart',
+                    'volumes': [{
+                        'doi': '10.1007/978-3-030-49613-5',
+                        'material': 'ebook',
+                        'source': None,
+                        'volume': '1'
+                    }]
+                },
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+            },
+            multipart_model)
+
+
+def test_monograph_volume_barcode(app):
+    """Test multipart volume with barcodes (= items)."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="n">pt.A</subfield>
+            <subfield code="x">73-0089-0</subfield>
+            </datafield>
+            """,
+            {
+                '_migration':
+                {
+                    **get_migration_dict(),
+                    'record_type': 'multipart',
+                    'volumes': [{'barcode': '73-0089-0', 'volume': 'A'}]
+                },
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+            },
+            multipart_model)
+
+
+def test_monograph_volume_url(app):
+    """Test multipart volume with urls."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="856" ind1="4" ind2=" ">
+            <subfield code="u">https://cds.cern.ch/auth.py?r=EBLIB_P_1890382</subfield>
+            <subfield code="y">ebook (v.1)</subfield>
+            </datafield>
+            """,
+            {
+                '_migration':
+                {
+                    **get_migration_dict(),
+                    'record_type': 'multipart',
+                    'volumes': [{
+                        'description': 'ebook',
+                        'url': 'https://cds.cern.ch/auth.py?r=EBLIB_P_1890382',
+                        'volume': '1'}]
+                },
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+            },
+            multipart_model)
+
+
+def test_monograph_legacy_representation(app):
+    """Test multipart representation in CDS."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="596" ind1=" " ind2=" ">
+            <subfield code="a">MULTIVOLUMES-1</subfield>
+            </datafield>
+            <datafield tag="597" ind1=" " ind2=" ">
+            <subfield code="a">Vol965</subfield>
+            </datafield>
+            """,
+            {
+                '_migration':
+                {
+                    **get_migration_dict(),
+                    'record_type': 'multipart',
+                    'multipart_id': 'Vol965',
+                    'multivolume_record_format': True,
+                },
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+            },
+            multipart_model)
+
+
+def test_monograph_legacy_report_number(app):
+    """Test multipart representation in CDS."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">IAEA-INIS-20-REV-0-D</subfield>
+            </datafield>
+            """,
+            {
+                '_migration':
+                {
+                    **get_migration_dict(),
+                    'record_type': 'multipart',
+                },
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
+                'identifiers': [{'scheme': 'report_number', 'value': 'IAEA-INIS-20-REV-0-D'}]
+            },
+            multipart_model)
+
+
+def test_monograph_series_authors(app):
+    """Test multipart authors."""
+    with app.app_context():
+        check_transformation(
+            """
+            <datafield tag="100" ind1=" " ind2=" ">
+            <subfield code="a">Mehra, Jagdish</subfield>
+            </datafield>
+            <datafield tag="700" ind1=" " ind2=" ">
+            <subfield code="a">Rechenberg, Helmut</subfield>
+            </datafield>
+            """,
+            {
+                '_migration':
+                {
+                    **get_migration_dict(),
+                    'record_type': 'multipart',
+                    'authors': [
+                        {
+                            'full_name': 'Mehra, Jagdish',
+                            'roles': ['AUTHOR']
+                        },
+                        {
+                            'full_name': 'Rechenberg, Helmut',
+                            'roles': ['AUTHOR']
+                        }],
+                },
+                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
+                'authors': ['Mehra, Jagdish', 'Rechenberg, Helmut']
+            },
+            multipart_model)

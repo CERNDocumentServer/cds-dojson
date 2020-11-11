@@ -735,13 +735,13 @@ def alternative_titles(self, key, value):
         _alternative_titles.append({
             'value': clean_val('a', value, str, req=True),
             'type': 'TRANSLATED_TITLE',
-            'language': 'en',
+            'language': 'EN',
         })
     if 'b' in value:
         _alternative_titles.append({
             'value': clean_val('b', value, str, req=True),
             'type': 'TRANSLATED_SUBTITLE',
-            'language': 'en',
+            'language': 'EN',
         })
     return _alternative_titles
 

@@ -413,7 +413,7 @@ def build_contributor_books(value):
         'full_name': value.get('name') or clean_val('a', value, str),
         'roles': [
             _get_correct_books_contributor_role(
-                'e', value.get('e', 'author')).lower()
+                'e', value.get('e', 'author'))
         ],
     }
 

@@ -21,7 +21,6 @@ from __future__ import absolute_import
 
 import json
 import os
-
 import pytest
 from dojson.utils import filter_values
 

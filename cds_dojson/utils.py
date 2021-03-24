@@ -23,7 +23,6 @@ from collections import defaultdict
 
 import arrow
 import six
-
 from dojson.utils import GroupableOrderedDict
 
 

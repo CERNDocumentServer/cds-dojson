@@ -20,13 +20,11 @@
 
 from __future__ import absolute_import, print_function
 
-from dojson.utils import for_each_value, filter_values, ignore_value, \
-    IgnoreKey, force_list
+from dojson.utils import (IgnoreKey, filter_values, for_each_value, force_list,
+                          ignore_value)
 
 from ..models.base import model
-
-from .utils import build_contributor, \
-    build_contributor_from_508
+from .utils import build_contributor, build_contributor_from_508
 
 
 @model.over('recid', '^001')

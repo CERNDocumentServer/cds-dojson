@@ -26,11 +26,12 @@
 from __future__ import absolute_import
 
 import json
+
 import pkg_resources
 import pytest
+from click.testing import CliRunner
 
 from cds_dojson.cli import compile_schema
-from click.testing import CliRunner
 
 
 @pytest.mark.parametrize('src, compiled', [

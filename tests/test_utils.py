@@ -19,9 +19,10 @@
 
 from __future__ import absolute_import
 
+from dojson.utils import filter_values
+
 from cds_dojson.utils import (MementoDict, convert_date_to_iso_8601,
                               for_each_squash, not_accessed_keys)
-from dojson.utils import filter_values
 
 
 def test_for_each_squash():

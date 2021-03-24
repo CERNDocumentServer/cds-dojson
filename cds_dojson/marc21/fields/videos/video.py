@@ -46,7 +46,8 @@ def duration(self, key, value):
     off dealing with more regex.
     """
     try:
-        return re.match('(\d{2}:\d{2}:\d{2})(\.\d+)?', value.get('a')).group(1)
+        return re.match(r'(\d{2}:\d{2}:\d{2})(\.\d+)?', value.get('a')) \
+            .group(1)
     except (AttributeError, TypeError):
         # The regex didn't match, we will extract the duration later.
         return '00:00:00'
@@ -144,11 +145,12 @@ def location(self, key, value):
 @ignore_value
 def internal_note(self, key, value):
     """Internal note."""
+    CATEGS = ('CERN50', 'CERN EDS', 'Video-SR-F', 'Pilote PICTURAE', 'Press')
     _internal_categories = defaultdict(list)
     _internal_categories.update(self.get('internal_categories', {}))
     _internal_notes = self.get('internal_note', '').splitlines()
     for v in force_list(value):
-        if v.get('a') in ('CERN50', 'CERN EDS', 'Video-SR-F', 'Pilote PICTURAE', 'Press'):
+        if v.get('a') in CATEGS:
             _internal_categories[v.get('a')].append(v.get('s'))
         else:
             _internal_notes.append(v.get('a'))

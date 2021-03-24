@@ -15,7 +15,6 @@ include .travis.yml
 include Dockerfile
 include LICENSE
 include pytest.ini
-include tox.ini
 recursive-include cds_dojson *.json
 recursive-include cds_dojson *.py
 recursive-include docs *.py

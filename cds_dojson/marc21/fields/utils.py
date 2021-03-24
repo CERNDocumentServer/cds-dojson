@@ -163,7 +163,7 @@ def _extract_json_ids(info):
         'AUTHOR|(CDS)': 'CDS',
         '(SzGeCERN)': 'CERN'
     }
-    regex = re.compile('((AUTHOR\|\((CDS|INSPIRE)\))|(\(SzGeCERN\)))(.*)')
+    regex = re.compile(r'((AUTHOR\|\((CDS|INSPIRE)\))|(\(SzGeCERN\)))(.*)')
     ids = []
     match = regex.match(info.get('0', ''))
     if match:

@@ -33,20 +33,21 @@ with open(os.path.join('cds_dojson', 'version.py'), 'rt') as f:
 
 tests_require = [
     'check-manifest>=0.25',
-    'coverage>=4.0',
+    'coverage>=5.3,<6',
     'invenio-jsonschemas>=1.0.0a5',
-    'isort>=4.2.2',
     'jsonpatch>=1.11',
     'jsonref>=0.1',
     'jsonresolver>=0.1.0',
     'jsonschema>=2.5.1',
-    'mock>=1.0.0',
+    'mock>=1.3.0',
     'pydocstyle>=1.0.0',
+    'pycodestyle>=1.0.0',
     'pytest-cache>=1.0',
-    'pytest-cov>=2.1.0',
+    'pytest-cov>=2.10.1',
+    'pytest-isort>=1.2.0',
     'pytest-pep8>=1.0.6',
-    'pytest>=2.8.0',
-    'pycountry>=17.5.14',
+    'pytest>=4.0.0,<5',
+    'pycountry>=17.5.14,<19',
 ]
 
 extras_require = {
@@ -75,14 +76,13 @@ setup(
     platforms='any',
     setup_requires=[
         'pytest-runner>=2.6.2',
-        'setuptools>=17.1',
     ],
     install_requires=[
         'arrow>=0.7.0',
-        'dojson>=1.2.1',
+        'dojson>=1.3.2',
         'invenio-query-parser>=0.5.0',
         'requests>=2.17.3',
-        'pycountry>=17.5.14',
+        'pycountry>=17.5.14,<19',
     ],
     extras_require=extras_require,
     classifiers=[

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of CERN Document Server.
-# Copyright (C) 2017 CERN.
+# Copyright (C) 2017-2021 CERN.
 #
 # Invenio is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -17,7 +17,13 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 
+
+# Quit on errors
+set -o errexit
+
+# Quit on unbound symbols
+set -o nounset
+
 pydocstyle cds_dojson tests && \
-# isort -rc -c -df && \
-check-manifest --ignore ".travis-*" && \
-python setup.py test
+python -m check_manifest --ignore ".*-requirements.txt" && \
+python -m pytest tests

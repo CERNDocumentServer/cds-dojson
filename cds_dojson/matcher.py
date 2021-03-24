@@ -22,7 +22,6 @@
 import logging
 
 import pkg_resources
-
 import pypeg2
 from dojson.contrib.marc21 import model as default
 from invenio_query_parser.parser import Main as parser

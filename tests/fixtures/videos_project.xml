@@ -37,11 +37,11 @@
     <subfield code="u">https://cds.cern.ch/record/2</subfield>
   </datafield>
   <datafield tag="859" ind1=" " ind2=" ">
-    <subfield code="f">Jacques.Fichet@cern.ch</subfield>
+    <subfield code="f">another.user@cern.ch</subfield>
   </datafield>
   <datafield tag="937" ind1=" " ind2=" ">
     <subfield code="c">2017-07-04</subfield>
-    <subfield code="s">Jacques.Fichet@cern.ch</subfield>
+    <subfield code="s">another.user@cern.ch</subfield>
   </datafield>
   <datafield tag="960" ind1=" " ind2=" ">
     <subfield code="a">85</subfield>

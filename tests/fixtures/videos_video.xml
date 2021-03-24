@@ -77,15 +77,15 @@
       <subfield code="e">Director</subfield>
     </datafield>
     <datafield tag="700" ind1=" " ind2=" ">
-      <subfield code="a">Christoph Madsen</subfield>
+      <subfield code="a">Test User</subfield>
       <subfield code="e">Director</subfield>
     </datafield>
     <datafield tag="700" ind1=" " ind2=" ">
-      <subfield code="a">Paola Catapano</subfield>
+      <subfield code="a">Test User 2</subfield>
       <subfield code="e">Director</subfield>
     </datafield>
     <datafield tag="700" ind1=" " ind2=" ">
-      <subfield code="a">Christoph Madsen</subfield>
+      <subfield code="a">Test User</subfield>
       <subfield code="e">Editor</subfield>
     </datafield>
     <datafield tag="773" ind1=" " ind2=" ">
@@ -267,14 +267,14 @@
     </datafield>
 
     <datafield tag="859" ind1=" " ind2=" ">
-      <subfield code="f">Jacques.Fichet@cern.ch</subfield>
+      <subfield code="f">another.user@cern.ch</subfield>
     </datafield>
     <datafield tag="859" ind1=" " ind2=" ">
-      <subfield code="f">christoph.martin.madsen@cern.ch</subfield>
+      <subfield code="f">tuser@cern.ch</subfield>
     </datafield>
     <datafield tag="937" ind1=" " ind2=" ">
       <subfield code="c">04 Jul 2017</subfield>
-      <subfield code="s">Jacques.Fichet@cern.ch</subfield>
+      <subfield code="s">another.user@cern.ch</subfield>
     </datafield>
     <datafield tag="960" ind1=" " ind2=" ">
       <subfield code="a">85</subfield>

@@ -18,9 +18,9 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Utilities for converting MARC21."""
 
+from dojson.contrib.marc21.utils import MARC21_DTD, split_stream
 from lxml import etree
 from six import StringIO, binary_type, text_type
-from dojson.contrib.marc21.utils import split_stream, MARC21_DTD
 
 from ..utils import MementoDict
 

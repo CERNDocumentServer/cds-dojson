@@ -19,9 +19,10 @@
 """Base model tests."""
 
 import os
-import mock
 
+import mock
 import pkg_resources
+
 from cds_dojson.marc21.models.base import model
 from cds_dojson.marc21.utils import create_record
 from cds_dojson.overdo import Overdo
@@ -48,7 +49,8 @@ def test_overdo_missing():
     class MyOverdo(Overdo):
         __ignore_keys__ = set(['c'])
 
-    with mock.patch('cds_dojson.overdo.not_accessed_keys', return_value=set(['a', 'b', 'c'])):
+    with mock.patch('cds_dojson.overdo.not_accessed_keys',
+                    return_value=set(['a', 'b', 'c'])):
         overdo = MyOverdo()
         overdo.__ignore_keys__ = set(['c'])
         assert overdo.missing('blob') == set(['a', 'b'])

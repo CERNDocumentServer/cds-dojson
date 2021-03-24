@@ -5,12 +5,8 @@
     {
       "properties": {
         "title": { "$ref": "../../definitions-v1.0.0.json#/definitions/title" },
-        "keywords": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/keywords"
-        },
-        "description": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/description"
-        },
+        "keywords": { "$ref": "../../definitions-v1.0.0.json#/definitions/keywords" },
+        "description": { "$ref": "../../definitions-v1.0.0.json#/definitions/description" },
         "translations": {
           "type": "array",
           "items": {
@@ -37,9 +33,7 @@
           "minItems": 1,
           "items": {
             "allOf": [
-              {
-                "$ref": "../../definitions-v1.0.0.json#/definitions/contributor"
-              },
+              {"$ref": "../../definitions-v1.0.0.json#/definitions/contributor"},
               {
                 "properties": {
                   "role": {
@@ -69,27 +63,17 @@
           }
         },
         "date": { "$ref": "../../definitions-v1.0.0.json#/definitions/date" },
-        "license": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/license"
-        },
+        "license": { "$ref": "../../definitions-v1.0.0.json#/definitions/license" },
         "note": { "$ref": "../../definitions-v1.0.0.json#/definitions/note" },
-        "internal_note": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note"
-        },
-        "internal_categories": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/internal_categories"
-        },
-        "subject": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/subject"
-        },
-        "external_system_identifiers": {
-          "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers"
-        },
+        "internal_note": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_note" },
+        "internal_categories": { "$ref": "../../definitions-v1.0.0.json#/definitions/internal_categories" },
+        "subject": { "$ref": "../../definitions-v1.0.0.json#/definitions/subject" },
+        "external_system_identifiers": { "$ref": "../../definitions-v1.0.0.json#/definitions/external_system_identifiers" },
         "_files": {
-          "type": "array",
-          "items": {
-            "$ref": "../../definitions-v1.0.0.json#/definitions/file"
-          }
+            "type": "array",
+            "items": {
+              "$ref": "../../definitions-v1.0.0.json#/definitions/file"
+            }
         },
         "videos": {
           "type": "array",
@@ -106,7 +90,10 @@
           "type": "object",
           "properties": {
             "state": {
-              "$ref": "../../definitions-v1.0.0.json#/definitions/state"
+              "type": "object"
+            },
+            "extracted_metadata": {
+              "type": "object"
             },
             "modified_by": {
               "type": "integer"

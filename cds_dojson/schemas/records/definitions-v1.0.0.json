@@ -98,7 +98,7 @@
           "description": "Specific contribution of the person to this specific record.",
           "type": "string"
         },
-        "role": {
+        "role" : {
           "type": "string"
         }
       },
@@ -110,63 +110,7 @@
     },
     "keywords": {
       "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          }
-        }
-      },
-      "type": "array"
-    },
-    "_file": {
-      "items": {
-        "type": "object",
-        "description": "A file object described using some basic subfields. (Usually to be extended).",
-        "properties": {
-          "bucket_id": {
-            "type": "string"
-          },
-          "checksum": {
-            "type": "string"
-          },
-          "completed": {
-            "type": "boolean"
-          },
-          "content_type": {
-            "type": "string"
-          },
-          "context_type": {
-            "enum": [
-              "frame",
-              "frames-preview",
-              "subtitle",
-              "master",
-              "subformat",
-              "playlist",
-              "poster"
-            ],
-            "type": "string"
-          },
-          "file_id": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string"
-          },
-          "media_type": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer"
-          },
-          "version_id": {
-            "type": "string"
-          }
-        }
+        "type": "object"
       },
       "type": "array"
     },
@@ -212,8 +156,8 @@
         "da",
         "de",
         "el",
-        "en-fr",
         "en",
+        "en-fr",
         "es",
         "fi",
         "fr",
@@ -231,12 +175,13 @@
         "silent",
         "sk",
         "sr",
+        "sr",
         "sv",
         "tr",
         "uk",
+        "zh",
         "zh_CN",
-        "zh_TW",
-        "zh"
+        "zh_TW"
       ],
       "type": "string"
     },
@@ -250,7 +195,7 @@
         "year": {
           "description": "The year during which the claimed copyright for the CreativeWork was first asserted.",
           "type": "string",
-          "format": "date-time"
+          "format" : "date-time"
         },
         "url": {
           "type": "string",
@@ -325,7 +270,7 @@
       "title": "Publication date",
       "description": "When the record is published",
       "type": "string",
-      "format": "date-time"
+      "format" : "date-time"
     },
     "related_links": {
       "items": {
@@ -420,81 +365,6 @@
           "type": "string"
         },
         "term": {
-          "type": "string"
-        }
-      }
-    },
-    "state": {
-      "type": "object",
-      "properties": {
-        "file_upload": {
-          "enum": [
-            "PENDING",
-            "RECEIVED",
-            "STARTED",
-            "SUCCESS",
-            "FAILURE",
-            "REVOKED",
-            "RETRY",
-            "IGNORED",
-            "REJECTED"
-          ],
-          "type": "string"
-        },
-        "file_download": {
-          "enum": [
-            "PENDING",
-            "RECEIVED",
-            "STARTED",
-            "SUCCESS",
-            "FAILURE",
-            "REVOKED",
-            "RETRY",
-            "IGNORED",
-            "REJECTED"
-          ],
-          "type": "string"
-        },
-        "file_transcode": {
-          "enum": [
-            "PENDING",
-            "RECEIVED",
-            "STARTED",
-            "SUCCESS",
-            "FAILURE",
-            "REVOKED",
-            "RETRY",
-            "IGNORED",
-            "REJECTED"
-          ],
-          "type": "string"
-        },
-        "file_video_extract_frames": {
-          "enum": [
-            "PENDING",
-            "RECEIVED",
-            "STARTED",
-            "SUCCESS",
-            "FAILURE",
-            "REVOKED",
-            "RETRY",
-            "IGNORED",
-            "REJECTED"
-          ],
-          "type": "string"
-        },
-        "file_video_metadata_extraction": {
-          "enum": [
-            "PENDING",
-            "RECEIVED",
-            "STARTED",
-            "SUCCESS",
-            "FAILURE",
-            "REVOKED",
-            "RETRY",
-            "IGNORED",
-            "REJECTED"
-          ],
           "type": "string"
         }
       }

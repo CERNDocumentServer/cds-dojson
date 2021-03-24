@@ -48,6 +48,3 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-
-# Editor settings
-.vscode/

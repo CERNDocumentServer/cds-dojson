@@ -37,6 +37,7 @@ def language_to_isocode(lang):
             'gre': 'el',
             'sil': 'silent',
             'silent': 'silent',
+            'sl': 'sl',
             'sr': 'sr',
         }
         value = exceptions.get(lang)

@@ -1,6 +1,10 @@
 Changes
 =======
 
+Version 0.10.0 (released 2021-03-28)
+-----------------------------------
+- Add Slovene language
+
 Version 0.9.0 (released 2018-06-04)
 -----------------------------------
 - Remove the DOI from the required fields

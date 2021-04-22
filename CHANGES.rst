@@ -1,6 +1,10 @@
 Changes
 =======
 
+Version 0.11.0 (released 2021-04-22)
+-----------------------------------
+- Add missing languages for all CERN member states
+
 Version 0.10.0 (released 2021-03-28)
 -----------------------------------
 - Add Slovene language

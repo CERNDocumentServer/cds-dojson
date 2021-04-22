@@ -34,7 +34,7 @@ with open(os.path.join('cds_dojson', 'version.py'), 'rt') as f:
 tests_require = [
     'check-manifest>=0.25',
     'coverage>=5.3,<6',
-    'invenio-jsonschemas>=1.0.0a5',
+    'invenio-jsonschemas>=1.0.0a5,<1.1.2',
     'jsonpatch>=1.11',
     'jsonref>=0.1',
     'jsonresolver>=0.1.0',

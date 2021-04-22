@@ -98,7 +98,7 @@
           "description": "Specific contribution of the person to this specific record.",
           "type": "string"
         },
-        "role" : {
+        "role": {
           "type": "string"
         }
       },
@@ -149,29 +149,45 @@
       "default": "en",
       "enum": [
         "ar",
+        "ast",
         "bg",
         "ca",
         "ch",
         "cs",
+        "cy",
         "da",
         "de",
         "el",
         "en",
         "en-fr",
         "es",
+        "et",
+        "eu",
         "fi",
         "fr",
+        "ga",
+        "gd",
+        "gl",
+        "he",
+        "hi",
         "hr",
         "hu",
         "it",
+        "lt",
         "ja",
         "ka",
         "ko",
+        "kw",
+        "nb",
         "nl",
+        "nn",
         "no",
         "pl",
         "pt",
+        "rm",
+        "ro",
         "ru",
+        "se",
         "silent",
         "sk",
         "sl",
@@ -179,6 +195,7 @@
         "sv",
         "tr",
         "uk",
+        "ur",
         "zh",
         "zh_CN",
         "zh_TW"
@@ -195,7 +212,7 @@
         "year": {
           "description": "The year during which the claimed copyright for the CreativeWork was first asserted.",
           "type": "string",
-          "format" : "date-time"
+          "format": "date-time"
         },
         "url": {
           "type": "string",
@@ -270,7 +287,7 @@
       "title": "Publication date",
       "description": "When the record is published",
       "type": "string",
-      "format" : "date-time"
+      "format": "date-time"
     },
     "related_links": {
       "items": {

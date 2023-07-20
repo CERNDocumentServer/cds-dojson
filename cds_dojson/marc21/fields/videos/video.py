@@ -181,11 +181,27 @@ def accelerator_experiment(self, key, value):
         'project': value.get('p'),
     }
 
-
-@model.over('date', '^269__')
+@model.over('date', '(^269__)|(^260__)')
 def date(self, key, value):
     """Date."""
-    return arrow.get(value.get('c')).strftime('%Y-%m-%d')
+    if key == '269__':
+        try:
+            return arrow.get(value.get('c')).strftime('%Y-%m-%d')
+        
+        except:
+            match = re.search(r'^(19|20)\d\d-(0[0-9]|1[012])-00', value.get('c'))
+            if match is not None:
+                return match.string.replace('-00', '')
+            
+            else:
+                return 'No Date'
+            
+    else:
+        try:
+            return arrow.get(value.get('c')).strftime('%Y')
+        
+        except:
+            return 'No Date'
 
 
 @model.over('copyright', '^542__')
@@ -263,7 +279,7 @@ def _files(self, key, value):
 
     def get_tags_to_transform(context_type, value):
         if context_type in ['frame', 'poster']:
-            return {'timestamp': int(value.get('y').split(' ')[3])}
+            return {'timestamp': int(float(value.get('y').split(' ')[3]))}
 
     def get_frame_name(result):
         _, ext = os.path.splitext(result['key'])

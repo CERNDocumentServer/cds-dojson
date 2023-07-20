@@ -53,15 +53,18 @@ def create_record(marcxml, correct=False, keep_singletons=True):
         text = leader.text or ''
         record.append(('leader', text))
 
+    index_offset = 0
     controlfield_iterator = tree.iter(tag='{*}controlfield')
-    for controlfield in controlfield_iterator:
+    for index, controlfield in enumerate(controlfield_iterator):
         tag = controlfield.attrib.get('tag', '!')
         text = controlfield.text or ''
         if text or keep_singletons:
             record.append((tag, text))
+            index_offset += 1
 
+    tags_indexes = {}
     datafield_iterator = tree.iter(tag='{*}datafield')
-    for datafield in datafield_iterator:
+    for index, datafield in enumerate(datafield_iterator):
         tag = datafield.attrib.get('tag', '!')
         ind1 = datafield.attrib.get('ind1', '!')
         ind2 = datafield.attrib.get('ind2', '!')
@@ -83,6 +86,17 @@ def create_record(marcxml, correct=False, keep_singletons=True):
         if fields or keep_singletons:
             key = '{0}{1}{2}'.format(tag, ind1, ind2)
             record.append((key, MementoDict(fields)))
+            tags_indexes[key] = index + index_offset
+
+    # Removing redundant tags.
+    # Always use as (tag_to_be_removed, tag_to_be_mantained)
+    redundant_tags = [
+        ('260__', '269__')
+    ]
+    
+    for redundant in redundant_tags:
+        if tags_indexes.get(redundant[0]) is not None and tags_indexes.get(redundant[1]) is not None:
+            record.pop(tags_indexes[redundant[0]])
 
     return MementoDict(record)
 

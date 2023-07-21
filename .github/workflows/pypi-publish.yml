@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade "pip==21" "setuptools==40" wheel
       - name: Build package
         # Remove `compile_catalog` if the package has no translations.
         run: |

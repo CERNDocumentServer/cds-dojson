@@ -39,7 +39,7 @@ jobs:
 
       - name: Generate dependencies
         run: |
-          python -m pip install --upgrade pip setuptools py
+          python -m pip install --upgrade "pip==21" "setuptools==40" py
           python -m pip install wheel coveralls requirements-builder configparser
           requirements-builder --level=${{ matrix.requirements-level }} setup.py > .${{ matrix.requirements-level }}-${{ matrix.python-version }}-requirements.txt
 

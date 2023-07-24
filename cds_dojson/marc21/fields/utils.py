@@ -79,6 +79,7 @@ def _get_correct_video_contributor_role(role):
         'autor': 'Creator',
         'camera': 'Camera Operator',
         'camera & sound': 'Camera Operator',
+        'chairperson': 'Chairperson',
         'co-produced by': 'Co-Producer',
         'co-production': 'Co-Producer',
         'commentaire': 'Comments by',
@@ -119,6 +120,7 @@ def _get_correct_video_contributor_role(role):
         'made by': 'Creator',
         'montage': 'Editor',
         'narrator': 'Narrator',
+        'organiser': 'Organiser',
         'presentator': 'Reporter',
         'presented by': 'Reporter',
         'presenter': 'Reporter',
@@ -146,6 +148,7 @@ def _get_correct_video_contributor_role(role):
         'shooting and editing': ('Camera Operator', 'Editor'),
         'son': 'Music by',
         'speaker': 'Speaker',
+        'sponsor': 'Sponsor',
         'writen by': 'Screenwriter',
         'writer and director': ('Screenwriter', 'Director'),
         'written & directed by': ('Screenwriter', 'Director'),
@@ -227,8 +230,12 @@ def build_contributor(value):
         # Avoids a few calls
         value = get_author_info_from_people_collection(value)
 
-    role = _get_correct_video_contributor_role(
-        value.get('e', 'producer'))  # always unicode
+    try:
+        role = _get_correct_video_contributor_role(
+                value.get('e', 'producer'))  # always unicode
+    except:
+        role = 'Not default: ' + value.get('e', 'producer')
+
     contributors = []
     contributor = {
         'ids': _extract_json_ids(value) or None,

@@ -153,7 +153,10 @@ def internal_note(self, key, value):
         if v.get('a') in CATEGS:
             _internal_categories[v.get('a')].append(v.get('s'))
         else:
-            _internal_notes.append(v.get('a'))
+            if v.get('a') is not None:
+                _internal_notes.append(v.get('a'))
+            else:
+                _internal_notes.append('No Category')
 
     if _internal_categories:
         self['internal_categories'] = dict(_internal_categories)
@@ -184,12 +187,22 @@ def accelerator_experiment(self, key, value):
 @model.over('date', '(^269__)|(^260__)')
 def date(self, key, value):
     """Date."""
+    if value.get('c') is None:
+        return 'No Date'
+
     if key == '269__':
         try:
-            return arrow.get(value.get('c')).strftime('%Y-%m-%d')
+            if type(value.get('c')) is tuple:
+                return arrow.get(value.get('c')[0]).strftime('%Y-%m-%d')
+            else:
+                return arrow.get(value.get('c')).strftime('%Y-%m-%d')
         
         except:
-            match = re.search(r'^(19|20)\d\d-(0[0-9]|1[012])-00', value.get('c'))
+            if type(value.get('c')) is tuple:
+                match = re.search(r'^(19|20)\d\d-(0[0-9]|1[012])-00', value.get('c')[0])
+            else:
+                match = re.search(r'^(19|20)\d\d-(0[0-9]|1[012])-00', value.get('c'))
+
             if match is not None:
                 return match.string.replace('-00', '')
             
@@ -198,7 +211,10 @@ def date(self, key, value):
             
     else:
         try:
-            return arrow.get(value.get('c')).strftime('%Y')
+            if type(value.get('c')) is tuple:
+                return arrow.get(value.get('c')[0]).strftime('%Y')
+            else:
+                return arrow.get(value.get('c')).strftime('%Y')
         
         except:
             return 'No Date'

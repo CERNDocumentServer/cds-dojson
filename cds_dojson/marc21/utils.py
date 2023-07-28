@@ -120,7 +120,6 @@ def create_record(marcxml, correct=False, keep_singletons=True):
 
                 if not(tag[0] in tags_indexes[tag[1]['8']]):
                     tags_indexes[tag[1]['8']][tag[0]] = tags_counter[tag[1]['8']]
-
                 tags_counter[tag[1]['8']] += 1
 
             # Wrong code 8

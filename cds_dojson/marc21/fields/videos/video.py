@@ -205,7 +205,6 @@ def date(self, key, value):
 
             if match is not None:
                 return match.string.replace('-00', '')
-            
             else:
                 return 'No Date'
             

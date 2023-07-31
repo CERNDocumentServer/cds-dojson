@@ -146,9 +146,15 @@ def create_record(marcxml, correct=False, keep_singletons=True):
                 while multi_video_dict[video][index_to_remove][0] == redundant[0]:
                     multi_video_dict[video].pop(tags_indexes[video][redundant[0]])
 
+    # MARCXML with no datafield - only controlfield
+    if len(multi_video) == 0:
+        return MementoDict(record)
+
+    # Single not indexed video
     if len(multi_video_dict.keys()) == 1:
         return MementoDict(multi_video_dict['not_indexed'])
     
+    # Multiple indexed videos
     return [MementoDict(video_record) for video_record in multi_video_dict.values()]
 
 

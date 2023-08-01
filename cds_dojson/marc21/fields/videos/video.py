@@ -230,7 +230,7 @@ def copyright(self, key, value):
     }
 
 
-@model.over('_files', '^8567_')
+@model.over('_files', '^(8567|8564)_')
 @for_each_value
 @filter_values
 def _files(self, key, value):
@@ -277,9 +277,14 @@ def _files(self, key, value):
 
     def get_filepath(value):
         if value.get('d'):
-            return value.get('d')[
-                len('\\\\cern.ch\\dfs\\Services\\'):
-            ].replace('\\', '/')
+            if 'cern.ch\\dfs\\Services' in value.get('d'):
+                return value.get('d')[
+                    len('\\\\cern.ch\\dfs\\Services\\'):
+                ].replace('\\', '/')
+            
+            else:
+                return 'http://cern.ch' + value.get('d').split('www')[-1]
+        
         else:
             return re.sub(
                 'https?://mediaarchive.cern.ch/', '', value.get('u', '')
@@ -327,18 +332,33 @@ def _files(self, key, value):
 
         return result
 
-    result = compute(deepcopy(value), *get_context_type(value))
+    if key == '8567_':
+        result = compute(deepcopy(value), *get_context_type(value))
 
-    # if it's the poster frame, make a copy for a frame!
-    if result['tags']['context_type'] == 'poster' and \
-            result['tags_to_transform']['timestamp'] == 5:
-        frame_5 = compute(value, 'frame', 'image')
-        if '_files' not in self:
-            self['_files'] = []
-        self['_files'].append(frame_5)
-        # update posterframe key name
-        _, ext = os.path.splitext(result['key'])
-        result['key'] = 'posterframe{0}'.format(ext)
+        # if it's the poster frame, make a copy for a frame!
+        if result['tags']['context_type'] == 'poster' and \
+                result['tags_to_transform']['timestamp'] == 5:
+            frame_5 = compute(value, 'frame', 'image')
+            if '_files' not in self:
+                self['_files'] = []
+            self['_files'].append(frame_5)
+            # update posterframe key name
+            _, ext = os.path.splitext(result['key'])
+            result['key'] = 'posterframe{0}'.format(ext)
+
+    else:
+        result = {}
+        result['key'] = get_key(value)
+
+        result['tags'] = {}
+        if value.get('u'):
+            result['tags']['preview'] = True
+            result['tags']['context_type'] = 'master'
+        result['tags']['media_type'] = value.get('y').split('-')[0].lower()
+        result['tags']['content_type'] = value.get('q').lower()
+
+        result['filepath'] = value.get('u')
+        result['tags_to_transform'] = get_tags_to_transform(result['tags']['context_type'], value)
 
     return result
 

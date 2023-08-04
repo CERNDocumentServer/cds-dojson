@@ -117,10 +117,15 @@ def create_record(marcxml, correct=False, keep_singletons=True):
             # Code 8 within the indexes of videos
             try:
                 multi_video_dict[tag[1]['8']].append(copy.deepcopy(tag))
+                multi_video_dict['not_indexed'].append(copy.deepcopy(tag))
 
                 if not(tag[0] in tags_indexes[tag[1]['8']]):
                     tags_indexes[tag[1]['8']][tag[0]] = tags_counter[tag[1]['8']]
                 tags_counter[tag[1]['8']] += 1
+
+                if not(tag[0] in tags_indexes['not_indexed']):
+                    tags_indexes['not_indexed'][tag[0]] = tags_counter['not_indexed']
+                tags_counter['not_indexed'] += 1
 
             # Wrong code 8
             except:

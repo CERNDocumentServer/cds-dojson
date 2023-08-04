@@ -351,11 +351,20 @@ def _files(self, key, value):
         result['key'] = get_key(value)
 
         result['tags'] = {}
-        if value.get('u'):
+        if value.get('u') and value.get('q') is not None:
             result['tags']['preview'] = True
             result['tags']['context_type'] = 'master'
-        result['tags']['media_type'] = value.get('y').split('-')[0].lower()
-        result['tags']['content_type'] = value.get('q').lower()
+            result['tags']['content_type'] = value.get('q').lower()
+
+        else:
+            result['tags']['preview'] = False
+            result['tags']['context_type'] = value.get('q')
+
+        if value.get('y') is None:
+            result['tags']['media_type'] = value.get('y')
+        
+        else:
+            result['tags']['media_type'] = value.get('y').split('-')[0].lower()
 
         result['filepath'] = value.get('u')
         result['tags_to_transform'] = get_tags_to_transform(result['tags']['context_type'], value)

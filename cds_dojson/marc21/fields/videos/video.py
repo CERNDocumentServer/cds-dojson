@@ -364,7 +364,10 @@ def _files(self, key, value):
             result['tags']['media_type'] = value.get('y')
         
         else:
-            result['tags']['media_type'] = value.get('y').split('-')[0].lower()
+            try:
+                result['tags']['media_type'] = value.get('y').split('-')[0].lower()
+            except:
+                result['tags']['media_type'] = None
 
         result['filepath'] = value.get('u')
         result['tags_to_transform'] = get_tags_to_transform(result['tags']['context_type'], value)

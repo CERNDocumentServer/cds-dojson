@@ -89,7 +89,7 @@ def create_record(marcxml, correct=False, keep_singletons=True):
                     multi_video = multi_video.union({text})
 
         # Handle the not indexed video
-        if not multi_video_with_index:
+        if tag == '856' and not multi_video_with_index:
             multi_video = multi_video.union({'not_indexed'})
 
         if fields or keep_singletons:
@@ -103,13 +103,25 @@ def create_record(marcxml, correct=False, keep_singletons=True):
     for tag in record:
         # Tags with no code or with codes, but no '8' code
         if type(tag[1]) is not MementoDict or '8' not in tag[1].keys():
-            for video in multi_video:
-                multi_video_dict[video].append(copy.deepcopy(tag))
-                
-                if not(tag[0] in tags_indexes[video]):
-                    tags_indexes[video][tag[0]] = tags_counter[video]
+            
+            # Propagating non-ndexed information to all videos
+            if tag[0][:3] != '856':
+                for video in multi_video:
+                    multi_video_dict[video].append(copy.deepcopy(tag))
+                    
+                    if not(tag[0] in tags_indexes[video]):
+                        tags_indexes[video][tag[0]] = tags_counter[video]
 
-                tags_counter[video] += 1
+                    tags_counter[video] += 1
+            
+            # Video file special case
+            else:
+                multi_video_dict['not_indexed'].append(copy.deepcopy(tag))
+                    
+                if not(tag[0] in tags_indexes['not_indexed']):
+                    tags_indexes['not_indexed'][tag[0]] = tags_counter['not_indexed']
+
+                tags_counter['not_indexed'] += 1
                     
 
         # Tags with code '8'
@@ -117,15 +129,10 @@ def create_record(marcxml, correct=False, keep_singletons=True):
             # Code 8 within the indexes of videos
             try:
                 multi_video_dict[tag[1]['8']].append(copy.deepcopy(tag))
-                multi_video_dict['not_indexed'].append(copy.deepcopy(tag))
-
+                
                 if not(tag[0] in tags_indexes[tag[1]['8']]):
                     tags_indexes[tag[1]['8']][tag[0]] = tags_counter[tag[1]['8']]
                 tags_counter[tag[1]['8']] += 1
-
-                if not(tag[0] in tags_indexes['not_indexed']):
-                    tags_indexes['not_indexed'][tag[0]] = tags_counter['not_indexed']
-                tags_counter['not_indexed'] += 1
 
             # Wrong code 8
             except:
@@ -136,7 +143,7 @@ def create_record(marcxml, correct=False, keep_singletons=True):
                         tags_indexes[video][tag[0]] = tags_counter[video]
 
                     tags_counter[video] += 1
-            
+
     # Removing redundant tags.
     # Always use as (tag_to_be_removed, tag_to_be_mantained)
     redundant_tags = [

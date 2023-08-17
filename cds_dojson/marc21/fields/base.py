@@ -87,6 +87,10 @@ def translations(self, key, value):
     translation = self.get('translations', [{}])[0]
     if key.startswith('246'):
         translation['title'] = {'title': value.get('a')}
+        if value.get('n'):
+            translation['description'] = value.get('n')
+        if value.get('p'):
+            translation['title']['subtitle'] = value.get('p')
     if key.startswith('590'):
         translation['description'] = value.get('a')
     translation['language'] = 'fr'

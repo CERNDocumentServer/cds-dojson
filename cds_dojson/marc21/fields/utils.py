@@ -234,7 +234,7 @@ def build_contributor(value):
         role = _get_correct_video_contributor_role(
                 value.get('e', 'producer'))  # always unicode
     except:
-        role = 'Not default: ' + value.get('e', 'producer')
+        role = 'Producer'
 
     contributors = []
     contributor = {

@@ -164,7 +164,8 @@ def create_record(marcxml, correct=False, keep_singletons=True):
 
     # Single not indexed video
     if len(multi_video_dict.keys()) == 1:
-        return MementoDict(multi_video_dict['not_indexed'])
+        key = [i for i in  multi_video_dict.keys()][0]
+        return MementoDict(multi_video_dict[key])
     
     # Multiple indexed videos
     return [MementoDict(video_record) for video_record in multi_video_dict.values()]

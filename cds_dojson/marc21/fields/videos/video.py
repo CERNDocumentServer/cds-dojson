@@ -112,6 +112,19 @@ def physical_medium(self, key, value):
     return [dict((k, v) for k, v in iteritems(i) if v is not None)
             for i in _physical_medium]
 
+@model.over('related_links', '^775__')
+def related_links(self, key, value):
+    
+    related_link = {}
+    if value.get('b') and value.get('w'):
+        if value.get('c'):
+            related_link['name'] = value.get('b') + ' ' + value.get('c')
+        else:
+            related_link['name'] = value.get('b')
+        
+        related_link['url'] = 'https://cds.cern.ch/record/' + value.get('w')
+    return related_link
+
 
 @model.over('_project_id', '^773__')
 @ignore_value
@@ -135,8 +148,11 @@ def project_id(self, key, value):
     return project_id
 
 
-@model.over('location', '^110__')
+@model.over('location', '(^110__)|(^901__)')
 def location(self, key, value):
+    if key == '901__' and 'location' not in self.keys():
+        return value.get('u')
+    
     """Location."""
     return value.get('a')
 
@@ -219,15 +235,45 @@ def date(self, key, value):
             return 'No Date'
 
 
-@model.over('copyright', '^542__')
+@model.over('copyright', '(^269__)|(^542__)|(^5421_)')
 @filter_values
 def copyright(self, key, value):
     """Copyright."""
-    return {
-        'holder': value.get('d'),
-        'year': value.get('g'),
-        'message': value.get('f'),
-    }
+    if key == '269__':
+        if value.get('b'):
+            return {
+                'holder': value.get('b')
+            }
+        return {'holder': ''}
+    
+    if key == '5421_':
+        if 'copyright' not in self.keys():
+            try:
+                if value.get('a'):
+                    return {
+                        'holder': value.get('a'),
+                        'year': value.get('g')
+                    }
+                else:
+                    return {
+                        'holder': value.get('d'),
+                        'year': value.get('g')
+                    }
+            except:
+                return {'holder': ''}
+    
+    if value.get('a'):
+        return {
+            'holder': value.get('a'),
+            'year': value.get('g'),
+            'message': value.get('f'),
+        }
+    else:
+        return {
+            'holder': value.get('d'),
+            'year': value.get('g'),
+            'message': value.get('f'),
+        }
 
 
 @model.over('_files', '^(8567|8564)_')

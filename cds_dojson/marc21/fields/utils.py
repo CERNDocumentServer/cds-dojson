@@ -230,11 +230,15 @@ def build_contributor(value):
         # Avoids a few calls
         value = get_author_info_from_people_collection(value)
 
-    try:
+    if value.get('e'):
         role = _get_correct_video_contributor_role(
                 value.get('e', 'producer'))  # always unicode
-    except:
-        role = 'Producer'
+    else:
+        try:
+            role = _get_correct_video_contributor_role(
+                    value.get('g', 'producer'))  # always unicode
+        except:
+            role = 'Producer'
 
     contributors = []
     contributor = {
@@ -277,3 +281,10 @@ def build_contributor_from_508(value):
             return contributors
     else:
         return build_contributor({'a': item.strip(), 'e': 'credits'})
+    
+def build_contributor_from_906(value):
+    contributor = {'name': value.get('p'), 'role': 'Speaker'}
+    if value.get('u'):
+        contributor['affiliations'] = (value.get('u'))
+
+    return [contributor]

@@ -114,7 +114,7 @@ def physical_medium(self, key, value):
 
 @model.over('related_links', '^775__')
 def related_links(self, key, value):
-    """Related links"""
+    """Related links."""
     related_link = {}
     if value.get('b') and value.get('w'):
         if value.get('c'):

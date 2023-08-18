@@ -114,7 +114,7 @@ def physical_medium(self, key, value):
 
 @model.over('related_links', '^775__')
 def related_links(self, key, value):
-    
+    """Related links"""
     related_link = {}
     if value.get('b') and value.get('w'):
         if value.get('c'):
@@ -150,10 +150,10 @@ def project_id(self, key, value):
 
 @model.over('location', '(^110__)|(^901__)')
 def location(self, key, value):
+    """Location."""
     if key == '901__' and 'location' not in self.keys():
         return value.get('u')
     
-    """Location."""
     return value.get('a')
 
 

@@ -283,6 +283,7 @@ def build_contributor_from_508(value):
         return build_contributor({'a': item.strip(), 'e': 'credits'})
     
 def build_contributor_from_906(value):
+    """Build contributors from field 508."""
     contributor = {'name': value.get('p'), 'role': 'Speaker'}
     if value.get('u'):
         contributor['affiliations'] = (value.get('u'))

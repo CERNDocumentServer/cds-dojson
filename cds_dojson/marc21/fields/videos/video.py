@@ -126,6 +126,117 @@ def related_links(self, key, value):
     return related_link
 
 
+@model.over('_digitization', '(^300__)|(^336__)|(^337__)|(^5081_)|(^514__)|(^5421_)|(^5831_)|(^583__)|(^594__)|(^595__)|(^597__)|(^65027)|(690C_)|(^773__)|(^7870_)|(^787__)|(^852__)|(^8564_)|(^856__)|(^961__)|(^962__)|(^981__)')
+@for_each_value
+def digitization(self, key, value):
+    """Digitization field."""
+    #import ipdb
+    #ipdb.set_trace()
+    
+    data = {}
+    try:
+        if key == '300__':
+            data['CERN_ID'] = value.get('2', '')
+            data['res_ar_fps'] = value.get('b', '')
+            data['FPS'] = value.get('c', '')
+            data['resolution'] = value.get('d', '')
+            data['aspect_ratio'] = value.get('e', '')
+        
+        elif key == '336__':
+            data['curator_split_comment'] = value.get('a', '')
+            data['curator_split_time'] = value.get('b', '')
+
+        elif key == '337__':
+            data['media_type'] = value.get('a', '')
+
+        elif key == '5081_':
+            data['director_info'] = value.get('a', '')
+
+        elif key == '514__':
+            data['picturae_media_quality'] = value.get('a', '')
+
+        elif key =='5421_':
+            data['copyright'] = value.get('a', '')
+                
+        elif key == '5831_':
+            data['quality_control_info'] = [value.get(code) for code in ['3', '5', '6', 'a', 'b', 'c', 'f', 'i', 'k', 'l', 'n', 'o', 'u', 'x', 'z'] if value.get(code)]
+            
+        elif key =='583__':
+            data['curated'] = value.get('a', '')
+            data['curation_date'] = value.get('c', '')
+            data['curation_quality_control'] = value.get('z', '')
+
+        elif key =='594__':
+            data['curator_category'] = value.get('a', '')
+        
+        elif key == '595__':
+            data['internal_note_datetime'] = value.get('d', '')
+            
+        elif key == '597__':
+            data['internal_note'] = value.get('a', '')
+
+        elif key == '65027':
+            data['epfl_category'] = value.get('a', '')
+
+        elif key == '690C_':
+            data['collection'] = value.get('a', '')
+
+        elif key == '773__':
+            data['host_item_entry'] = value.get('o', '')
+            data['library_report_number'] = value.get('r', '')
+
+        elif key == '7870_':
+            data['related_links_info'] = [value.get(code) for code in ['i', 'r', 'w'] if value.get(code)]
+            
+        elif key == '787__':
+            data['related_links_info'] = data['related_links_info'] = [value.get(code) for code in ['1', 'a', 'i', 'w'] if value.get(code)]
+            
+        elif key == '852__':
+            data['physical_media_note'] = value.get('h', '')
+            data['has_copy'] = value.get('j', '')
+            data['physical_media_type'] = value.get('x', '')
+
+        elif key == '8564_':
+            if value.get('1'):
+                data['has_subtitles'] = value.get('1', '')
+            else:
+                data['has_subtitles'] = value.get('i', '')
+
+            data['storage_service'] = value.get('2', '')
+            data['file_size'] = value.get('s', '')
+            data['record_control_number'] = value.get('w', '')
+            data['record_id'] = value.get('y', '')
+            data['format_resolution'] = value.get('z', '')
+
+        elif key == '856_2':
+            data['subtitle_extension'] = value.get('q', '')
+            data['subtitle_path'] = value.get('u', '')
+
+            if value.get('x'):
+                data['subtitle_language'] = value.get('x', '')
+            else:
+                data['subtitle_language'] = value.get('y', '')
+
+            data['subtitle_note'] = value.get('z', '')
+
+        elif key == '961__':
+            data['curator_name'] = value.get('a', '')
+            data['curator_title'] = value.get('b', '')
+            data['curation_time'] = value.get('h', '')
+
+        elif key == '962__':
+            data['conference_cds_recid'] = value.get('b', '')
+            data['conference_cds_id'] = value.get('n', '')
+
+        elif key == '962__':
+            data['deleted_cds_records'] = value.get('a', '')
+    
+    except Exception as exception:
+        #print(exception)
+        pass
+
+    return data
+
 @model.over('_project_id', '^773__')
 @ignore_value
 def project_id(self, key, value):

@@ -65,9 +65,6 @@ def contributors(self, key, value):
     else:
         items = build_contributor_from_906(value)
         if 'contributors' in self.keys():
-            import ipdb
-            ipdb.set_trace()
-
             names = [dic['name'] for dic in self['contributors']]
             roles = [dic['role'] for dic in self['contributors']]
             if items[0]['name'] in names:

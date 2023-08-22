@@ -210,6 +210,9 @@ def test_required_fields(app):
                         'aspect_ratio': '16:9'
                     },
                     {
+                        'collection': 'publvideomovie'
+                    },
+                    {
                         'host_item_entry': 'AVW.project.2963',
                         'library_report_number': 'CERN-MOVIE-2017-023'
                     }
@@ -473,6 +476,10 @@ def test_fields(app):
                     'related_links': [
                         {'name': 'Version anglaise', 'url': 'http://cds.cern.ch/record/43172'},
                         {'name': 'Version allemande', 'url': 'https://cds.cern.ch/record/2194933'},
+                    ],
+                    '_digitization': [
+                        {'library_report_number': 'CERN-FILM-1965-44'},
+                        {'host_item_entry': 'AVW.project.111', 'library_report_number': 'CERN-MOVIE-1965-001'}
                     ]}
             )
             check_transformation(
@@ -531,7 +538,10 @@ def test_fields(app):
                     <subfield code="e">16:9</subfield>
                 </datafield>
                 """, {
-                    'duration': '00:00:00'
+                    'duration': '00:00:00',
+                    '_digitization': [
+                        {'aspect_ratio': '16:9'}
+                    ]
                 })
             check_transformation(
                 """
@@ -540,7 +550,10 @@ def test_fields(app):
                     <subfield code="e">16:9</subfield>
                 </datafield>
                 """, {
-                    'duration': '12:33:12'
+                    'duration': '12:33:12',
+                    '_digitization': [
+                        {'aspect_ratio': '16:9'}
+                    ]
                 })
             check_transformation(
                 """
@@ -549,7 +562,10 @@ def test_fields(app):
                     <subfield code="e">16:9</subfield>
                 </datafield>
                 """, {
-                    'duration': '00:00:00'
+                    'duration': '00:00:00',
+                    '_digitization': [
+                        {'res_ar_fps': '16:9', 'aspect_ratio': '16:9'}
+                    ]
                 })
             check_transformation(
                 """

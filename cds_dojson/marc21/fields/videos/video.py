@@ -45,6 +45,23 @@ def duration(self, key, value):
     i.e. '2 min.', we will extract it programatically later to avoid the hassle
     off dealing with more regex.
     """
+    data = {}
+    data['CERN_ID'] = value.get('2', '')
+    data['res_ar_fps'] = value.get('b', '')
+    data['FPS'] = value.get('c', '')
+    data['resolution'] = value.get('d', '')
+    data['aspect_ratio'] = value.get('e', '')
+
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
+
+    if len(data.keys()) > 0:
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [data]
+        else:
+            self['_digitization'].append(data)
+
     try:
         return re.match(r'(\d{2}:\d{2}:\d{2})(\.\d+)?', value.get('a')) \
             .group(1)
@@ -66,6 +83,21 @@ def language(self, key, value):
 @model.over('physical_medium', '(^340__)|(^852__)')
 def physical_medium(self, key, value):
     """Physical medium."""
+    data = {}
+    data['physical_media_note'] = value.get('h', '')
+    data['has_copy'] = value.get('j', '')
+    data['physical_media_type'] = value.get('x', '')
+
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
+
+    if len(data.keys()) > 0:
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [data]
+        else:
+            self['_digitization'].append(data)
+
     def find_match(seq, copy):
         if not seq and not copy \
                 and key == '852__' and len(_physical_medium) == 1:
@@ -126,8 +158,9 @@ def related_links(self, key, value):
     return related_link
 
 
-@model.over('_digitization', '(^300__)|(^336__)|(^337__)|(^5081_)|(^514__)|(^5421_)|(^5831_)|(^583__)|(^594__)|(^595__)|(^597__)|(^65027)|(690C_)|(^773__)|(^7870_)|(^787__)|(^852__)|(^8564_)|(^856__)|(^961__)|(^962__)|(^981__)')
+@model.over('_digitization', '(^336__)|(^337__)|(^5081_)|(^514__)|(^5831_)|(^583__)|(^594__)|(^597__)|(^65027)|(690C_)|(^7870_)|(^787__)|(^856_2)|(^961__)|(^962__)|(^981__)')
 @for_each_value
+@ignore_value
 def digitization(self, key, value):
     """Digitization field."""
     #import ipdb
@@ -135,14 +168,7 @@ def digitization(self, key, value):
     
     data = {}
     try:
-        if key == '300__':
-            data['CERN_ID'] = value.get('2', '')
-            data['res_ar_fps'] = value.get('b', '')
-            data['FPS'] = value.get('c', '')
-            data['resolution'] = value.get('d', '')
-            data['aspect_ratio'] = value.get('e', '')
-        
-        elif key == '336__':
+        if key == '336__':
             data['curator_split_comment'] = value.get('a', '')
             data['curator_split_time'] = value.get('b', '')
 
@@ -154,9 +180,6 @@ def digitization(self, key, value):
 
         elif key == '514__':
             data['picturae_media_quality'] = value.get('a', '')
-
-        elif key =='5421_':
-            data['copyright'] = value.get('a', '')
                 
         elif key == '5831_':
             data['quality_control_info'] = [value.get(code) for code in ['3', '5', '6', 'a', 'b', 'c', 'f', 'i', 'k', 'l', 'n', 'o', 'u', 'x', 'z'] if value.get(code)]
@@ -168,9 +191,6 @@ def digitization(self, key, value):
 
         elif key =='594__':
             data['curator_category'] = value.get('a', '')
-        
-        elif key == '595__':
-            data['internal_note_datetime'] = value.get('d', '')
             
         elif key == '597__':
             data['internal_note'] = value.get('a', '')
@@ -181,32 +201,11 @@ def digitization(self, key, value):
         elif key == '690C_':
             data['collection'] = value.get('a', '')
 
-        elif key == '773__':
-            data['host_item_entry'] = value.get('o', '')
-            data['library_report_number'] = value.get('r', '')
-
         elif key == '7870_':
             data['related_links_info'] = [value.get(code) for code in ['i', 'r', 'w'] if value.get(code)]
             
         elif key == '787__':
             data['related_links_info'] = data['related_links_info'] = [value.get(code) for code in ['1', 'a', 'i', 'w'] if value.get(code)]
-            
-        elif key == '852__':
-            data['physical_media_note'] = value.get('h', '')
-            data['has_copy'] = value.get('j', '')
-            data['physical_media_type'] = value.get('x', '')
-
-        elif key == '8564_':
-            if value.get('1'):
-                data['has_subtitles'] = value.get('1', '')
-            else:
-                data['has_subtitles'] = value.get('i', '')
-
-            data['storage_service'] = value.get('2', '')
-            data['file_size'] = value.get('s', '')
-            data['record_control_number'] = value.get('w', '')
-            data['record_id'] = value.get('y', '')
-            data['format_resolution'] = value.get('z', '')
 
         elif key == '856_2':
             data['subtitle_extension'] = value.get('q', '')
@@ -235,16 +234,33 @@ def digitization(self, key, value):
         #print(exception)
         pass
 
-    empty_keys = [key for key in data.keys() if data[key] == '']
-    for key in empty_keys:
-        data.pop(key)
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
 
-    return data
+    if len(data.keys()) > 0:
+        return data
+    
+    return None
 
 @model.over('_project_id', '^773__')
 @ignore_value
 def project_id(self, key, value):
     """Report number."""
+    data = {}
+    data['host_item_entry'] = value.get('o', '')
+    data['library_report_number'] = value.get('r', '')
+
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
+
+    if len(data.keys()) > 0:
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [data]
+        else:
+            self['_digitization'].append(data)
+
     values = force_list(value)
     project_id = None
     related_links = self.get('related_links', [])
@@ -291,6 +307,13 @@ def internal_note(self, key, value):
 
     if _internal_categories:
         self['internal_categories'] = dict(_internal_categories)
+
+    if value.get('d'):
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [{'internal_note_datetime': value.get('d')}]
+        else:
+            self['_digitization'].append({'internal_note_datetime': value.get('d')})
+
     return '\n'.join(_internal_notes) or None
 
 
@@ -362,6 +385,13 @@ def copyright(self, key, value):
         return {'holder': ''}
     
     if key == '5421_':
+        
+        if value.get('a'):
+            if '_digitization' not in self.keys():
+                self['_digitization'] = [{'copyright': value.get('a')}]
+            else:
+                self['_digitization'].append({'copyright': value.get('a')})
+
         if 'copyright' not in self.keys():
             try:
                 if value.get('a'):
@@ -508,6 +538,27 @@ def _files(self, key, value):
             result['key'] = 'posterframe{0}'.format(ext)
 
     else:
+        data = {}
+        if value.get('1'):
+            data['has_subtitles'] = value.get('1', '')
+        else:
+            data['has_subtitles'] = value.get('i', '')
+        data['storage_service'] = value.get('2', '')
+        data['file_size'] = value.get('s', '')
+        data['record_control_number'] = value.get('w', '')
+        data['record_id'] = value.get('y', '')
+        data['format_resolution'] = value.get('z', '')
+
+        empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+        for aux_key in empty_keys:
+            data.pop(aux_key)
+
+        if len(data.keys()) > 0:
+            if '_digitization' not in self.keys():
+                self['_digitization'] = [data]
+            else:
+                self['_digitization'].append(data)
+
         result = {}
         result['key'] = get_key(value)
 

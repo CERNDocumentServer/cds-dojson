@@ -47,7 +47,7 @@ def test_required_fields(app):
                                     'test-email@cern.ch',
                                     'example@test.com'],
                             'update': ['another.user@cern.ch',
-                                    'tuser@cern.ch']},
+                                    'tuser@cern.ch']},    
                 '_files': [
                     {
                         'filepath': 'MediaArchive/Video/Masters/Movies/CERN/2017/CERN-MOVIE-2017-023/Final_Output/CERN-MOVIE-2017-023-001.mov',
@@ -200,6 +200,18 @@ def test_required_fields(app):
                                 'context_type': 'frame',
                                 'media_type': 'image'},
                         'tags_to_transform': {'timestamp': 95}
+                    }
+                ],
+                '_digitization': [
+                    {
+                        'res_ar_fps': '1920x1080 16/9, 25.00',
+                        'FPS': '25',
+                        'resolution': '1920x1080',
+                        'aspect_ratio': '16:9'
+                    },
+                    {
+                        'host_item_entry': 'AVW.project.2963',
+                        'library_report_number': 'CERN-MOVIE-2017-023'
                     }
                 ],
                 '_project_id': 'https://cds.cern.ch/record/1',

@@ -228,12 +228,16 @@ def digitization(self, key, value):
             data['conference_cds_recid'] = value.get('b', '')
             data['conference_cds_id'] = value.get('n', '')
 
-        elif key == '962__':
+        elif key == '981__':
             data['deleted_cds_records'] = value.get('a', '')
     
     except Exception as exception:
         #print(exception)
         pass
+
+    empty_keys = [key for key in data.keys() if data[key] == '']
+    for key in empty_keys:
+        data.pop(key)
 
     return data
 

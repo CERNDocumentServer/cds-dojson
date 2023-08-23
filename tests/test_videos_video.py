@@ -564,7 +564,7 @@ def test_fields(app):
                 """, {
                     'duration': '00:00:00',
                     '_digitization': [
-                        {'res_ar_fps': '16:9', 'aspect_ratio': '16:9'}
+                        {'res_ar_fps': '16:9,', 'aspect_ratio': '16:9'}
                     ]
                 })
             check_transformation(

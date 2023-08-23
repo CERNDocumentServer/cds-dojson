@@ -18,11 +18,11 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Video rules tests."""
 import mock
+from helpers import load_fixture_file, mock_contributor_fetch, validate
 
 from cds_dojson.marc21.fields.videos.utils import language_to_isocode
 from cds_dojson.marc21.models.videos.video import model
 from cds_dojson.marc21.utils import create_record
-from helpers import load_fixture_file, mock_contributor_fetch, validate
 
 
 def test_required_fields(app):
@@ -47,7 +47,7 @@ def test_required_fields(app):
                                     'test-email@cern.ch',
                                     'example@test.com'],
                             'update': ['another.user@cern.ch',
-                                    'tuser@cern.ch']},
+                                    'tuser@cern.ch']},    
                 '_files': [
                     {
                         'filepath': 'MediaArchive/Video/Masters/Movies/CERN/2017/CERN-MOVIE-2017-023/Final_Output/CERN-MOVIE-2017-023-001.mov',
@@ -200,6 +200,21 @@ def test_required_fields(app):
                                 'context_type': 'frame',
                                 'media_type': 'image'},
                         'tags_to_transform': {'timestamp': 95}
+                    }
+                ],
+                '_digitization': [
+                    {
+                        'res_ar_fps': '1920x1080 16/9, 25.00',
+                        'FPS': '25',
+                        'resolution': '1920x1080',
+                        'aspect_ratio': '16:9'
+                    },
+                    {
+                        'collection': 'publvideomovie'
+                    },
+                    {
+                        'host_item_entry': 'AVW.project.2963',
+                        'library_report_number': 'CERN-MOVIE-2017-023'
                     }
                 ],
                 '_project_id': 'https://cds.cern.ch/record/1',
@@ -461,6 +476,10 @@ def test_fields(app):
                     'related_links': [
                         {'name': 'Version anglaise', 'url': 'http://cds.cern.ch/record/43172'},
                         {'name': 'Version allemande', 'url': 'https://cds.cern.ch/record/2194933'},
+                    ],
+                    '_digitization': [
+                        {'library_report_number': 'CERN-FILM-1965-44'},
+                        {'host_item_entry': 'AVW.project.111', 'library_report_number': 'CERN-MOVIE-1965-001'}
                     ]}
             )
             check_transformation(
@@ -519,7 +538,10 @@ def test_fields(app):
                     <subfield code="e">16:9</subfield>
                 </datafield>
                 """, {
-                    'duration': '00:00:00'
+                    'duration': '00:00:00',
+                    '_digitization': [
+                        {'aspect_ratio': '16:9'}
+                    ]
                 })
             check_transformation(
                 """
@@ -528,7 +550,10 @@ def test_fields(app):
                     <subfield code="e">16:9</subfield>
                 </datafield>
                 """, {
-                    'duration': '12:33:12'
+                    'duration': '12:33:12',
+                    '_digitization': [
+                        {'aspect_ratio': '16:9'}
+                    ]
                 })
             check_transformation(
                 """
@@ -537,7 +562,10 @@ def test_fields(app):
                     <subfield code="e">16:9</subfield>
                 </datafield>
                 """, {
-                    'duration': '00:00:00'
+                    'duration': '00:00:00',
+                    '_digitization': [
+                        {'res_ar_fps': '16:9,', 'aspect_ratio': '16:9'}
+                    ]
                 })
             check_transformation(
                 """

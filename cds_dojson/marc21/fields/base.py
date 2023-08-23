@@ -24,7 +24,7 @@ from dojson.utils import (IgnoreKey, filter_values, for_each_value, force_list,
                           ignore_value)
 
 from ..models.base import model
-from .utils import build_contributor, build_contributor_from_508
+from .utils import build_contributor, build_contributor_from_508, build_contributor_from_906
 
 
 @model.over('recid', '^001')
@@ -54,14 +54,22 @@ def report_number(self, key, value):
     return rn
 
 
-@model.over('contributors', '^(100|700|508)__')
+@model.over('contributors', '^(100|700|508|906)__')
 def contributors(self, key, value):
     """Contributors."""
     authors = self.get('contributors', [])
     if key in ['100__', '700__']:
         items = build_contributor(value)
-    else:
+    elif key == '508__':
         items = build_contributor_from_508(value)
+    else:
+        items = build_contributor_from_906(value)
+        if 'contributors' in self.keys():
+            names = [dic['name'] for dic in self['contributors']]
+            roles = [dic['role'] for dic in self['contributors']]
+            if items[0]['name'] in names:
+                if items[0]['role'] == roles[names.index(items[0]['name'])]:
+                    items = None
     # add only contributors that are not part of the authors
     if items:
         authors.extend(
@@ -87,6 +95,10 @@ def translations(self, key, value):
     translation = self.get('translations', [{}])[0]
     if key.startswith('246'):
         translation['title'] = {'title': value.get('a')}
+        if value.get('n'):
+            translation['description'] = value.get('n')
+        if value.get('p'):
+            translation['title']['subtitle'] = value.get('p')
     if key.startswith('590'):
         translation['description'] = value.get('a')
     translation['language'] = 'fr'
@@ -94,10 +106,32 @@ def translations(self, key, value):
     raise IgnoreKey('translations')
 
 
-@model.over('description', '^520__')
+@model.over('description', '(^511__)|(^5111_)|(^518__)|(^520__)')
 def description(self, key, value):
     """Description."""
-    return value.get('a')
+    if key == '511__' or key == '5111_':
+        if value.get('a'):
+            return 'Filmed people: ' + value.get('a')
+        elif value.get('1'):
+            return 'Filmed people: ' + value.get('1')
+        return ''
+    
+    if key == '518__':
+        if value.get('a'):
+            if 'description' in self.keys():
+                return self['description'] + '\nPlace and/or date of event: ' + value.get('a')
+            return value.get('a')
+        if 'description' in self.keys():
+            return self['description']
+        return ''
+
+    if value.get('a'):
+        if 'description' in self.keys():
+            return self['description'] + '\nPlace and/or date of event: ' + value.get('a')
+        return value.get('a')
+    if 'description' in self.keys():
+        return self['description']
+    return ''
 
 
 @model.over('keywords', '^6531_')

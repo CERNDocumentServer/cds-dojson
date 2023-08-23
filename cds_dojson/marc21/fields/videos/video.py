@@ -45,6 +45,23 @@ def duration(self, key, value):
     i.e. '2 min.', we will extract it programatically later to avoid the hassle
     off dealing with more regex.
     """
+    data = {}
+    data['CERN_ID'] = value.get('2', '')
+    data['res_ar_fps'] = value.get('b', '')
+    data['FPS'] = value.get('c', '')
+    data['resolution'] = value.get('d', '')
+    data['aspect_ratio'] = value.get('e', '')
+
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
+
+    if len(data.keys()) > 0:
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [data]
+        else:
+            self['_digitization'].append(data)
+
     try:
         return re.match(r'(\d{2}:\d{2}:\d{2})(\.\d+)?', value.get('a')) \
             .group(1)
@@ -66,6 +83,21 @@ def language(self, key, value):
 @model.over('physical_medium', '(^340__)|(^852__)')
 def physical_medium(self, key, value):
     """Physical medium."""
+    data = {}
+    data['physical_media_note'] = value.get('h', '')
+    data['has_copy'] = value.get('j', '')
+    data['physical_media_type'] = value.get('x', '')
+
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
+
+    if len(data.keys()) > 0:
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [data]
+        else:
+            self['_digitization'].append(data)
+
     def find_match(seq, copy):
         if not seq and not copy \
                 and key == '852__' and len(_physical_medium) == 1:
@@ -112,11 +144,123 @@ def physical_medium(self, key, value):
     return [dict((k, v) for k, v in iteritems(i) if v is not None)
             for i in _physical_medium]
 
+@model.over('related_links', '^775__')
+def related_links(self, key, value):
+    """Related links."""
+    related_link = {}
+    if value.get('b') and value.get('w'):
+        if value.get('c'):
+            related_link['name'] = value.get('b') + ' ' + value.get('c')
+        else:
+            related_link['name'] = value.get('b')
+        
+        related_link['url'] = 'https://cds.cern.ch/record/' + value.get('w')
+    return related_link
+
+
+@model.over('_digitization', '(^336__)|(^337__)|(^5081_)|(^514__)|(^5831_)|(^583__)|(^594__)|(^597__)|(^65027)|(690C_)|(^7870_)|(^787__)|(^856_2)|(^961__)|(^962__)|(^981__)')
+@for_each_value
+@ignore_value
+def digitization(self, key, value):
+    """Digitization field."""
+    #import ipdb
+    #ipdb.set_trace()
+    
+    data = {}
+    try:
+        if key == '336__':
+            data['curator_split_comment'] = value.get('a', '')
+            data['curator_split_time'] = value.get('b', '')
+
+        elif key == '337__':
+            data['media_type'] = value.get('a', '')
+
+        elif key == '5081_':
+            data['director_info'] = value.get('a', '')
+
+        elif key == '514__':
+            data['picturae_media_quality'] = value.get('a', '')
+                
+        elif key == '5831_':
+            data['quality_control_info'] = [value.get(code) for code in ['3', '5', '6', 'a', 'b', 'c', 'f', 'i', 'k', 'l', 'n', 'o', 'u', 'x', 'z'] if value.get(code)]
+            
+        elif key =='583__':
+            data['curated'] = value.get('a', '')
+            data['curation_date'] = value.get('c', '')
+            data['curation_quality_control'] = value.get('z', '')
+
+        elif key =='594__':
+            data['curator_category'] = value.get('a', '')
+            
+        elif key == '597__':
+            data['internal_note'] = value.get('a', '')
+
+        elif key == '65027':
+            data['epfl_category'] = value.get('a', '')
+
+        elif key == '690C_':
+            data['collection'] = value.get('a', '')
+
+        elif key == '7870_':
+            data['related_links_info'] = [value.get(code) for code in ['i', 'r', 'w'] if value.get(code)]
+            
+        elif key == '787__':
+            data['related_links_info'] = data['related_links_info'] = [value.get(code) for code in ['1', 'a', 'i', 'w'] if value.get(code)]
+
+        elif key == '856_2':
+            data['subtitle_extension'] = value.get('q', '')
+            data['subtitle_path'] = value.get('u', '')
+
+            if value.get('x'):
+                data['subtitle_language'] = value.get('x', '')
+            else:
+                data['subtitle_language'] = value.get('y', '')
+
+            data['subtitle_note'] = value.get('z', '')
+
+        elif key == '961__':
+            data['curator_name'] = value.get('a', '')
+            data['curator_title'] = value.get('b', '')
+            data['curation_time'] = value.get('h', '')
+
+        elif key == '962__':
+            data['conference_cds_recid'] = value.get('b', '')
+            data['conference_cds_id'] = value.get('n', '')
+
+        elif key == '981__':
+            data['deleted_cds_records'] = value.get('a', '')
+    
+    except Exception as exception:
+        #print(exception)
+        pass
+
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
+
+    if len(data.keys()) > 0:
+        return data
+    
+    return None
 
 @model.over('_project_id', '^773__')
 @ignore_value
 def project_id(self, key, value):
     """Report number."""
+    data = {}
+    data['host_item_entry'] = value.get('o', '')
+    data['library_report_number'] = value.get('r', '')
+
+    empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+    for aux_key in empty_keys:
+        data.pop(aux_key)
+
+    if len(data.keys()) > 0:
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [data]
+        else:
+            self['_digitization'].append(data)
+
     values = force_list(value)
     project_id = None
     related_links = self.get('related_links', [])
@@ -135,9 +279,12 @@ def project_id(self, key, value):
     return project_id
 
 
-@model.over('location', '^110__')
+@model.over('location', '(^110__)|(^901__)')
 def location(self, key, value):
     """Location."""
+    if key == '901__' and 'location' not in self.keys():
+        return value.get('u')
+    
     return value.get('a')
 
 
@@ -153,10 +300,20 @@ def internal_note(self, key, value):
         if v.get('a') in CATEGS:
             _internal_categories[v.get('a')].append(v.get('s'))
         else:
-            _internal_notes.append(v.get('a'))
+            if v.get('a') is not None:
+                _internal_notes.append(v.get('a'))
+            else:
+                _internal_notes.append('No Category')
 
     if _internal_categories:
         self['internal_categories'] = dict(_internal_categories)
+
+    if value.get('d'):
+        if '_digitization' not in self.keys():
+            self['_digitization'] = [{'internal_note_datetime': value.get('d')}]
+        else:
+            self['_digitization'].append({'internal_note_datetime': value.get('d')})
+
     return '\n'.join(_internal_notes) or None
 
 
@@ -181,25 +338,90 @@ def accelerator_experiment(self, key, value):
         'project': value.get('p'),
     }
 
-
-@model.over('date', '^269__')
+@model.over('date', '(^269__)|(^260__)')
 def date(self, key, value):
     """Date."""
-    return arrow.get(value.get('c')).strftime('%Y-%m-%d')
+    if value.get('c') is None:
+        return 'No Date'
+
+    if key == '269__':
+        try:
+            if type(value.get('c')) is tuple:
+                return arrow.get(value.get('c')[0]).strftime('%Y-%m-%d')
+            else:
+                return arrow.get(value.get('c')).strftime('%Y-%m-%d')
+        
+        except:
+            if type(value.get('c')) is tuple:
+                match = re.search(r'^(19|20)\d\d-(0[0-9]|1[012])-00', value.get('c')[0])
+            else:
+                match = re.search(r'^(19|20)\d\d-(0[0-9]|1[012])-00', value.get('c'))
+
+            if match is not None:
+                return match.string.replace('-00', '')
+            else:
+                return 'No Date'
+            
+    else:
+        try:
+            if type(value.get('c')) is tuple:
+                return arrow.get(value.get('c')[0]).strftime('%Y')
+            else:
+                return arrow.get(value.get('c')).strftime('%Y')
+        
+        except:
+            return 'No Date'
 
 
-@model.over('copyright', '^542__')
+@model.over('copyright', '(^269__)|(^542__)|(^5421_)')
 @filter_values
 def copyright(self, key, value):
     """Copyright."""
-    return {
-        'holder': value.get('d'),
-        'year': value.get('g'),
-        'message': value.get('f'),
-    }
+    if key == '269__':
+        if value.get('b'):
+            return {
+                'holder': value.get('b')
+            }
+        return {'holder': ''}
+    
+    if key == '5421_':
+        
+        if value.get('a'):
+            if '_digitization' not in self.keys():
+                self['_digitization'] = [{'copyright': value.get('a')}]
+            else:
+                self['_digitization'].append({'copyright': value.get('a')})
+
+        if 'copyright' not in self.keys():
+            try:
+                if value.get('a'):
+                    return {
+                        'holder': value.get('a'),
+                        'year': value.get('g')
+                    }
+                else:
+                    return {
+                        'holder': value.get('d'),
+                        'year': value.get('g')
+                    }
+            except:
+                return {'holder': ''}
+    
+    if value.get('a'):
+        return {
+            'holder': value.get('a'),
+            'year': value.get('g'),
+            'message': value.get('f'),
+        }
+    else:
+        return {
+            'holder': value.get('d'),
+            'year': value.get('g'),
+            'message': value.get('f'),
+        }
 
 
-@model.over('_files', '^8567_')
+@model.over('_files', '^(8567|8564)_')
 @for_each_value
 @filter_values
 def _files(self, key, value):
@@ -246,9 +468,14 @@ def _files(self, key, value):
 
     def get_filepath(value):
         if value.get('d'):
-            return value.get('d')[
-                len('\\\\cern.ch\\dfs\\Services\\'):
-            ].replace('\\', '/')
+            if 'cern.ch\\dfs\\Services' in value.get('d'):
+                return value.get('d')[
+                    len('\\\\cern.ch\\dfs\\Services\\'):
+                ].replace('\\', '/')
+            
+            else:
+                return 'http://cern.ch' + value.get('d').split('www')[-1]
+        
         else:
             return re.sub(
                 'https?://mediaarchive.cern.ch/', '', value.get('u', '')
@@ -263,7 +490,7 @@ def _files(self, key, value):
 
     def get_tags_to_transform(context_type, value):
         if context_type in ['frame', 'poster']:
-            return {'timestamp': int(value.get('y').split(' ')[3])}
+            return {'timestamp': int(float(value.get('y').split(' ')[3]))}
 
     def get_frame_name(result):
         _, ext = os.path.splitext(result['key'])
@@ -296,18 +523,66 @@ def _files(self, key, value):
 
         return result
 
-    result = compute(deepcopy(value), *get_context_type(value))
+    if key == '8567_':
+        result = compute(deepcopy(value), *get_context_type(value))
 
-    # if it's the poster frame, make a copy for a frame!
-    if result['tags']['context_type'] == 'poster' and \
-            result['tags_to_transform']['timestamp'] == 5:
-        frame_5 = compute(value, 'frame', 'image')
-        if '_files' not in self:
-            self['_files'] = []
-        self['_files'].append(frame_5)
-        # update posterframe key name
-        _, ext = os.path.splitext(result['key'])
-        result['key'] = 'posterframe{0}'.format(ext)
+        # if it's the poster frame, make a copy for a frame!
+        if result['tags']['context_type'] == 'poster' and \
+                result['tags_to_transform']['timestamp'] == 5:
+            frame_5 = compute(value, 'frame', 'image')
+            if '_files' not in self:
+                self['_files'] = []
+            self['_files'].append(frame_5)
+            # update posterframe key name
+            _, ext = os.path.splitext(result['key'])
+            result['key'] = 'posterframe{0}'.format(ext)
+
+    else:
+        data = {}
+        if value.get('1'):
+            data['has_subtitles'] = value.get('1', '')
+        else:
+            data['has_subtitles'] = value.get('i', '')
+        data['storage_service'] = value.get('2', '')
+        data['file_size'] = value.get('s', '')
+        data['record_control_number'] = value.get('w', '')
+        data['record_id'] = value.get('y', '')
+        data['format_resolution'] = value.get('z', '')
+
+        empty_keys = [aux_key for aux_key in data.keys() if data[aux_key] == '']
+        for aux_key in empty_keys:
+            data.pop(aux_key)
+
+        if len(data.keys()) > 0:
+            if '_digitization' not in self.keys():
+                self['_digitization'] = [data]
+            else:
+                self['_digitization'].append(data)
+
+        result = {}
+        result['key'] = get_key(value)
+
+        result['tags'] = {}
+        if value.get('u') and value.get('q') is not None:
+            result['tags']['preview'] = True
+            result['tags']['context_type'] = 'master'
+            result['tags']['content_type'] = value.get('q').lower()
+
+        else:
+            result['tags']['preview'] = False
+            result['tags']['context_type'] = value.get('q')
+
+        if value.get('y') is None:
+            result['tags']['media_type'] = value.get('y')
+        
+        else:
+            try:
+                result['tags']['media_type'] = value.get('y').split('-')[0].lower()
+            except:
+                result['tags']['media_type'] = None
+
+        result['filepath'] = value.get('u')
+        result['tags_to_transform'] = get_tags_to_transform(result['tags']['context_type'], value)
 
     return result
 

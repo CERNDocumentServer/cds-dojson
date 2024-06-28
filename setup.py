@@ -134,6 +134,12 @@ setup(
             'multipart = cds_dojson.marc21.fields.books.multipart',
             'journal = cds_dojson.marc21.fields.books.journal',
         ],
+        'cds_dojson.marc21.rdm': [
+            'base = cds_dojson.marc21.fields.rdm.base',
+        ],
+        'cds_dojson.marc21.summer_student_report': [
+            'base = cds_dojson.marc21.fields.rdm.summer_student_report',
+        ],
         # DoJSON entry points
         'console_scripts': [
             'cds-dojson=cds_dojson.cli:cli',

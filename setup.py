@@ -47,7 +47,7 @@ tests_require = [
     'pytest-isort>=1.2.0',
     'pytest-pep8>=1.0.6',
     'pytest>=4.0.0,<5',
-    'pycountry>=17.5.14,<19',
+    'pycountry>=17.5.14',
 ]
 
 extras_require = {
@@ -145,6 +145,6 @@ setup(
         'dojson.cli.load': [
             'cds_marcxml = cds_dojson.marc21.utils:load',
         ],
-        
+
     }
 )

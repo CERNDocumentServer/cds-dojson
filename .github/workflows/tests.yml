@@ -26,6 +26,9 @@ jobs:
       matrix:
         python-version: [3.9]
         requirements-level: [pypi]
+    env:
+      DB: ${{ matrix.db-service }}
+      EXTRAS: tests
 
     steps:
       - name: Checkout
@@ -36,10 +39,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
+          cache-dependency-path: setup.cfg
 
       - name: Install dependencies
         run: |
-          pip install .
+          pip install ".[$EXTRAS]"
           pip freeze
           docker --version
           docker-compose --version

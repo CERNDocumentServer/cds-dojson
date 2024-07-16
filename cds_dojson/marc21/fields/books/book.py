@@ -23,12 +23,17 @@ from __future__ import absolute_import, print_function, unicode_literals
 from dojson.errors import IgnoreKey
 from dojson.utils import filter_values, for_each_value
 
-from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
-    MissingRequiredField, UnexpectedValue
-from cds_dojson.marc21.fields.books.utils import extract_parts, \
-    extract_volume_number, is_excluded
-from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
-    out_strip
+from cds_dojson.marc21.fields.books.errors import (
+    ManualMigrationRequired,
+    MissingRequiredField,
+    UnexpectedValue,
+)
+from cds_dojson.marc21.fields.books.utils import (
+    extract_parts,
+    extract_volume_number,
+    is_excluded,
+)
+from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, out_strip
 from cds_dojson.marc21.models.books.book import model
 
 from .base import alternative_titles as alternative_titles_base

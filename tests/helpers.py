@@ -50,7 +50,8 @@ def validate(json):
         json,
         json['$schema'],
         resolver=json_resolver(json['$schema']),
-        types={'array': (list, tuple)})
+        # types={'array': (list, tuple)}
+    )
 
 
 def load_fixture_file(file_name):

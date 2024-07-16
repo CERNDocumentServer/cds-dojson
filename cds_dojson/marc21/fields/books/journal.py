@@ -24,8 +24,7 @@ from dojson.utils import for_each_value
 
 from cds_dojson.marc21.fields.books.book import title as base_title
 from cds_dojson.marc21.fields.books.errors import UnexpectedValue
-from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
-    out_strip
+from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, out_strip
 from cds_dojson.marc21.models.books.journal import model
 
 

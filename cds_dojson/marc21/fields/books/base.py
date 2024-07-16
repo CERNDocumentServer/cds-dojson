@@ -29,17 +29,32 @@ from dateutil.parser import ParserError
 from dojson.errors import IgnoreKey
 from dojson.utils import filter_values, flatten, for_each_value, force_list
 
-from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
-    UnexpectedValue
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField, UnexpectedValue
 from cds_dojson.marc21.fields.books.utils import extract_volume_number
-from cds_dojson.marc21.fields.books.values_mapping import ACQUISITION_METHOD, \
-    ARXIV_CATEGORIES, COLLECTION, DOCUMENT_TYPE, EXTERNAL_SYSTEM_IDENTIFIERS, \
-    EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE, MATERIALS, MEDIUM_TYPES, \
-    SUBJECT_CLASSIFICATION_EXCEPTIONS, mapping
-from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
-    build_contributor_books, clean_email, clean_pages_range, clean_val, \
-    filter_list_values, get_week_start, out_strip, related_url, \
-    replace_in_result
+from cds_dojson.marc21.fields.books.values_mapping import (
+    ACQUISITION_METHOD,
+    ARXIV_CATEGORIES,
+    COLLECTION,
+    DOCUMENT_TYPE,
+    EXTERNAL_SYSTEM_IDENTIFIERS,
+    EXTERNAL_SYSTEM_IDENTIFIERS_TO_IGNORE,
+    MATERIALS,
+    MEDIUM_TYPES,
+    SUBJECT_CLASSIFICATION_EXCEPTIONS,
+    mapping,
+)
+from cds_dojson.marc21.fields.utils import (
+    ManualMigrationRequired,
+    build_contributor_books,
+    clean_email,
+    clean_pages_range,
+    clean_val,
+    filter_list_values,
+    get_week_start,
+    out_strip,
+    related_url,
+    replace_in_result,
+)
 from cds_dojson.marc21.models.books.base import model
 
 from .utils import extract_parts, is_excluded

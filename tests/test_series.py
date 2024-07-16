@@ -23,8 +23,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import pytest
 from dojson.errors import MissingRule
 
-from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
-    UnexpectedValue
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField, UnexpectedValue
 from cds_dojson.marc21.models.books.base import get_migration_dict
 from cds_dojson.marc21.models.books.multipart import model as multipart_model
 from cds_dojson.marc21.models.books.serial import model as serial_model

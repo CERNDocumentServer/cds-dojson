@@ -23,12 +23,18 @@ from copy import deepcopy
 from dojson.errors import IgnoreKey
 from dojson.utils import for_each_value, force_list
 
-from cds_dojson.marc21.fields.books.errors import MissingRequiredField, \
-    UnexpectedValue
-from cds_dojson.marc21.fields.books.utils import extract_parts, \
-    extract_volume_info, extract_volume_number
-from cds_dojson.marc21.fields.utils import build_contributor_books, \
-    clean_val, filter_list_values, out_strip
+from cds_dojson.marc21.fields.books.errors import MissingRequiredField, UnexpectedValue
+from cds_dojson.marc21.fields.books.utils import (
+    extract_parts,
+    extract_volume_info,
+    extract_volume_number,
+)
+from cds_dojson.marc21.fields.utils import (
+    build_contributor_books,
+    clean_val,
+    filter_list_values,
+    out_strip,
+)
 from cds_dojson.marc21.models.books.multipart import model
 
 from .base import alternative_identifiers as alternative_identifiers_base

@@ -49,7 +49,6 @@ from cds_dojson.cli import compile_schema, convert_yaml2json
 def test_cli(src, compiled):
     """Test cds-dojson CLI."""
     runner = CliRunner()
-
     result = runner.invoke(compile_schema, [
         pkg_resources.resource_filename('cds_dojson.schemas', src)
     ])

@@ -25,8 +25,11 @@ from copy import deepcopy
 import pytest
 from dojson.errors import MissingRule
 
-from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
-    MissingRequiredField, UnexpectedValue
+from cds_dojson.marc21.fields.books.errors import (
+    ManualMigrationRequired,
+    MissingRequiredField,
+    UnexpectedValue,
+)
 from cds_dojson.marc21.fields.books.values_mapping import MATERIALS, mapping
 from cds_dojson.marc21.models.books.base import get_migration_dict
 from cds_dojson.marc21.models.books.book import model

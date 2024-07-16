@@ -22,10 +22,20 @@ from __future__ import absolute_import
 import pytest
 from dojson.errors import IgnoreKey
 
-from cds_dojson.marc21.fields.utils import ManualMigrationRequired, \
-    MissingRequiredField, UnexpectedValue, clean_email, clean_pages_range, \
-    clean_str, clean_val, filter_list_values, get_week_start, out_strip, \
-    related_url, replace_in_result
+from cds_dojson.marc21.fields.utils import (
+    ManualMigrationRequired,
+    MissingRequiredField,
+    UnexpectedValue,
+    clean_email,
+    clean_pages_range,
+    clean_str,
+    clean_val,
+    filter_list_values,
+    get_week_start,
+    out_strip,
+    related_url,
+    replace_in_result,
+)
 
 
 def test_clean_pages():

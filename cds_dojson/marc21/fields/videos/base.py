@@ -20,11 +20,13 @@
 from __future__ import absolute_import, print_function
 
 from dojson.errors import IgnoreKey
-from dojson.utils import filter_values, for_each_value, force_list, \
-    ignore_value
+from dojson.utils import filter_values, for_each_value, force_list, ignore_value
 
-from ...fields.utils import build_contributor_from_508, \
-    build_contributor_videos, clean_val
+from ...fields.utils import (
+    build_contributor_from_508,
+    build_contributor_videos,
+    clean_val,
+)
 from ...models.videos.base import model
 
 

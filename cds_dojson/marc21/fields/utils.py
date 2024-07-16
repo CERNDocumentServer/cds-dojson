@@ -31,8 +31,11 @@ from dojson.errors import IgnoreKey
 from dojson.utils import force_list
 from six import PY2, iteritems
 
-from cds_dojson.marc21.fields.books.errors import ManualMigrationRequired, \
-    MissingRequiredField, UnexpectedValue
+from cds_dojson.marc21.fields.books.errors import (
+    ManualMigrationRequired,
+    MissingRequiredField,
+    UnexpectedValue,
+)
 from cds_dojson.utils import MementoDict
 
 
@@ -353,6 +356,7 @@ def _extract_json_ids(info, provenence='source'):
     regex = re.compile(r'((AUTHOR\|\((CDS|INSPIRE)\))|(\(SzGeCERN\)))(.*)')
     ids = []
     author_ids = force_list(info.get('0', ''))
+
     for author_id in author_ids:
         match = regex.match(author_id)
         if match:
@@ -374,7 +378,6 @@ def _extract_json_ids(info, provenence='source'):
         ids.append({'value': info['inspireid'], provenence: 'INSPIRE ID'})
     except KeyError:
         pass
-
     return ids
 
 

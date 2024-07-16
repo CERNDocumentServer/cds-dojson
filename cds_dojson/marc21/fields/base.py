@@ -20,8 +20,13 @@
 
 from __future__ import absolute_import, print_function
 
-from dojson.utils import (IgnoreKey, filter_values, for_each_value, force_list,
-                          ignore_value)
+from dojson.utils import (
+    IgnoreKey,
+    filter_values,
+    for_each_value,
+    force_list,
+    ignore_value,
+)
 
 from ..models.base import model
 

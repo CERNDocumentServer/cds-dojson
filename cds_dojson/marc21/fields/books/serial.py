@@ -19,10 +19,8 @@
 """Books fields."""
 from dojson.utils import for_each_value
 
-from cds_dojson.marc21.fields.books.multipart import \
-    isbns as multipart_identifiers
-from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, \
-    out_strip
+from cds_dojson.marc21.fields.books.multipart import isbns as multipart_identifiers
+from cds_dojson.marc21.fields.utils import clean_val, filter_list_values, out_strip
 from cds_dojson.marc21.models.books.serial import model
 
 

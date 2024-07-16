@@ -284,22 +284,6 @@
           },
           "quality": {
             "type": "string"
-          }, 
-          "content_type": {
-            "type": "string"
-          }, 
-          "context_type": {
-            "enum": [
-              "Master",
-              "Slave",
-              "Subtitle",
-              "Other"
-            ],
-            "type": "string",
-            "description": "Former BibDocFile.doctype."
-          },
-          "quality": {
-            "type": "string"
           },
           "checksum": {
             "type": "string"
@@ -450,7 +434,6 @@
               "silent",
               "sk",
               "sl",
-              "sr",
               "sv",
               "tr",
               "uk",
@@ -586,7 +569,6 @@
         "silent",
         "sk",
         "sl",
-        "sr",
         "sv",
         "tr",
         "uk",

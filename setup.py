@@ -20,4 +20,5 @@
 """CDS DoJSON extension."""
 
 from setuptools import setup
+
 setup()

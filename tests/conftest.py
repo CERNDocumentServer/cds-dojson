@@ -33,5 +33,5 @@ def app():
     )
 
     app_.config.update(TESTING=True)
-    InvenioJSONSchemas(app_)
+    InvenioJSONSchemas(app_, entry_point_group="invenio_jsonschemas.testschemas")
     return app_

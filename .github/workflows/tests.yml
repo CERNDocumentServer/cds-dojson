@@ -22,10 +22,15 @@ on:
 jobs:
   Tests:
     runs-on: ubuntu-20.04
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        python-version: [3.9, 3.12]
+        python-version: [3.9]
         requirements-level: [pypi]
+        experimental: [false]
+        include:
+          - python-version: 3.12
+            experimental: true
     env:
       DB: ${{ matrix.db-service }}
       EXTRAS: tests

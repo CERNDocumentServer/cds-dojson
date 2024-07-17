@@ -1,6 +1,13 @@
 Changes
 =======
 
+Version 0.12.0 (released 2024-07-17)
+-----------------------------------
+
+- global: migrate to setup.cfg
+- fix tests
+- CI: upgrade python version
+
 Version 0.11.0 (released 2021-04-22)
 -----------------------------------
 - Add missing languages for all CERN member states

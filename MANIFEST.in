@@ -37,6 +37,7 @@ include .travis.yml
 include Dockerfile
 include LICENSE
 include pytest.ini
+recursive-include cds_dojson *.gitkeep
 recursive-include cds_dojson *.json
 recursive-include cds_dojson *.py
 recursive-include cds_dojson *.yml
@@ -48,3 +49,6 @@ recursive-include tests *.xml
 recursive-include tests *.json
 recursive-include tests *.yml
 recursive-exclude tests/fixtures/books/results *.json
+
+# added by check-manifest
+recursive-include cds_dojson *.gitkeep

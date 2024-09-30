@@ -22,7 +22,11 @@ from __future__ import absolute_import, print_function
 
 import os
 import re
-from collections import defaultdict
+try:
+    from collections import defaultdict
+except ImportError:
+    # python 3.12 has moved the collections base classes to `collections.abc` module
+    from collections.abc import defaultdict
 from copy import deepcopy
 
 import arrow

@@ -21,7 +21,7 @@
 
 import logging
 
-import pkg_resources
+import importlib_metadata
 import pypeg2
 from dojson.contrib.marc21 import model as default
 from invenio_query_parser.parser import Main as parser
@@ -60,7 +60,8 @@ def matcher(record, entry_point_group):
     logger = logging.getLogger(__name__ + ".dojson_matcher")
 
     _matches = []
-    for entry_point in pkg_resources.iter_entry_points(entry_point_group):
+    entrypoints = set(importlib_metadata.entry_points(group=entry_point_group))
+    for entry_point in entrypoints:
         model = entry_point.load()
         query = Query(model.__query__)
         if query.match(record):

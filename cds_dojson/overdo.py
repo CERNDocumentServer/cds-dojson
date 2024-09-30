@@ -18,16 +18,16 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Base classes for CDS DoJSON."""
 
-import pkg_resources
+import importlib_metadata
 from dojson.overdo import Overdo as DoJSONOverdo
 
 from .matcher import matcher
 from .utils import not_accessed_keys
 
 try:
-    pkg_resources.get_distribution('flask')
+    importlib_metadata.distribution('flask')
     from flask import current_app
-except (pkg_resources.DistributionNotFound, RuntimeError) as e:
+except (importlib_metadata.PackageNotFoundError, RuntimeError) as e:
     HAS_FLASK = False
 else:
     HAS_FLASK = True

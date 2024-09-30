@@ -1,6 +1,13 @@
 Changes
 =======
 
+
+Version 0.13.0 (released 2024-09-30)
+-----------------------------------
+
+- global: move to importlib from pkg_resources
+
+
 Version 0.12.0 (released 2024-07-17)
 -----------------------------------
 

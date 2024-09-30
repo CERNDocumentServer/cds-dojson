@@ -21,7 +21,11 @@
 import functools
 import json
 import os
-from collections import defaultdict
+try:
+    from collections import defaultdict
+except ImportError:
+    # python 3.12 has moved the collections base classes to `collections.abc` module
+    from collections.abc import defaultdict
 
 import arrow
 import six

@@ -28,6 +28,8 @@ from invenio_query_parser.parser import Main as parser
 from invenio_query_parser.walkers.match_unit import MatchUnit
 from invenio_query_parser.walkers.pypeg_to_ast import PypegConverter
 
+from cds_dojson.exceptions import ModelMissingException, MultipleModelsException
+
 # Cache of (name, model, parsed_query_ast) tuples keyed by entry_point_group.
 # Entry points and their query ASTs are static for the lifetime of a process,
 # so scanning importlib_metadata and re-parsing pypeg2 queries on every call
@@ -87,7 +89,6 @@ def matcher(record, entry_point_group):
                 name, model
             ))
             _matches.append([name, model])
-    try:
         if len(_matches) > 1:
             logger.error(
                 ("Found more than one matches `{0}`, we'll use {1}"
@@ -95,12 +96,13 @@ def matcher(record, entry_point_group):
                     _matches, default, record
                 )
             )
-            return default
-        return _matches[0][1]
-    except IndexError:
-        logger.warning(
-            "Model *not* found, fallback to default {0} for record {1}".format(
-                default, record
+            raise MultipleModelsException(
+                "Found more than one models {0} for record {1}".format(
+                    _matches, record))
+        if len(_matches) == 0:
+            logger.warning(
+                "Model *not* found, fallback to default {0} for record {1}".format(
+                    default, record
+                )
             )
-        )
-        return default
+            raise ModelMissingException("Model *not* found")

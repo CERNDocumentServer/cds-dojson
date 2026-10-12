@@ -17,6 +17,7 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Define Books flavour exceptions."""
+
 from dojson.errors import DoJSONException
 
 
@@ -25,8 +26,8 @@ class CDSDoJSONException(DoJSONException):
 
     def __init__(self, *args, **kwargs):
         """Constructor."""
-        self.subfield = kwargs.get('subfield', None)
-        message = kwargs.get('message', None)
+        self.subfield = kwargs.get("subfield", None)
+        message = kwargs.get("message", None)
         if message:
             self.message = self.message + message
 
@@ -36,16 +37,16 @@ class CDSDoJSONException(DoJSONException):
 class UnexpectedValue(CDSDoJSONException):
     """The corresponding value is unexpected."""
 
-    message = '[UNEXPECTED INPUT VALUE]'
+    message = "[UNEXPECTED INPUT VALUE]"
 
 
 class MissingRequiredField(CDSDoJSONException):
     """The corresponding value is required."""
 
-    message = '[MISSING REQUIRED FIELD]'
+    message = "[MISSING REQUIRED FIELD]"
 
 
 class ManualMigrationRequired(CDSDoJSONException):
     """The corresponding field should be manually migrated."""
 
-    message = '[MANUAL MIGRATION REQUIRED]'
+    message = "[MANUAL MIGRATION REQUIRED]"

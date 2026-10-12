@@ -37,9 +37,11 @@ def mock_path_to_url(self, path):
 
 def json_resolver(schema):
     """Test ``json_resolver``."""
-    json_resolver = JSONResolver(plugins=[
-        'demo.json_resolver',
-    ])
+    json_resolver = JSONResolver(
+        plugins=[
+            "demo.json_resolver",
+        ]
+    )
     resolver_cls = ref_resolver_factory(json_resolver)
     return resolver_cls.from_schema(schema)
 
@@ -48,43 +50,40 @@ def validate(json):
     """Wrap jsonchema.validate for convenience."""
     return _validate(
         json,
-        json['$schema'],
-        resolver=json_resolver(json['$schema']),
+        json["$schema"],
+        resolver=json_resolver(json["$schema"]),
         # types={'array': (list, tuple)}
     )
 
 
 def load_fixture_file(file_name):
     """Read the content of a file and return it."""
-    return pkg_resources.resource_string(__name__,
-                                         os.path.join('fixtures',
-                                                      file_name))
+    return pkg_resources.resource_string(__name__, os.path.join("fixtures", file_name))
 
 
 def mock_contributor_fetch(info):
     """Mock contributor fetch."""
-    name = info.get('a')
+    name = info.get("a")
     author_info = dict()
-    if name == 'Test User':
+    if name == "Test User":
         author_info = dict(
-            name='User, Test',
-            lastname='User',
-            recid='123456789',
-            email='tuser@cern.ch',
-            firstname='Test',
-            cernccid='987654',
+            name="User, Test",
+            lastname="User",
+            recid="123456789",
+            email="tuser@cern.ch",
+            firstname="Test",
+            cernccid="987654",
         )
-    elif name == 'Test User 2':
+    elif name == "Test User 2":
         author_info = dict(
-            name='User, Test 2',
-            lastname='User 2',
-            recid='2123456789',
-            email='tuser2@cern.ch',
-            firstname='Test 2',
-            cernccid='9876542',
+            name="User, Test 2",
+            lastname="User 2",
+            recid="2123456789",
+            email="tuser2@cern.ch",
+            firstname="Test 2",
+            cernccid="9876542",
         )
     else:
         return info
 
-    return MementoDict([
-        (k, v) for k, v in chain(info.items(), iteritems(author_info))])
+    return MementoDict([(k, v) for k, v in chain(info.items(), iteritems(author_info))])

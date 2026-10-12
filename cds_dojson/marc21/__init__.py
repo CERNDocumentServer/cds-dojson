@@ -21,4 +21,4 @@
 
 from ..overdo import OverdoBase
 
-marc21 = OverdoBase(entry_point_models='cds_dojson.marc21.models')
+marc21 = OverdoBase(entry_point_models="cds_dojson.marc21.models")

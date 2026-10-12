@@ -26,5 +26,4 @@ class VideosBase(OverdoJSONSchema):
     """Base model conversion MARC21 to JSON."""
 
 
-model = VideosBase(bases=(cds_base, ),
-                   entry_point_group='cds_dojson.marc21.videos')
+model = VideosBase(bases=(cds_base,), entry_point_group="cds_dojson.marc21.videos")

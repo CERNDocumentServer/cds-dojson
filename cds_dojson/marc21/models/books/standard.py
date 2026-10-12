@@ -30,13 +30,13 @@ from .base import model as books_base
 class CDSStandard(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
-    __query__ = '690C_:STANDARD OR 980__:STANDARD -980__:DELETED -980__:MIGRATED'
+    __query__ = "690C_:STANDARD OR 980__:STANDARD -980__:DELETED -980__:MIGRATED"
 
-    __schema__ = 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json'
+    __schema__ = "https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json"
 
     __ignore_keys__ = COMMON_IGNORE_FIELDS
 
-    __json_init_dict__ = {'_migration': {**get_migration_dict()}}
+    __json_init_dict__ = {"_migration": {**get_migration_dict()}}
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
@@ -47,10 +47,14 @@ class CDSStandard(CDSOverdoBookBase):
             init_fields=deepcopy(self.__json_init_dict__),
         )
 
-        json['$schema'] = self.__class__.__schema__
+        json["$schema"] = self.__class__.__schema__
         return json
 
 
 model = CDSStandard(
-    bases=(books_base, cds_base,),
-    entry_point_group='cds_dojson.marc21.book')
+    bases=(
+        books_base,
+        cds_base,
+    ),
+    entry_point_group="cds_dojson.marc21.book",
+)

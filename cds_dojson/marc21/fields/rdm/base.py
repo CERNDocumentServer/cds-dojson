@@ -26,16 +26,16 @@ from cds_dojson.marc21.fields.utils import clean_val, out_strip
 from cds_dojson.marc21.models.base import model
 
 
-@model.over('preprint_date', '^269__')     # item, RDM?!
+@model.over("preprint_date", "^269__")  # item, RDM?!
 @out_strip
 def preprint_date(self, key, value):
     """Translates preprint_date fields."""
-    date = clean_val('c', value, str)
+    date = clean_val("c", value, str)
     if date:
         try:
             date = parser.parse(date)
             return date.date().isoformat()
         except (ValueError, AttributeError):
-            raise ManualMigrationRequired(subfield='c')
+            raise ManualMigrationRequired(subfield="c")
     else:
-        raise IgnoreKey('preprint_date')
+        raise IgnoreKey("preprint_date")

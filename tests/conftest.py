@@ -29,7 +29,7 @@ def app():
     app_ = Flask(__name__)
     app_.config.update(
         TESTING=True,
-        JSONSCHEMAS_HOST='cds.cern.ch',
+        JSONSCHEMAS_HOST="cds.cern.ch",
     )
 
     app_.config.update(TESTING=True)

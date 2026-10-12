@@ -16,4 +16,3 @@ class ModelMissingException(Exception):
 
 class MultipleModelsException(Exception):
     """CDSDoJSONException class."""
-

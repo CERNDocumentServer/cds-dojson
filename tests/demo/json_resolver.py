@@ -32,10 +32,8 @@ import jsonresolver
 import pkg_resources
 
 
-@jsonresolver.route('/schemas/<path:path>',
-                    host='cds.cern.ch')
+@jsonresolver.route("/schemas/<path:path>", host="cds.cern.ch")
 def resolve_definitions(path):
     """Resolve the JSON definition schema."""
-    with open(pkg_resources.resource_filename(
-            'cds_dojson.schemas', path), 'r') as f:
+    with open(pkg_resources.resource_filename("cds_dojson.schemas", path), "r") as f:
         return json.load(f)

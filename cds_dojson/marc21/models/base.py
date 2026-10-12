@@ -25,4 +25,4 @@ class Base(OverdoJSONSchema):
     """Base model conversion MARC21 to JSON."""
 
 
-model = Base(entry_point_group='cds_dojson.marc21.base')
+model = Base(entry_point_group="cds_dojson.marc21.base")

@@ -29,7 +29,7 @@ import six
 from jsonref import JsonRef
 
 
-def compile_schema(schema, base_uri='', in_place=False):
+def compile_schema(schema, base_uri="", in_place=False):
     """Resolve references in schema.
 
     It is assumed that schemas have already been validated for backward
@@ -50,8 +50,8 @@ def compile_schema(schema, base_uri='', in_place=False):
 def _compile_all_of(schema):
     """Go through the schema an compile the ``allOf`` rules."""
     if isinstance(schema, dict):
-        if 'allOf' in schema:
-            all_of = schema.pop('allOf')
+        if "allOf" in schema:
+            all_of = schema.pop("allOf")
             schema = merge_dicts(schema, *all_of)
         for key, value in six.iteritems(schema):
             schema[key] = _compile_all_of(value)

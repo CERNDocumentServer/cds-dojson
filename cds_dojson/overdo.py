@@ -25,7 +25,7 @@ from .matcher import matcher
 from .utils import not_accessed_keys
 
 try:
-    importlib_metadata.distribution('flask')
+    importlib_metadata.distribution("flask")
     from flask import current_app
 except (importlib_metadata.PackageNotFoundError, RuntimeError) as e:
     HAS_FLASK = False
@@ -36,10 +36,7 @@ else:
 class OverdoBase(DoJSONOverdo):
     """Base entry class."""
 
-    def __init__(self,
-                 bases=None,
-                 entry_point_group=None,
-                 entry_point_models=None):
+    def __init__(self, bases=None, entry_point_group=None, entry_point_models=None):
         """Init."""
         super(OverdoBase, self).__init__(bases, entry_point_group)
         self.entry_point_models = entry_point_models
@@ -60,7 +57,7 @@ class OverdoBase(DoJSONOverdo):
 class Overdo(DoJSONOverdo):
     """Translation index base."""
 
-    __query__ = ''
+    __query__ = ""
     """To be used by the matcher to find the proper model."""
 
     __ignore_keys__ = set()
@@ -74,6 +71,7 @@ class Overdo(DoJSONOverdo):
               regular expression in `source_tags` are equal to the current
               ones.
         """
+
         def override(rule):
             if name == rule[1][0]:
                 return True
@@ -82,7 +80,7 @@ class Overdo(DoJSONOverdo):
                     return True
             return False
 
-        if kwargs.get('override', False):
+        if kwargs.get("override", False):
             self.rules[:] = [rule for rule in self.rules if not override(rule)]
 
         return super(Overdo, self).over(name, *source_tags)
@@ -95,7 +93,7 @@ class Overdo(DoJSONOverdo):
 class OverdoJSONSchema(Overdo):
     """Translation index which adds $schema key."""
 
-    __schema__ = ''
+    __schema__ = ""
     """Name of the schema to be added to the final JSON."""
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
@@ -103,13 +101,14 @@ class OverdoJSONSchema(Overdo):
         json = super(OverdoJSONSchema, self).do(
             blob=blob,
             ignore_missing=ignore_missing,
-            exception_handlers=exception_handlers)
+            exception_handlers=exception_handlers,
+        )
         if HAS_FLASK:
-            json_schema = current_app.extensions['invenio-jsonschemas']
-            json['$schema'] = {
-                '$ref': json_schema.path_to_url(self.__class__.__schema__)
+            json_schema = current_app.extensions["invenio-jsonschemas"]
+            json["$schema"] = {
+                "$ref": json_schema.path_to_url(self.__class__.__schema__)
             }
         else:
-            json['$schema'] = {'$ref': self.__class__.__schema__}
+            json["$schema"] = {"$ref": self.__class__.__schema__}
 
         return json

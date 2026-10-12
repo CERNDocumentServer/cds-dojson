@@ -26,12 +26,12 @@ from dojson.utils import filter_values, for_each_value
 from ...models.videos.project import model
 
 
-@model.over('related_links', '^773__')
+@model.over("related_links", "^773__")
 @for_each_value
 @filter_values
 def related_links(self, key, value):
     """Related links."""
     return {
-        'name': value.get('p'),
-        'url': value.get('u'),
+        "name": value.get("p"),
+        "url": value.get("u"),
     }

@@ -24,7 +24,11 @@ from cds_dojson.marc21.fields.books.errors import MissingRequiredField
 
 MAX_PAGES_NUMBER = 8192
 
-RE_STR_VOLUME_PREFIX = r"(?:(?:[Vv](?:ol(?:ume)?)?|[Pp](?:art(?:ie)?|t)?|[Tt](?:eil)?|[Bb]d|[Tt]ome?|course|conference|fasc(?:icule)?|book|unit|suppl|Tafeln|Tomo)[\s\.]*)"
+RE_STR_VOLUME_PREFIX = (
+    r"(?:(?:[Vv](?:ol(?:ume)?)?|[Pp](?:art(?:ie)?|t)?|[Tt](?:eil)?|[Bb]d|"
+    r"[Tt]ome?|course|conference|fasc(?:icule)?|book|unit|suppl|Tafeln|Tomo)"
+    r"[\s\.]*)"
+)
 RE_STR_ROMAN_NUMERAL = r"(?:(?:IX|IV|V?I{1,3})|X{1,3}(?:IX|IV|V?I{0,3}))"
 RE_STR_VOLUME_SUFFIX = r"(\d{{1,4}}|\d\d?[a-zA-Z]|[a-zA-Z]\d|[A-H]|{})".format(
     RE_STR_ROMAN_NUMERAL

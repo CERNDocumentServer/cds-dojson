@@ -23,13 +23,10 @@
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 """Test cds-dojson CLI and jsonschema compiler."""
 
-from __future__ import absolute_import
-
 import json
 import os
-import shutil
+from importlib.resources import files
 
-import pkg_resources
 import pytest
 from click.testing import CliRunner
 
@@ -60,14 +57,10 @@ from cds_dojson.cli import compile_schema, convert_yaml2json
 def test_cli(src, compiled):
     """Test cds-dojson CLI."""
     runner = CliRunner()
-    result = runner.invoke(
-        compile_schema, [pkg_resources.resource_filename("cds_dojson.schemas", src)]
-    )
+    result = runner.invoke(compile_schema, [str(files("cds_dojson.schemas") / src)])
     assert 0 == result.exit_code
     compiled_schema_result = json.loads(result.output)
-    with open(
-        pkg_resources.resource_filename("cds_dojson.schemas", compiled), "r"
-    ) as f:
+    with (files("cds_dojson.schemas") / compiled).open("r") as f:
         compile_schema_expected = json.load(f)
 
     assert compile_schema_expected == compiled_schema_result
@@ -78,7 +71,7 @@ def test_cli(src, compiled):
     [("./tests/fixtures/books/ymls/", "./tests/fixtures/books/results/")],
 )
 def test_cli_convert_yaml2json(source, destination):
-    """Test cds-dojson CLI 'convert_yaml2json' command"""
+    """Test cds-dojson CLI 'convert_yaml2json' command."""
     runner = CliRunner()
 
     result = runner.invoke(convert_yaml2json, [source, destination])

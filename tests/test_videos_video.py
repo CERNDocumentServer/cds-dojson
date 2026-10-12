@@ -18,7 +18,8 @@
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Video rules tests."""
 
-import mock
+from unittest import mock
+
 from helpers import load_fixture_file, mock_contributor_fetch, validate
 
 from cds_dojson.marc21.fields.videos.utils import language_to_isocode

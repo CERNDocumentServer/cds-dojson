@@ -20,19 +20,23 @@
 """Query parser."""
 
 import logging
+import sys
 
-import importlib_metadata
 import pypeg2
-from dojson.contrib.marc21 import model as default
 from invenio_query_parser.parser import Main as parser
 from invenio_query_parser.walkers.match_unit import MatchUnit
 from invenio_query_parser.walkers.pypeg_to_ast import PypegConverter
 
 from cds_dojson.exceptions import ModelMissingException, MultipleModelsException
 
+if sys.version_info >= (3, 10):
+    from importlib.metadata import entry_points
+else:  # pragma: no cover
+    from importlib_metadata import entry_points
+
 # Cache of (name, model, parsed_query_ast) tuples keyed by entry_point_group.
 # Entry points and their query ASTs are static for the lifetime of a process,
-# so scanning importlib_metadata and re-parsing pypeg2 queries on every call
+# so scanning importlib.metadata and re-parsing pypeg2 queries on every call
 # was the dominant cost (~84s for 1320 calls).
 _models_cache = {}
 
@@ -61,7 +65,7 @@ class Query(object):
 def _load_models(entry_point_group):
     """Load and cache entry point models for a given group."""
     if entry_point_group not in _models_cache:
-        entrypoints = set(importlib_metadata.entry_points(group=entry_point_group))
+        entrypoints = set(entry_points(group=entry_point_group))
         models = []
         for ep in entrypoints:
             model = ep.load()
@@ -79,6 +83,8 @@ def matcher(record, entry_point_group):
     :param record: Something that looks like a python dictionary
 
     :returns: a model instance
+    :raises ModelMissingException: if no model matches the record
+    :raises MultipleModelsException: if more than one model matches the record
     """
     logger = logging.getLogger(__name__ + ".dojson_matcher")
 
@@ -91,17 +97,11 @@ def matcher(record, entry_point_group):
         return _matches[0][1]
     elif len(_matches) > 1:
         logger.error(
-            (
-                "Found more than one matches `{0}`, we'll use {1}" " for record {2}."
-            ).format(_matches, default, record)
+            "Found more than one match {0} for record {1}.".format(_matches, record)
         )
         raise MultipleModelsException(
             "Found more than one models {0} for record {1}".format(_matches, record)
         )
-    elif len(_matches) == 0:
-        logger.warning(
-            "Model *not* found, fallback to default {0} for record {1}".format(
-                default, record
-            )
-        )
+    else:
+        logger.warning("Model *not* found for record {0}".format(record))
         raise ModelMissingException("Model *not* found")

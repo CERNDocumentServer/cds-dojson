@@ -67,7 +67,7 @@ def isbns(self, key, value):
     if val_u:
         volume_info = extract_volume_info(val_u)
         # if set found it means that the isbn is for the whole multipart
-        set_search = re.search("(.*?)\(set\.*\)", val_u)
+        set_search = re.search(r"(.*?)\(set\.*\)", val_u)
         if volume_info:
             # if we have volume there it means that the ISBN is of the volume
             volume_obj = {

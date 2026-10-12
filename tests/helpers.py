@@ -18,20 +18,18 @@
 # Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Test utilities."""
 
-import os
 from itertools import chain
+from pathlib import Path
 
-import pkg_resources
 from jsonresolver import JSONResolver
 from jsonresolver.contrib.jsonschema import ref_resolver_factory
 from jsonschema import validate as _validate
-from six import iteritems
 
 from cds_dojson.utils import MementoDict
 
 
 def mock_path_to_url(self, path):
-    """Mock the ``paht_to_utl method from InvenioJSONSchemasState."""
+    """Mock the ``path_to_url`` method from InvenioJSONSchemasState."""
     return path
 
 
@@ -58,7 +56,7 @@ def validate(json):
 
 def load_fixture_file(file_name):
     """Read the content of a file and return it."""
-    return pkg_resources.resource_string(__name__, os.path.join("fixtures", file_name))
+    return (Path(__file__).parent / "fixtures" / file_name).read_bytes()
 
 
 def mock_contributor_fetch(info):
@@ -86,4 +84,4 @@ def mock_contributor_fetch(info):
     else:
         return info
 
-    return MementoDict([(k, v) for k, v in chain(info.items(), iteritems(author_info))])
+    return MementoDict(list(chain(info.items(), author_info.items())))

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2021 CERN.
+# Copyright (C) 2021-2026 CERN.
 #
-# Invenio App RDM is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# CDS-DoJSON is free software; you can redistribute it and/or modify it
+# under the terms of the Revised BSD License; see LICENSE file for more details.
 
 name: CI
 
@@ -21,18 +21,12 @@ on:
 
 jobs:
   Tests:
-    runs-on: ubuntu-20.04
-    continue-on-error: ${{ matrix.experimental }}
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: [3.9]
-        requirements-level: [pypi]
-        experimental: [false]
-        include:
-          - python-version: 3.12
-            experimental: true
+        python-version: ["3.9", "3.12", "3.14"]
     env:
-      DB: ${{ matrix.db-service }}
       EXTRAS: tests
 
     steps:
@@ -50,8 +44,6 @@ jobs:
         run: |
           pip install ".[$EXTRAS]"
           pip freeze
-          docker --version
-          docker compose --version
 
       - name: Run tests
         run: ./run-tests.sh

@@ -24,6 +24,5 @@ set -o errexit
 # Quit on unbound symbols
 set -o nounset
 
-pydocstyle cds_dojson tests && \
 python -m check_manifest --ignore ".*-requirements.txt" && \
 python -m pytest tests

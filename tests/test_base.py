@@ -18,10 +18,8 @@
 # 59 Temple Place, Suite 330, Boston, MA 02D111-1307, USA.
 """Base model tests."""
 
-import os
-
-import mock
-import pkg_resources
+from pathlib import Path
+from unittest import mock
 
 from cds_dojson.marc21.models.base import model
 from cds_dojson.marc21.utils import create_record
@@ -30,9 +28,7 @@ from cds_dojson.overdo import Overdo
 
 def test_base_model(app):
     """Test base model."""
-    marcxml = pkg_resources.resource_string(
-        __name__, os.path.join("fixtures", "base.xml")
-    )
+    marcxml = (Path(__file__).parent / "fixtures" / "base.xml").read_bytes()
 
     with app.app_context():
         blob = create_record(marcxml)
@@ -48,11 +44,11 @@ def test_overdo_missing():
     """Test missing check from Overdo."""
 
     class MyOverdo(Overdo):
-        __ignore_keys__ = set(["c"])
+        __ignore_keys__ = {"c"}
 
     with mock.patch(
-        "cds_dojson.overdo.not_accessed_keys", return_value=set(["a", "b", "c"])
+        "cds_dojson.overdo.not_accessed_keys", return_value={"a", "b", "c"}
     ):
         overdo = MyOverdo()
-        overdo.__ignore_keys__ = set(["c"])
-        assert overdo.missing("blob") == set(["a", "b"])
+        overdo.__ignore_keys__ = {"c"}
+        assert overdo.missing("blob") == {"a", "b"}

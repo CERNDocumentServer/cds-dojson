@@ -21,6 +21,7 @@
 import functools
 import json
 import os
+
 try:
     from collections import defaultdict
 except ImportError:
@@ -39,11 +40,13 @@ class MementoDict(GroupableOrderedDict):
     def __new__(cls, *args):
         """Add the memory to the default instance."""
         cls.accessed_keys = property(
-            lambda self: set([k for k in self.__memory if k != '__order__']))
+            lambda self: set([k for k in self.__memory if k != "__order__"])
+        )
         cls.not_accessed_keys = property(
-            lambda self: set(
-                [k for k in self.keys() if k != '__order__']
-            ).difference(self.__memory))
+            lambda self: set([k for k in self.keys() if k != "__order__"]).difference(
+                self.__memory
+            )
+        )
         new = GroupableOrderedDict.__new__(cls, *args)
         new.__memory = set()
         new.__skip_memento = False
@@ -61,10 +64,12 @@ class MementoDict(GroupableOrderedDict):
 
     def __repr__(self):
         """Output the representation of the GroupableOrderedDict."""
-        out = ("({!r}, {!r})".format(k, v)
-               for k, v in self.iteritems(skip_memento=True, repeated=True)
-               if k != '__order__')
-        return 'GroupableOrderedDict(({out}))'.format(out=', '.join(out))
+        out = (
+            "({!r}, {!r})".format(k, v)
+            for k, v in self.iteritems(skip_memento=True, repeated=True)
+            if k != "__order__"
+        )
+        return "GroupableOrderedDict(({out}))".format(out=", ".join(out))
 
     def _add_to_memory(self, key):
         """Add key to the memory is it is not locked."""
@@ -89,6 +94,7 @@ def for_each_squash(f):
         [{'a': 'foo'}, {'b': 'bar'}] -> {'a': 'foo', 'b': 'barc'}
         [{'a': 'foo'}, {'a': 'bar'}] -> {'a': ['foo', 'barc']}
     """
+
     @functools.wraps(f)
     def wrapper(self, key, values, **kwargs):
         if not isinstance(values, list):
@@ -121,8 +127,7 @@ def not_accessed_keys(blob):
         for key, value in blob.iteritems(skip_memento=True):
             partial_missing = not_accessed_keys(value)
             if partial_missing:
-                missing.update(
-                    ['{0}{1}'.format(key, f) for f in partial_missing])
+                missing.update(["{0}{1}".format(key, f) for f in partial_missing])
                 if key in missing:
                     missing.remove(key)
     elif isinstance(blob, (tuple, list)):
@@ -132,7 +137,7 @@ def not_accessed_keys(blob):
     return missing
 
 
-def convert_date_to_iso_8601(date, format_='YYYY-MM-DD', **kwargs):
+def convert_date_to_iso_8601(date, format_="YYYY-MM-DD", **kwargs):
     """Convert a date string its ISO 8601 representation.
 
     YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45+01:00)
@@ -148,26 +153,27 @@ def convert_date_to_iso_8601(date, format_='YYYY-MM-DD', **kwargs):
     """
     # The order is important as arrow tries to apply them top to bottom
     _FORMATS = [
-        'YYYY-MM-DD',
-        'YYYY/MM/DD',
-        'DD/MM/YYYY',
-        'DD/MM/YY',
-        'YYYY.MM.DD',
-        'DD MMMM YYYY',
-        'DD MMM YYYY',
-        'DD MMM YY',
-        'YYYY-MM',
-        'YYYY/MM',
-        'YYYY.MM',
-        'MMM YYYY',
-        'YYYY',
-        'YY',
+        "YYYY-MM-DD",
+        "YYYY/MM/DD",
+        "DD/MM/YYYY",
+        "DD/MM/YY",
+        "YYYY.MM.DD",
+        "DD MMMM YYYY",
+        "DD MMM YYYY",
+        "DD MMM YY",
+        "YYYY-MM",
+        "YYYY/MM",
+        "YYYY.MM",
+        "MMM YYYY",
+        "YYYY",
+        "YY",
     ]
     return arrow.get(date, _FORMATS).format(format_) if date else date
 
 
 def yaml2json(source, destination):
     """Converts recursively yaml files to json."""
+
     def _get_current_directory_name(root, source):
         """Reurns the current directory name.
 
@@ -176,31 +182,30 @@ def yaml2json(source, destination):
             source: './ymls'
             return: 'elements'
         """
-        return root.replace(os.path.commonprefix([root, source]), '')
+        return root.replace(os.path.commonprefix([root, source]), "")
 
     for root, directories, filenames in os.walk(source):
         for directory in directories:
             destination_directory = os.path.join(
-                destination, _get_current_directory_name(root, source),
-                directory)
+                destination, _get_current_directory_name(root, source), directory
+            )
             if not os.path.exists(destination_directory):
                 os.makedirs(destination_directory)
 
         for filename in filenames:
             filename_ext = os.path.splitext(filename)[1]
 
-            if filename_ext == '.yml' or filename_ext == '.yaml':
-                new_filename = os.path.splitext(filename)[0] + '.json'
+            if filename_ext == ".yml" or filename_ext == ".yaml":
+                new_filename = os.path.splitext(filename)[0] + ".json"
 
                 directory = _get_current_directory_name(root, source)
                 read_file_path = os.path.join(root, filename)
-                write_file_path = os.path.join(destination, directory,
-                                               new_filename)
+                write_file_path = os.path.join(destination, directory, new_filename)
                 with open(read_file_path) as stream:
                     # read the yml file
                     yaml_data = yaml.safe_load(stream)
 
-                with open(write_file_path, 'w') as f:
+                with open(write_file_path, "w") as f:
                     # write the json file
                     json.dump(yaml_data, f, indent=2)
                     f.write("\n")

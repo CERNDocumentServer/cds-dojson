@@ -42,22 +42,22 @@ def cli():
 
 
 @cli.command()
-@click.argument('schema', type=click.Path(exists=True))
+@click.argument("schema", type=click.Path(exists=True))
 def compile_schema(schema):
     """Compile ``$ref`` and ``allOf`` key from the given JSON schema."""
     with open(schema) as f:
         schema_json = json.load(f)
 
-    base_uri = 'file://{0}/'.format(os.path.dirname(os.path.abspath(schema)))
+    base_uri = "file://{0}/".format(os.path.dirname(os.path.abspath(schema)))
 
     click.echo(json.dumps(_compile_schema(schema_json, base_uri), indent=2))
 
 
 @cli.command()
-@click.argument('source', type=click.Path(exists=True))
-@click.argument('destination', type=click.Path())
+@click.argument("source", type=click.Path(exists=True))
+@click.argument("destination", type=click.Path())
 def convert_yaml2json(source, destination):
     """Convert files from yaml to json."""
     if sys.version_info[0] <= 3 and sys.version_info[1] < 6:
-        click.echo('Use Python 3.6+ to deterministically generate the json.')
+        click.echo("Use Python 3.6+ to deterministically generate the json.")
     yaml2json(source, destination)

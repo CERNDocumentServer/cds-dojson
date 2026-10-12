@@ -29,8 +29,10 @@ from cds_dojson.marc21.models.books.multipart import model as multipart_model
 from cds_dojson.marc21.models.books.serial import model as serial_model
 from cds_dojson.marc21.utils import create_record
 
-marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
-           """<record>{0}</record></collection>""")
+marcxml = (
+    """<collection xmlns="http://www.loc.gov/MARC21/slim">"""
+    """<record>{0}</record></collection>"""
+)
 
 
 def check_transformation(marcxml_body, json_body, model=None):
@@ -38,7 +40,7 @@ def check_transformation(marcxml_body, json_body, model=None):
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
-        '$schema': 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json',
+        "$schema": "https://127.0.0.1:5000/schemas/series/series-v1.0.0.json",
     }
     expected.update(**json_body)
     assert record == expected
@@ -55,14 +57,11 @@ def test_serial(app):
             </datafield>
             """,
             {
-                'title':
-                    [
-                        'Esl and applied linguistics professional'
-                    ],
-                'mode_of_issuance': 'SERIAL',
-                '_migration': {'record_type': 'serial', 'children': []}
+                "title": ["Esl and applied linguistics professional"],
+                "mode_of_issuance": "SERIAL",
+                "_migration": {"record_type": "serial", "children": []},
             },
-            serial_model
+            serial_model,
         )
 
         check_transformation(
@@ -73,16 +72,12 @@ def test_serial(app):
             </datafield>
             """,
             {
-                'title':
-                    [
-                        'Springerbriefs in history'
-                        ' of science and technology'
-                    ],
-                'mode_of_issuance': 'SERIAL',
-                'identifiers': [{'scheme': 'ISSN', 'value': '2211-4564'}],
-                '_migration': {'record_type': 'serial', 'children': []}
+                "title": ["Springerbriefs in history" " of science and technology"],
+                "mode_of_issuance": "SERIAL",
+                "identifiers": [{"scheme": "ISSN", "value": "2211-4564"}],
+                "_migration": {"record_type": "serial", "children": []},
             },
-            serial_model
+            serial_model,
         )
 
         check_transformation(
@@ -93,16 +88,12 @@ def test_serial(app):
             </datafield>
             """,
             {
-                'title':
-                    [
-                        'Springerbriefs in history'
-                        ' of science and technology'
-                    ],
-                'mode_of_issuance': 'SERIAL',
-                'identifiers': [{'scheme': 'ISSN', 'value': '2211-4564'}],
-                '_migration': {'record_type': 'serial', 'children': []}
+                "title": ["Springerbriefs in history" " of science and technology"],
+                "mode_of_issuance": "SERIAL",
+                "identifiers": [{"scheme": "ISSN", "value": "2211-4564"}],
+                "_migration": {"record_type": "serial", "children": []},
             },
-            serial_model
+            serial_model,
         )
 
         with pytest.raises(MissingRule):
@@ -113,14 +104,10 @@ def test_serial(app):
                 </datafield>
                 """,
                 {
-                    'title':
-                        [
-                            'Springerbriefs in history'
-                            ' of science and technology'
-                        ],
-                    '_migration': {'record_type': 'serial', 'children': []}
+                    "title": ["Springerbriefs in history" " of science and technology"],
+                    "_migration": {"record_type": "serial", "children": []},
                 },
-                serial_model
+                serial_model,
             )
 
 
@@ -147,26 +134,22 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': 'La fisica di Amaldi',
-                'alternative_titles': [
-                    {
-                        'value': 'idee ed esperimenti : con CD-ROM',
-                        'type': 'SUBTITLE'
-                    }
+                "title": "La fisica di Amaldi",
+                "alternative_titles": [
+                    {"value": "idee ed esperimenti : con CD-ROM", "type": "SUBTITLE"}
                 ],
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                'number_of_volumes': '2',
-                '_migration': {
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "number_of_volumes": "2",
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart', 'volumes': [
-                        {'title': 'Introduzione alla fisica meccanica',
-                         'volume': '1'},
-                        {'title': 'Termologia, onde, relatività',
-                         'volume': '2'}
-                    ]}
-
+                    "record_type": "multipart",
+                    "volumes": [
+                        {"title": "Introduzione alla fisica meccanica", "volume": "1"},
+                        {"title": "Termologia, onde, relatività", "volume": "2"},
+                    ],
+                },
             },
-            multipart_model
+            multipart_model,
         )
 
         check_transformation(
@@ -184,22 +167,19 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': 'La fisica di Amaldi',
-                'alternative_titles': [
-                    {
-                        'value': 'idee ed esperimenti : con CD-ROM',
-                        'type': 'SUBTITLE'
-                    }
+                "title": "La fisica di Amaldi",
+                "alternative_titles": [
+                    {"value": "idee ed esperimenti : con CD-ROM", "type": "SUBTITLE"}
                 ],
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                'number_of_volumes': '2',
-                '_migration': {
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "number_of_volumes": "2",
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart', 'volumes': [
-                        {'title': 'Termologia, onde, relatività',
-                         'volume': '2'}
-                    ]}
-
+                    "record_type": "multipart",
+                    "volumes": [
+                        {"title": "Termologia, onde, relatività", "volume": "2"}
+                    ],
+                },
             },
             multipart_model,
         )
@@ -219,20 +199,18 @@ def test_monograph(app):
             </datafield>
             """,
             {
-                'title': 'La fisica di Amaldi',
-                'alternative_titles': [
-                    {
-                        'value': 'idee ed esperimenti : con CD-ROM',
-                        'type': 'SUBTITLE'
-                    }
+                "title": "La fisica di Amaldi",
+                "alternative_titles": [
+                    {"value": "idee ed esperimenti : con CD-ROM", "type": "SUBTITLE"}
                 ],
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                '_migration': {
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart', 'volumes': [
-                        {'title': 'Termologia, onde, relatività',
-                         'volume': '2'}
-                    ]}
+                    "record_type": "multipart",
+                    "volumes": [
+                        {"title": "Termologia, onde, relatività", "volume": "2"}
+                    ],
+                },
             },
             multipart_model,
         )
@@ -253,19 +231,18 @@ def test_monograph(app):
 
             """,
             {
-                'title': 'La fisica di Amaldi',
-                'alternative_titles': [
-                    {
-                        'value': 'idee ed esperimenti : con CD-ROM',
-                        'type': 'SUBTITLE'
-                    }
+                "title": "La fisica di Amaldi",
+                "alternative_titles": [
+                    {"value": "idee ed esperimenti : con CD-ROM", "type": "SUBTITLE"}
                 ],
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                '_migration': {
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart', 'volumes': [
-                        {'title': 'Termologia, onde, relatività', 'volume': '2'}
-                    ]}
+                    "record_type": "multipart",
+                    "volumes": [
+                        {"title": "Termologia, onde, relatività", "volume": "2"}
+                    ],
+                },
             },
             multipart_model,
         )
@@ -286,16 +263,20 @@ def test_monograph(app):
                 </datafield>
                 """,
                 {
-                    'title': 'La fisica di Amaldi',
-                    'alternative_titles': [
-                        {'value': 'idee ed esperimenti : con CD-ROM',
-                         'type': 'SUBTITLE'}
+                    "title": "La fisica di Amaldi",
+                    "alternative_titles": [
+                        {
+                            "value": "idee ed esperimenti : con CD-ROM",
+                            "type": "SUBTITLE",
+                        }
                     ],
-                    'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                    'number_of_volumes': '2',
-                    '_migration': {
+                    "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                    "number_of_volumes": "2",
+                    "_migration": {
                         **get_migration_dict(),
-                        'record_type': 'multipart', 'volumes': []}
+                        "record_type": "multipart",
+                        "volumes": [],
+                    },
                 },
                 multipart_model,
             )
@@ -312,14 +293,20 @@ def test_monograph(app):
                 </datafield>
                 """,
                 {
-                    'title': 'La fisica di Amaldi',
-                    'alternative_titles': [
-                        {'value': 'idee ed esperimenti : con CD-ROM',
-                         'type': 'SUBTITLE'}
+                    "title": "La fisica di Amaldi",
+                    "alternative_titles": [
+                        {
+                            "value": "idee ed esperimenti : con CD-ROM",
+                            "type": "SUBTITLE",
+                        }
                     ],
-                    'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                    'number_of_volumes': '2',
-                    '_migration': {**get_migration_dict(), 'record_type': 'multipart', 'volumes': []}
+                    "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                    "number_of_volumes": "2",
+                    "_migration": {
+                        **get_migration_dict(),
+                        "record_type": "multipart",
+                        "volumes": [],
+                    },
                 },
                 multipart_model,
             )
@@ -377,71 +364,59 @@ def test_monograph_migration(app):
             </datafield>
             """,
             {
-                '_migration': {
+                "_migration": {
                     **get_migration_dict(),
-                    'volumes': [
+                    "volumes": [
                         {
-                            'volume': '3',
-                            'isbn': '1108052819',
-                            'physical_description': 'print version, paperback',
-                            'is_electronic': False,
+                            "volume": "3",
+                            "isbn": "1108052819",
+                            "physical_description": "print version, paperback",
+                            "is_electronic": False,
                         },
                         {
-                            'volume': '3',
-                            'isbn': '9781108052818',
-                            'physical_description':
-                                'print version, paperback',
-                            'is_electronic': False,
+                            "volume": "3",
+                            "isbn": "9781108052818",
+                            "physical_description": "print version, paperback",
+                            "is_electronic": False,
                         },
                         {
-                            'volume': '2',
-                            'isbn': '9781108052801',
-                            'physical_description':
-                                'print version, paperback',
-                            'is_electronic': False,
+                            "volume": "2",
+                            "isbn": "9781108052801",
+                            "physical_description": "print version, paperback",
+                            "is_electronic": False,
                         },
                         {
-                            'volume': '2',
-                            'isbn': '1108052800',
-                            'physical_description':
-                                'print version, paperback',
-                            'is_electronic': False,
+                            "volume": "2",
+                            "isbn": "1108052800",
+                            "physical_description": "print version, paperback",
+                            "is_electronic": False,
                         },
                         {
-                            'volume': '1',
-                            'isbn': '9781108052795',
-                            'physical_description':
-                                'print version, paperback',
-                            'is_electronic': False,
+                            "volume": "1",
+                            "isbn": "9781108052795",
+                            "physical_description": "print version, paperback",
+                            "is_electronic": False,
                         },
                         {
-                            'volume': '1',
-                            'isbn': '1108052797',
-                            'physical_description':
-                                'print version, paperback',
-                            'is_electronic': False,
+                            "volume": "1",
+                            "isbn": "1108052797",
+                            "physical_description": "print version, paperback",
+                            "is_electronic": False,
                         },
-                        {
-                            'title': '1865-1874',
-                            'volume': '1'
-                        },
-                        {
-                            'title': '1875-1881',
-                            'volume': '2'
-                        },
-                        {
-                            'title': '1882-1905',
-                            'volume': '3'
-                        },
+                        {"title": "1865-1874", "volume": "1"},
+                        {"title": "1875-1881", "volume": "2"},
+                        {"title": "1882-1905", "volume": "3"},
                     ],
-                    'record_type': 'multipart',
+                    "record_type": "multipart",
                 },
-                'title': 'Wissenschaftliche Abhandlungen',
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                'number_of_volumes': '3',
-                'identifiers': [{'scheme': 'ISBN', 'value': '9781108052825'}],
-                'physical_description': 'print version, paperback',
-            }, multipart_model)
+                "title": "Wissenschaftliche Abhandlungen",
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "number_of_volumes": "3",
+                "identifiers": [{"scheme": "ISBN", "value": "9781108052825"}],
+                "physical_description": "print version, paperback",
+            },
+            multipart_model,
+        )
 
 
 def test_monograph_invalid_volume_migration(app):
@@ -462,7 +437,9 @@ def test_monograph_invalid_volume_migration(app):
                 <subfield code="u">print version, paperback (v.2, CD-ROM)</subfield>
                 </datafield>
                 """,
-                {}, multipart_model)
+                {},
+                multipart_model,
+            )
 
 
 def test_monograph_volume_migration_no_description(app):
@@ -475,13 +452,18 @@ def test_monograph_volume_migration_no_description(app):
             <subfield code="u">v.13</subfield>
             </datafield>
             """,
-            {'_migration': {
-                **get_migration_dict(),
-                'record_type': 'multipart',
-                'volumes': [{'is_electronic': False,
-                             'isbn': '1560810726',
-                             'volume': '13'}]},
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH'}, multipart_model)
+            {
+                "_migration": {
+                    **get_migration_dict(),
+                    "record_type": "multipart",
+                    "volumes": [
+                        {"is_electronic": False, "isbn": "1560810726", "volume": "13"}
+                    ],
+                },
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+            },
+            multipart_model,
+        )
 
 
 def test_monograph_with_electronic_isbns(app):
@@ -521,45 +503,45 @@ def test_monograph_with_electronic_isbns(app):
             </datafield>
             """,
             {
-                'identifiers': [
-                    {'scheme': 'ISBN', 'value': '0817631852'},
-                    {'scheme': 'ISBN', 'value': '0817631879'},
-                    {'scheme': 'ISBN', 'value': '9780817631857'},
-                    {'scheme': 'ISBN', 'value': '9780817631871'},
-
+                "identifiers": [
+                    {"scheme": "ISBN", "value": "0817631852"},
+                    {"scheme": "ISBN", "value": "0817631879"},
+                    {"scheme": "ISBN", "value": "9780817631857"},
+                    {"scheme": "ISBN", "value": "9780817631871"},
                 ],
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                '_migration': {
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart',
-                    'volumes': [
+                    "record_type": "multipart",
+                    "volumes": [
                         {
-                            'is_electronic': False,
-                            'physical_description': 'print version',
-                            'volume': '2',
-                            'isbn': '0817631852'
+                            "is_electronic": False,
+                            "physical_description": "print version",
+                            "volume": "2",
+                            "isbn": "0817631852",
                         },
                         {
-                            'is_electronic': True,
-                            'physical_description': 'electronic version',
-                            'volume': '2',
-                            'isbn': '9781461239406'
+                            "is_electronic": True,
+                            "physical_description": "electronic version",
+                            "volume": "2",
+                            "isbn": "9781461239406",
                         },
                         {
-                            'is_electronic': True,
-                            'physical_description': 'electronic version',
-                            'volume': '1',
-                            'isbn': '9781461251545'
+                            "is_electronic": True,
+                            "physical_description": "electronic version",
+                            "volume": "1",
+                            "isbn": "9781461251545",
                         },
                         {
-                            'is_electronic': False,
-                            'physical_description': 'print version',
-                            'volume': '1',
-                            'isbn': '9781461295891'
+                            "is_electronic": False,
+                            "physical_description": "print version",
+                            "volume": "1",
+                            "isbn": "9781461295891",
                         },
                     ],
                 },
-            }, multipart_model
+            },
+            multipart_model,
         )
 
 
@@ -575,20 +557,22 @@ def test_monograph_volume_migration_doi(app):
             </datafield>
             """,
             {
-                '_migration':
-                {
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart',
-                    'volumes': [{
-                        'doi': '10.1007/978-3-030-49613-5',
-                        'material': 'ebook',
-                        'source': None,
-                        'volume': '1'
-                    }]
+                    "record_type": "multipart",
+                    "volumes": [
+                        {
+                            "doi": "10.1007/978-3-030-49613-5",
+                            "material": "ebook",
+                            "source": None,
+                            "volume": "1",
+                        }
+                    ],
                 },
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
             },
-            multipart_model)
+            multipart_model,
+        )
 
 
 def test_monograph_volume_barcode(app):
@@ -602,15 +586,15 @@ def test_monograph_volume_barcode(app):
             </datafield>
             """,
             {
-                '_migration':
-                {
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart',
-                    'volumes': [{'barcode': '73-0089-0', 'volume': 'A'}]
+                    "record_type": "multipart",
+                    "volumes": [{"barcode": "73-0089-0", "volume": "A"}],
                 },
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
             },
-            multipart_model)
+            multipart_model,
+        )
 
 
 def test_monograph_volume_url(app):
@@ -624,18 +608,21 @@ def test_monograph_volume_url(app):
             </datafield>
             """,
             {
-                '_migration':
-                {
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart',
-                    'volumes': [{
-                        'description': 'ebook',
-                        'url': 'https://cds.cern.ch/auth.py?r=EBLIB_P_1890382',
-                        'volume': '1'}]
+                    "record_type": "multipart",
+                    "volumes": [
+                        {
+                            "description": "ebook",
+                            "url": "https://cds.cern.ch/auth.py?r=EBLIB_P_1890382",
+                            "volume": "1",
+                        }
+                    ],
                 },
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
             },
-            multipart_model)
+            multipart_model,
+        )
 
 
 def test_monograph_legacy_representation(app):
@@ -651,16 +638,16 @@ def test_monograph_legacy_representation(app):
             </datafield>
             """,
             {
-                '_migration':
-                {
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart',
-                    'multipart_id': 'Vol965',
-                    'multivolume_record_format': True,
+                    "record_type": "multipart",
+                    "multipart_id": "Vol965",
+                    "multivolume_record_format": True,
                 },
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH'
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
             },
-            multipart_model)
+            multipart_model,
+        )
 
 
 def test_monograph_legacy_report_number(app):
@@ -673,15 +660,17 @@ def test_monograph_legacy_report_number(app):
             </datafield>
             """,
             {
-                '_migration':
-                {
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart',
+                    "record_type": "multipart",
                 },
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                'identifiers': [{'scheme': 'report_number', 'value': 'IAEA-INIS-20-REV-0-D'}]
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "identifiers": [
+                    {"scheme": "report_number", "value": "IAEA-INIS-20-REV-0-D"}
+                ],
             },
-            multipart_model)
+            multipart_model,
+        )
 
 
 def test_monograph_series_authors(app):
@@ -697,21 +686,16 @@ def test_monograph_series_authors(app):
             </datafield>
             """,
             {
-                '_migration':
-                {
+                "_migration": {
                     **get_migration_dict(),
-                    'record_type': 'multipart',
-                    'authors': [
-                        {
-                            'full_name': 'Mehra, Jagdish',
-                            'roles': ['AUTHOR']
-                        },
-                        {
-                            'full_name': 'Rechenberg, Helmut',
-                            'roles': ['AUTHOR']
-                        }],
+                    "record_type": "multipart",
+                    "authors": [
+                        {"full_name": "Mehra, Jagdish", "roles": ["AUTHOR"]},
+                        {"full_name": "Rechenberg, Helmut", "roles": ["AUTHOR"]},
+                    ],
                 },
-                'mode_of_issuance': 'MULTIPART_MONOGRAPH',
-                'authors': ['Mehra, Jagdish', 'Rechenberg, Helmut']
+                "mode_of_issuance": "MULTIPART_MONOGRAPH",
+                "authors": ["Mehra, Jagdish", "Rechenberg, Helmut"],
             },
-            multipart_model)
+            multipart_model,
+        )

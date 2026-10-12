@@ -85,22 +85,19 @@ def matcher(record, entry_point_group):
     _matches = []
     for name, model, query in _load_models(entry_point_group):
         if query.match(record):
-            logger.info("Model `{0}` found matching the query {1}.".format(
-                name, model
-            ))
+            logger.info("Model `{0}` found matching the query {1}.".format(name, model))
             _matches.append([name, model])
     if len(_matches) == 1:
         return _matches[0][1]
     elif len(_matches) > 1:
         logger.error(
-            ("Found more than one matches `{0}`, we'll use {1}"
-             " for record {2}.").format(
-                _matches, default, record
-            )
+            (
+                "Found more than one matches `{0}`, we'll use {1}" " for record {2}."
+            ).format(_matches, default, record)
         )
         raise MultipleModelsException(
-            "Found more than one models {0} for record {1}".format(
-                _matches, record))
+            "Found more than one models {0} for record {1}".format(_matches, record)
+        )
     elif len(_matches) == 0:
         logger.warning(
             "Model *not* found, fallback to default {0} for record {1}".format(

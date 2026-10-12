@@ -23,25 +23,27 @@ from __future__ import absolute_import, print_function, unicode_literals
 from cds_dojson.marc21.models.books.journal import model
 from cds_dojson.marc21.utils import create_record
 
-marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
-           """<record>{0}</record></collection>""")
+marcxml = (
+    """<collection xmlns="http://www.loc.gov/MARC21/slim">"""
+    """<record>{0}</record></collection>"""
+)
 
 
 def check_transformation(marcxml_body, json_body):
     blob = create_record(marcxml.format(marcxml_body))
     record = model.do(blob, ignore_missing=False)
     expected = {
-        '$schema': 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json',
-        '_migration': {
-            'is_multipart': False,
-            'has_related': False,
-            'record_type': 'journal',
-            'volumes': [],
-            'items': [],
-            'electronic_items': [],
-            'relation_previous': None,
-            'relation_next': None,
-        }
+        "$schema": "https://127.0.0.1:5000/schemas/series/series-v1.0.0.json",
+        "_migration": {
+            "is_multipart": False,
+            "has_related": False,
+            "record_type": "journal",
+            "volumes": [],
+            "items": [],
+            "electronic_items": [],
+            "relation_previous": None,
+            "relation_next": None,
+        },
     }
     expected.update(**json_body)
     assert record == expected
@@ -57,13 +59,14 @@ def test_title(app):
             </datafield>
                         """,
             {
-                'title': 'Radioengineering',
-                'alternative_titles': [
+                "title": "Radioengineering",
+                "alternative_titles": [
                     {
-                        'value': "Proceedings of Czech and Slovak Technical Universities",
-                        'type': 'SUBTITLE'},
-                ]
-            }
+                        "value": "Proceedings of Czech and Slovak Technical Universities",
+                        "type": "SUBTITLE",
+                    },
+                ],
+            },
         )
 
 
@@ -79,13 +82,14 @@ def test_alternative_titles(app):
             </datafield>
             """,
             {
-                'title': 'Recherche Coopérative sur Programme no 25',
-                'alternative_titles': [
+                "title": "Recherche Coopérative sur Programme no 25",
+                "alternative_titles": [
                     {
-                        'value': "Les rencontres physiciens-mathématiciens de Strasbourg",
-                        'type': 'ALTERNATIVE_TITLE'},
-                ]
-            }
+                        "value": "Les rencontres physiciens-mathématiciens de Strasbourg",
+                        "type": "ALTERNATIVE_TITLE",
+                    },
+                ],
+            },
         )
 
 
@@ -98,8 +102,8 @@ def test_abbreviated_title(app):
             </datafield>
             """,
             {
-                'abbreviated_title': 'Bull. CERN Comm.',
-            }
+                "abbreviated_title": "Bull. CERN Comm.",
+            },
         )
 
 
@@ -113,9 +117,10 @@ def test_identifiers(app):
             </datafield>
             """,
             {
-                'identifiers': [{'scheme': 'ISSN', 'value': '1805-9600',
-                                 'material': 'online'}],
-            }
+                "identifiers": [
+                    {"scheme": "ISSN", "value": "1805-9600", "material": "online"}
+                ],
+            },
         )
 
 
@@ -128,9 +133,8 @@ def test_internal_notes(app):
             </datafield>
             """,
             {
-                'internal_notes': [
-                    {'value': 'Online archives purchased 2014'}],
-            }
+                "internal_notes": [{"value": "Online archives purchased 2014"}],
+            },
         )
 
 
@@ -143,8 +147,8 @@ def test_note(app):
             </datafield>
             """,
             {
-                'note': 'The reports are catalogued individually and retrievable in the catalogue.',
-            }
+                "note": "The reports are catalogued individually and retrievable in the catalogue.",
+            },
         )
 
 
@@ -158,8 +162,8 @@ def test_publisher(app):
             </datafield>
             """,
             {
-                'publisher': 'National Council on Radiation Protection and Measurements',
-            }
+                "publisher": "National Council on Radiation Protection and Measurements",
+            },
         )
 
 
@@ -172,8 +176,8 @@ def test_languages(app):
             </datafield>
             """,
             {
-                'languages': ['EN'],
-            }
+                "languages": ["EN"],
+            },
         )
 
 
@@ -186,21 +190,17 @@ def test_migration(app):
             </datafield>
             """,
             {
-                '_migration': {
-                    'is_multipart': False,
-                    'has_related': False,
-                    'record_type': 'journal',
-                    'volumes': [],
-                    'electronic_items': [
-                        {
-                            'subscription': 'v 1 (1992) -'
-                        }
-                    ],
-                    'items': [],
-                    'relation_next': None,
-                    'relation_previous': None,
+                "_migration": {
+                    "is_multipart": False,
+                    "has_related": False,
+                    "record_type": "journal",
+                    "volumes": [],
+                    "electronic_items": [{"subscription": "v 1 (1992) -"}],
+                    "items": [],
+                    "relation_next": None,
+                    "relation_previous": None,
                 },
-            }
+            },
         )
         check_transformation(
             """
@@ -212,24 +212,24 @@ def test_migration(app):
             </datafield>
             """,
             {
-                '_migration': {
-                    'is_multipart': False,
-                    'has_related': False,
-                    'record_type': 'journal',
-                    'volumes': [],
-                    'electronic_items': [
+                "_migration": {
+                    "is_multipart": False,
+                    "has_related": False,
+                    "record_type": "journal",
+                    "volumes": [],
+                    "electronic_items": [
                         {
-                            'subscription': 'v 1 (1992) -',
-                            'url': 'https://www.radioeng.cz/search.htm',
-                            'access_type': '6',
-                            'note': 'tada',
+                            "subscription": "v 1 (1992) -",
+                            "url": "https://www.radioeng.cz/search.htm",
+                            "access_type": "6",
+                            "note": "tada",
                         }
                     ],
-                    'items': [],
-                    'relation_next': None,
-                    'relation_previous': None,
+                    "items": [],
+                    "relation_next": None,
+                    "relation_previous": None,
                 },
-            }
+            },
         )
         check_transformation(
             """
@@ -239,21 +239,21 @@ def test_migration(app):
             </datafield>
             """,
             {
-                '_migration': {
-                    'is_multipart': False,
-                    'has_related': False,
-                    'record_type': 'journal',
-                    'volumes': [],
-                    'items': [
+                "_migration": {
+                    "is_multipart": False,
+                    "has_related": False,
+                    "record_type": "journal",
+                    "volumes": [],
+                    "items": [
                         {
-                            'subscription': 'v 1 (1992) -',
+                            "subscription": "v 1 (1992) -",
                         }
                     ],
-                    'electronic_items': [],
-                    'relation_next': None,
-                    'relation_previous': None,
+                    "electronic_items": [],
+                    "relation_next": None,
+                    "relation_previous": None,
                 },
-            }
+            },
         )
         check_transformation(
             """
@@ -264,17 +264,17 @@ def test_migration(app):
             </datafield>
             """,
             {
-                '_migration': {
-                    'is_multipart': False,
-                    'has_related': False,
-                    'record_type': 'journal',
-                    'volumes': [],
-                    'items': [],
-                    'electronic_items': [],
-                    'relation_next': None,
-                    'relation_previous': '2711756',
+                "_migration": {
+                    "is_multipart": False,
+                    "has_related": False,
+                    "record_type": "journal",
+                    "volumes": [],
+                    "items": [],
+                    "electronic_items": [],
+                    "relation_next": None,
+                    "relation_previous": "2711756",
                 },
-            }
+            },
         )
         check_transformation(
             """
@@ -285,15 +285,15 @@ def test_migration(app):
                 </datafield>
             """,
             {
-                '_migration': {
-                    'is_multipart': False,
-                    'has_related': False,
-                    'record_type': 'journal',
-                    'volumes': [],
-                    'items': [],
-                    'electronic_items': [],
-                    'relation_next': '2711769',
-                    'relation_previous': None,
+                "_migration": {
+                    "is_multipart": False,
+                    "has_related": False,
+                    "record_type": "journal",
+                    "volumes": [],
+                    "items": [],
+                    "electronic_items": [],
+                    "relation_next": "2711769",
+                    "relation_previous": None,
                 },
-            }
+            },
         )

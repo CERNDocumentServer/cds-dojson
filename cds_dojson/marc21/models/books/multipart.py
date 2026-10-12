@@ -17,6 +17,7 @@
 # along with Invenio; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
 """Series model."""
+
 from __future__ import unicode_literals
 
 from copy import deepcopy
@@ -29,17 +30,19 @@ from .base import model as books_base
 class CDSMultipart(CDSOverdoBookBase):
     """Translation Index for CDS Books."""
 
-    __query__ = '(596__:MULTIVOLUMES AND 690C_:BOOK OR 690C_:"YELLOW REPORT" OR ' \
-                '980__:PROCEEDINGS OR ' \
-                '697C_:LEGSERLIB -980__:DELETED -980__:MIGRATED)'
+    __query__ = (
+        '(596__:MULTIVOLUMES AND 690C_:BOOK OR 690C_:"YELLOW REPORT" OR '
+        "980__:PROCEEDINGS OR "
+        "697C_:LEGSERLIB -980__:DELETED -980__:MIGRATED)"
+    )
 
-    __schema__ = 'https://127.0.0.1:5000/schemas/series/series-v1.0.0.json'
+    __schema__ = "https://127.0.0.1:5000/schemas/series/series-v1.0.0.json"
 
     __model_ignore_keys__ = set()
 
     __ignore_keys__ = COMMON_IGNORE_FIELDS | __model_ignore_keys__
 
-    __json_init_dict__ = {'_migration': {**get_migration_dict()}}
+    __json_init_dict__ = {"_migration": {**get_migration_dict()}}
 
     def do(self, blob, ignore_missing=True, exception_handlers=None):
         """Set schema after translation depending on the model."""
@@ -47,16 +50,21 @@ class CDSMultipart(CDSOverdoBookBase):
             blob=blob,
             ignore_missing=ignore_missing,
             exception_handlers=exception_handlers,
-            init_fields=deepcopy(self.__json_init_dict__))
-        json['$schema'] = self.__class__.__schema__
+            init_fields=deepcopy(self.__json_init_dict__),
+        )
+        json["$schema"] = self.__class__.__schema__
 
-        json['_migration'].update({'record_type': 'multipart'})
+        json["_migration"].update({"record_type": "multipart"})
 
-        json['mode_of_issuance'] = 'MULTIPART_MONOGRAPH'
+        json["mode_of_issuance"] = "MULTIPART_MONOGRAPH"
 
         return json
 
 
 model = CDSMultipart(
-    bases=(books_base, cds_base, ),
-    entry_point_group='cds_dojson.marc21.series')
+    bases=(
+        books_base,
+        cds_base,
+    ),
+    entry_point_group="cds_dojson.marc21.series",
+)

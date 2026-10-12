@@ -28,17 +28,17 @@ def language_to_isocode(lang):
         return pycountry.languages.get(alpha_3=lang).alpha_2
     except (KeyError, AttributeError):
         exceptions = {
-            'chi': 'zh',
-            'cze': 'cs',
-            'dut': 'nl',
-            'eng-fre': 'en-fr',
-            'fre': 'fr',
-            'ger': 'de',
-            'gre': 'el',
-            'sil': 'silent',
-            'silent': 'silent',
-            'sl': 'sl',
-            'sr': 'sr',
+            "chi": "zh",
+            "cze": "cs",
+            "dut": "nl",
+            "eng-fre": "en-fr",
+            "fre": "fr",
+            "ger": "de",
+            "gre": "el",
+            "sil": "silent",
+            "silent": "silent",
+            "sl": "sl",
+            "sr": "sr",
         }
         value = exceptions.get(lang)
         if value:
@@ -47,4 +47,4 @@ def language_to_isocode(lang):
             return pycountry.languages.get(alpha_2=lang[0:2]).alpha_2
         except (KeyError, AttributeError):
             # FIXME log somewhere
-            return 'silent'
+            return "silent"

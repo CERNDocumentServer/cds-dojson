@@ -26,18 +26,20 @@ from cds_dojson.marc21.models.books.base import get_migration_dict
 from cds_dojson.marc21.models.books.standard import model
 from cds_dojson.marc21.utils import create_record
 
-marcxml = ("""<collection xmlns="http://www.loc.gov/MARC21/slim">"""
-           """<record>{0}</record></collection>""")
+marcxml = (
+    """<collection xmlns="http://www.loc.gov/MARC21/slim">"""
+    """<record>{0}</record></collection>"""
+)
 
 
 def check_transformation(marcxml_body, json_body):
     blob = create_record(marcxml.format(marcxml_body))
-    record = {'_migration': {**get_migration_dict()}}
+    record = {"_migration": {**get_migration_dict()}}
 
     record.update(**model.do(blob, ignore_missing=False))
     expected = {
-        '$schema': 'https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json',
-        '_migration': {**get_migration_dict()}
+        "$schema": "https://127.0.0.1:5000/schemas/documents/document-v1.0.0.json",
+        "_migration": {**get_migration_dict()},
     }
     expected.update(**json_body)
     assert record == expected
@@ -53,12 +55,11 @@ def test_title(app):
             </datafield>
             """,
             {
-
-                'title': 'Incoterms 2010',
-                'alternative_titles': [
-                    {'value': "les règles de l'ICC", 'type': 'SUBTITLE'},
-                ]
-            }
+                "title": "Incoterms 2010",
+                "alternative_titles": [
+                    {"value": "les règles de l'ICC", "type": "SUBTITLE"},
+                ],
+            },
         )
         check_transformation(
             """
@@ -77,21 +78,22 @@ def test_title(app):
             </datafield>
             """,
             {
-                'document_type': 'STANDARD',
-                'title': 'Test',
-                'alternative_titles': [
-                    {'value': 'Subtitle', 'type': 'SUBTITLE'},
-                    {'value': 'Water quality — sampling',
-                     'type': 'TRANSLATED_TITLE',
-                     'language': 'fr',
-                     },
+                "document_type": "STANDARD",
+                "title": "Test",
+                "alternative_titles": [
+                    {"value": "Subtitle", "type": "SUBTITLE"},
                     {
-                        'type': 'TRANSLATED_SUBTITLE',
-                        'value': u"""part 15: guidance on the preservation and handling of sludge""",
-                        'language': 'fr',
-                    }
+                        "value": "Water quality — sampling",
+                        "type": "TRANSLATED_TITLE",
+                        "language": "fr",
+                    },
+                    {
+                        "type": "TRANSLATED_SUBTITLE",
+                        "value": """part 15: guidance on the preservation and handling of sludge""",
+                        "language": "fr",
+                    },
                 ],
-            }
+            },
         )
         check_transformation(
             """
@@ -111,23 +113,26 @@ def test_title(app):
             <datafield tag="300" ind1=" " ind2=" ">
                 <subfield code="a">373 p</subfield>
             </datafield>
-            """, {
-                'document_type': 'STANDARD',
-                'title': 'Test',
-                'alternative_titles': [
-                    {'value': 'Subtitle', 'type': 'SUBTITLE'},
-                    {'value': 'Water quality — sampling',
-                     'type': 'TRANSLATED_TITLE',
-                     'language': 'fr',
-                     },
+            """,
+            {
+                "document_type": "STANDARD",
+                "title": "Test",
+                "alternative_titles": [
+                    {"value": "Subtitle", "type": "SUBTITLE"},
                     {
-                        'type': 'TRANSLATED_SUBTITLE',
-                        'value': u"""part 15: guidance on the preservation and handling of sludge""",
-                        'language': 'fr',
-                    }
+                        "value": "Water quality — sampling",
+                        "type": "TRANSLATED_TITLE",
+                        "language": "fr",
+                    },
+                    {
+                        "type": "TRANSLATED_SUBTITLE",
+                        "value": """part 15: guidance on the preservation and handling of sludge""",
+                        "language": "fr",
+                    },
                 ],
-                'number_of_pages': 373,
-            })
+                "number_of_pages": 373,
+            },
+        )
         check_transformation(
             """
             <datafield tag="690" ind1="C" ind2=" ">
@@ -146,20 +151,22 @@ def test_title(app):
             <datafield tag="300" ind1=" " ind2=" ">
                 <subfield code="a">mult. p</subfield>
             </datafield>
-            """, {
-                'document_type': 'STANDARD',
-                'title': 'Test',
-
-                'alternative_titles': [
-                    {'value': 'Subtitle', 'type': 'SUBTITLE'},
-                    {'value': 'Water quality — sampling',
-                     'type': 'TRANSLATED_TITLE',
-                     'language': 'fr',
-                     },
+            """,
+            {
+                "document_type": "STANDARD",
+                "title": "Test",
+                "alternative_titles": [
+                    {"value": "Subtitle", "type": "SUBTITLE"},
                     {
-                        'type': 'TRANSLATED_SUBTITLE',
-                        'value': u"""part 15: guidance on the preservation and handling of sludge""",
-                        'language': 'fr',
-                    }
+                        "value": "Water quality — sampling",
+                        "type": "TRANSLATED_TITLE",
+                        "language": "fr",
+                    },
+                    {
+                        "type": "TRANSLATED_SUBTITLE",
+                        "value": """part 15: guidance on the preservation and handling of sludge""",
+                        "language": "fr",
+                    },
                 ],
-            })
+            },
+        )

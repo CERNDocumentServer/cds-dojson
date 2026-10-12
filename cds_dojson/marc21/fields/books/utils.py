@@ -24,14 +24,18 @@ from cds_dojson.marc21.fields.books.errors import MissingRequiredField
 
 MAX_PAGES_NUMBER = 8192
 
-RE_STR_VOLUME_PREFIX = r'(?:(?:[Vv](?:ol(?:ume)?)?|[Pp](?:art(?:ie)?|t)?|[Tt](?:eil)?|[Bb]d|[Tt]ome?|course|conference|fasc(?:icule)?|book|unit|suppl|Tafeln|Tomo)[\s\.]*)'
-RE_STR_ROMAN_NUMERAL = r'(?:(?:IX|IV|V?I{1,3})|X{1,3}(?:IX|IV|V?I{0,3}))'
-RE_STR_VOLUME_SUFFIX = r'(\d{{1,4}}|\d\d?[a-zA-Z]|[a-zA-Z]\d|[A-H]|{})'.format(RE_STR_ROMAN_NUMERAL)
-RE_STR_VOLUME = r'(?:{}?{})'.format(RE_STR_VOLUME_PREFIX, RE_STR_VOLUME_SUFFIX)
-RE_STR_SPECIAL = r'[^0-9A-Za-zÀ-ÿ\-/]'
+RE_STR_VOLUME_PREFIX = r"(?:(?:[Vv](?:ol(?:ume)?)?|[Pp](?:art(?:ie)?|t)?|[Tt](?:eil)?|[Bb]d|[Tt]ome?|course|conference|fasc(?:icule)?|book|unit|suppl|Tafeln|Tomo)[\s\.]*)"
+RE_STR_ROMAN_NUMERAL = r"(?:(?:IX|IV|V?I{1,3})|X{1,3}(?:IX|IV|V?I{0,3}))"
+RE_STR_VOLUME_SUFFIX = r"(\d{{1,4}}|\d\d?[a-zA-Z]|[a-zA-Z]\d|[A-H]|{})".format(
+    RE_STR_ROMAN_NUMERAL
+)
+RE_STR_VOLUME = r"(?:{}?{})".format(RE_STR_VOLUME_PREFIX, RE_STR_VOLUME_SUFFIX)
+RE_STR_SPECIAL = r"[^0-9A-Za-zÀ-ÿ\-/]"
 
-RE_VOLUME_NUMBER = re.compile(r'(?:^|{}){}(?:$|{})'.format(RE_STR_SPECIAL, RE_STR_VOLUME, RE_STR_SPECIAL))
-RE_VOLUME_INFO = re.compile(r'(.*?)\({}\)'.format(RE_STR_VOLUME))
+RE_VOLUME_NUMBER = re.compile(
+    r"(?:^|{}){}(?:$|{})".format(RE_STR_SPECIAL, RE_STR_VOLUME, RE_STR_SPECIAL)
+)
+RE_VOLUME_INFO = re.compile(r"(.*?)\({}\)".format(RE_STR_VOLUME))
 
 
 def is_excluded(value):
@@ -63,9 +67,7 @@ def extract_number_of_pages(value):
 def extract_physical_description(value):
     """Extract physical description from 300 if any."""
     res = re.findall(
-        r"([0-9]+ \w[CD\-ROM|DVD\-ROM|diskette|VHS]+)",
-        value,
-        flags=re.IGNORECASE
+        r"([0-9]+ \w[CD\-ROM|DVD\-ROM|diskette|VHS]+)", value, flags=re.IGNORECASE
     )
     if res:
         return ", ".join(res).upper()
@@ -88,7 +90,7 @@ def extract_parts(value):
 
     physical_description = extract_physical_description(value)
     if physical_description:
-        valid_parts_count -= len(physical_description.split(','))
+        valid_parts_count -= len(physical_description.split(","))
 
     return {
         "has_extra": bool(valid_parts_count > 0),
@@ -97,8 +99,7 @@ def extract_parts(value):
     }
 
 
-def extract_volume_number(value, search=False, raise_exception=False,
-                          subfield=None):
+def extract_volume_number(value, search=False, raise_exception=False, subfield=None):
     """Extract the volume number from a string, returns None if not matched."""
     regex = RE_VOLUME_NUMBER
     if search:
@@ -112,7 +113,8 @@ def extract_volume_number(value, search=False, raise_exception=False,
 
     if raise_exception:
         raise MissingRequiredField(
-            subfield=subfield, message=' failed to parse volume number')
+            subfield=subfield, message=" failed to parse volume number"
+        )
 
     return None
 

@@ -31,29 +31,27 @@ from dojson.utils import (
 from ..models.base import model
 
 
-@model.over('recid', '^001')
+@model.over("recid", "^001")
 def recid(self, key, value):
     """Record Identifier."""
     return int(value)
 
 
-@model.over('agency_code', '^003')
+@model.over("agency_code", "^003")
 def agency_code(self, key, value):
     """Control number identifier."""
-    return 'SzGeCERN'
+    return "SzGeCERN"
 
 
-@model.over('videos', '^774')
+@model.over("videos", "^774")
 @for_each_value
 def videos(self, key, value):
     """Videos."""
-    return {
-        '$ref': value.get('u')
-    }
+    return {"$ref": value.get("u")}
 
 
-@model.over('modified_by', '^937__')
+@model.over("modified_by", "^937__")
 @ignore_value
 def modified_by(self, key, value):
     """Modified by."""
-    return value.get('s')
+    return value.get("s")

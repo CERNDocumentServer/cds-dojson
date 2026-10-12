@@ -27,14 +27,17 @@ import pytest
 def test_version():
     """Test version import."""
     from cds_dojson import __version__
+
     assert __version__
 
 
 def test_wrong_model():
     """Test cds_marc21 should not be used for `over`."""
     from cds_dojson.marc21 import marc21
+
     with pytest.raises(NotImplementedError):
-        @marc21.over('test', '...')
+
+        @marc21.over("test", "...")
         def test(self, key, value):
             """Testing function."""
-            return {'a': 'b'}
+            return {"a": "b"}

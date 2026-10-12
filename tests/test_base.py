@@ -30,27 +30,29 @@ from cds_dojson.overdo import Overdo
 
 def test_base_model(app):
     """Test base model."""
-    marcxml = pkg_resources.resource_string(__name__,
-                                            os.path.join(
-                                                'fixtures', 'base.xml'))
+    marcxml = pkg_resources.resource_string(
+        __name__, os.path.join("fixtures", "base.xml")
+    )
 
     with app.app_context():
         blob = create_record(marcxml)
-        assert model.missing(blob) == {'001', '003', '005'}
+        assert model.missing(blob) == {"001", "003", "005"}
 
         record = model.do(blob)
-        assert record['recid'] == 1495143
-        assert record['agency_code'] == 'SzGeCERN'
+        assert record["recid"] == 1495143
+        assert record["agency_code"] == "SzGeCERN"
         assert not model.missing(blob)
 
 
 def test_overdo_missing():
     """Test missing check from Overdo."""
-    class MyOverdo(Overdo):
-        __ignore_keys__ = set(['c'])
 
-    with mock.patch('cds_dojson.overdo.not_accessed_keys',
-                    return_value=set(['a', 'b', 'c'])):
+    class MyOverdo(Overdo):
+        __ignore_keys__ = set(["c"])
+
+    with mock.patch(
+        "cds_dojson.overdo.not_accessed_keys", return_value=set(["a", "b", "c"])
+    ):
         overdo = MyOverdo()
-        overdo.__ignore_keys__ = set(['c'])
-        assert overdo.missing('blob') == set(['a', 'b'])
+        overdo.__ignore_keys__ = set(["c"])
+        assert overdo.missing("blob") == set(["a", "b"])

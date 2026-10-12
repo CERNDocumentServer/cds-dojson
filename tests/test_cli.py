@@ -36,35 +36,47 @@ from click.testing import CliRunner
 from cds_dojson.cli import compile_schema, convert_yaml2json
 
 
-@pytest.mark.parametrize('src, compiled', [
-    ('records/videos/video/video_src-v1.0.0.json',
-     'records/videos/video/video-v1.0.0.json'),
-    ('records/videos/project/project_src-v1.0.0.json',
-     'records/videos/project/project-v1.0.0.json'),
-    ('deposits/records/videos/video/video_src-v1.0.0.json',
-     'deposits/records/videos/video/video-v1.0.0.json'),
-    ('deposits/records/videos/project/project_src-v1.0.0.json',
-     'deposits/records/videos/project/project-v1.0.0.json'),
-])
+@pytest.mark.parametrize(
+    "src, compiled",
+    [
+        (
+            "records/videos/video/video_src-v1.0.0.json",
+            "records/videos/video/video-v1.0.0.json",
+        ),
+        (
+            "records/videos/project/project_src-v1.0.0.json",
+            "records/videos/project/project-v1.0.0.json",
+        ),
+        (
+            "deposits/records/videos/video/video_src-v1.0.0.json",
+            "deposits/records/videos/video/video-v1.0.0.json",
+        ),
+        (
+            "deposits/records/videos/project/project_src-v1.0.0.json",
+            "deposits/records/videos/project/project-v1.0.0.json",
+        ),
+    ],
+)
 def test_cli(src, compiled):
     """Test cds-dojson CLI."""
     runner = CliRunner()
-    result = runner.invoke(compile_schema, [
-        pkg_resources.resource_filename('cds_dojson.schemas', src)
-    ])
+    result = runner.invoke(
+        compile_schema, [pkg_resources.resource_filename("cds_dojson.schemas", src)]
+    )
     assert 0 == result.exit_code
     compiled_schema_result = json.loads(result.output)
     with open(
-            pkg_resources.resource_filename('cds_dojson.schemas',
-                                            compiled), 'r') as f:
+        pkg_resources.resource_filename("cds_dojson.schemas", compiled), "r"
+    ) as f:
         compile_schema_expected = json.load(f)
 
     assert compile_schema_expected == compiled_schema_result
 
 
-@pytest.mark.parametrize('source, destination', [
-    ('./tests/fixtures/books/ymls/', './tests/fixtures/books/results/')
-])
+@pytest.mark.parametrize(
+    "source, destination",
+    [("./tests/fixtures/books/ymls/", "./tests/fixtures/books/results/")],
+)
 def test_cli_convert_yaml2json(source, destination):
     """Test cds-dojson CLI 'convert_yaml2json' command"""
     runner = CliRunner()
@@ -73,11 +85,11 @@ def test_cli_convert_yaml2json(source, destination):
 
     assert 0 == result.exit_code
 
-    with open('./tests/fixtures/books/books_title_mock.json') as s:
+    with open("./tests/fixtures/books/books_title_mock.json") as s:
         # read the mock JSON file
         json_mock = json.load(s)
 
-    with open(os.path.join(destination, 'books_title.json')) as s:
+    with open(os.path.join(destination, "books_title.json")) as s:
         # read the newly created JSON file
         json_converted = json.load(s)
 

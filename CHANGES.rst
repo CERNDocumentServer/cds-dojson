@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.14.0 (released 2026-10-13)
+-----------------------------------
+
+- chore(format): ran new black and isort formatters on code
+- update(python): update python version support and tests
 
 Version 0.13.0 (released 2024-09-30)
 -----------------------------------
